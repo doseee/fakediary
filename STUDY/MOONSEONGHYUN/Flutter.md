@@ -107,3 +107,4 @@ pubspec.yaml파일로 가서 intl의 버전을 0.17.0으로 바꿔줍니다.
 위 과정을 마치면 정상적으로 앱이 실행됩니다.
 
 ![https://blog.kakaocdn.net/dn/LsKah/btsai4lStDT/vqXHNwULiKvbak6huqKxOk/img.png](https://blog.kakaocdn.net/dn/LsKah/btsai4lStDT/vqXHNwULiKvbak6huqKxOk/img.png)
+..
