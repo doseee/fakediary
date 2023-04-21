@@ -1,3 +1,39 @@
+# 2023.04.21 복합키를 JPA로 매핑하기, Base Entity
+- 복합키 매핑 예시
+```
+@Entity
+public class MyEntity {
+	@EmbeddedId
+	private MyEntityId id;
+
+	//다른 필드들 ...
+}
+
+@Embeddable
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MyENtityId implements SerializableP
+	@column(name = "first_key")
+	private Long firstKey;
+
+	@column(name = "second_key")
+	private Long secondKey;
+{
+```
+- BaseEntity 예시
+```
+@Getter
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class BaseTimeEntity {
+    @CreatedDate
+    private LocalDateTime createdDate;
+    @LastModifiedDate
+    private LocalDateTime modifiedDate;
+}
+```
+
 # 2023.04.20 ERD 마무리
 ![ERD마무리](./img/erdcloud.png)
 - 컨설턴트님의 피드백을 반영한 ERD를완성하였습니다.
