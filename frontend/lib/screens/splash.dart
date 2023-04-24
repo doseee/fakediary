@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
-import '../main.dart';
+import 'package:frontend/screens/home_screen.dart';
 
 class Splash extends StatefulWidget {
+  const Splash({super.key});
+
   @override
   _SplashState createState() => _SplashState();
 }
@@ -20,7 +21,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         const Duration(seconds: 3),
         () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (BuildContext context) => MyApp()),
+            MaterialPageRoute(
+                builder: (BuildContext context) => const HomeScreen()),
             (route) => false));
   }
 
@@ -47,9 +49,9 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                       'assets/lottie/book-loop-perspective.json',
                       controller: _controller, onLoaded: (composition) {
                     _controller.addStatusListener((status) {
-                      if (status == AnimationStatus.dismissed)
+                      if (status == AnimationStatus.dismissed) {
                         _controller.forward();
-                      else if (status == AnimationStatus.completed)
+                      } else if (status == AnimationStatus.completed)
                         _controller.reverse();
                     });
 
@@ -57,7 +59,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                       ..duration = composition.duration
                       ..forward();
                   })),
-              SizedBox(
+              const SizedBox(
                 child: Text("Lieary"),
               )
             ],

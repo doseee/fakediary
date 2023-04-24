@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/splash.dart';
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Main Screen'),
+        title: const Text('Main Screen'),
       ),
       body: Center(
         child: ElevatedButton(
-          child: Text('Go to Details'),
+          child: const Text('Go to Mainpage'),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DetailsScreen()),
+              MaterialPageRoute(
+                builder: (context) => const MainScreen(),
+              ),
             );
           },
         ),
@@ -23,27 +27,15 @@ class MainScreen extends StatelessWidget {
   }
 }
 
-class DetailsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Details Screen'),
-      ),
-      body: Center(
-        child: Text('This is the details screen'),
-      ),
-    );
-  }
-}
-
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: Splash(),
   ));
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,7 +43,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
