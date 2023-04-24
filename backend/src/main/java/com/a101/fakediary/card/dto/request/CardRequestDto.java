@@ -13,9 +13,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @ToString
 public class CardRequestDto {
-    private Long memberId;                  //  카드 만들 사람의 pk
-    private String keyword;                 //
-    private BigDecimal langitude;
+    private Long memberId;
+    private String keyword;
+    private BigDecimal latitude;
     private BigDecimal longitude;
     private String originCardImageUrl;
     private String cardImageUrl;
