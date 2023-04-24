@@ -1,7 +1,7 @@
 package com.a101.fakediary.genre.entity;
 
 import com.a101.fakediary.common.BaseEntity;
-import com.a101.fakediary.diary.entity.GenrePK;
+import com.a101.fakediary.diary.entity.Diary;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,6 +14,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "genre")
 public class Genre extends BaseEntity {
-   @EmbeddedId
-   private GenrePK id;
+   @Id
+   @Column(name = "genre_id")
+   private Long genreId;
+
+   @Column(length = 30, nullable = false)
+   private String genre;
+
+   @ManyToOne
+   @JoinColumn(name = "diary_id")
+   private Diary diary;
 }

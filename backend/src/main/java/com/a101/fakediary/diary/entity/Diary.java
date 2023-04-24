@@ -13,7 +13,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "diary")
 public class Diary extends BaseEntity {
     @SequenceGenerator(
             name="DIARY_SEQ_GEN",
@@ -34,6 +33,7 @@ public class Diary extends BaseEntity {
     private String prompt;
     @Column(nullable = false, length = 400)
     private String title;
+    @Lob
     @Column(nullable = false, length = 32000)
     private String detail;
     @Column(nullable = false, length = 1000)

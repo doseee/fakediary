@@ -1,7 +1,6 @@
 package com.a101.fakediary.friendship.entity;
 
 import com.a101.fakediary.common.BaseEntity;
-import com.a101.fakediary.diary.entity.GenrePK;
 import com.a101.fakediary.member.entity.Member;
 import lombok.*;
 
@@ -12,23 +11,20 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@IdClass(FriendshipId.class)
 @Entity
 public class Friendship extends BaseEntity {
     @Id
-    @Column(name = "member_id")
-    private Long memberId;
-
-    @Id
-    @Column(name = "friend_id")
-    private Long friendId;
-    @EmbeddedId
-    private FriendshipId id;
+    @Column(name = "friendship_id")
+    private Long friendshipId;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", insertable = false, updatable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-    @Column(name = "exchange_cnt", nullable = false, columnDefinition = "SMALLINT default 0") // SMALLINT 대응 short
-    private short exchangeCnt;
 
+    @ManyToOne
+    @JoinColumn(name = "friend_id", nullable = false)
+    private Member friend;
+
+    @Column(nullable = false)
+    private int exchangeCnt;
 }
