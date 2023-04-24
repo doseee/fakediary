@@ -1,6 +1,4 @@
-package com.a101.fakediary.card.dto;
-
-import lombok.*;
+package com.a101.fakediary.card.dto.response;
 
 //@Getter
 //@Setter
@@ -8,5 +6,5 @@ import lombok.*;
 //@NoArgsConstructor
 //@AllArgsConstructor
 //@ToString
-public class CardDto {
+public class CardResponseDto {
 }
