@@ -48,7 +48,7 @@ packages:
       sha256: "4a07be6cb69c84d677a6c3096fcf960cc3285a8330b4603e0d463d15d9bd934c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.17.0"
+    version: "1.17.1"
   convert:
     dependency: transitive
     description:
@@ -154,7 +154,7 @@ packages:
       sha256: "8829d8a55c13fc0e37127c29fedf290c102f4e40ae94ada574091fe0ff96c917"
       url: "https://pub.dev"
     source: hosted
-    version: "1.8.2"
+    version: "1.8.3"
   pointycastle:
     dependency: transitive
     description:
@@ -215,7 +215,7 @@ packages:
       sha256: daadc9baabec998b062c9091525aa95786508b1c48e9c30f1f891b8bf6ff2e64
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.16"
+    version: "0.5.2"
   typed_data:
     dependency: transitive
     description:
@@ -233,5 +233,5 @@ packages:
     source: hosted
     version: "2.1.4"
 sdks:
-  dart: ">=2.19.6 <3.0.0"
+  dart: ">=3.0.0-0 <4.0.0"
   flutter: ">=3.3.0"

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/menu_screen.dart';
 import 'package:frontend/screens/splash.dart';
 
 class MainScreen extends StatelessWidget {
@@ -13,11 +12,13 @@ class MainScreen extends StatelessWidget {
       ),
       body: Center(
         child: ElevatedButton(
-          child: const Text('Go to Details'),
+          child: const Text('Go to Mainpage'),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const DetailsScreen()),
+              MaterialPageRoute(
+                builder: (context) => const MainScreen(),
+              ),
             );
           },
         ),
@@ -26,24 +27,8 @@ class MainScreen extends StatelessWidget {
   }
 }
 
-class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Details Screen'),
-      ),
-      body: const Center(
-        child: Text('This is the details screen'),
-      ),
-    );
-  }
-}
-
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: Splash(),
   ));
 }
@@ -58,7 +43,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MenuScreen(),
+      home: const MainScreen(),
     );
   }
 }

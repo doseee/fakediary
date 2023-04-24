@@ -22,10 +22,14 @@ public class Member extends BaseEntity {
     )
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBER_SEQ_GEN")
+    @Column(name = "member_id")
     private Long memberId;
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
 
     @Column(name = "nickname", nullable = false, length = 10)
     private String nickname;
@@ -36,10 +40,10 @@ public class Member extends BaseEntity {
     @Column(name = "diary_base_name", nullable = true)
     private String diaryBaseName;
 
-    @Column(name = "firebase_uid", nullable = false)
+    @Column(name = "firebase_uid", nullable = true)
     private String firebaseUid;
 
-    @Column(name = "provider_id", nullable = false)
+    @Column(name = "provider_id", nullable = true)
     private String providerId;
 
 }
