@@ -19,6 +19,7 @@ public class RandomExchangePool extends BaseEntity {
     private Long randomExchangePoolId;
 
     @OneToOne
+    @JoinColumn(name = "diary_id")
     private Diary diary;    //  교환할 일기
 
     @ManyToOne
@@ -29,6 +30,7 @@ public class RandomExchangePool extends BaseEntity {
     private LocalDate randomDate;   //  교환 신청한 날짜
 
     @OneToOne
+    @JoinColumn(name = "exchanged_diary_id")
     private Diary exchangedDiary;   //  교환된 일기
     
     @ManyToOne

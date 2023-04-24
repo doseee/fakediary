@@ -2,7 +2,8 @@ package com.a101.fakediary.exchangediary.entity;
 
 import com.a101.fakediary.common.BaseEntity;
 import com.a101.fakediary.diary.entity.Diary;
-import com.a101.fakediary.enums.ExchangeType;
+import com.a101.fakediary.enums.EExchangeType;
+import com.a101.fakediary.enums.EExchangeType;
 import com.a101.fakediary.member.entity.Member;
 import lombok.*;
 
@@ -36,7 +37,7 @@ public class ExchangedDiary extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ExchangeType exchangeType;  //  교환 유형
+    private EExchangeType exchangeType;  //  교환 유형
 
 
 }
