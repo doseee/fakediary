@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/splash.dart';
 
 class MainScreen extends StatelessWidget {
   @override
@@ -37,7 +38,9 @@ class DetailsScreen extends StatelessWidget {
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(
+    home: Splash(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

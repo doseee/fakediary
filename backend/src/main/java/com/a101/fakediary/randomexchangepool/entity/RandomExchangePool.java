@@ -22,7 +22,7 @@ public class RandomExchangePool extends BaseEntity {
     private Diary diary;    //  교환할 일기
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false) //  교환할 일기의 주인
+    @JoinColumn(name = "owner_id", nullable = false) //  교환할 일기의 주인
     private Member owner;
 
     @Column(nullable = false)
@@ -32,6 +32,6 @@ public class RandomExchangePool extends BaseEntity {
     private Diary exchangedDiary;   //  교환된 일기
     
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "exchanged_owner_id")
     private Member exchangedOwner;  //  교환된 일기 주인
 }
