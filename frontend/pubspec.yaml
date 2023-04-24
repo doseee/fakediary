@@ -63,11 +63,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/lottie/
-<<<<<<< HEAD
     - assets/img/
-=======
-    - assets/img/main_background.jpg
->>>>>>> a588159eecdc313fc26fe6704a7e578c3bdd73eb
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
