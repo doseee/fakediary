@@ -1,8 +1,10 @@
 package com.a101.fakediary.diaryimage.entity;
 
+import com.a101.fakediary.common.BaseEntity;
+import com.a101.fakediary.diary.entity.Diary;
 import lombok.*;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Setter
 @Getter
@@ -10,5 +12,14 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @Builder
 @Entity
-public class DiaryImage {
+public class DiaryImage extends BaseEntity {
+    @Id
+    private Long diaryImageId;
+
+    @ManyToOne
+    @JoinColumn(name = "diary_id")
+    private Diary diary;
+
+    @Column(nullable = false)
+    private String diaryImageUrl;
 }
