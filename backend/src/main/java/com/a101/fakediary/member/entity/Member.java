@@ -22,6 +22,7 @@ public class Member extends BaseEntity {
     )
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBER_SEQ_GEN")
+    @Column(name = "member_id")
     private Long memberId;
 
     @Column(name = "email", nullable = false)

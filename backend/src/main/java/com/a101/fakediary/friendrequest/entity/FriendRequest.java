@@ -1,6 +1,7 @@
 package com.a101.fakediary.friendrequest.entity;
 
-import com.a101.fakediary.enums.EFriendRequestStatus;
+import com.a101.fakediary.common.BaseEntity;
+import com.a101.fakediary.enums.ERequestStatus;
 import com.a101.fakediary.member.entity.Member;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-public class FriendRequest {
+public class FriendRequest extends BaseEntity {
     @SequenceGenerator(
             name = "FRIEND_REQUEST_SEQ_GEN",
             sequenceName = "FRIEND_REQUEST_SEQ",
@@ -33,7 +34,7 @@ public class FriendRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20,nullable = false)
-    private EFriendRequestStatus status;
+    private ERequestStatus status;
 
 
 

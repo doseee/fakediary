@@ -19,19 +19,21 @@ public class RandomExchangePool extends BaseEntity {
     private Long randomExchangePoolId;
 
     @OneToOne
+    @JoinColumn(name = "diary_id")
     private Diary diary;    //  교환할 일기
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false) //  교환할 일기의 주인
+    @JoinColumn(name = "owner_id", nullable = false) //  교환할 일기의 주인
     private Member owner;
 
     @Column(nullable = false)
     private LocalDate randomDate;   //  교환 신청한 날짜
 
     @OneToOne
+    @JoinColumn(name = "exchanged_diary_id")
     private Diary exchangedDiary;   //  교환된 일기
     
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "exchanged_owner_id")
     private Member exchangedOwner;  //  교환된 일기 주인
 }

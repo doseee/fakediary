@@ -23,6 +23,7 @@ public class Diary extends BaseEntity {
     )
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DIARY_SEQ_GEN")
+    @Column(name = "diary_id")
     private Long diaryId;
     @ManyToOne
     @JoinColumn(name="member_id", referencedColumnName = "member_id", nullable = false)
