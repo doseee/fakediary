@@ -38,28 +38,28 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       home: Scaffold(
         body: Container(
           alignment: Alignment.center,
+          color: Colors.green,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                  width: 500,
-                  height: 500,
-                  child: Lottie.asset('assets/lottie/book-loop-perspective.json',
-                      controller: _controller, onLoaded: (composition) {
-                        _controller.addStatusListener((status) {
-                          if (status == AnimationStatus.dismissed)
-                            _controller.forward();
-                          else if (status == AnimationStatus.completed)
-                            _controller.reverse();
-                        });
+                    child:
+                    Lottie.asset('assets/lottie/book-loop-perspective.json',
+                        controller: _controller, onLoaded: (composition) {
+                          _controller.addStatusListener((status) {
+                            if (status == AnimationStatus.dismissed)
+                              _controller.forward();
+                            else if (status == AnimationStatus.completed)
+                              _controller.reverse();
+                          });
 
-                        _controller
-                          ..duration = composition.duration
-                          ..forward();
-                      })),
+                          _controller
+                            ..duration = composition.duration
+                            ..forward();
+                        })),
               SizedBox(
-                child: Text("Lieary"),
+                child: Text('lieary'),
               )
             ],
           ),
