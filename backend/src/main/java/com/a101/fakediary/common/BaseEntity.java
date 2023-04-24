@@ -1,4 +1,6 @@
 package com.a101.fakediary.common;
+import org.springframework.context.annotation.Configuration;
+
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
