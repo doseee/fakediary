@@ -19,19 +19,19 @@ public class ExchangedDiary extends BaseEntity {
     private Long exchangedDiaryId;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "sender_id", nullable = false)
     private Member sender;              //  보낸 일기 작성자
 
     @ManyToOne
-    @JoinColumn(name = "diary_id", nullable = false)
+    @JoinColumn(name = "send_diary_id", nullable = false)
     private Diary senderDiary;            //  보낸 일기
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "receive_owner_id", nullable = false)
     private Member receiver;              //  받은 일기 작성자
 
     @ManyToOne
-    @JoinColumn(name = "diary_id", nullable = false)
+    @JoinColumn(name = "receive_diary_id", nullable = false)
     private Diary receiverDiary;            //  받은 일기
 
     @Enumerated(EnumType.STRING)

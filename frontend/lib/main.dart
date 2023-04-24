@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/menu_screen.dart';
+import 'package:frontend/screens/splash.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(
+    home: Splash(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
