@@ -1,7 +1,6 @@
 package com.a101.fakediary.genre.entity;
 
 import com.a101.fakediary.common.BaseEntity;
-import com.a101.fakediary.diary.entity.GenrePK;
 import lombok.*;
 
 import javax.persistence.*;

@@ -3,7 +3,6 @@ import 'package:lottie/lottie.dart';
 
 import '../main.dart';
 
-
 class Splash extends StatefulWidget {
   @override
   _SplashState createState() => _SplashState();
@@ -20,10 +19,10 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     _controller = AnimationController(vsync: this);
     Future.delayed(
         const Duration(seconds: 3),
-            () => Navigator.pushAndRemoveUntil(
+        () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (BuildContext context) => const MyApp()),
-                (route) => false));
+            MaterialPageRoute(builder: (BuildContext context) => MyApp()),
+            (route) => false));
   }
 
   @override
