@@ -32,8 +32,7 @@ public class Diary extends BaseEntity {
     private String prompt;
     @Column(nullable = false, length = 400)
     private String title;
-    @Lob
-    @Column(nullable = false, length = 32000)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String detail;
     @Column(nullable = false, length = 1000)
     private String summary;
