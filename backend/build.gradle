@@ -30,6 +30,10 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	// https://mvnrepository.com/artifact/org.javassist/javassist
+	implementation group: 'org.javassist', name: 'javassist', version: '3.29.0-GA'
+
 }
 
 tasks.named('test') {
