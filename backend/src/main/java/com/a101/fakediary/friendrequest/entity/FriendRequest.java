@@ -25,11 +25,11 @@ public class FriendRequest extends BaseEntity {
     private Long friendRequestId;
 
     @ManyToOne
-    @JoinColumn(name = "sender_id", referencedColumnName = "member_id", nullable = false)
+    @JoinColumn(name = "sender_id", nullable = false)
     private Member senderId;
 
     @ManyToOne
-    @JoinColumn(name = "receiver_id", referencedColumnName = "member_id", nullable = false)
+    @JoinColumn(name = "receiver_id", nullable = false)
     private Member receiverId;
 
     @Enumerated(EnumType.STRING)
