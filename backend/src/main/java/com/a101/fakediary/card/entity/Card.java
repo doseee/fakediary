@@ -27,7 +27,7 @@ public class Card extends BaseEntity {
     private Long cardId;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
 
@@ -44,5 +44,5 @@ public class Card extends BaseEntity {
     private String originCardImageUrl;
 
     @Column(name = "card_image_url", nullable = false)
-    private String originCardImage;
+    private String cardImageUrl;
 }

@@ -13,7 +13,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "diary")
 public class Diary extends BaseEntity {
     @SequenceGenerator(
             name="DIARY_SEQ_GEN",
@@ -25,7 +24,7 @@ public class Diary extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DIARY_SEQ_GEN")
     private Long diaryId;
     @ManyToOne
-    @JoinColumn(name="member_id", referencedColumnName = "member_id", nullable = false)
+    @JoinColumn(name="member_id", nullable = false)
     private Member member;
     @Column(nullable = false, length = 500)
     private String keyword;
@@ -33,6 +32,7 @@ public class Diary extends BaseEntity {
     private String prompt;
     @Column(nullable = false, length = 400)
     private String title;
+    @Lob
     @Column(nullable = false, length = 32000)
     private String detail;
     @Column(nullable = false, length = 1000)
