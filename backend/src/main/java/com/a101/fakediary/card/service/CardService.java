@@ -4,15 +4,26 @@ import com.a101.fakediary.card.dto.request.CardSaveRequestDto;
 import com.a101.fakediary.card.dto.response.CardResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
-import com.a101.fakediary.imagefile.handler.S3ImageFileHandler;
+import com.a101.fakediary.imagefile.handler.ImageFileHandler;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.JSONParser;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserter;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+import org.json.JSONObject;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -28,7 +39,19 @@ import java.util.StringTokenizer;
 public class CardService {
     private final CardRepository cardRepository;
     private final MemberRepository memberRepository;
-    private final S3ImageFileHandler s3ImageFileHandler;
+    private final ImageFileHandler s3ImageFileHandler;
+
+    @Value("${fake-diary.deep-art.base-url}")
+    private final String BASE_URL;
+
+    @Value("${fake-diary.deep-art.api-key}")
+    private final String API_KEY;
+
+    @Value("${fake-diary.deep-art.access-key}")
+    private final String ACCESS_KEY;
+
+    @Value("${fake-diary.deep-art.secret-key}")
+    private final String SECRET_KEY;
 
     @Transactional
     public Long saveCard(MultipartFile origImageFile, MultipartFile cardImageFile, String saveCardDtoString) throws Exception {
@@ -59,6 +82,83 @@ public class CardService {
         return ret;
     }
 
+    public MultipartFile getCardImageFile(MultipartFile origImageFile) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("x-api-key", API_KEY);
+        headers.set("x-api-access-key", ACCESS_KEY);
+        headers.set("x-api-secret-key", SECRET_KEY);
+
+        //  1. MultipartFile에서 이미지 데이터를 읽어온다.
+        byte[] imageBytes = origImageFile.getBytes();
+
+        //  2. api를 통해 style 목록을 얻어온다.
+        WebClient client = WebClient.builder()
+                .baseUrl(BASE_URL + "/styles")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeaders(headers::addAll)
+                .build();
+
+        //  GET request를 보내 style의 목록을 얻어온다.
+        Mono<String> response = client.get()
+                .retrieve()
+                .bodyToMono(String.class);
+
+        response.subscribe(res -> {
+            System.out.println("res = " + res);
+        });
+
+        //  3. api를 통해 이미지를 업로드한다.
+        client = WebClient.builder()
+                .baseUrl(BASE_URL + "/upload")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE)
+                .defaultHeaders(headers::addAll)
+                .build();
+
+        //  이미지와 styleId를 reuqestMap에 넣어서 POST request를 보낸다.
+        MultiValueMap<String, HttpEntity<?>> requestMap = new LinkedMultiValueMap<>();
+        requestMap.add("styleId", new HttpEntity<>("c7984b32-1560-11e7-afe2-06d95fe194ed"));
+        requestMap.add("image", new HttpEntity<>(imageBytes));
+
+        response = client.post()
+                .body(BodyInserters.fromMultipartData(requestMap))
+                .retrieve()
+                .bodyToMono(String.class);
+
+        //  Mono의 subscribe 메서드를 사용해, response 값을 출력함.
+        response.subscribe(res -> {
+            System.out.println("res = " + res);
+        });
+
+        //  4. 처리 결과물을 받기 위해, 다시 새로운 WebClient를 생성
+        client = WebClient.builder()
+                .baseUrl(BASE_URL + "/result")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeaders(headers::addAll)
+                .build();
+
+        //  submissionId를 정의한다.
+        final String[] submissionId = {null};
+
+        // Mono의 subscribe 메소드를 사용해, response 값에서 submissionId 값을 추출합니다.
+        response.subscribe(res -> {
+            JSONObject json = new JSONObject(res);
+            submissionId[0] = json.getString("submissionId");
+        });
+        
+        //  추출한 submissionIOd 값을 사용해 GET 요청을 보내고, 처리 결과물을 Mono로 받는다.
+        response = client.get()
+                .uri(uriBuilder -> uriBuilder.queryParam("submissionId", submissionId).build())
+                .retrieve()
+                .bodyToMono(String.class);
+        
+        //  Mono의 subscribe 메서드를 사용해 처리 결과물을 출력한다.
+        response.subscribe(res -> {
+            System.out.println("res = " + res); 
+        });
+
+        return null;
+    }
+
     public List<CardResponseDto> listCards(Long memberId){
         List<CardResponseDto> ret  = new ArrayList<>();
 
@@ -74,15 +174,11 @@ public class CardService {
         return ret;
     }
 
-    public CardResponseDto findCard(Long cardId) {
+    public CardResponseDto findCard(Long cardId) throws Exception {
         CardResponseDto ret = null;
 
-        try {
-            Card card = cardRepository.findById(cardId).orElseThrow(() -> new Exception());
-            ret = createCardResponseDto(card);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new Exception());
+        ret = createCardResponseDto(card);
 
         return ret;
     }

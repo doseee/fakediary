@@ -48,6 +48,10 @@ dependencies {
 
 	//	WebClient dependency 추가
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation group: 'org.json', name: 'json', version: '20230227'
+
 }
 
 tasks.named('test') {

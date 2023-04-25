@@ -1,5 +1,6 @@
 package com.a101.fakediary.card.controller;
 
+import com.a101.fakediary.card.dto.response.CardResponseDto;
 import com.a101.fakediary.card.service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.json.JSONParser;
@@ -32,7 +33,7 @@ public class CardController {
         try {
             MultipartFile cardImageFile = null; //  origImageFile을 이용해서 cardImageFile을 얻어야 함.
                                                 //  DeepArtsEffect 호출해야 함.
-
+            cardImageFile = cardService.getCardImageFile(origImageFile);
 
             Long cardId = cardService.saveCard(origImageFile, cardImageFile, saveCardDtoString);
             ret = new ResponseEntity<>("만들어진 카드 id = " + cardId, HttpStatus.OK);
@@ -63,6 +64,14 @@ public class CardController {
      */
     @GetMapping("/pick/{cardId}")
     public ResponseEntity<?> findCard(@PathVariable(name = "cardId")Long cardId) {
-        return new ResponseEntity<>(cardService.findCard(cardId), HttpStatus.OK);
+        CardResponseDto cardResponseDto = null;
+
+        try {
+            cardResponseDto = cardService.findCard(cardId);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(cardResponseDto, HttpStatus.OK);
     }
 }

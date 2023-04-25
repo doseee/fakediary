@@ -18,9 +18,9 @@ import java.util.UUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class S3ImageFileHandler {
+public class ImageFileHandler {
     //  버킷 이름 동적 할당
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${cloud.aws.s3.api-key}")
     private String bucket;
 
     //  버킷 주소 동적 할당
@@ -96,6 +96,35 @@ public class S3ImageFileHandler {
         }
 
         return url;
+    }
+
+    /**
+     * DeepArtEffects에 보내기 위해 MultipartFile을 File로 변환함
+     *
+     * @param multipartFile
+     * @return
+     */
+    public File convertMultipartFileToFile(MultipartFile multipartFile) {
+        if(multipartFile == null)
+            return null;
+
+        String originalFileName = multipartFile.getOriginalFilename();
+        File file = null;
+
+        try {
+            //  파일 객체 생성
+            file = new File(System.getProperty("user.dir") + originalFileName);
+
+            file.setExecutable(true);
+            file.setReadable(true);
+            file.setWritable(true);
+
+            multipartFile.transferTo(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return file;
     }
 }
 
