@@ -37,6 +37,7 @@ dependencies:
   lottie: ^2.3.2
   carousel_slider: ^4.2.1
   dots_indicator: ^2.1.0
+  gradient_borders: ^1.0.0
 
 dev_dependencies:
   flutter_test:

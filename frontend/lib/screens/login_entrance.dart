@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/regist_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:gradient_borders/gradient_borders.dart';
 
 import 'login.dart';
 import 'menu_screen.dart';
@@ -86,46 +87,72 @@ class _LoginEntranceState extends State<LoginEntrance>
               )),
               Padding(padding: EdgeInsets.only(left: 50, right: 50),
                 child:
-                Flexible(flex: 1, child: ElevatedButton(
-                  onPressed: () { Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                      builder: (context) => const Login(),
-                    ));},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffffffff),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    )
+                Container(
+                  width: 250,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xff79F1A4),
+                        Color(0xff0E5CAD),
+                      ]
+                    ),
+                    borderRadius: BorderRadius.circular(25)
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-                    child:
-                        Text('LOGIN', style: TextStyle(color: Colors.black, fontSize: 14),)
-                  )
-                ),),),
-                Padding(padding: EdgeInsets.only(left: 50, right: 50),
-                  child:
-                  Flexible(flex: 1, child: ElevatedButton(
+                  child: Flexible(flex: 1, child: ElevatedButton(
+                      onPressed: () { Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          ));},
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          elevation: 0.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          )
+                      ),
+                      child:
+                          Text('LOGIN', style: TextStyle(color: Colors.white, fontSize: 14),)
+                  ),),
+                )),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: 250,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    border: GradientBoxBorder(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xff79F1A4),
+                          Color(0xff0E5CAD),
+                        ]
+                      ),
+                      width: 2
+                    ),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child : Flexible(flex: 1, child: ElevatedButton(
                       onPressed: () { Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const RegistScreen(),
-                          )); },
+                          ));},
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xff4b6858),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          elevation: 0.0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
-                          )),
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-                          child: Text(
-                            'JOIN',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ))),
-                ),
-              ),
-              Flexible(flex: 2, child: Container()),
+                          )
+                      ),
+                      child:
+                      Text('회원이 아니신가요? JOIN', style: TextStyle(color: Colors.white, fontSize: 14),)
+                  ),),
+                  )
             ],
           ))),
     );
