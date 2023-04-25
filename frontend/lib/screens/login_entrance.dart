@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/main.dart';
+import 'package:frontend/screens/regist_screen.dart';
 import 'package:lottie/lottie.dart';
 
 import 'menu_screen.dart';
@@ -11,7 +11,8 @@ class LoginEntrance extends StatefulWidget {
   State<LoginEntrance> createState() => _LoginEntranceState();
 }
 
-class _LoginEntranceState extends State<LoginEntrance> with SingleTickerProviderStateMixin {
+class _LoginEntranceState extends State<LoginEntrance>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -36,7 +37,7 @@ class _LoginEntranceState extends State<LoginEntrance> with SingleTickerProvider
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -55,53 +56,75 @@ class _LoginEntranceState extends State<LoginEntrance> with SingleTickerProvider
             ),
           ),
           body: Center(
-            child: Column(
-              children: [
-                Flexible(flex: 3,
-                  child:
-                  Center(
-                    child: Text('My Lieary', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: Color(0xfff1f1f1)),
-                ),),),
-              Flexible(flex: 4, child: Container(
-                child: Lottie.asset('assets/lottie/login_ent.json', width: 300),
-              )),
-              Padding(padding: EdgeInsets.only(left: 50, right: 50),
-                child:
-                Flexible(flex: 1, child: ElevatedButton(
-                  onPressed: () { print('s'); },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffffffff),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    )
+              child: Column(
+            children: [
+              Flexible(
+                flex: 3,
+                child: Center(
+                  child: Text(
+                    'My Lieary',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 24,
+                        color: Color(0xfff1f1f1)),
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-                    child:
-                        Text('LOGIN', style: TextStyle(color: Colors.black, fontSize: 14),)
-                  )
-                ),),),
-                Padding(padding: EdgeInsets.only(left: 50, right: 50),
-                  child:
-                  Flexible(flex: 1, child: ElevatedButton(
-                      onPressed: () { print('join'); },
+                ),
+              ),
+              Flexible(
+                  flex: 4,
+                  child: Container(
+                    child: Lottie.asset('assets/lottie/login_ent.json',
+                        width: 300),
+                  )),
+              Padding(
+                padding: EdgeInsets.only(left: 50, right: 50),
+                child: Flexible(
+                  flex: 1,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        print('s');
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xffffffff),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          )),
+                      child: Padding(
+                          padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
+                          child: Text(
+                            'LOGIN',
+                            style: TextStyle(color: Colors.black, fontSize: 14),
+                          ))),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 50, right: 50),
+                child: Flexible(
+                  flex: 1,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegistScreen()),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xff4b6858),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
-                          )
-                      ),
+                          )),
                       child: Padding(
                           padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-                          child:
-                          Text('JOIN', style: TextStyle(color: Colors.white, fontSize: 14),)
-                      )
-                  ),),),
-                Flexible(flex: 2, child: Container()),
-              ],
-            )
-          )
-      ),
+                          child: Text(
+                            'JOIN',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ))),
+                ),
+              ),
+              Flexible(flex: 2, child: Container()),
+            ],
+          ))),
     );
   }
 }
