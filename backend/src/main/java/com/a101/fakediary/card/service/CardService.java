@@ -1,6 +1,6 @@
 package com.a101.fakediary.card.service;
 
-import com.a101.fakediary.card.dto.request.SaveCardDto;
+import com.a101.fakediary.card.dto.request.CardSaveRequestDto;
 import com.a101.fakediary.card.dto.response.CardResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
@@ -37,7 +37,7 @@ public class CardService {
         Object obj = jsonParser.parse();
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = mapper.convertValue(obj, Map.class);
-        SaveCardDto saveCardDto = createSaveCardDto(map);
+        CardSaveRequestDto saveCardDto = createSaveCardDto(map);
         Member member = memberRepository.findById(saveCardDto.getMemberId()).orElseThrow(() -> new Exception("member not found"));
         String origImageUrl = s3ImageFileHandler.uploadOnS3(origImageFile);
         String cardImageUrl = s3ImageFileHandler.uploadOnS3(cardImageFile);
@@ -87,8 +87,8 @@ public class CardService {
         return ret;
     }
 
-    private SaveCardDto createSaveCardDto(Map<String, Object> map) {
-        return SaveCardDto.builder()
+    private CardSaveRequestDto createSaveCardDto(Map<String, Object> map) {
+        return CardSaveRequestDto.builder()
                 .memberId(Long.parseLong(String.valueOf(map.get("memberId"))))
                 .baseName(String.valueOf(map.get("baseName")))
                 .basePlace(String.valueOf(map.get("basePlace")))
