@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/main.dart';
 import 'package:lottie/lottie.dart';
 
+import 'login.dart';
 import 'menu_screen.dart';
 
 class LoginEntrance extends StatefulWidget {
@@ -68,7 +69,11 @@ class _LoginEntranceState extends State<LoginEntrance> with SingleTickerProvider
               Padding(padding: EdgeInsets.only(left: 50, right: 50),
                 child:
                 Flexible(flex: 1, child: ElevatedButton(
-                  onPressed: () { print('s'); },
+                  onPressed: () { Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                      builder: (context) => const Login(),
+                    ));},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xffffffff),
                     shape: RoundedRectangleBorder(
