@@ -52,17 +52,17 @@ class _MenuScreenState extends State<MenuScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
-          actions: [
+          actions: const [
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 30,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
+                    children: [
                       Image(
                         image: AssetImage('assets/img/icon_close.png'),
                       ),
