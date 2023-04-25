@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/menu_screen.dart';
 
 class MainScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class MainScreen extends StatelessWidget {
 
 void main() {
   runApp(const MaterialApp(
-    home: MenuScreen(),
+    home: LoginEntrance(),
   ));
 }
 
