@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/main.dart';
+import 'package:frontend/screens/regist_screen.dart';
 import 'package:lottie/lottie.dart';
 
 import 'login.dart';
@@ -12,7 +12,8 @@ class LoginEntrance extends StatefulWidget {
   State<LoginEntrance> createState() => _LoginEntranceState();
 }
 
-class _LoginEntranceState extends State<LoginEntrance> with SingleTickerProviderStateMixin {
+class _LoginEntranceState extends State<LoginEntrance>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -37,7 +38,7 @@ class _LoginEntranceState extends State<LoginEntrance> with SingleTickerProvider
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -111,19 +112,18 @@ class _LoginEntranceState extends State<LoginEntrance> with SingleTickerProvider
                           backgroundColor: Color(0xff4b6858),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
-                          )
-                      ),
+                          )),
                       child: Padding(
                           padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-                          child:
-                          Text('JOIN', style: TextStyle(color: Colors.white, fontSize: 14),)
-                      )
-                  ),),),
-                Flexible(flex: 2, child: Container()),
-              ],
-            )
-          )
-      ),
+                          child: Text(
+                            'JOIN',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ))),
+                ),
+              ),
+              Flexible(flex: 2, child: Container()),
+            ],
+          ))),
     );
   }
 }
