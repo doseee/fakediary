@@ -16,6 +16,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import org.json.JSONObject;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +82,7 @@ public class CardService {
         return ret;
     }
 
+    @Transactional
     public MultipartFile getCardImageFile(MultipartFile origImageFile) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.set("x-api-key", API_KEY);
@@ -159,6 +160,7 @@ public class CardService {
         return null;
     }
 
+    @Transactional(readOnly = true)
     public List<CardResponseDto> listCards(Long memberId){
         List<CardResponseDto> ret  = new ArrayList<>();
 
@@ -174,6 +176,7 @@ public class CardService {
         return ret;
     }
 
+    @Transactional(readOnly = true)
     public CardResponseDto findCard(Long cardId) throws Exception {
         CardResponseDto ret = null;
 
