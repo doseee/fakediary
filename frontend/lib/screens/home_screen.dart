@@ -24,7 +24,7 @@ class _MainScreenState extends State<HomeScreen> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
-            actions: const [
+            actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
