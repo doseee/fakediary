@@ -77,11 +77,9 @@ class _LoginEntranceState extends State<LoginEntrance>
           body: Center(
             child: Column(
               children: [
-                Flexible(flex: 3,
+                Flexible(flex: 1,
                   child:
-                  Center(
-                    child: Text('My Lieary', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24, color: Color(0xfff1f1f1)),
-                ),),),
+                  Container()),
               Flexible(flex: 4, child: Container(
                 child: Lottie.asset('assets/lottie/login_ent.json', width: 300),
               )),
