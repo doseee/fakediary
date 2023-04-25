@@ -20,36 +20,43 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	//implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-	//	lombok
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
-
-	//	spring test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+	//testImplementation 'org.springframework.security:spring-security-test'
 
 	// https://mvnrepository.com/artifact/org.javassist/javassist
 	implementation group: 'org.javassist', name: 'javassist', version: '3.29.0-GA'
 
-	//	amazon s3
+	// Swagger
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+	//	S3
 	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-context
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-context', version: '2.2.6.RELEASE'
 	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-autoconfigure
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-autoconfigure', version: '2.2.6.RELEASE'
-
+	
 	//	WebClient
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	//	WebClient dependency 추가
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation group: 'org.json', name: 'json', version: '20230227'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
