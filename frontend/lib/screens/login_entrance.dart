@@ -42,18 +42,35 @@ class _LoginEntranceState extends State<LoginEntrance> with SingleTickerProvider
             backgroundColor: Colors.transparent,
             elevation: 0,
             toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
-            title: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MenuScreen(),
+            actions: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 30,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MenuScreen(),
+                              ),
+                            );
+                          },
+                          icon: Image.asset('assets/img/icon_menu_page.png'),
+                          iconSize: 50,
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              },
-              icon: Image.asset('assets/img/icon_menu.png'),
-              iconSize: 50,
-            ),
+                ],
+              ),
+            ]
           ),
           body: Center(
             child: Column(
