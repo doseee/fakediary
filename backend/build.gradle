@@ -34,6 +34,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.javassist/javassist
 	implementation group: 'org.javassist', name: 'javassist', version: '3.29.0-GA'
 
+	// Swagger
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 }
 
 tasks.named('test') {
