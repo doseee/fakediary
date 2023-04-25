@@ -30,6 +30,12 @@ public class Card extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Column(length = 10)
+    private String baseName;    //  주인공 이름
+
+    @Column
+    private String basePlace;   //  장소 이름
+
     @Column(name = "keyword", length = 30, nullable = false)
     private String keyword;
 

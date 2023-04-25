@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 @ToString
 public class CardRequestDto {
     private Long memberId;
+    private String baseName;
+    private String basePlace;
     private String keyword;
     private BigDecimal latitude;
     private BigDecimal longitude;

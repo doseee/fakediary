@@ -15,6 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class CardController {
     private final CardService cardService;
 
+    /**
+     *
+     *
+     * @param origImageFile : FE에서 촬영한 원본 이미지
+     * @param saveCardDtoString : FE에서 전송한 카드에 넣을 정보들
+     * @return
+     */
     @PostMapping
     public ResponseEntity<?> saveCard(
             @RequestPart(value = "origImageFile", required = true) MultipartFile origImageFile,
@@ -35,5 +42,27 @@ public class CardController {
             e.printStackTrace();
         }
         return ret;
+    }
+
+    /**
+     * 사용자가 가지고 있는 모든 카드들을 가져옴
+     *
+     * @param memberId
+     * @return
+     */
+    @GetMapping("/{memberId}")
+    public ResponseEntity<?>  listCards(@PathVariable(name = "memberId")Long memberId) {
+      return new ResponseEntity<>(cardService.listCards(memberId), HttpStatus.OK);
+    }
+
+    /**
+     * 사용자가 특정 카드를 뽑아서 상세 정보를 봄
+     *
+     * @param cardId
+     * @return
+     */
+    @GetMapping("/pick/{cardId}")
+    public ResponseEntity<?> findCard(@PathVariable(name = "cardId")Long cardId) {
+        return new ResponseEntity<>(cardService.findCard(cardId), HttpStatus.OK);
     }
 }
