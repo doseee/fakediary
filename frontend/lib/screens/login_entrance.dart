@@ -107,7 +107,11 @@ class _LoginEntranceState extends State<LoginEntrance>
                 Padding(padding: EdgeInsets.only(left: 50, right: 50),
                   child:
                   Flexible(flex: 1, child: ElevatedButton(
-                      onPressed: () { print('join'); },
+                      onPressed: () { Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegistScreen(),
+                          )); },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xff4b6858),
                           shape: RoundedRectangleBorder(
