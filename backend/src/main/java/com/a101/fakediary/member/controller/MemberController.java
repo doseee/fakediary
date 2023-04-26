@@ -1,15 +1,12 @@
 package com.a101.fakediary.member.controller;
 
 import com.a101.fakediary.member.dto.MemberSaveRequestDto;
-import com.a101.fakediary.member.dto.MemberUpdateRequestDto;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.a101.fakediary.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -55,7 +52,7 @@ public class MemberController {
     public ResponseEntity<?> deleteMember(@PathVariable Long memberId){
 
         Optional<Member> memberOptional = memberRepository.findById(memberId);
-        if (!memberOptional.isPresent()) {
+        if (memberOptional.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid memberId");
         }
 

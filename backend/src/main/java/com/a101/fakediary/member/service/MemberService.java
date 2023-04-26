@@ -43,9 +43,9 @@ public class MemberService {
         return ResponseEntity.ok().build();
     }
 
-    public boolean isNicknameUnique(String nickname) {
-        return !memberRepository.existsByNickname(nickname);
-    }
+//    public boolean isNicknameUnique(String nickname) {
+//        return !memberRepository.existsByNickname(nickname);
+//    }
 
     // 수정
 //    @Transactional
