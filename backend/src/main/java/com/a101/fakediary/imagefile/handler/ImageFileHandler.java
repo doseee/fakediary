@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageFileHandler {
     //  버킷 이름 동적 할당
-    @Value("${cloud.aws.s3.api-key}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     //  버킷 주소 동적 할당
@@ -125,6 +126,12 @@ public class ImageFileHandler {
         }
 
         return file;
+    }
+
+    public static String encode(MultipartFile multipartFile) throws IOException {
+        byte[] bytes = multipartFile.getBytes();
+        byte[] encoded = Base64.encodeBase64(bytes);
+        return new String(encoded);
     }
 }
 

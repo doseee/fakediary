@@ -3,7 +3,6 @@ package com.a101.fakediary.card.controller;
 import com.a101.fakediary.card.dto.response.CardResponseDto;
 import com.a101.fakediary.card.service.CardService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,22 +19,22 @@ public class CardController {
      *
      *
      * @param origImageFile : FE에서 촬영한 원본 이미지
-     * @param saveCardDtoString : FE에서 전송한 카드에 넣을 정보들
+     * @param cardSaveRequestDtoString : FE에서 전송한 카드에 넣을 정보들
      * @return
      */
     @PostMapping
     public ResponseEntity<?> saveCard(
             @RequestPart(value = "origImageFile", required = true) MultipartFile origImageFile,
-            @RequestParam(value = "saveCardDtoString")String saveCardDtoString
+            @RequestParam(value = "cardSaveRequestDtoString")String cardSaveRequestDtoString
     ) {
         ResponseEntity<?> ret = null;
 
         try {
-            MultipartFile cardImageFile = null; //  origImageFile을 이용해서 cardImageFile을 얻어야 함.
+            MultipartFile cardImageFile = cardService.getCardImageFile(origImageFile);; //  origImageFile을 이용해서 cardImageFile을 얻어야 함.
                                                 //  DeepArtsEffect 호출해야 함.
-            cardImageFile = cardService.getCardImageFile(origImageFile);
+//            MultipartFile cardImageFile = null;
 
-            Long cardId = cardService.saveCard(origImageFile, cardImageFile, saveCardDtoString);
+            Long cardId = cardService.saveCard(origImageFile, cardImageFile, cardSaveRequestDtoString);
             ret = new ResponseEntity<>("만들어진 카드 id = " + cardId, HttpStatus.OK);
         } catch(ParseException e) {
             e.printStackTrace();
@@ -73,5 +72,14 @@ public class CardController {
         }
 
         return new ResponseEntity<>(cardResponseDto, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @GetMapping("/styles")
+    public ResponseEntity<?> findCardStyles() {
+        return new ResponseEntity<>(cardService.getDeepArtEffectsStyles().block(), HttpStatus.OK);
     }
 }
