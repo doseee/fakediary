@@ -21,6 +21,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     //회원가입
+    @Transactional
     public Member signUpMember(MemberSaveRequestDto memberSaveRequestDto) {
         // 닉네임 중복 체크
         if (memberRepository.existsByNickname(memberSaveRequestDto.getNickname())) {
@@ -41,13 +42,13 @@ public class MemberService {
     //로그인
     public Member signInMember(MemberLoginRequestDto memberloginRequestDto) {
         Optional<Member> memberOptional = memberRepository.findByEmail(memberloginRequestDto.getEmail());
-        if (!memberOptional.isPresent()) {
-            throw new IllegalArgumentException("Invalid email or password");
+        if (memberOptional.isEmpty()) {
+            throw new IllegalArgumentException("올바르지 않은 Email입니다.");
         }
         Member member = memberOptional.get();
         String encodePassword = PasswordEncoder.sha256(memberloginRequestDto.getPassword());
         if (!encodePassword.equals(member.getPassword())) {
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         return member;
     }
