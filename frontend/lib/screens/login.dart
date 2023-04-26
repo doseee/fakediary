@@ -166,7 +166,11 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               height: 20,
                             ),
-                            _buttonLogin()
+                            _buttonLogin(),
+                            SizedBox(
+                              height: 280,
+                            ),
+                            Text('My Lieary', style: TextStyle(color: Colors.blueGrey),)
                           ],
                         ),
                       ]),
