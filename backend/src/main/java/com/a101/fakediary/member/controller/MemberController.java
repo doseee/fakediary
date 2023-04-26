@@ -24,11 +24,12 @@ public class MemberController {
     //회원가입
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody MemberSaveRequestDto memberSaveRequestDto) {
-
-//        if (memberSaveRequestDto == null) {
-//            return ResponseEntity.badRequest().body("MemberSaveRequestDto is null");
-//        }
-        return memberService.signUpMember(memberSaveRequestDto);
+        try {
+            Member member = memberService.signUpMember(memberSaveRequestDto);
+            return ResponseEntity.ok(member);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     //로그인
