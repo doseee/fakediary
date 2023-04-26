@@ -19,9 +19,12 @@ class ApiService {
       body: json.encode(memberLoginRequestDto),
     );
     if (response.statusCode == 200) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('email', email);
+      await prefs.setString('nickname', response.body);
+      await prefs.setString('password', password);
       return true;
     } else {
-      print('login error');
       return false;
     }
   }
@@ -42,13 +45,8 @@ class ApiService {
       body: json.encode(memberSaveRequestDto),
     );
     if (response.statusCode == 200) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('email', email);
-      await prefs.setString('nickname', nickname);
-
       return login(email, password);
     } else {
-      print('signup error');
       return false;
     }
   }
