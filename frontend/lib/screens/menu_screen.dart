@@ -57,12 +57,12 @@ class _MenuScreenState extends State<MenuScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 30,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
+                    children: [
                       Image(
                         image: AssetImage('assets/img/icon_close.png'),
                       ),

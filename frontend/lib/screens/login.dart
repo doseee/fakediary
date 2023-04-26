@@ -1,0 +1,25 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('로그인 화면임'),
+          ),
+          body: Container(
+            child: Text('zzz'),
+          ),
+        )
+    );
+  }
+}

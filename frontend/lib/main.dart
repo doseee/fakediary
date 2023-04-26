@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/menu_screen.dart';
+import 'package:frontend/screens/splash.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -29,7 +29,7 @@ class MainScreen extends StatelessWidget {
 
 void main() {
   runApp(const MaterialApp(
-    home: MenuScreen(),
+    home: Splash(),
   ));
 }
 
