@@ -39,18 +39,17 @@ public class MemberService {
     }
 
     //로그인
-    public ResponseEntity<?> signInMember(MemberLoginRequestDto memberloginRequestDto) {
+    public Member signInMember(MemberLoginRequestDto memberloginRequestDto) {
         Optional<Member> memberOptional = memberRepository.findByEmail(memberloginRequestDto.getEmail());
         if (!memberOptional.isPresent()) {
-            return ResponseEntity.badRequest().body("Invalid email or password");
+            throw new IllegalArgumentException("Invalid email or password");
         }
-
         Member member = memberOptional.get();
         String encodePassword = PasswordEncoder.sha256(memberloginRequestDto.getPassword());
         if (!encodePassword.equals(member.getPassword())) {
-            return ResponseEntity.badRequest().body("Invalid email or password");
+            throw new IllegalArgumentException("Invalid email or password");
         }
-        return ResponseEntity.ok(member);
+        return member;
     }
 
     // 수정
@@ -76,9 +75,8 @@ public class MemberService {
     }
 
     //삭제
-    public ResponseEntity<?> removeMember(long memberId) {
+    public void removeMember(long memberId) {
         memberRepository.deleteById(memberId);
-        return ResponseEntity.ok().build();
     }
 
 
