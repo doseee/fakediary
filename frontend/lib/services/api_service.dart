@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   static const String baseUrl = "http://k8a101.p.ssafy.io:8080/";
@@ -39,8 +40,10 @@ class ApiService {
       body: json.encode(memberSaveRequestDto),
     );
     if (response.statusCode == 200) {
-      print('aaa');
-      print(response.body);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('email', email);
+      await prefs.setString('nickname', nickname);
+
       return response.body;
     } else {
       throw Exception('Failed to signup');
