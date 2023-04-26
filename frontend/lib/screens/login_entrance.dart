@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import 'login.dart';
 import 'menu_screen.dart';
 
 class LoginEntrance extends StatefulWidget {
@@ -38,22 +39,38 @@ class _LoginEntranceState extends State<LoginEntrance>
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
-            title: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MenuScreen(),
-                  ),
-                );
-              },
-              icon: Image.asset('assets/img/icon_menu.png'),
-              iconSize: 50,
-            ),
-          ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
+              actions: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MenuScreen(),
+                                ),
+                              );
+                            },
+                            icon: Image.asset('assets/img/icon_menu_page.png'),
+                            iconSize: 50,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ]),
           body: Center(
               child: Column(
             children: [
@@ -76,47 +93,40 @@ class _LoginEntranceState extends State<LoginEntrance>
                         width: 300),
                   )),
               Padding(
-                padding: EdgeInsets.only(left: 50, right: 50),
-                child: Flexible(
-                  flex: 1,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        print('s');
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xffffffff),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          )),
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-                          child: Text(
-                            'LOGIN',
-                            style: TextStyle(color: Colors.black, fontSize: 14),
-                          ))),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 50, right: 50),
-                child: Flexible(
-                  flex: 1,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        print('join');
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xff4b6858),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          )),
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(100, 10, 100, 10),
-                          child: Text(
-                            'JOIN',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ))),
-                ),
-              ),
+                  padding: EdgeInsets.only(left: 50, right: 50),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          Color(0xff79F1A4),
+                          Color(0xff0E5CAD),
+                        ]),
+                        borderRadius: BorderRadius.circular(25)),
+                    child: Flexible(
+                      flex: 1,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Login(),
+                                ));
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              elevation: 0.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              )),
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(100, 5, 100, 5),
+                              child: Text(
+                                'LOGIN',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14),
+                              ))),
+                    ),
+                  )),
               Flexible(flex: 2, child: Container()),
             ],
           ))),
