@@ -1,5 +1,6 @@
 package com.a101.fakediary.member.service;
 
+import com.a101.fakediary.member.dto.MemberLoginRequestDto;
 import com.a101.fakediary.member.dto.MemberSaveRequestDto;
 import com.a101.fakediary.member.dto.MemberUpdateRequestDto;
 import com.a101.fakediary.member.entity.Member;
@@ -42,18 +43,18 @@ public class MemberService {
     }
 
     //로그인
-    public ResponseEntity<?> signInMember(String email, String password) {
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+    public ResponseEntity<?> signInMember(MemberLoginRequestDto memberloginRequestDto) {
+        Optional<Member> memberOptional = memberRepository.findByEmail(memberloginRequestDto.getEmail());
         if (!memberOptional.isPresent()) {
             return ResponseEntity.badRequest().body("Invalid email or password");
         }
 
         Member member = memberOptional.get();
-        String encodePassword = PasswordEncoder.sha256(password);
+        String encodePassword = PasswordEncoder.sha256(memberloginRequestDto.getPassword());
         if (!encodePassword.equals(member.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid email or password");
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(member);
     }
 
     // 수정

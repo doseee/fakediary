@@ -1,11 +1,13 @@
 package com.a101.fakediary.member.controller;
 
+import com.a101.fakediary.member.dto.MemberLoginRequestDto;
 import com.a101.fakediary.member.dto.MemberSaveRequestDto;
 import com.a101.fakediary.member.dto.MemberUpdateRequestDto;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.a101.fakediary.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +33,16 @@ public class MemberController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
-
-        return memberService.signInMember(email, password);
+    public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
+        //프론트쪽에서 로그인 성공시 닉네임을 반환해달라는 요청
+        ResponseEntity<?> response = memberService.signInMember(memberLoginRequestDto);
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            Member member = (Member) response.getBody();
+            if (member.getNickname() != null) {
+                return ResponseEntity.ok(member.getNickname());
+            }
+        }
+        return response;
     }
 
     //회원 정보 수정
