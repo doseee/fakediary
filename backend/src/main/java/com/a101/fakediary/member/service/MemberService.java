@@ -4,9 +4,7 @@ import com.a101.fakediary.member.dto.MemberSaveRequestDto;
 import com.a101.fakediary.member.dto.MemberUpdateRequestDto;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
-import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -58,21 +56,27 @@ public class MemberService {
         return ResponseEntity.ok().build();
     }
 
-//    public boolean isNicknameUnique(String nickname) {
-//        return !memberRepository.existsByNickname(nickname);
-//    }
-
     // 수정
-//    @Transactional
-//    public void updateMember(Long id, MemberUpdateRequestDto requestDto) {
-//        Optional<Member> member = memberRepository.findById(id);
-//        if (member.isPresent()) {
-//            Member m = member.get();
-//            m.setNickname(requestDto.getNickname());
-//            m.setAutoDiaryTime(requestDto.getAutoDiaryTime());
-//            m.setDiaryBaseName(requestDto.getDiaryBaseName());
-//        }
-//    }
+    @Transactional
+    public void modifyMember(Long memberId, MemberUpdateRequestDto memberUpdateRequestDto) {
+
+        // 닉네임 중복 체크
+        if (memberUpdateRequestDto.getNickname() != null) {
+            Optional<Member> memberOptional = memberRepository.findByNickname(memberUpdateRequestDto.getNickname());
+            if (memberOptional.isPresent() && !memberOptional.get().getMemberId().equals(memberId)) {
+                throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+            }
+        }
+
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+        // 회원 정보 수정
+        if (memberUpdateRequestDto.getNickname() != null) {
+            member.setNickname(memberUpdateRequestDto.getNickname());
+        }
+        member.setAutoDiaryTime(memberUpdateRequestDto.getAutoDiaryTime());
+        member.setDiaryBaseName(memberUpdateRequestDto.getDiaryBaseName());
+    }
 
     //삭제
     public ResponseEntity<?> removeMember(long memberId) {
