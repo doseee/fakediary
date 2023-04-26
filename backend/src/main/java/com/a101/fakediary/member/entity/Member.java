@@ -25,22 +25,22 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "nickname", nullable = false, length = 10)
+    @Column(name = "nickname", nullable = false, length = 10, unique = true)
     private String nickname;
 
-    @Column(name = "diary_time", nullable = true)
-    private LocalTime diaryTime;
+    @Column(name = "auto_diary_time", nullable = true)
+    private LocalTime autoDiaryTime;
 
     @Column(name = "diary_base_name", nullable = true)
     private String diaryBaseName;
 
-    @Column(name = "firebase_uid", nullable = true)
+    @Column(name = "firebase_uid", nullable = true, unique = true)
     private String firebaseUid;
 
     @Column(name = "provider_id", nullable = true)

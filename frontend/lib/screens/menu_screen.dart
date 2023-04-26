@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_screen.dart';
+import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/screens/card_create.dart';
 
@@ -131,7 +132,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                 desc2: '일기를 생성할 수 있습니다.',
                                 onSelect: onSelect,
                                 selected: selectedTitle == '일기생성',
-                                screen: const HomeScreen(),
+                                screen: const LoginEntrance(),
                               ),
                               const SizedBox(
                                 width: 6,

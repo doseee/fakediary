@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/regist_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:gradient_borders/gradient_borders.dart';
 
 import 'login.dart';
 import 'menu_screen.dart';
@@ -74,18 +76,7 @@ class _LoginEntranceState extends State<LoginEntrance>
           body: Center(
               child: Column(
             children: [
-              Flexible(
-                flex: 3,
-                child: Center(
-                  child: Text(
-                    'My Lieary',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 24,
-                        color: Color(0xfff1f1f1)),
-                  ),
-                ),
-              ),
+              Flexible(flex: 1, child: Container()),
               Flexible(
                   flex: 4,
                   child: Container(
@@ -95,6 +86,8 @@ class _LoginEntranceState extends State<LoginEntrance>
               Padding(
                   padding: EdgeInsets.only(left: 50, right: 50),
                   child: Container(
+                    width: 250,
+                    height: 50,
                     decoration: BoxDecoration(
                         gradient: LinearGradient(colors: [
                           Color(0xff79F1A4),
@@ -118,16 +111,50 @@ class _LoginEntranceState extends State<LoginEntrance>
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                               )),
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(100, 5, 100, 5),
-                              child: Text(
-                                'LOGIN',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14),
-                              ))),
+                          child: Text(
+                            'LOGIN',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          )),
                     ),
                   )),
-              Flexible(flex: 2, child: Container()),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: 250,
+                height: 50,
+                decoration: BoxDecoration(
+                  border: GradientBoxBorder(
+                      gradient: LinearGradient(colors: [
+                        Color(0xff79F1A4),
+                        Color(0xff0E5CAD),
+                      ]),
+                      width: 2),
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Flexible(
+                  flex: 1,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegistScreen(),
+                            ));
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          elevation: 0.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          )),
+                      child: Text(
+                        '회원이 아니신가요? JOIN',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      )),
+                ),
+              )
             ],
           ))),
     );
