@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/camera_ex.dart';
-import 'package:lottie/lottie.dart';
 
 class CardCreate extends StatefulWidget {
   const CardCreate({super.key});
@@ -27,24 +25,44 @@ class _CardCreateState extends State<CardCreate> {
             Color(0xff203a43),
             Color(0xff2c5364),
           ])),
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CameraExample()));
-        },
-        child: Lottie.asset(
-          'assets/lottie/camera_loop.json',
-          width: 80,
-          height: 80,
-        ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(),
+        // body: Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 50),
+        //   child: Column(
+        //     children: [
+        //       SizedBox(
+        //         height: 50,
+        //       ),
+        //       ElevatedButton(
+        //         style: ButtonStyle(
+        //           // fixedSize: MaterialStateProperty.all(const Size(50, 50)),
+        //           backgroundColor:
+        //               MaterialStateProperty.all(Colors.transparent),
+        //           // shadowColor: MaterialStateProperty.all(Colors.transparent),
+        //         ),
+        //         onPressed: () {
+        //           Navigator.push(context,
+        //               MaterialPageRoute(builder: (context) => CameraExample()));
+        //         },
+        //         child: Lottie.asset(
+        //           'assets/img/icon_cam.png',
+        //           width: 80,
+        //           height: 80,
+        //         ),
 
-        // Positioned(
-        //   top: 0,
-        //   right: -40,
-        //   child: SizedBox(
-        //     width: 180,
-        //     height: 180,
-        //     child: Lottie.asset('assets/lottie/camera_loop.json'),
+        //         // Positioned(
+        //         //   top: 0,
+        //         //   right: -40,
+        //         //   child: SizedBox(
+        //         //     width: 180,
+        //         //     height: 180,
+        //         //     child: Lottie.asset('assets/lottie/camera_loop.json'),
+        //         //   ),
+        //         // ),
+        //       ),
+        //     ],
         //   ),
         // ),
       ),
