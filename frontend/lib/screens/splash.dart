@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/login_entrance.dart';
 import 'package:lottie/lottie.dart';
 import 'package:frontend/screens/home_screen.dart';
 
@@ -22,7 +23,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         () => Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => const HomeScreen()),
+                builder: (BuildContext context) => const LoginEntrance()),
             (route) => false));
   }
 
@@ -63,8 +64,9 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                 _controller.addStatusListener((status) {
                   if (status == AnimationStatus.dismissed) {
                     _controller.forward();
-                  } else if (status == AnimationStatus.completed)
+                  } else if (status == AnimationStatus.completed) {
                     _controller.reverse();
+                  }
                 });
 
                 _controller
