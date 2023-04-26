@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/services/api_service.dart';
 
 class RegistScreen extends StatefulWidget {
   const RegistScreen({super.key});
@@ -157,14 +158,28 @@ class _RegistScreentState extends State<RegistScreen> {
                 SizedBox(
                   height: 75,
                 ),
-                Container(
-                  width: 275,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      print(_emailController.text);
+                      print(_nicknameController.text);
+                      print(_passwordController.text);
+                      ApiService.signup(
+                        _emailController.text,
+                        _nicknameController.text,
+                        _passwordController.text,
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: 275,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.white,
+                    ),
+                    child: Center(child: Text('회원가입')),
                   ),
-                  child: Center(child: Text('회원가입')),
                 )
               ],
             ),
