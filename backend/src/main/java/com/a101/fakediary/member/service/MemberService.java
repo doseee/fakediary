@@ -4,12 +4,15 @@ import com.a101.fakediary.member.dto.MemberSaveRequestDto;
 import com.a101.fakediary.member.dto.MemberUpdateRequestDto;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
+import javassist.bytecode.DuplicateMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,6 +23,18 @@ public class MemberService {
 
     //회원가입
     public ResponseEntity<?> signUpMember(MemberSaveRequestDto memberSaveRequestDto) {
+        Map<String, String> response = new HashMap<>();
+        // 닉네임 중복 체크
+        if (memberRepository.existsByNickname(memberSaveRequestDto.getNickname())) {
+            response.put("error", "이미 존재하는 닉네임입니다.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        // 이메일 중복 체크
+        if (memberRepository.existsByEmail(memberSaveRequestDto.getEmail())) {
+            response.put("error", "이미 존재하는 이메일입니다.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         Member member = memberSaveRequestDto.toEntity();
         String encodePassword = PasswordEncoder.sha256(member.getPassword()); // 시큐리티삭제해서 일단 Bcrypt대신 sha암호화
         member.setPassword(encodePassword);
