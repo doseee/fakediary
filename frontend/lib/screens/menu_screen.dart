@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_screen.dart';
+import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
+import 'package:frontend/screens/card_create.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -57,12 +59,12 @@ class _MenuScreenState extends State<MenuScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 30,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
+                    children: [
                       Image(
                         image: AssetImage('assets/img/icon_close.png'),
                       ),
@@ -119,7 +121,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                 desc2: '카드를 생성할 수 있습니다.',
                                 onSelect: onSelect,
                                 selected: selectedTitle == '카드생성',
-                                screen: const HomeScreen(),
+                                screen: const CardCreate(),
                               ),
                               const SizedBox(
                                 width: 9,
@@ -130,7 +132,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                 desc2: '일기를 생성할 수 있습니다.',
                                 onSelect: onSelect,
                                 selected: selectedTitle == '일기생성',
-                                screen: const HomeScreen(),
+                                screen: const LoginEntrance(),
                               ),
                               const SizedBox(
                                 width: 6,
