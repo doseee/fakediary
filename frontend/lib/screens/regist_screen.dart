@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/main.dart';
 import 'package:frontend/services/api_service.dart';
 
 class RegistScreen extends StatefulWidget {
@@ -163,16 +164,23 @@ class _RegistScreenState extends State<RegistScreen> {
                     height: 75,
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (_formKey.currentState!.validate()) {
                         print(_emailController.text);
                         print(_nicknameController.text);
                         print(_passwordController.text);
-                        ApiService.signup(
+                        final bool result = await ApiService.signup(
                           _emailController.text,
                           _nicknameController.text,
                           _passwordController.text,
                         );
+                        if (!mounted) return;
+                        if (result) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainScreen()));
+                        }
                       }
                     },
                     child: Container(
