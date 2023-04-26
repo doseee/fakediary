@@ -21,40 +21,35 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     //회원가입
-    public ResponseEntity<?> signUpMember(MemberSaveRequestDto memberSaveRequestDto) {
-        Map<String, String> response = new HashMap<>();
+    public Member signUpMember(MemberSaveRequestDto memberSaveRequestDto) {
         // 닉네임 중복 체크
         if (memberRepository.existsByNickname(memberSaveRequestDto.getNickname())) {
-            response.put("error", "이미 존재하는 닉네임입니다.");
-            return ResponseEntity.badRequest().body(response);
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
         // 이메일 중복 체크
         if (memberRepository.existsByEmail(memberSaveRequestDto.getEmail())) {
-            response.put("error", "이미 존재하는 이메일입니다.");
-            return ResponseEntity.badRequest().body(response);
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
         Member member = memberSaveRequestDto.toEntity();
         String encodePassword = PasswordEncoder.sha256(member.getPassword()); // 시큐리티삭제해서 일단 Bcrypt대신 sha암호화
         member.setPassword(encodePassword);
 
-        memberRepository.save(member);
-        return ResponseEntity.ok().build();
+        return memberRepository.save(member);
     }
 
     //로그인
-    public ResponseEntity<?> signInMember(MemberLoginRequestDto memberloginRequestDto) {
+    public Member signInMember(MemberLoginRequestDto memberloginRequestDto) {
         Optional<Member> memberOptional = memberRepository.findByEmail(memberloginRequestDto.getEmail());
         if (!memberOptional.isPresent()) {
-            return ResponseEntity.badRequest().body("Invalid email or password");
+            throw new IllegalArgumentException("Invalid email or password");
         }
-
         Member member = memberOptional.get();
         String encodePassword = PasswordEncoder.sha256(memberloginRequestDto.getPassword());
         if (!encodePassword.equals(member.getPassword())) {
-            return ResponseEntity.badRequest().body("Invalid email or password");
+            throw new IllegalArgumentException("Invalid email or password");
         }
-        return ResponseEntity.ok(member);
+        return member;
     }
 
     // 수정
@@ -80,9 +75,8 @@ public class MemberService {
     }
 
     //삭제
-    public ResponseEntity<?> removeMember(long memberId) {
+    public void removeMember(long memberId) {
         memberRepository.deleteById(memberId);
-        return ResponseEntity.ok().build();
     }
 
 

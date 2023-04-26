@@ -24,25 +24,26 @@ public class MemberController {
     //회원가입
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody MemberSaveRequestDto memberSaveRequestDto) {
-
-//        if (memberSaveRequestDto == null) {
-//            return ResponseEntity.badRequest().body("MemberSaveRequestDto is null");
-//        }
-        return memberService.signUpMember(memberSaveRequestDto);
+        try {
+            Member member = memberService.signUpMember(memberSaveRequestDto);
+            return ResponseEntity.ok(member);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     //로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
-        //프론트쪽에서 로그인 성공시 닉네임을 반환해달라는 요청
-        ResponseEntity<?> response = memberService.signInMember(memberLoginRequestDto);
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            Member member = (Member) response.getBody();
+        try {
+            Member member = memberService.signInMember(memberLoginRequestDto);
             if (member.getNickname() != null) {
                 return ResponseEntity.ok(member.getNickname());
             }
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return response;
     }
 
     //회원 정보 수정
