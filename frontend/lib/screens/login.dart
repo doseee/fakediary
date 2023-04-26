@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/home_screen.dart';
 import 'package:lottie/lottie.dart';
 
 import '../main.dart';
@@ -91,7 +92,7 @@ class _LoginState extends State<Login> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        MainScreen()));
+                        HomeScreen()));
           }
         }
       },
