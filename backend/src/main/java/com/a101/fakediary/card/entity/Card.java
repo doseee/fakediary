@@ -53,4 +53,7 @@ public class Card extends BaseEntity {
 
     @Column(name = "card_image_url", nullable = false)
     private String cardImageUrl;
+
+    @Column(name = "card_style_id", nullable = false)
+    private String cardStyleId;
 }

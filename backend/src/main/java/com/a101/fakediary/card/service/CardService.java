@@ -5,6 +5,7 @@ import com.a101.fakediary.card.dto.response.CardResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.deeparteffects.api.DeepArtEffectsApi;
+import com.a101.fakediary.deeparteffects.styles.DeepArtEffectsStyles;
 import com.a101.fakediary.imagefile.handler.ImageFileHandler;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
@@ -31,7 +32,7 @@ public class CardService {
     private final DeepArtEffectsApi deepArtEffectsApi;
 
     @Transactional
-    public Long saveCard(MultipartFile origImageFile, String cardImageFileUrl, String saveCardDtoString) throws Exception {
+    public Long saveCard(MultipartFile origImageFile, String cardImageFileUrl, String styleId, String saveCardDtoString) throws Exception {
         Long ret = -1L;
         JSONParser jsonParser = new JSONParser(saveCardDtoString);
         Object obj = jsonParser.parse();
@@ -48,7 +49,6 @@ public class CardService {
         Member member = memberRepository.findById(saveCardDto.getMemberId()).orElseThrow(() -> new Exception("member not found"));
         String origImageUrl = s3ImageFileHandler.uploadOnS3(origImageFile);
         String cardImageUrl = s3ImageFileHandler.uploadOnS3(cardImageFile);
-//        String cardImageUrl = "123456";
 
         Card card = Card.builder()
                 .member(member)
@@ -60,6 +60,7 @@ public class CardService {
                 .originCardImageName(origImageFile.getOriginalFilename())
                 .origImageUrl(origImageUrl)
                 .cardImageUrl(cardImageUrl)
+                .cardStyleId(styleId)
                 .build();
 
         ret = cardRepository.save(card).getCardId();
@@ -68,13 +69,21 @@ public class CardService {
     }
 
     @Transactional
-    public String getCardImageFileUrl(String styleId, MultipartFile origImageFile) throws Exception {
+    public Map<String, String> getCardImageFileUrl(MultipartFile origImageFile) throws Exception {
+        Map<String, String> ret = new HashMap<>();
+
+        int randomStyleIdx = DeepArtEffectsStyles.getRandomStyleIdx();
+        String styleId = DeepArtEffectsStyles.getStyleId(randomStyleIdx);   //  적용된 styleId
         String submissionId = deepArtEffectsApi.uploadImageWithStyleId(origImageFile, styleId);
 
         log.info("submissionId = " + submissionId);
 
-        return deepArtEffectsApi.getCardImageUrl(submissionId);
-//        return null;
+        String cardImageFileUrl = deepArtEffectsApi.getCardImageUrl(submissionId);  //  카드 이미지 URL
+
+        ret.put("styleId", styleId);
+        ret.put("cardImageFileUrl", cardImageFileUrl);
+
+        return ret;
     }
 
     @Transactional(readOnly = true)
