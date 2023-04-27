@@ -41,6 +41,7 @@ dependencies:
   http: ^0.13.5
   gradient_borders: ^1.0.0
   shared_preferences: ^2.1.0
+  flutter_spinkit: ^5.1.0
 
 dev_dependencies:
   flutter_test:
