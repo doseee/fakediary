@@ -41,9 +41,10 @@ class _LoginEntranceState extends State<LoginEntrance>
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              toolbarHeight: MediaQuery.of(context).size.height * 0.1183,),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
+          ),
           body: Center(
               child: Column(
             children: [
@@ -65,67 +66,75 @@ class _LoginEntranceState extends State<LoginEntrance>
                           Color(0xff0E5CAD),
                         ]),
                         borderRadius: BorderRadius.circular(25)),
-                    child: Flexible(
-                      flex: 1,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Login(),
-                                ));
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              elevation: 0.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
+                    child: Column(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Login(),
+                                    ));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  elevation: 0.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  )),
+                              child: Text(
+                                'LOGIN',
+                                style: TextStyle(color: Colors.white, fontSize: 14),
                               )),
-                          child: Text(
-                            'LOGIN',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          )),
-                    ),
+                        ),
+                      ],
+                    )
                   )),
               SizedBox(
                 height: 20,
               ),
               Container(
-                width: 250,
-                height: 50,
-                decoration: BoxDecoration(
-                  border: GradientBoxBorder(
-                      gradient: LinearGradient(colors: [
-                        Color(0xff79F1A4),
-                        Color(0xff0E5CAD),
-                      ]),
-                      width: 2),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Flexible(
-                  flex: 1,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegistScreen(),
-                            ));
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          elevation: 0.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          )),
-                      child: Text(
-                        '회원이 아니신가요? JOIN',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      )),
-                ),
-              )
+                  width: 250,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    border: GradientBoxBorder(
+                        gradient: LinearGradient(colors: [
+                          Color(0xff79F1A4),
+                          Color(0xff0E5CAD),
+                        ]),
+                        width: 2),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Column(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const RegistScreen(),
+                                  ));
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                elevation: 0.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                )),
+                            child: Text(
+                              '회원이 아니신가요? JOIN',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            )),
+                      ),
+                    ],
+                  ))
             ],
           ))),
     );
