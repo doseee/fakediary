@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class DeepArtEffectsResponse {
-    private String submissionId;
+public class DeepArtEffectsImageUrlResponse {
+    private String status;
+    private String url;
 }

@@ -31,13 +31,14 @@ public class CardService {
     private final DeepArtEffectsApi deepArtEffectsApi;
 
     @Transactional
-    public Long saveCard(MultipartFile origImageFile, MultipartFile cardImageFile, String saveCardDtoString) throws Exception {
+    public Long saveCard(MultipartFile origImageFile, String cardImageFileUrl, String saveCardDtoString) throws Exception {
         Long ret = -1L;
         JSONParser jsonParser = new JSONParser(saveCardDtoString);
         Object obj = jsonParser.parse();
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = mapper.convertValue(obj, Map.class);
         CardSaveRequestDto saveCardDto = createCardSaveRequestDto(map);
+        MultipartFile cardImageFile = ImageFileHandler.downloadImage(cardImageFileUrl);
 
         List<Member> memberList = memberRepository.findAll();
         log.info("memberList = " + memberList);
@@ -66,7 +67,12 @@ public class CardService {
 
     @Transactional
     public String getCardImageFileUrl(String styleId, MultipartFile origImageFile) throws Exception {
-        return deepArtEffectsApi.uploadImageWithStyleId(origImageFile, styleId);
+        String submissionId = deepArtEffectsApi.uploadImageWithStyleId(origImageFile, styleId);
+
+        log.info("submissionId = " + submissionId);
+
+        return deepArtEffectsApi.getCardImageUrl(submissionId);
+//        return null;
     }
 
     @Transactional(readOnly = true)

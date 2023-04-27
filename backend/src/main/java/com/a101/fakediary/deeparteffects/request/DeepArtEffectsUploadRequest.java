@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class DeepArtEffectsRequest {
+public class DeepArtEffectsUploadRequest {
     private String styleId;
     private String imageBase64Encoded;
 }

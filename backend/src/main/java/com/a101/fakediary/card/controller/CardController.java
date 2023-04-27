@@ -36,9 +36,8 @@ public class CardController {
                                                 //  DeepArtsEffect 호출해야 함.
 
             log.info("cardIamgeFileUrl = " + cardImageFileUrl);
-            MultipartFile cardImageFile = null;
 
-            Long cardId = cardService.saveCard(origImageFile, cardImageFile, cardSaveRequestDtoString);
+            Long cardId = cardService.saveCard(origImageFile, cardImageFileUrl, cardSaveRequestDtoString);
             ret = new ResponseEntity<>("만들어진 카드 id = " + cardId, HttpStatus.OK);
         } catch(ParseException e) {
             e.printStackTrace();
