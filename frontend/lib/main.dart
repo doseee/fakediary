@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/card_create.dart';
+import 'package:frontend/screens/login_entrance.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -8,6 +8,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Main Screen'),
       ),
       body: Center(
@@ -29,7 +30,7 @@ class MainScreen extends StatelessWidget {
 
 void main() {
   runApp(const MaterialApp(
-    home: CardCreate(),
+    home: LoginEntrance(),
   ));
 }
 
