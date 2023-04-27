@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/card_create.dart';
+import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
-import 'package:frontend/screens/card_create.dart';
-import 'package:frontend/screens/card_list.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -82,24 +82,27 @@ class _MenuScreenState extends State<MenuScreen> {
               flex: 427,
               child: Container(
                 clipBehavior: Clip.hardEdge,
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
-                ),
-                child: Center(
-                  child: Transform.scale(
-                    scale: 1.15,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/img/menu_white.png'),
-                        ),
-                      ),
-                      child: Center(
+                decoration: const BoxDecoration(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/img/bg_menu.png'),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            2 *
+                                MediaQuery.of(context).size.height /
+                                867.4285714285714,
+                            0,
+                            0,
+                            0),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SizedBox(
-                              height: 40,
-                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -111,6 +114,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                   selected: selectedTitle == '카드목록',
                                   screen: const CardList(),
                                 ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
+                                ),
                                 MenuButton(
                                   title: '카드생성',
                                   desc1: '사진과 키워드를 입력하고',
@@ -118,6 +126,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                   onSelect: onSelect,
                                   selected: selectedTitle == '카드생성',
                                   screen: const CardCreate(),
+                                ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
                                 ),
                                 MenuButton(
                                   title: '일기생성',
@@ -128,6 +141,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                   screen: const LoginEntrance(),
                                 ),
                               ],
+                            ),
+                            SizedBox(
+                              height: 5 *
+                                  MediaQuery.of(context).size.height /
+                                  867.4285714285714,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -140,6 +158,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                   selected: selectedTitle == '친구목록',
                                   screen: const HomeScreen(),
                                 ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
+                                ),
                                 MenuButton(
                                   title: '메인',
                                   desc1: '메인 페이지로',
@@ -147,6 +170,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                   onSelect: onSelect,
                                   selected: selectedTitle == '메인',
                                   screen: const HomeScreen(),
+                                ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
                                 ),
                                 MenuButton(
                                   title: '일기목록',
@@ -157,6 +185,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                   screen: const HomeScreen(),
                                 ),
                               ],
+                            ),
+                            SizedBox(
+                              height: 5 *
+                                  MediaQuery.of(context).size.height /
+                                  867.4285714285714,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -169,6 +202,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                   selected: selectedTitle == '알림',
                                   screen: const HomeScreen(),
                                 ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
+                                ),
                                 MenuButton(
                                   title: '정보수정',
                                   desc1: '개인 정보를 수정하고',
@@ -176,6 +214,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                   onSelect: onSelect,
                                   selected: selectedTitle == '정보수정',
                                   screen: const HomeScreen(),
+                                ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
                                 ),
                                 MenuButton(
                                   title: '튜토리얼',
@@ -190,7 +233,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           ],
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
@@ -334,8 +377,10 @@ class _MenuButtonState extends State<MenuButton> {
             widget.title, widget.desc1, widget.desc2, widget.screen);
       },
       child: Container(
-        width: 95,
-        height: 95,
+        width:
+            100 * 1.05 * MediaQuery.of(context).size.height / 867.4285714285714,
+        height:
+            100 * 1.05 * MediaQuery.of(context).size.height / 867.4285714285714,
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(widget.selected ? 0.25 : 0),
           borderRadius: const BorderRadius.all(
