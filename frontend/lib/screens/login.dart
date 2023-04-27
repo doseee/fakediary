@@ -164,7 +164,7 @@ class _LoginState extends State<Login> {
                             ),
                             _passwordWidget(),
                             SizedBox(
-                              height: 20,
+                              height: 40,
                             ),
                             _buttonLogin(),
                             SizedBox(
