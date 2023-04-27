@@ -39,7 +39,7 @@ class _CardListState extends State<CardList> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Image(image: AssetImage('assets/img/'))
+                    Image(image: AssetImage('assets/img/icon_menu.png'))
                   ],
                 ),)
               ],
