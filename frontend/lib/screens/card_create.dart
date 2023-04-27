@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/menu_screen.dart';
 import 'package:gradient_borders/gradient_borders.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CardCreate extends StatefulWidget {
   const CardCreate({super.key});
@@ -82,6 +83,12 @@ class _CardCreateState extends State<CardCreate> {
     setState(() {
       keyword3Modified = !keyword3Modified;
     });
+  }
+
+  useDefaultPerson() async {
+    final prefs = await SharedPreferences.getInstance();
+    _personController.text = prefs.getString('nickname') ?? '';
+    setState(() {});
   }
 
   @override
@@ -177,10 +184,12 @@ class _CardCreateState extends State<CardCreate> {
                     ),
                   ),
                   CheckRow(
-                      text: '주인공',
-                      buttonText: '기본 주인공으로 설정',
-                      isSelected: personSelected,
-                      converter: setPerson),
+                    text: '주인공',
+                    buttonText: '기본 주인공으로 설정',
+                    isSelected: personSelected,
+                    converter: setPerson,
+                    makeDefault: useDefaultPerson,
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -221,6 +230,7 @@ class _CardCreateState extends State<CardCreate> {
                     buttonText: '현재 위치로 설정',
                     isSelected: locationSelected,
                     converter: setLocation,
+                    makeDefault: useDefaultPerson,
                   ),
                   SizedBox(
                     height: 10,
@@ -540,6 +550,7 @@ class CheckRow extends StatelessWidget {
   final String buttonText;
   final bool isSelected;
   final Function converter;
+  final Function makeDefault;
 
   const CheckRow({
     super.key,
@@ -547,6 +558,7 @@ class CheckRow extends StatelessWidget {
     required this.buttonText,
     required this.isSelected,
     required this.converter,
+    required this.makeDefault,
   });
 
   @override
@@ -602,35 +614,40 @@ class CheckRow extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          width: 146,
-          height: 23,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff263344),
-                Color(0xff1B2532).withOpacity(0.538),
-                Color(0xff1C2A3D).withOpacity(0.502),
-                Color(0xff1E2E42).withOpacity(0.46),
-                Color(0xff364B66).withOpacity(0.33),
-                Color(0xff2471D6).withOpacity(0),
+        GestureDetector(
+          onTap: () {
+            makeDefault();
+          },
+          child: Container(
+            width: 146,
+            height: 23,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xff263344),
+                  Color(0xff1B2532).withOpacity(0.538),
+                  Color(0xff1C2A3D).withOpacity(0.502),
+                  Color(0xff1E2E42).withOpacity(0.46),
+                  Color(0xff364B66).withOpacity(0.33),
+                  Color(0xff2471D6).withOpacity(0),
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xff000000).withOpacity(0.25),
+                  offset: const Offset(0, 4),
+                  blurRadius: 4,
+                ),
               ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xff000000).withOpacity(0.25),
-                offset: const Offset(0, 4),
-                blurRadius: 4,
-              ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              buttonText,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10,
+            child: Center(
+              child: Text(
+                buttonText,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                ),
               ),
             ),
           ),
