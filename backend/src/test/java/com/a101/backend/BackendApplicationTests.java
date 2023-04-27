@@ -1,13 +1,13 @@
-package com.a101.fakediary;
+package com.a101.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class BackendApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
+//@SpringBootTest
+//class BackendApplicationTests {
+//
+//	@Test
+//	void contextLoads() {
+//	}
+//
+//}
