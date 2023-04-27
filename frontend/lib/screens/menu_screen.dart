@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/card_create.dart';
+import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
-import 'package:frontend/screens/card_create.dart';
-import 'package:frontend/screens/card_list.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -55,26 +55,26 @@ class _MenuScreenState extends State<MenuScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
-          actions: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 30,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Image(
-                        image: AssetImage('assets/img/icon_close.png'),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
+          // actions: [
+          //   Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Padding(
+          //         padding: EdgeInsets.symmetric(
+          //           horizontal: 30,
+          //         ),
+          //         child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.end,
+          //           children: [
+          //             Image(
+          //               image: AssetImage('assets/img/icon_close.png'),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ],
         ),
         body: Column(
           children: [
@@ -82,155 +82,158 @@ class _MenuScreenState extends State<MenuScreen> {
               flex: 427,
               child: Container(
                 clipBehavior: Clip.hardEdge,
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
-                ),
-                child: Transform.scale(
-                  scale: 1.15,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/img/menu_white.png'),
-                      ),
+                decoration: const BoxDecoration(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/img/bg_menu.png'),
                     ),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              MenuButton(
-                                title: '카드목록',
-                                desc1: '생성한 카드를 확인하고',
-                                desc2: '연관된 일기를 볼 수 있습니다.',
-                                onSelect: onSelect,
-                                selected: selectedTitle == '카드목록',
-                                screen: const CardList(),
-                              ),
-                              const SizedBox(
-                                width: 9,
-                              ),
-                              MenuButton(
-                                title: '카드생성',
-                                desc1: '사진과 키워드를 입력하고',
-                                desc2: '카드를 생성할 수 있습니다.',
-                                onSelect: onSelect,
-                                selected: selectedTitle == '카드생성',
-                                screen: const CardCreate(),
-                              ),
-                              const SizedBox(
-                                width: 9,
-                              ),
-                              MenuButton(
-                                title: '일기생성',
-                                desc1: '카드와 분위기를 선택하고',
-                                desc2: '일기를 생성할 수 있습니다.',
-                                onSelect: onSelect,
-                                selected: selectedTitle == '일기생성',
-                                screen: const LoginEntrance(),
-                              ),
-                              const SizedBox(
-                                width: 6,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 9,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              MenuButton(
-                                title: '친구목록',
-                                desc1: '목록에서 친구를 선택하고',
-                                desc2: '일기를 교환할 수 있습니다.',
-                                onSelect: onSelect,
-                                selected: selectedTitle == '친구목록',
-                                screen: const HomeScreen(),
-                              ),
-                              const SizedBox(
-                                width: 9,
-                              ),
-                              MenuButton(
-                                title: '메인',
-                                desc1: '메인 페이지로',
-                                desc2: '이동합니다.',
-                                onSelect: onSelect,
-                                selected: selectedTitle == '메인',
-                                screen: const HomeScreen(),
-                              ),
-                              const SizedBox(
-                                width: 9,
-                              ),
-                              MenuButton(
-                                title: '일기목록',
-                                desc1: '일기 목록에서 지금까지',
-                                desc2: '내가 작성한 일기를 볼 수 있습니다.',
-                                onSelect: onSelect,
-                                selected: selectedTitle == '일기목록',
-                                screen: const HomeScreen(),
-                              ),
-                              const SizedBox(
-                                width: 6,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              MenuButton(
-                                title: '알림',
-                                desc1: '도착한 알림 목록을 확인하고',
-                                desc2: '필요한 페이지로 이동할 수 있습니다.',
-                                onSelect: onSelect,
-                                selected: selectedTitle == '알림',
-                                screen: const HomeScreen(),
-                              ),
-                              const SizedBox(
-                                width: 9,
-                              ),
-                              MenuButton(
-                                title: '정보수정',
-                                desc1: '개인 정보를 수정하고',
-                                desc2: '기본 키워드를 지정할 수 있습니다.',
-                                onSelect: onSelect,
-                                selected: selectedTitle == '정보수정',
-                                screen: const HomeScreen(),
-                              ),
-                              const SizedBox(
-                                width: 9,
-                              ),
-                              MenuButton(
-                                title: '튜토리얼',
-                                desc1: '앱의 이용방법을',
-                                desc2: '확인합니다.',
-                                onSelect: onSelect,
-                                selected: selectedTitle == '튜토리얼',
-                                screen: const TutorialScreen(),
-                              ),
-                              const SizedBox(
-                                width: 6,
-                              ),
-                            ],
-                          ),
-                        ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            2 *
+                                MediaQuery.of(context).size.height /
+                                867.4285714285714,
+                            0,
+                            0,
+                            0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MenuButton(
+                                  title: '카드목록',
+                                  desc1: '생성한 카드를 확인하고',
+                                  desc2: '연관된 일기를 볼 수 있습니다.',
+                                  onSelect: onSelect,
+                                  selected: selectedTitle == '카드목록',
+                                  screen: const CardList(),
+                                ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
+                                ),
+                                MenuButton(
+                                  title: '카드생성',
+                                  desc1: '사진과 키워드를 입력하고',
+                                  desc2: '카드를 생성할 수 있습니다.',
+                                  onSelect: onSelect,
+                                  selected: selectedTitle == '카드생성',
+                                  screen: const CardCreate(),
+                                ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
+                                ),
+                                MenuButton(
+                                  title: '일기생성',
+                                  desc1: '카드와 분위기를 선택하고',
+                                  desc2: '일기를 생성할 수 있습니다.',
+                                  onSelect: onSelect,
+                                  selected: selectedTitle == '일기생성',
+                                  screen: const LoginEntrance(),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5 *
+                                  MediaQuery.of(context).size.height /
+                                  867.4285714285714,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MenuButton(
+                                  title: '친구목록',
+                                  desc1: '목록에서 친구를 선택하고',
+                                  desc2: '일기를 교환할 수 있습니다.',
+                                  onSelect: onSelect,
+                                  selected: selectedTitle == '친구목록',
+                                  screen: const HomeScreen(),
+                                ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
+                                ),
+                                MenuButton(
+                                  title: '메인',
+                                  desc1: '메인 페이지로',
+                                  desc2: '이동합니다.',
+                                  onSelect: onSelect,
+                                  selected: selectedTitle == '메인',
+                                  screen: const HomeScreen(),
+                                ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
+                                ),
+                                MenuButton(
+                                  title: '일기목록',
+                                  desc1: '일기 목록에서 지금까지',
+                                  desc2: '내가 작성한 일기를 볼 수 있습니다.',
+                                  onSelect: onSelect,
+                                  selected: selectedTitle == '일기목록',
+                                  screen: const HomeScreen(),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5 *
+                                  MediaQuery.of(context).size.height /
+                                  867.4285714285714,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MenuButton(
+                                  title: '알림',
+                                  desc1: '도착한 알림 목록을 확인하고',
+                                  desc2: '필요한 페이지로 이동할 수 있습니다.',
+                                  onSelect: onSelect,
+                                  selected: selectedTitle == '알림',
+                                  screen: const HomeScreen(),
+                                ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
+                                ),
+                                MenuButton(
+                                  title: '정보수정',
+                                  desc1: '개인 정보를 수정하고',
+                                  desc2: '기본 키워드를 지정할 수 있습니다.',
+                                  onSelect: onSelect,
+                                  selected: selectedTitle == '정보수정',
+                                  screen: const HomeScreen(),
+                                ),
+                                SizedBox(
+                                  width: 4.5 *
+                                      MediaQuery.of(context).size.height /
+                                      867.4285714285714,
+                                ),
+                                MenuButton(
+                                  title: '튜토리얼',
+                                  desc1: '앱의 이용방법을',
+                                  desc2: '확인합니다.',
+                                  onSelect: onSelect,
+                                  selected: selectedTitle == '튜토리얼',
+                                  screen: const TutorialScreen(),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
@@ -374,8 +377,10 @@ class _MenuButtonState extends State<MenuButton> {
             widget.title, widget.desc1, widget.desc2, widget.screen);
       },
       child: Container(
-        width: 95,
-        height: 95,
+        width:
+            100 * 1.05 * MediaQuery.of(context).size.height / 867.4285714285714,
+        height:
+            100 * 1.05 * MediaQuery.of(context).size.height / 867.4285714285714,
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(widget.selected ? 0.25 : 0),
           borderRadius: const BorderRadius.all(
