@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/main.dart';
+import 'package:frontend/screens/home_screen.dart';
 
 class TutorialScreen extends StatefulWidget {
   const TutorialScreen({super.key});
@@ -211,7 +211,7 @@ class _CarouselItemState extends State<CarouselItem> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const MainScreen()),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
                   );
                 },
                 child: Container(
