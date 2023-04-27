@@ -32,7 +32,7 @@ class MainScreen extends StatelessWidget {
 
 void main() {
   runApp(const MaterialApp(
-    home: CardResult(),
+    home: LoginEntrance(),
   ));
 }
 
