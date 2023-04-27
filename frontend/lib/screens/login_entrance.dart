@@ -43,36 +43,7 @@ class _LoginEntranceState extends State<LoginEntrance>
           appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
-              toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
-              actions: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 30,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const MenuScreen(),
-                                ),
-                              );
-                            },
-                            icon: Image.asset('assets/img/icon_menu_page.png'),
-                            iconSize: 50,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ]),
+              toolbarHeight: MediaQuery.of(context).size.height * 0.1183,),
           body: Center(
               child: Column(
             children: [
