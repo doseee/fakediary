@@ -1,6 +1,7 @@
 package com.a101.fakediary.friendship.service;
 
 import com.a101.fakediary.friendship.dto.FriendshipDto;
+import com.a101.fakediary.friendship.dto.FriendshipResponseDto;
 import com.a101.fakediary.friendship.entity.Friendship;
 import com.a101.fakediary.friendship.repository.FriendshipRepository;
 import com.a101.fakediary.member.entity.Member;
@@ -20,22 +21,20 @@ public class FriendshipService {
     private final MemberRepository memberRepository;
 
     public void saveFriend(FriendshipDto dto) {
-        friendshipRepository.save(dto.toEntity()); // A,B 저장
-        dto.setFriendId(dto.getMemberId());
-        dto.setMemberId(dto.getFriendId());
-        friendshipRepository.save(dto.toEntity()); // B,A 저장
+        friendshipRepository.save(dto.toEntity());
     }
 
     public void deleteFriend(FriendshipDto dto) {
-        friendshipRepository.deleteById(dto.getFriendId());
-        friendshipRepository.deleteById(dto.getMemberId());
+        Long memberId = dto.getMemberId();
+        Long friendId = dto.getFriendId();
+        friendshipRepository.deleteFriend(memberId, friendId);
     }
 
     public List<Member> searchFriend(String nickname) {
         return memberRepository.findByNicknameContaining(nickname);
     }
 
-    public List<Friendship> listFriend(Long memberId) {
-        return friendshipRepository.findByMemberId(memberId);
+    public List<FriendshipResponseDto> listFriend(Long memberId) {
+        return friendshipRepository.listFriend(memberId);
     }
 }
