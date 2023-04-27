@@ -78,8 +78,11 @@ public class ImageFileHandler {
         String originalFileName = multipartFile.getOriginalFilename();
         String url = null;
 
+        log.info("originalFileName = " + originalFileName);
+
         try {
-            final String extension = originalFileName.substring(originalFileName.lastIndexOf(".")).toLowerCase();
+            int idx = originalFileName.lastIndexOf(".");
+            final String extension = idx != -1 ? originalFileName.substring(idx).toLowerCase() : ".jpg";
             //  파일 이름 암호화
             final String saveFileName = getUuid() + extension;
 

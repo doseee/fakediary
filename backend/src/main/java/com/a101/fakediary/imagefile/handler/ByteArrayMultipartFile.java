@@ -1,5 +1,6 @@
 package com.a101.fakediary.imagefile.handler;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -53,6 +54,15 @@ public class ByteArrayMultipartFile implements MultipartFile {
 
     @Override
     public void transferTo(File dest) throws IOException, IllegalStateException {
-        throw new UnsupportedOperationException();
+        if (dest.exists()) {
+            if (!dest.delete()) {
+                throw new IllegalStateException(String.format("Failed to delete file '%s'", dest.getAbsolutePath()));
+            }
+        }
+        if (!dest.createNewFile()) {
+            throw new IllegalStateException(String.format("Failed to create file '%s'", dest.getAbsolutePath()));
+        }
+        FileUtils.writeByteArrayToFile(dest, content);
     }
+
 }

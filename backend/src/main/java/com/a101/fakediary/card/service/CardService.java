@@ -40,6 +40,8 @@ public class CardService {
         CardSaveRequestDto saveCardDto = createCardSaveRequestDto(map);
         MultipartFile cardImageFile = ImageFileHandler.downloadImage(cardImageFileUrl);
 
+        log.info("cardImageFile = " + cardImageFile);
+
         List<Member> memberList = memberRepository.findAll();
         log.info("memberList = " + memberList);
 
