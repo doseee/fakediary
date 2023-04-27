@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/crad_result.dart';
 import 'package:frontend/screens/login.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/regist_screen.dart';
@@ -31,7 +32,7 @@ class MainScreen extends StatelessWidget {
 
 void main() {
   runApp(const MaterialApp(
-    home: LoginEntrance(),
+    home: CardResult(),
   ));
 }
 
