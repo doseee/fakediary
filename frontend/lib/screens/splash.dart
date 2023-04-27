@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:lottie/lottie.dart';
-import 'package:frontend/screens/home_screen.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
