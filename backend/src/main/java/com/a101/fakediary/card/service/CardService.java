@@ -12,19 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.JSONParser;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -74,11 +65,9 @@ public class CardService {
     }
 
     @Transactional
-    public MultipartFile getCardImageFile(MultipartFile origImageFile) throws Exception {
-//        return deepArtEffectsApi.getCardImageFile(origImageFile);
-        return deepArtEffectsApi.uploadImage(origImageFile);
+    public String getCardImageFileUrl(String styleId, MultipartFile origImageFile) throws Exception {
+        return deepArtEffectsApi.uploadImageWithStyleId(origImageFile, styleId);
     }
-
 
     @Transactional(readOnly = true)
     public Mono<String> getDeepArtEffectsStyles() {

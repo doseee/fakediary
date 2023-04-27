@@ -3,12 +3,14 @@ package com.a101.fakediary.card.controller;
 import com.a101.fakediary.card.dto.response.CardResponseDto;
 import com.a101.fakediary.card.service.CardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequestMapping("/card")
 @RequiredArgsConstructor
@@ -30,9 +32,11 @@ public class CardController {
         ResponseEntity<?> ret = null;
 
         try {
-            MultipartFile cardImageFile = cardService.getCardImageFile(origImageFile);; //  origImageFile을 이용해서 cardImageFile을 얻어야 함.
+            String cardImageFileUrl = cardService.getCardImageFileUrl("c7984b32-1560-11e7-afe2-06d95fe194ed", origImageFile);; //  origImageFile을 이용해서 cardImageFile을 얻어야 함.
                                                 //  DeepArtsEffect 호출해야 함.
-//            MultipartFile cardImageFile = null;
+
+            log.info("cardIamgeFileUrl = " + cardImageFileUrl);
+            MultipartFile cardImageFile = null;
 
             Long cardId = cardService.saveCard(origImageFile, cardImageFile, cardSaveRequestDtoString);
             ret = new ResponseEntity<>("만들어진 카드 id = " + cardId, HttpStatus.OK);

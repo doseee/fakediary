@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.UUID;
 
 @Slf4j
@@ -132,6 +136,14 @@ public class ImageFileHandler {
         byte[] bytes = multipartFile.getBytes();
         byte[] encoded = Base64.encodeBase64(bytes);
         return new String(encoded);
+    }
+
+    public MultipartFile downloadImage(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+        URLConnection connection = url.openConnection();
+        InputStream inputStream = connection.getInputStream();
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+        return new ByteArrayMultipartFile("imageFile", bytes);
     }
 }
 
