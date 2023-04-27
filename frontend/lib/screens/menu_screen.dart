@@ -3,6 +3,7 @@ import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/screens/card_create.dart';
+import 'package:frontend/screens/card_list.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -110,7 +111,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                 desc2: '연관된 일기를 볼 수 있습니다.',
                                 onSelect: onSelect,
                                 selected: selectedTitle == '카드목록',
-                                screen: const HomeScreen(),
+                                screen: const CardList(),
                               ),
                               const SizedBox(
                                 width: 9,

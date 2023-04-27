@@ -19,48 +19,56 @@ class _MainScreenState extends State<HomeScreen> {
           ),
         ),
         child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
             backgroundColor: Colors.transparent,
-            elevation: 0,
-            toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Image(
+                            image: AssetImage('assets/img/icon_alarm.png'),
+                            width: 50, // set the desired width
+                            height: 50, // set the desired height
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            body: Center(
+              child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 30,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Image(
-                          image: AssetImage('assets/img/icon_alarm.png'),
-                          width: 50, // set the desired width
-                          height: 50, // set the desired height
+                  Flexible(flex: 2, child: Container()),
+                  Flexible(
+                      flex: 1,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MenuScreen()),
+                          );
+                        },
+                        icon: Image.asset(
+                          'assets/img/icon_menu.png',
                         ),
-                      ],
-                    ),
-                  ),
+                        iconSize: 80,
+                      ))
                 ],
               ),
-            ],
-          ),
-          body: Container(
-              child: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MenuScreen()),
-              );
-            },
-            icon: Image.asset(
-              'assets/img/icon_menu.png',
-              width: 80,
-              height: 80,
-            ),
-          )),
-        ));
+            )));
   }
 }
