@@ -21,6 +21,8 @@ class _CameraExampleState extends State<CameraExample> {
     setState(() {
       _image = File(image!.path); // 가져온 이미지를 _image에 저장
     });
+
+    Navigator.pop(context, _image);
   }
 
   // 이미지를 보여주는 위젯

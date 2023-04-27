@@ -22,7 +22,6 @@ class ApiService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('email', email);
       await prefs.setString('nickname', response.body);
-      await prefs.setString('password', password);
       return true;
     } else {
       return false;

@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:lottie/lottie.dart';
 
-import '../main.dart';
 import '../services/api_service.dart';
-import 'menu_screen.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -79,24 +76,20 @@ class _LoginState extends State<Login> {
 
   Widget _buttonLogin() {
     return GestureDetector(
-      onTap: () async {
-        if (_formKey.currentState!.validate()) {
-          print(_emailController.text);
-          print(_passwordController.text);
-          final bool result = await ApiService.login(
-              _emailController.text,
-              _passwordController.text);
-          if (!mounted) return;
-          if (result) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        HomeScreen()));
+        onTap: () async {
+          if (_formKey.currentState!.validate()) {
+            print(_emailController.text);
+            print(_passwordController.text);
+            final bool result = await ApiService.login(
+                _emailController.text, _passwordController.text);
+            if (!mounted) return;
+            if (result) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
+            }
           }
-        }
-      },
-      child: Center(
+        },
+        child: Center(
           child: Container(
             width: 250,
             height: 50,
@@ -107,13 +100,12 @@ class _LoginState extends State<Login> {
                 ]),
                 borderRadius: BorderRadius.circular(25)),
             child: Center(
-            child: Text(
+                child: Text(
               'LOGIN',
               style: TextStyle(color: Colors.white, fontSize: 14),
             )),
-            ),
-          ));
-
+          ),
+        ));
   }
 
   @override
@@ -170,7 +162,10 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               height: 280,
                             ),
-                            Text('My Lieary', style: TextStyle(color: Colors.blueGrey),)
+                            Text(
+                              'My Lieary',
+                              style: TextStyle(color: Colors.blueGrey),
+                            )
                           ],
                         ),
                       ]),
