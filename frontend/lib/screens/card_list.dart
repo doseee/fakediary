@@ -43,6 +43,15 @@ class CardModal extends StatelessWidget {
             title: Text(cardTitle[cardIndex],
                 style: TextStyle(fontWeight: FontWeight.w600)),
           ),
+          body: Padding(
+            padding: EdgeInsets.all(40),
+            child: Row(
+              children: [
+                Flexible(flex: 1, child: Container(decoration: BoxDecoration(color: Colors.white),)),
+                Flexible(flex: 1, child: Container(decoration: BoxDecoration(color: Colors.black),))
+              ],
+            ),
+          ),
         ));
   }
 }

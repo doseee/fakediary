@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/card_list.dart';
+import 'package:frontend/screens/crad_result.dart';
+import 'package:frontend/screens/home_screen.dart';
+import 'package:frontend/screens/loading_screen.dart';
 import 'package:frontend/screens/login_entrance.dart';
+import 'package:frontend/screens/splash.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -30,7 +35,8 @@ class MainScreen extends StatelessWidget {
 
 void main() {
   runApp(const MaterialApp(
-    home: LoginEntrance(),
+    debugShowCheckedModeBanner: false,
+    home: Splash(),
   ));
 }
 
@@ -40,11 +46,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MainScreen(),
+      home: const HomeScreen(),
     );
   }
 }
