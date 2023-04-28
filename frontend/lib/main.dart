@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/login.dart';
 import 'package:frontend/screens/login_entrance.dart';
-import 'package:frontend/screens/regist_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -10,6 +8,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Main Screen'),
       ),
       body: Center(
