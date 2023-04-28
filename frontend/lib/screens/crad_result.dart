@@ -61,7 +61,7 @@ class _CardResultState extends State<CardResult>
       ..addListener(() {
         setState(() {});
       });
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         opacityLevel = 1.0;
       });
