@@ -173,12 +173,12 @@ class _CardResultState extends State<CardResult>
   Widget _buildBack() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.transparent,
         border: Border.all(
           width: 10,
           color: Color(0xffECE0CA),
         ),
         borderRadius: BorderRadius.circular(30),
+        image: DecorationImage(image: AssetImage('assets/img/mosk.jpg'))
       ),
       child:Column(
         children: [
@@ -188,8 +188,7 @@ class _CardResultState extends State<CardResult>
           ),
           Flexible(
             flex: 1,
-            child: Container(
-                decoration: BoxDecoration(color: Colors.white)),
+            child: Container(),
           ),
           Flexible(
             flex: 1,

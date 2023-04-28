@@ -8,29 +8,65 @@ class CardList extends StatefulWidget {
   _CardListState createState() => _CardListState();
 }
 
-
 class CardModal extends StatelessWidget {
   //모달창 class
   final int cardIndex;
+  final List cardTitle;
 
-  const CardModal({Key? key, required this.cardIndex}) : super(key: key);
+  const CardModal({Key? key, required this.cardIndex, required this.cardTitle})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Card ${cardIndex + 1}'),
-      ),
-      body: Center(
-        child: Text('This is Card ${cardIndex + 1}'),
-      ),
-    );
+    return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xff0F2027),
+              Color(0xff203A43),
+              Color(0xff2C5364),
+            ],
+            stops: [0, 0.4, 1.0],
+          ),
+          image: DecorationImage(
+            image: AssetImage('assets/img/bg_galaxy.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            title: Text(cardTitle[cardIndex],
+                style: TextStyle(fontWeight: FontWeight.w600)),
+          ),
+        ));
   }
 }
 
-
-
 class _CardListState extends State<CardList> {
+  List temp = [
+    '박소정',
+    '바나프레소',
+    '박박',
+    'IAM',
+    'ㄹㄹ',
+    'ㄱㄱㄱㄱ',
+    '하하하하',
+    '즐거운하루^^',
+    '박소정',
+    '바나프레소',
+    '박박',
+    'IAM',
+    'ㄹㄹ',
+    'ㄱㄱㄱㄱ',
+    '하하하하',
+    '즐거운하루^^'
+  ];
+
   Widget build(BuildContext context) {
     return (Container(
         decoration: BoxDecoration(
@@ -99,14 +135,16 @@ class _CardListState extends State<CardList> {
                             width: 80,
                             height: 80,
                           ),
+                          SizedBox(height: 15,),
                           Text('내가 만든 카드를 확인해보세요',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 15,
                                   color: Colors.white)),
-                          Text('카드를 누르면 해당 카드로 생성한 소설이 나타납니다.',
+                          Text('카드를 누르면 해당 카드로 생성한 일기가 나타납니다.',
                               style:
                                   TextStyle(fontSize: 10, color: Colors.white)),
+                          SizedBox(height: 10,),
                           Image(
                             image: AssetImage('assets/img/line_top.png'),
                             width: 200,
@@ -131,17 +169,19 @@ class _CardListState extends State<CardList> {
                     // GridView 자체의 Padding 설정
                     children: List.generate(
                       // 카드 리스트 생성
-                      15, // 총 카드 갯수
+                      temp.length, // 총 카드 갯수
                       (index) {
                         return InkWell(
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
-                                builder: (context) =>
-                                    CardModal(cardIndex: index),
+                                builder: (context) => CardModal(
+                                    cardIndex: index, cardTitle: temp),
                               );
                             },
                             child: Card(
+                              color: Colors.transparent,
+                              elevation: 0.0,
                               child: Column(
                                 children: <Widget>[
                                   Image(
@@ -152,11 +192,11 @@ class _CardListState extends State<CardList> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Card ${index + 1}',
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
-                                    ),
+                                    child: Text(temp[index],
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 12)),
                                   ),
                                 ],
                               ),
