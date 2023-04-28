@@ -19,31 +19,6 @@ import javax.persistence.*;
                 }
         )
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @NamedNativeQuery(name="listFriendQuery", query = "SELECT f.member_id AS member_id, f.friend_id AS friend_id, m.nickname AS nickname, f.exchange_cnt AS exchange_cnt " +
         "FROM Friendship f " +
         "JOIN (SELECT m.member_id AS member_id, m.nickname AS nickname " +
