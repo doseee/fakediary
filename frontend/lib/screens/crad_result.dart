@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
@@ -27,7 +28,7 @@ Widget _buttonList(BuildContext context) {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const CardList(),
+                builder: (context) => const CardCreate(),
               ));
         },
         style: ElevatedButton.styleFrom(
@@ -38,7 +39,7 @@ Widget _buttonList(BuildContext context) {
               borderRadius: BorderRadius.circular(30.0),
             )),
         child: Text(
-          '카드 목록 확인하기',
+          '카드 추가 생성하기',
           style: TextStyle(
               color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
         )),
@@ -119,7 +120,7 @@ class _CardResultState extends State<CardResult>
                   ),
                 ),
                 Flexible(
-                    flex: 9,
+                    flex: 10,
                     child: GestureDetector(
                         onTap: () {
                           _toggleCardExpansion();
@@ -139,10 +140,30 @@ class _CardResultState extends State<CardResult>
                           ),
                         ))),
                 Flexible(
-                    flex: 3,
-                    child: Center(
-                      child: _buttonList(context),
-                    )),
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        Flexible(flex: 1, child: Container(),),
+                        Flexible(flex: 4, child: Column(
+                          children: [
+                            Flexible(flex: 2, child:  Center(
+                              child: _buttonList(context),
+                            ),),
+                            Flexible(flex: 3, child:  Center(
+                              child: TextButton(onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const CardList(),
+                                    ));
+                              },
+                              child: Text('카드 목록 보러가기 →', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),),)
+                            ),)
+                          ],
+                        ),),
+                        Flexible(flex: 1, child: Container())
+                      ],
+                    ))
               ],
             ),
           )),
