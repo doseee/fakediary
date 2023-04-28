@@ -126,7 +126,7 @@ public class DeepArtEffectsApi {
 
 
         //  DeepArtEffectsImageUrlResponse res = response.block(Duration.ofMillis(3000));
-        Thread.sleep(5000); // 5초간 대기
+        Thread.sleep(10000); // 10초간 대기
         DeepArtEffectsImageUrlResponse res = response.block();
 
         Instant end = Instant.now();

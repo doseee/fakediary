@@ -32,7 +32,7 @@ public class CardService {
     private final DeepArtEffectsApi deepArtEffectsApi;
 
     @Transactional
-    public Long saveCard(MultipartFile origImageFile, String cardImageFileUrl, String styleId, String saveCardDtoString) throws Exception {
+    public Long saveCard(MultipartFile origImageFile, String cardImageFileUrl, int styleIndex, String styleId, String saveCardDtoString) throws Exception {
         Long ret = -1L;
         JSONParser jsonParser = new JSONParser(saveCardDtoString);
         Object obj = jsonParser.parse();
@@ -60,6 +60,7 @@ public class CardService {
                 .originCardImageName(origImageFile.getOriginalFilename())
                 .origImageUrl(origImageUrl)
                 .cardImageUrl(cardImageUrl)
+                .cardStyleIndex(styleIndex)
                 .cardStyleId(styleId)
                 .build();
 
@@ -80,6 +81,7 @@ public class CardService {
 
         String cardImageFileUrl = deepArtEffectsApi.getCardImageUrl(submissionId);  //  카드 이미지 URL
 
+        ret.put("styleIndex", String.valueOf(randomStyleIdx));
         ret.put("styleId", styleId);
         ret.put("cardImageFileUrl", cardImageFileUrl);
 
