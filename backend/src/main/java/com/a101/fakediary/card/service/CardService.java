@@ -118,13 +118,32 @@ public class CardService {
     }
 
     private CardSaveRequestDto createCardSaveRequestDto(Map<String, Object> map) {
+        Object baseNameObj = map.get("baseName");
+        Object basePlaceObj = map.get("basePlace");
+        Object latitudeObj = map.get("latitude");
+        Object longitudeObj = map.get("longitude"); //  nullable한 속성들
+
+        log.info("memberId = " + map.get("memberId"));
+        log.info("baseName = " + baseNameObj);
+        log.info("basePlace = " + basePlaceObj);
+        log.info("keyword = " + map.get("keyword"));
+        log.info("latitude = " + latitudeObj);
+        log.info("longitude = " + longitudeObj);
+
+        Long memberId = Long.parseLong(String.valueOf(map.get("memberId")));
+        String baseName = baseNameObj != null ? String.valueOf(baseNameObj) : null;
+        String basePlace = basePlaceObj != null ? String.valueOf(basePlaceObj) : null;
+        String keyword = String.valueOf(map.get("keyword"));
+        BigDecimal latitude = latitudeObj != null ? new BigDecimal(String.valueOf(latitudeObj)) : null;
+        BigDecimal longitude = longitudeObj != null ? new BigDecimal(String.valueOf(latitudeObj)) : null;
+
         return CardSaveRequestDto.builder()
-                .memberId(Long.parseLong(String.valueOf(map.get("memberId"))))
-                .baseName(String.valueOf(map.get("baseName")))
-                .basePlace(String.valueOf(map.get("basePlace")))
-                .keyword(String.valueOf(map.get("keyword")))
-                .latitude(new BigDecimal(String.valueOf(map.get("latitude"))))
-                .longitude(new BigDecimal(String.valueOf(map.get("longitude"))))
+                .memberId(memberId)
+                .baseName(baseName)
+                .basePlace(basePlace)
+                .keyword(keyword)
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
     }
 
