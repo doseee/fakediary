@@ -35,12 +35,12 @@ public class CardController {
         ResponseEntity<?> ret = null;
 
         try {
-            Map<String, String> map = cardService.getCardImageFileUrl(origImageFile);   //  origImageFile을 이용해서 cardImageFile을 얻어야 함.
+            Map<String, String> map = cardService.getCardImageInfo(origImageFile);   //  origImageFile을 이용해서 cardImageFile을 얻어야 함.
 
             String styleId = map.get("styleId");                        //  적용된 DeepArtEffects style id
             String cardImageFileUrl = map.get("cardImageFileUrl");      //  DeepArtEffects style 적용된 카드 이미지 URL
 
-            log.info("cardIamgeFileUrl = " + cardImageFileUrl);
+            log.info("cardImageFileUrl = " + cardImageFileUrl);
 
             Long cardId = cardService.saveCard(origImageFile, cardImageFileUrl, styleId, cardSaveRequestDtoString);
             ret = new ResponseEntity<>("만들어진 카드 id = " + cardId, HttpStatus.OK);

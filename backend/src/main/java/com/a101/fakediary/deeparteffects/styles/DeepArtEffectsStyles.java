@@ -131,7 +131,7 @@ public class DeepArtEffectsStyles {
     private final static int[] indices = {1, 3, 4, 5, 7, 8, 9, 10, 12, 13, 14, 17, 20, 22, 25, 27, 29, 30, 31, 33, 39, 41, 45, 46, 47, 48, 50, 53, 57, 60, 63, 64, 65, 67, 69, 70, 73, 74, 77, 78, 79 ,81 ,84 ,85 ,87 ,89 ,92 ,93 ,95 ,97 ,98 ,100 ,102, 103, 104 ,106 ,107 ,109 ,110 ,112 ,113 ,117 ,120};
 
     public static int getRandomStyleIdx() {
-        return new Random().nextInt(indices.length);
+        return indices[new Random().nextInt(indices.length)];
     }
 
     public static String getStyleId(int idx) {

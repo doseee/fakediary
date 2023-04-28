@@ -69,7 +69,7 @@ public class CardService {
     }
 
     @Transactional
-    public Map<String, String> getCardImageFileUrl(MultipartFile origImageFile) throws Exception {
+    public Map<String, String> getCardImageInfo(MultipartFile origImageFile) throws Exception {
         Map<String, String> ret = new HashMap<>();
 
         int randomStyleIdx = DeepArtEffectsStyles.getRandomStyleIdx();
