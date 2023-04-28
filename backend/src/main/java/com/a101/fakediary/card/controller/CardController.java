@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/card")
@@ -29,15 +31,19 @@ public class CardController {
             @RequestPart(value = "origImageFile", required = true) MultipartFile origImageFile,
             @RequestParam(value = "cardSaveRequestDtoString")String cardSaveRequestDtoString
     ) {
+        log.info("saveCard!!!!");
         ResponseEntity<?> ret = null;
 
         try {
-            String cardImageFileUrl = cardService.getCardImageFileUrl("c7984b32-1560-11e7-afe2-06d95fe194ed", origImageFile);; //  origImageFile을 이용해서 cardImageFile을 얻어야 함.
-                                                //  DeepArtsEffect 호출해야 함.
+            Map<String, String> map = cardService.getCardImageInfo(origImageFile);   //  origImageFile을 이용해서 cardImageFile을 얻어야 함.
 
-            log.info("cardIamgeFileUrl = " + cardImageFileUrl);
+            int styleIndex = Integer.parseInt(map.get("styleIndex"));
+            String styleId = map.get("styleId");                        //  적용된 DeepArtEffects style id
+            String cardImageFileUrl = map.get("cardImageFileUrl");      //  DeepArtEffects style 적용된 카드 이미지 URL
 
-            Long cardId = cardService.saveCard(origImageFile, cardImageFileUrl, cardSaveRequestDtoString);
+            log.info("cardImageFileUrl = " + cardImageFileUrl);
+
+            Long cardId = cardService.saveCard(origImageFile, cardImageFileUrl, styleIndex, styleId, cardSaveRequestDtoString);
             ret = new ResponseEntity<>("만들어진 카드 id = " + cardId, HttpStatus.OK);
         } catch(ParseException e) {
             e.printStackTrace();
@@ -55,6 +61,7 @@ public class CardController {
      */
     @GetMapping("/{memberId}")
     public ResponseEntity<?>  listCards(@PathVariable(name = "memberId")Long memberId) {
+        log.info("listCards!!!!");
       return new ResponseEntity<>(cardService.listCards(memberId), HttpStatus.OK);
     }
 
@@ -66,6 +73,7 @@ public class CardController {
      */
     @GetMapping("/pick/{cardId}")
     public ResponseEntity<?> findCard(@PathVariable(name = "cardId")Long cardId) {
+        log.info("findCard!!!!");
         CardResponseDto cardResponseDto = null;
 
         try {
@@ -83,6 +91,7 @@ public class CardController {
      */
     @GetMapping("/styles")
     public ResponseEntity<?> findCardStyles() {
+        log.info("findCardStyles!!!");
         return new ResponseEntity<>(cardService.getDeepArtEffectsStyles().block(), HttpStatus.OK);
     }
 }

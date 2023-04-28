@@ -5,6 +5,7 @@ import com.a101.fakediary.card.dto.response.CardResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.deeparteffects.api.DeepArtEffectsApi;
+import com.a101.fakediary.deeparteffects.styles.DeepArtEffectsStyles;
 import com.a101.fakediary.imagefile.handler.ImageFileHandler;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
@@ -31,7 +32,7 @@ public class CardService {
     private final DeepArtEffectsApi deepArtEffectsApi;
 
     @Transactional
-    public Long saveCard(MultipartFile origImageFile, String cardImageFileUrl, String saveCardDtoString) throws Exception {
+    public Long saveCard(MultipartFile origImageFile, String cardImageFileUrl, int styleIndex, String styleId, String saveCardDtoString) throws Exception {
         Long ret = -1L;
         JSONParser jsonParser = new JSONParser(saveCardDtoString);
         Object obj = jsonParser.parse();
@@ -48,7 +49,6 @@ public class CardService {
         Member member = memberRepository.findById(saveCardDto.getMemberId()).orElseThrow(() -> new Exception("member not found"));
         String origImageUrl = s3ImageFileHandler.uploadOnS3(origImageFile);
         String cardImageUrl = s3ImageFileHandler.uploadOnS3(cardImageFile);
-//        String cardImageUrl = "123456";
 
         Card card = Card.builder()
                 .member(member)
@@ -60,6 +60,8 @@ public class CardService {
                 .originCardImageName(origImageFile.getOriginalFilename())
                 .origImageUrl(origImageUrl)
                 .cardImageUrl(cardImageUrl)
+                .cardStyleIndex(styleIndex)
+                .cardStyleId(styleId)
                 .build();
 
         ret = cardRepository.save(card).getCardId();
@@ -68,13 +70,22 @@ public class CardService {
     }
 
     @Transactional
-    public String getCardImageFileUrl(String styleId, MultipartFile origImageFile) throws Exception {
+    public Map<String, String> getCardImageInfo(MultipartFile origImageFile) throws Exception {
+        Map<String, String> ret = new HashMap<>();
+
+        int randomStyleIdx = DeepArtEffectsStyles.getRandomStyleIdx();
+        String styleId = DeepArtEffectsStyles.getStyleId(randomStyleIdx);   //  적용된 styleId
         String submissionId = deepArtEffectsApi.uploadImageWithStyleId(origImageFile, styleId);
 
         log.info("submissionId = " + submissionId);
 
-        return deepArtEffectsApi.getCardImageUrl(submissionId);
-//        return null;
+        String cardImageFileUrl = deepArtEffectsApi.getCardImageUrl(submissionId);  //  카드 이미지 URL
+
+        ret.put("styleIndex", String.valueOf(randomStyleIdx));
+        ret.put("styleId", styleId);
+        ret.put("cardImageFileUrl", cardImageFileUrl);
+
+        return ret;
     }
 
     @Transactional(readOnly = true)
@@ -109,13 +120,32 @@ public class CardService {
     }
 
     private CardSaveRequestDto createCardSaveRequestDto(Map<String, Object> map) {
+        Object baseNameObj = map.get("baseName");
+        Object basePlaceObj = map.get("basePlace");
+        Object latitudeObj = map.get("latitude");
+        Object longitudeObj = map.get("longitude"); //  nullable한 속성들
+
+        log.info("memberId = " + map.get("memberId"));
+        log.info("baseName = " + baseNameObj);
+        log.info("basePlace = " + basePlaceObj);
+        log.info("keyword = " + map.get("keyword"));
+        log.info("latitude = " + latitudeObj);
+        log.info("longitude = " + longitudeObj);
+
+        Long memberId = Long.parseLong(String.valueOf(map.get("memberId")));
+        String baseName = baseNameObj != null ? String.valueOf(baseNameObj) : null;
+        String basePlace = basePlaceObj != null ? String.valueOf(basePlaceObj) : null;
+        String keyword = String.valueOf(map.get("keyword"));
+        BigDecimal latitude = latitudeObj != null ? new BigDecimal(String.valueOf(latitudeObj)) : null;
+        BigDecimal longitude = longitudeObj != null ? new BigDecimal(String.valueOf(latitudeObj)) : null;
+
         return CardSaveRequestDto.builder()
-                .memberId(Long.parseLong(String.valueOf(map.get("memberId"))))
-                .baseName(String.valueOf(map.get("baseName")))
-                .basePlace(String.valueOf(map.get("basePlace")))
-                .keyword(String.valueOf(map.get("keyword")))
-                .latitude(new BigDecimal(String.valueOf(map.get("latitude"))))
-                .longitude(new BigDecimal(String.valueOf(map.get("longitude"))))
+                .memberId(memberId)
+                .baseName(baseName)
+                .basePlace(basePlace)
+                .keyword(keyword)
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
     }
 

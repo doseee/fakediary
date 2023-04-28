@@ -4,6 +4,7 @@ import com.a101.fakediary.common.BaseEntity;
 import com.a101.fakediary.enums.ERequestStatus;
 import com.a101.fakediary.member.entity.Member;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -33,10 +34,6 @@ public class FriendRequest extends BaseEntity {
     private Member receiverId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 20,nullable = false)
+    @Column(name = "status", length = 20, nullable = false)
     private ERequestStatus status;
-
-
-
-
 }
