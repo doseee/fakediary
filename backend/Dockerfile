@@ -1,6 +1,7 @@
 FROM openjdk:11
 
-ENV JAVA_OPTS="-Duser.timezone=Asia/Seoul"
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ARG JAR_FILE=build/libs/*.jar
 
