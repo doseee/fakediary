@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,6 +48,58 @@ class ApiService {
       return login(email, password);
     } else {
       return false;
+    }
+  }
+
+  static Future<List<String>> getCaption(File img) async {
+    const apiKey = "AIzaSyA1Py3uRqxEYNs-EczcNSHrGHAjH1Ej80Q";
+    final url = Uri.parse(
+        'https://vision.googleapis.com/v1/images:annotate?key=$apiKey');
+
+    print('hi');
+
+    final requestBody = {
+      "requests": [
+        {
+          "image": {
+            "content": base64Encode(await img.readAsBytes()),
+          },
+          "features": [
+            {
+              "type": "OBJECT_LOCALIZATION",
+              "maxResults": 3,
+            }
+          ],
+        },
+      ],
+    };
+
+    print('hello');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final responses = jsonResponse['responses'];
+      final resp = responses[0];
+
+      final objectAnnotations = resp['localizedObjectAnnotations'];
+      print(objectAnnotations);
+      List<String> objectNames = [];
+      for (var objectAnnotation in objectAnnotations) {
+        objectNames.add(objectAnnotation['name']);
+      }
+
+      print(objectNames);
+      return objectNames;
+    } else {
+      return [];
     }
   }
 }
