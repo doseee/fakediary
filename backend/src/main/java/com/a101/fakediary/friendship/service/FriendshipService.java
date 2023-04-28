@@ -30,8 +30,8 @@ public class FriendshipService {
         friendshipRepository.deleteFriend(memberId, friendId);
     }
 
-    public List<Member> searchFriend(String nickname) {
-        return memberRepository.findByNicknameContaining(nickname);
+    public List<Member> searchFriend(String nickname, Long memberId) {
+        return friendshipRepository.searchFriend(nickname, memberId);
     }
 
     public List<FriendshipResponseDto> listFriend(Long memberId) {

@@ -49,10 +49,11 @@ public class FriendshipController {
     }
 
     @ApiOperation(value = "닉네임으로 친구 검색")
-    @GetMapping("/search/{nickname}")
-    public ResponseEntity<?> searchFriend(@PathVariable String nickname) {
+    @GetMapping("/search/{nickname}/{memberId}")
+    public ResponseEntity<?> searchFriend(@PathVariable String nickname, @PathVariable Long memberId) {
         try {
-            List<Member> list = friendshipService.searchFriend(nickname);
+            List<Member> list = friendshipService.searchFriend(nickname, memberId);
+            System.out.println(list.size());
             if (list.isEmpty())
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             return new ResponseEntity<List<Member>>(list, HttpStatus.OK);
