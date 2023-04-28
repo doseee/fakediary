@@ -9,7 +9,6 @@ import com.a101.fakediary.member.service.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,7 +52,7 @@ public class MemberController {
     }
 
     //회원 정보 수정
-    @ApiOperation(value = "유저 정보 수정")
+    @ApiOperation(value = "유저 정보 수정", notes = "authDiaryTime은 \"autoDiaryTime\" : \"23:00:00\" 이런식으로 입력" )
     @PatchMapping("/{memberId}")
     public ResponseEntity<?> updateMember(@PathVariable Long memberId,
                                           @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
