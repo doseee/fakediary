@@ -9,7 +9,6 @@ import com.a101.fakediary.member.service.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,7 @@ public class MemberController {
 
     //로그인
 
-    @ApiOperation(value = "유저 로그인")
+    @ApiOperation(value = "유저 로그인.")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
         try {
