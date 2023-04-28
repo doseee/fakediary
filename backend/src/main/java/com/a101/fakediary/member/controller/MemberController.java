@@ -37,7 +37,7 @@ public class MemberController {
 
     //로그인
 
-    @ApiOperation(value = "유저 로그인.")
+    @ApiOperation(value = "유저 로그인")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
         try {
@@ -52,7 +52,7 @@ public class MemberController {
     }
 
     //회원 정보 수정
-    @ApiOperation(value = "유저 정보 수정")
+    @ApiOperation(value = "유저 정보 수정", notes = "authDiaryTime은 \"autoDiaryTime\" : \"23:00:00\" 이런식으로 입력" )
     @PatchMapping("/{memberId}")
     public ResponseEntity<?> updateMember(@PathVariable Long memberId,
                                           @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
