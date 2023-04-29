@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/menu_screen.dart';
@@ -35,6 +37,7 @@ class _CardCreateState extends State<CardCreate> {
   String keyword3 = '';
 
   ImageProvider? _currentImage;
+  File _image = File('');
 
   @override
   void initState() {
@@ -164,7 +167,9 @@ class _CardCreateState extends State<CardCreate> {
                           if (result != null) {
                             final captions =
                                 await ApiService.getCaption(result);
+
                             setState(() {
+                              _image = result;
                               _currentImage = FileImage(result);
                               keyword1 = captions.isNotEmpty ? captions[0] : "";
                               keyword1Modified = !captions.isNotEmpty;
@@ -366,35 +371,64 @@ class _CardCreateState extends State<CardCreate> {
                   SizedBox(
                     height: 45,
                   ),
-                  Container(
-                    width: 268,
-                    height: 61,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xff263344),
-                          Color(0xff1B2532).withOpacity(0.538),
-                          Color(0xff1C2A3D).withOpacity(0.502),
-                          Color(0xff1E2E42).withOpacity(0.46),
-                          Color(0xff364B66).withOpacity(0.33),
-                          Color(0xff2471D6).withOpacity(0),
+                  GestureDetector(
+                    onTap: () {
+                      String key1 = keyword1Modified
+                          ? _keyword1Controller.text
+                          : keyword1;
+                      String key2 = keyword2Modified
+                          ? _keyword2Controller.text
+                          : keyword2;
+                      String key3 = keyword3Modified
+                          ? _keyword3Controller.text
+                          : keyword3;
+
+                      List<String> strings = [key1, key2, key3];
+
+                      List<String> nonEmptyStrings =
+                          strings.where((str) => str.isNotEmpty).toList();
+
+                      String combinedString = nonEmptyStrings.join('@');
+
+                      ApiService.makeCard(
+                          6,
+                          _personController.text,
+                          _locationController.text,
+                          combinedString,
+                          37.5721418,
+                          126.9772436,
+                          _image);
+                    },
+                    child: Container(
+                      width: 268,
+                      height: 61,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xff263344),
+                            Color(0xff1B2532).withOpacity(0.538),
+                            Color(0xff1C2A3D).withOpacity(0.502),
+                            Color(0xff1E2E42).withOpacity(0.46),
+                            Color(0xff364B66).withOpacity(0.33),
+                            Color(0xff2471D6).withOpacity(0),
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff000000).withOpacity(0.25),
+                            offset: const Offset(0, 4),
+                            blurRadius: 4,
+                          ),
                         ],
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xff000000).withOpacity(0.25),
-                          offset: const Offset(0, 4),
-                          blurRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        'MAKE YOUR OWN CARD',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
+                      child: Center(
+                        child: Text(
+                          'MAKE YOUR OWN CARD',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                     ),
