@@ -130,6 +130,11 @@ class ApiService {
     final response = await request.send();
     if (response.statusCode == 200) {
       print('success');
+      final responseData = await response.stream.bytesToString();
+
+      print(responseData);
+      // final responseDto = jsonDecode(responseData);
+      // print(responseDto);
     } else {
       print('fail');
       print(response.statusCode);
