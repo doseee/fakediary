@@ -82,10 +82,11 @@ public class CardController {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<>(cardResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(cardResponseDto == null ? "해당 카드가 없음" : cardResponseDto, HttpStatus.OK);
     }
 
     /**
+     * 카드 스타일 가져오기
      *
      * @return
      */
@@ -93,5 +94,25 @@ public class CardController {
     public ResponseEntity<?> findCardStyles() {
         log.info("findCardStyles!!!");
         return new ResponseEntity<>(cardService.getDeepArtEffectsStyles().block(), HttpStatus.OK);
+    }
+
+    /**
+     * 개발용
+     * cardId라는 카드를 제거함
+     *
+     * @param cardId
+     * @return
+     */
+    @DeleteMapping("/{cardId}")
+    public ResponseEntity<?> deleteCardByCardId(@PathVariable("cardId") Long cardId) {
+        long ret = -1;
+
+        try {
+            ret = cardService.deleteCardByCardId(cardId);
+        } catch(Exception e) {
+            e.printStackTrace();;
+        }
+
+        return new ResponseEntity<>("삭제된 카드 번호 = " + ret, HttpStatus.OK);
     }
 }

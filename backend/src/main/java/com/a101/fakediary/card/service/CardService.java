@@ -119,6 +119,15 @@ public class CardService {
         return ret;
     }
 
+    @Transactional
+    public Long deleteCardByCardId(Long cardId) throws Exception {
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new Exception());
+        Long ret = card.getCardId();
+
+        cardRepository.delete(card);
+        return ret;
+    }
+
     private CardSaveRequestDto createCardSaveRequestDto(Map<String, Object> map) {
         Object baseNameObj = map.get("baseName");
         Object basePlaceObj = map.get("basePlace");
