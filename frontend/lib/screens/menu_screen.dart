@@ -82,11 +82,11 @@ class _MenuScreenState extends State<MenuScreen> {
               flex: 427,
               child: Container(
                 clipBehavior: Clip.hardEdge,
-                decoration: const BoxDecoration(),
+                decoration: BoxDecoration(),
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/img/bg_menu.png'),
+                      image: AssetImage('assets/img/menu_white.png'),
                     ),
                   ),
                   child: Row(
