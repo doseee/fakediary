@@ -42,7 +42,7 @@ class _CardCreateState extends State<CardCreate> {
   String keyword3 = '';
 
   ImageProvider? _currentImage;
-  File _image = File('');
+  File? _image;
 
   @override
   void initState() {
@@ -396,15 +396,21 @@ class _CardCreateState extends State<CardCreate> {
                               _isLoading = true;
                             });
 
-                            String key1 = keyword1Modified
-                                ? _keyword1Controller.text
-                                : keyword1;
-                            String key2 = keyword2Modified
-                                ? _keyword2Controller.text
-                                : keyword2;
-                            String key3 = keyword3Modified
-                                ? _keyword3Controller.text
-                                : keyword3;
+                            String key1 = keyword1Selected
+                                ? (keyword1Modified
+                                    ? _keyword1Controller.text
+                                    : keyword1)
+                                : '';
+                            String key2 = keyword2Selected
+                                ? (keyword2Modified
+                                    ? _keyword2Controller.text
+                                    : keyword2)
+                                : '';
+                            String key3 = keyword3Selected
+                                ? (keyword3Modified
+                                    ? _keyword3Controller.text
+                                    : keyword3)
+                                : '';
 
                             List<String> strings = [key1, key2, key3];
 
@@ -413,14 +419,45 @@ class _CardCreateState extends State<CardCreate> {
 
                             String combinedString = nonEmptyStrings.join('@');
 
+                            if ((!personSelected ||
+                                    _personController.text == '') &&
+                                (!locationSelected ||
+                                    _locationController.text == '') &&
+                                combinedString == '') {
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Center(
+                                      child: Text('키워드를 한 개 이상 입력해주세요.')),
+                                ),
+                              );
+                              return;
+                            }
+
+                            if (_image == null) {
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Center(child: Text('사진을 선택해주세요.')),
+                                ),
+                              );
+                              return;
+                            }
+
                             await ApiService.makeCard(
                                 6,
-                                _personController.text,
-                                _locationController.text,
+                                personSelected ? _personController.text : '',
+                                locationSelected
+                                    ? _locationController.text
+                                    : '',
                                 combinedString,
                                 37.5721418,
                                 126.9772436,
-                                _image);
+                                _image!);
 
                             setState(() {
                               _isLoading = false;
