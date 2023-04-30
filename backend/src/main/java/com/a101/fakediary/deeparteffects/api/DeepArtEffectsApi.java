@@ -116,18 +116,23 @@ public class DeepArtEffectsApi {
                 .build();
 
         Instant start = Instant.now();
-        Mono<DeepArtEffectsImageUrlResponse> response = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/result")
-                        .queryParam("submissionId", submissionId)
-                        .build())
-                .retrieve()
-                .bodyToMono(DeepArtEffectsImageUrlResponse.class);
 
+        DeepArtEffectsImageUrlResponse res = null;
 
-        //  DeepArtEffectsImageUrlResponse res = response.block(Duration.ofMillis(3000));
-        Thread.sleep(10000); // 10초간 대기
-        DeepArtEffectsImageUrlResponse res = response.block();
+        while(true) {
+            Mono<DeepArtEffectsImageUrlResponse> response = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/result")
+                            .queryParam("submissionId", submissionId)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(DeepArtEffectsImageUrlResponse.class);
+
+            res = response.block();
+            if(res.getStatus() != null && res.getStatus().equals("finished"))
+                break;
+            Thread.sleep(1000); //  1초 간격으로 확인
+        }
 
         Instant end = Instant.now();
         log.info("status = " + res.getStatus());
@@ -135,7 +140,5 @@ public class DeepArtEffectsApi {
         log.info("Elapsed time: " + Duration.between(start, end).toMillis() + " ms");
 
         return res.getUrl();
-
     }
-
 }

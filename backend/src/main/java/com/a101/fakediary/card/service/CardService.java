@@ -1,7 +1,7 @@
 package com.a101.fakediary.card.service;
 
 import com.a101.fakediary.card.dto.request.CardSaveRequestDto;
-import com.a101.fakediary.card.dto.response.CardResponseDto;
+import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.deeparteffects.api.DeepArtEffectsApi;
@@ -32,8 +32,8 @@ public class CardService {
     private final DeepArtEffectsApi deepArtEffectsApi;
 
     @Transactional
-    public Long saveCard(MultipartFile origImageFile, String cardImageFileUrl, int styleIndex, String styleId, String saveCardDtoString) throws Exception {
-        Long ret = -1L;
+    public CardSaveResponseDto saveCard(MultipartFile origImageFile, String cardImageFileUrl, int styleIndex, String styleId, String saveCardDtoString) throws Exception {
+        CardSaveResponseDto ret = null;
         JSONParser jsonParser = new JSONParser(saveCardDtoString);
         Object obj = jsonParser.parse();
         ObjectMapper mapper = new ObjectMapper();
@@ -64,7 +64,8 @@ public class CardService {
                 .cardStyleId(styleId)
                 .build();
 
-        ret = cardRepository.save(card).getCardId();
+        cardRepository.save(card);
+        ret = createCardSaveResponseDto(card);
 
         return ret;
     }
@@ -75,6 +76,10 @@ public class CardService {
 
         int randomStyleIdx = DeepArtEffectsStyles.getRandomStyleIdx();
         String styleId = DeepArtEffectsStyles.getStyleId(randomStyleIdx);   //  적용된 styleId
+
+//        randomStyleIdx = 3;
+//        styleId = "c7984b32-1560-11e7-afe2-06d95fe194ed";
+
         String submissionId = deepArtEffectsApi.uploadImageWithStyleId(origImageFile, styleId);
 
         log.info("submissionId = " + submissionId);
@@ -94,13 +99,13 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
-    public List<CardResponseDto> listCards(Long memberId){
-        List<CardResponseDto> ret  = new ArrayList<>();
+    public List<CardSaveResponseDto> listCards(Long memberId){
+        List<CardSaveResponseDto> ret  = new ArrayList<>();
 
         try {
             List<Card> cardList = cardRepository.findAllByMemberId(memberId).orElseThrow(() -> new Exception());
             for (Card card : cardList) {
-                ret.add(createCardResponseDto(card));
+                ret.add(createCardSaveResponseDto(card));
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -110,12 +115,21 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
-    public CardResponseDto findCard(Long cardId) throws Exception {
-        CardResponseDto ret = null;
+    public CardSaveResponseDto findCard(Long cardId) throws Exception {
+        CardSaveResponseDto ret = null;
 
         Card card = cardRepository.findById(cardId).orElseThrow(() -> new Exception());
-        ret = createCardResponseDto(card);
+        ret = createCardSaveResponseDto(card);
 
+        return ret;
+    }
+
+    @Transactional
+    public Long deleteCardByCardId(Long cardId) throws Exception {
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new Exception());
+        Long ret = card.getCardId();
+
+        cardRepository.delete(card);
         return ret;
     }
 
@@ -149,10 +163,13 @@ public class CardService {
                 .build();
     }
 
-    private CardResponseDto createCardResponseDto(Card card) {
-        CardResponseDto ret = CardResponseDto.builder()
+    private CardSaveResponseDto createCardSaveResponseDto(Card card) {
+        Member member = card.getMember();
+
+        CardSaveResponseDto ret = CardSaveResponseDto.builder()
                 .cardId(card.getCardId())
-                .memberId(card.getMember().getMemberId())
+                .memberId(member.getMemberId())
+                .nickName(member.getNickname())
                 .baseName(card.getBaseName())
                 .basePlace(card.getBasePlace())
                 .keywords(new ArrayList<>())

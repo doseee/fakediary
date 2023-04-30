@@ -39,10 +39,10 @@ public class Card extends BaseEntity {
     @Column(name = "keyword", length = 30, nullable = false)
     private String keyword;
 
-    @Column(name = "latitude", nullable = true)
+    @Column(name = "latitude", nullable = true, precision = 20, scale = 10)
     private BigDecimal latitude;
 
-    @Column(name = "longitude", nullable = true)
+    @Column(name = "longitude", nullable = true, precision = 20, scale = 10)
     private BigDecimal longitude;
 
     @Column(name = "origin_card_image_name", nullable = false)
