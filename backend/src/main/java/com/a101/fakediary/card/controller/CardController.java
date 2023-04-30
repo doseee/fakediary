@@ -1,6 +1,6 @@
 package com.a101.fakediary.card.controller;
 
-import com.a101.fakediary.card.dto.response.CardResponseDto;
+import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.service.CardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +43,8 @@ public class CardController {
 
             log.info("cardImageFileUrl = " + cardImageFileUrl);
 
-            Long cardId = cardService.saveCard(origImageFile, cardImageFileUrl, styleIndex, styleId, cardSaveRequestDtoString);
-            ret = new ResponseEntity<>("만들어진 카드 id = " + cardId, HttpStatus.OK);
+            CardSaveResponseDto cardSaveResponseDto = cardService.saveCard(origImageFile, cardImageFileUrl, styleIndex, styleId, cardSaveRequestDtoString);
+            ret = new ResponseEntity<>(cardSaveResponseDto, HttpStatus.OK);
         } catch(ParseException e) {
             e.printStackTrace();
         } catch(Exception e) {
@@ -74,7 +74,7 @@ public class CardController {
     @GetMapping("/pick/{cardId}")
     public ResponseEntity<?> findCard(@PathVariable(name = "cardId")Long cardId) {
         log.info("findCard!!!!");
-        CardResponseDto cardResponseDto = null;
+        CardSaveResponseDto cardResponseDto = null;
 
         try {
             cardResponseDto = cardService.findCard(cardId);
