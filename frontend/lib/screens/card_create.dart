@@ -104,6 +104,14 @@ class _CardCreateState extends State<CardCreate> {
     setState(() {});
   }
 
+  useDefaultLocation() async {
+    print('location');
+    final position = await ApiService.determinePosition();
+    print(position);
+    _locationController.text = await ApiService.coordToRegion(position);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return _isLoading
@@ -259,7 +267,7 @@ class _CardCreateState extends State<CardCreate> {
                           buttonText: '현재 위치로 설정',
                           isSelected: locationSelected,
                           converter: setLocation,
-                          makeDefault: useDefaultPerson,
+                          makeDefault: useDefaultLocation,
                         ),
                         SizedBox(
                           height: 10,
