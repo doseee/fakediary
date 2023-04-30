@@ -101,6 +101,7 @@ class _CardCreateState extends State<CardCreate> {
   useDefaultPerson() async {
     final prefs = await SharedPreferences.getInstance();
     _personController.text = prefs.getString('nickname') ?? '';
+    personSelected = true;
     setState(() {});
   }
 
@@ -109,6 +110,7 @@ class _CardCreateState extends State<CardCreate> {
     final position = await ApiService.determinePosition();
     print(position);
     _locationController.text = await ApiService.coordToRegion(position);
+    locationSelected = true;
     setState(() {});
   }
 
