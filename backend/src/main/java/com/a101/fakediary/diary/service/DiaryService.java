@@ -1,15 +1,18 @@
 package com.a101.fakediary.diary.service;
 
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
+import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryRepository;
 import com.a101.fakediary.genre.dto.GenreDto;
+import com.a101.fakediary.genre.repository.GenreRepository;
 import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -39,5 +42,22 @@ public class DiaryService {
             GenreDto gen = new GenreDto(diary.getDiaryId(), s[i]);
             genreService.saveGenre(gen); //장르 저장
         }
+    }
+
+    public DiaryResponseDto detailDiary(Long diaryId) {
+        return new DiaryResponseDto(diaryRepository.findByDiaryId(diaryId));
+    }
+
+    public List<DiaryResponseDto> allDiary(Long memberId) {
+        return diaryRepository.allDiary(memberId);
+    }
+
+    public List<DiaryResponseDto> filterDiary(Long memberId, String genre) {
+        return diaryRepository.filterDiary(memberId, genre);
+    }
+
+    public void deleteDiary(Long diaryId) {
+        genreService.deleteGenre(diaryId);
+        diaryRepository.deleteDiary(diaryId);
     }
 }

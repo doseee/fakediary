@@ -27,4 +27,5 @@ public class GenreService {
     public void saveGenre(GenreDto dto) {
         genreRepository.save(toEntity(dto));
     }
+    public void deleteGenre(Long diaryId) {genreRepository.deleteGenre(diaryId);}
 }
