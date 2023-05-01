@@ -8,8 +8,9 @@ import com.a101.fakediary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class MemberService {
     }
 
     //로그인
+    @Transactional(readOnly = true)
     public Member signInMember(MemberLoginRequestDto memberloginRequestDto) {
         Optional<Member> memberOptional = memberRepository.findByEmail(memberloginRequestDto.getEmail());
         if (memberOptional.isEmpty()) {
@@ -76,6 +78,7 @@ public class MemberService {
     }
 
     //삭제
+    @Transactional
     public void removeMember(long memberId) {
         memberRepository.deleteById(memberId);
     }

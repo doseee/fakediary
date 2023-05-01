@@ -8,8 +8,8 @@ import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -20,20 +20,24 @@ public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public void saveFriend(FriendshipDto dto) {
         friendshipRepository.save(dto.toEntity());
     }
 
+    @Transactional
     public void deleteFriend(FriendshipDto dto) {
         Long memberId = dto.getMemberId();
         Long friendId = dto.getFriendId();
         friendshipRepository.deleteFriend(memberId, friendId);
     }
 
+    @Transactional(readOnly = true)
     public List<Member> searchFriend(String nickname, Long memberId) {
         return friendshipRepository.searchFriend(nickname, memberId);
     }
 
+    @Transactional(readOnly = true)
     public List<FriendshipResponseDto> listFriend(Long memberId) {
         return friendshipRepository.listFriend(memberId);
     }
