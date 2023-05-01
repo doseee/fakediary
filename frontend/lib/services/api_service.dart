@@ -10,6 +10,7 @@ class ApiService {
   static const String baseUrl = "http://10.0.2.2:8080/";
 
   static Future<bool> login(String email, String password) async {
+    print('loginstart');
     final url = Uri.parse('$baseUrl/member/login');
     final memberLoginRequestDto = {
       'email': email,
@@ -22,12 +23,15 @@ class ApiService {
       },
       body: json.encode(memberLoginRequestDto),
     );
+    print('loginmiddle');
     if (response.statusCode == 200) {
+      print('success');
       final prefs = await SharedPreferences.getInstance();
       final respJson = jsonDecode(response.body);
       await prefs.setInt('memberId', respJson['memberId']);
       await prefs.setString('nickname', respJson['nickname']);
       await prefs.setString('diaryBaseName', respJson['diaryBaseName'] ?? '');
+      print('end');
       return true;
     } else {
       print('failed');
@@ -137,7 +141,7 @@ class ApiService {
     }
   }
 
-  static Future<void> makeCard(int memberId, String baseName, String basePlace,
+  static Future<Map<String, dynamic>> makeCard(int memberId, String baseName, String basePlace,
       String keyword, double latitude, double longitude, File img) async {
     Map<String, dynamic> cardSaveRequestData = {
       "memberId": memberId,
@@ -164,17 +168,21 @@ class ApiService {
     );
 
     final response = await request.send();
-    if (response.statusCode == 200) {
+    // if (response.statusCode == 200) {
       print('success');
       final responseData = await response.stream.bytesToString();
 
+
       // print(responseData);
-      // final responseDto = jsonDecode(responseData);
+      final responseDto = jsonDecode(responseData);
       // print(responseDto['memberId']);
-    } else {
-      print('fail');
-      print(response.statusCode);
-    }
+      Map<String, dynamic> card = responseDto;
+
+      return card;
+    // } else {
+    //   print('fail');
+    //   print(response.statusCode);
+    // }
   }
 
   /// Determine the current position of the device.

@@ -463,7 +463,7 @@ class _CardCreateState extends State<CardCreate> {
                               return;
                             }
 
-                            await ApiService.makeCard(
+                            Map<String, dynamic> card = await ApiService.makeCard(
                                 memberId,
                                 personSelected ? _personController.text : '',
                                 locationSelected
@@ -481,7 +481,7 @@ class _CardCreateState extends State<CardCreate> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CardResult()));
+                                    builder: (context) => CardResult(card : card)));
                           },
                           child: Container(
                             width: 268,
