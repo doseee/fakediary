@@ -1,6 +1,7 @@
 package com.a101.fakediary.member.controller;
 
 import com.a101.fakediary.member.dto.MemberLoginRequestDto;
+import com.a101.fakediary.member.dto.MemberLoginResponseDto;
 import com.a101.fakediary.member.dto.MemberSaveRequestDto;
 import com.a101.fakediary.member.dto.MemberUpdateRequestDto;
 import com.a101.fakediary.member.entity.Member;
@@ -41,11 +42,8 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
         try {
-            Member member = memberService.signInMember(memberLoginRequestDto);
-            if (member.getNickname() != null) {
-                return ResponseEntity.ok(member.getNickname());
-            }
-            return ResponseEntity.ok().build();
+            MemberLoginResponseDto memberLoginResponseDto = memberService.signInMember(memberLoginRequestDto);
+            return ResponseEntity.ok().body(memberLoginResponseDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
