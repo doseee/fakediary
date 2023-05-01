@@ -1,4 +1,4 @@
-package com.a101.fakediary.job;
+package com.a101.fakediary.job.helloworld;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -47,9 +47,10 @@ public class HelloWorldJobConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                System.out.println("Hello World Spring Batch");
+                System.out.println("Hello World Spring Batch!!!");
                 return RepeatStatus.FINISHED;   //  이 스텝이 끝났음을  알림
             }
         };
     }
+
 }
