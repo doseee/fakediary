@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/menu_screen.dart';
+import 'package:frontend/services/api_service.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DiaryCreateCards extends StatefulWidget {
   const DiaryCreateCards({Key? key}) : super(key: key);
@@ -9,6 +12,20 @@ class DiaryCreateCards extends StatefulWidget {
 }
 class _DiaryCreateState extends State<DiaryCreateCards> {
   List temp = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initId();
+  }
+  late int memberId;
+  initId() async {
+    final prefs = await SharedPreferences.getInstance();
+    memberId = prefs.getInt('memberId')!;
+    print(memberId);
+  await ApiService().getCards(memberId);
+
+  }
 
   Widget build(BuildContext context) {
     return (Container(

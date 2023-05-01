@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   // static const String baseUrl = "http://10.0.2.2:8080/";
   static const String baseUrl = "http://k8a101.p.ssafy.io:8080/";
+
   static Future<bool> login(String email, String password) async {
     print('loginstart');
     final url = Uri.parse('$baseUrl/member/login');
@@ -302,6 +303,22 @@ class ApiService {
       print('fail');
       print(response.statusCode);
       print(response.body);
+    }
+  }
+
+  Future<void> getCards(memberId) async {
+    final url =Uri.parse('$baseUrl/card/$memberId');
+      final response = await http.get(url);
+    print(response);
+    if (response.statusCode == 200) {
+      // If the API call is successful, update the 'temp' list with the retrieved data
+      final jsonData = jsonDecode(response.body);
+      print(jsonData);
+      print(List<String>.from(jsonData['data']));
+      // Assuming the card data is returned as an array of strings
+    } else {
+      // If the API call fails, handle the error appropriately
+      print('Failed to fetch data: ${response.statusCode}');
     }
   }
 }
