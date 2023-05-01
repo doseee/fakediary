@@ -307,18 +307,29 @@ class ApiService {
   }
 
   Future<void> getCards(memberId) async {
-    final url =Uri.parse('$baseUrl/card/$memberId');
+    final url = Uri.parse('$baseUrl/card/$memberId');
+
+    try {
       final response = await http.get(url);
-    print(response);
-    if (response.statusCode == 200) {
-      // If the API call is successful, update the 'temp' list with the retrieved data
-      final jsonData = jsonDecode(response.body);
-      print(jsonData);
-      print(List<String>.from(jsonData['data']));
-      // Assuming the card data is returned as an array of strings
-    } else {
-      // If the API call fails, handle the error appropriately
-      print('Failed to fetch data: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        // If the API call is successful, update the 'temp' list with the retrieved data
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+
+        // Assuming the card data is returned as a list of Maps
+        final List<Map<String, dynamic>> cardData = jsonData
+            .map((dynamic cardJson) => cardJson as Map<String, dynamic>)
+            .toList();
+
+        // Do something with the card data, e.g. print it
+        print(cardData);
+      } else {
+        // If the API call fails, handle the error appropriately
+        print('Failed to fetch data: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle any exceptions thrown during the API call
+      print('Error fetching data: $e');
     }
   }
 }
