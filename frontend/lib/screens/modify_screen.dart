@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -246,6 +247,10 @@ class _ModifyScreenState extends State<ModifyScreen> {
                     onTap: () {
                       ApiService.modifyUser(nicknameController.text, hour,
                           minute, second, basenameController.text);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
                     },
                     child: Container(
                       width: 267,

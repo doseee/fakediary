@@ -286,6 +286,17 @@ class ApiService {
     );
     if (response.statusCode == 200) {
       print('success');
+      prefs.setString('nickname', newNickname);
+      prefs.setString('diaryBaseName', newDiaryBaseName);
+
+      final parsedTime = autoDiaryTime.split(':');
+      final hour = int.parse(parsedTime[0]);
+      final minute = int.parse(parsedTime[1]);
+      final second = int.parse(parsedTime[2]);
+      prefs.setInt('hour', hour);
+      prefs.setInt('minute', minute);
+      prefs.setInt('second', second);
+
       print(response.body);
     } else {
       print('fail');
