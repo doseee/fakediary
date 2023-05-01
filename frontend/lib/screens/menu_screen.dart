@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
+import 'package:frontend/screens/friend_list_screen.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
@@ -156,7 +157,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   desc2: '일기를 교환할 수 있습니다.',
                                   onSelect: onSelect,
                                   selected: selectedTitle == '친구목록',
-                                  screen: const HomeScreen(),
+                                  screen: const FriendListScreen(),
                                 ),
                                 SizedBox(
                                   width: 4.5 *

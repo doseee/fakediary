@@ -1,6 +1,7 @@
 package com.a101.fakediary.member.service;
 
 import com.a101.fakediary.member.dto.MemberLoginRequestDto;
+import com.a101.fakediary.member.dto.MemberLoginResponseDto;
 import com.a101.fakediary.member.dto.MemberSaveRequestDto;
 import com.a101.fakediary.member.dto.MemberUpdateRequestDto;
 import com.a101.fakediary.member.entity.Member;
@@ -42,7 +43,7 @@ public class MemberService {
 
     //로그인
     @Transactional(readOnly = true)
-    public Member signInMember(MemberLoginRequestDto memberloginRequestDto) {
+    public MemberLoginResponseDto signInMember(MemberLoginRequestDto memberloginRequestDto) {
         Optional<Member> memberOptional = memberRepository.findByEmail(memberloginRequestDto.getEmail());
         if (memberOptional.isEmpty()) {
             throw new IllegalArgumentException("올바르지 않은 Email입니다.");
@@ -52,7 +53,18 @@ public class MemberService {
         if (!encodePassword.equals(member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        return member;
+
+        MemberLoginResponseDto memberLoginResponseDto = MemberLoginResponseDto.builder()
+                .memberId(member.getMemberId())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .autoDiaryTime(member.getAutoDiaryTime())
+                .diaryBaseName(member.getDiaryBaseName())
+                .firebaseUid(member.getFirebaseUid())
+                .providerId(member.getProviderId())
+                .build();
+
+        return memberLoginResponseDto;
     }
 
     // 수정

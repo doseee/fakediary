@@ -451,7 +451,7 @@ class _CardCreateState extends State<CardCreate> {
                             }
 
                             await ApiService.makeCard(
-                                6,
+                                100,
                                 personSelected ? _personController.text : '',
                                 locationSelected
                                     ? _locationController.text
