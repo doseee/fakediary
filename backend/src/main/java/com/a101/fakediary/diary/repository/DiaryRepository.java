@@ -29,4 +29,9 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Transactional
     @Query("delete from Diary where diaryId =:diaryId")
     void deleteDiary(@Param("diaryId") Long diaryId);
+
+    //다이어리 id의 이미지들을 오름차순으로 정렬. 가장 앞에있는것이 썸네일
+    @Query("SELECT d.diaryImageUrl FROM DiaryImage d WHERE d.diary.diaryId = :diaryId ORDER BY d.diaryImageId ASC")
+    List<String> findDiaryImageUrlByDiaryId(@Param("diaryId") Long diaryId);
+
 }
