@@ -3,6 +3,7 @@ import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
+import 'dart:math' as math;
 
 class CardResult extends StatefulWidget {
   final Map<String, dynamic> card;
@@ -193,20 +194,28 @@ class _CardResultState extends State<CardResult>
 
   Widget _buildBack() {
     return Container(
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          border: Border.all(
-            width: 10,
-            color: Color(0xffECE0CA),
-          ),
-          borderRadius: BorderRadius.circular(30),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        border: Border.all(
+          width: 10,
+          color: Color(0xffECE0CA),
         ),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.rotationY(math.pi),
         child: Container(
           decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(widget.card['cardImageUrl']))),
-        ));
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage(widget.card['cardImageUrl']),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildFront() {

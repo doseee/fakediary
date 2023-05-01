@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/login_entrance.dart';
 
 class MainScreen extends StatelessWidget {
