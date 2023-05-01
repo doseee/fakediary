@@ -1,5 +1,6 @@
 package com.a101.fakediary;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -7,7 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
-//@EnableJpaAuditing	//	JPA Auditing 활성화
+@EnableBatchProcessing
+@EnableJpaAuditing	//	JPA Auditing 활성화
 @SpringBootApplication
 public class BackendApplication {
 
