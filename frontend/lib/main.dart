@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/login_entrance.dart';
+import 'package:frontend/screens/mood_select.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -30,7 +30,7 @@ class MainScreen extends StatelessWidget {
 
 void main() {
   runApp(const MaterialApp(
-    home: LoginEntrance(),
+    home: MoodSelect(),
   ));
 }
 

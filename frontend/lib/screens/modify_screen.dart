@@ -54,10 +54,6 @@ class _ModifyScreenState extends State<ModifyScreen> {
             ],
             stops: [0, 0.4, 1.0],
           ),
-          image: DecorationImage(
-            image: AssetImage('assets/img/bg_galaxy.png'),
-            fit: BoxFit.cover,
-          ),
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
