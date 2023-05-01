@@ -225,39 +225,36 @@ class _MoodSelectState extends State<MoodSelect> {
                         ),
                       ],
                     ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        width: 268,
-                        height: 61,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              const Color(0xff263344),
-                              const Color(0xff1B2532).withOpacity(0.53),
-                              const Color(0xff1C2A3D).withOpacity(0.5),
-                              const Color(0xff1E2E42).withOpacity(0.46),
-                              const Color(0xff364B66).withOpacity(0.33),
-                              const Color(0xff2471D6).withOpacity(0),
-                            ],
-                            stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff000000).withOpacity(0.25),
-                              offset: const Offset(0, 4),
-                              blurRadius: 4,
-                            ),
+                    Container(
+                      width: 268,
+                      height: 61,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            const Color(0xff263344),
+                            const Color(0xff1B2532).withOpacity(0.53),
+                            const Color(0xff1C2A3D).withOpacity(0.5),
+                            const Color(0xff1E2E42).withOpacity(0.46),
+                            const Color(0xff364B66).withOpacity(0.33),
+                            const Color(0xff2471D6).withOpacity(0),
                           ],
+                          stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
                         ),
-                        child: const Center(
-                          child: Text(
-                            'MAKE YOUR OWN DIARY',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff000000).withOpacity(0.25),
+                            offset: const Offset(0, 4),
+                            blurRadius: 4,
                           ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'MAKE YOUR OWN DIARY',
+                          style: TextStyle(color: Colors.white, fontSize: 15),
                         ),
                       ),
                     ),

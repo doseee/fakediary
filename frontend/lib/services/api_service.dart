@@ -18,13 +18,21 @@ class ApiService {
     final response = await http.post(
       url,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json.encode(memberLoginRequestDto),
     );
     if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
-      final respJson = jsonDecode(response.body);
+      final respJson = jsonDecode(utf8.decode(response.bodyBytes));
+      print(respJson);
+      final parsedTime = respJson['autoDiaryTime'].split(':') ?? "00:00:00";
+      final hour = int.parse(parsedTime[0]);
+      final minute = int.parse(parsedTime[1]);
+      final second = int.parse(parsedTime[2]);
+      await prefs.setInt('hour', hour);
+      await prefs.setInt('minute', minute);
+      await prefs.setInt('second', second);
       await prefs.setInt('memberId', respJson['memberId']);
       await prefs.setString('nickname', respJson['nickname']);
       await prefs.setString('diaryBaseName', respJson['diaryBaseName'] ?? '');
@@ -236,6 +244,36 @@ class ApiService {
       print(response.statusCode);
       print(response.body);
       return '';
+    }
+  }
+
+  static Future<void> modifyUser(String newNickname, String hour, String minute,
+      String second, String newDiaryBaseName) async {
+    final prefs = await SharedPreferences.getInstance();
+    final memberId = prefs.getInt('memberId');
+    final url = Uri.parse('$baseUrl/member/$memberId');
+    final autoDiaryTime = '$hour:$minute:$second';
+    print(autoDiaryTime);
+    print(newDiaryBaseName);
+    final memberUpdateRequestDto = {
+      "autoDiaryTime": autoDiaryTime,
+      "diaryBaseName": newDiaryBaseName,
+      "nickname": newNickname,
+    };
+    final response = await http.patch(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(memberUpdateRequestDto),
+    );
+    if (response.statusCode == 200) {
+      print('success');
+      print(response.body);
+    } else {
+      print('fail');
+      print(response.statusCode);
+      print(response.body);
     }
   }
 }
