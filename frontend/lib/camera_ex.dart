@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CameraExample extends StatefulWidget {
@@ -18,9 +19,36 @@ class _CameraExampleState extends State<CameraExample> {
   Future getImage(ImageSource imageSource) async {
     final image = await picker.pickImage(source: imageSource);
 
-    setState(() {
-      _image = File(image!.path); // 가져온 이미지를 _image에 저장
-    });
+    if (image != null) {
+      final imageCropper = ImageCropper();
+
+      final croppedFile = await imageCropper.cropImage(
+        sourcePath: image.path,
+        aspectRatio: CropAspectRatio(ratioX: 1580, ratioY: 2800),
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Colors.deepPurple,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: true,
+          ),
+          IOSUiSettings(
+            title: 'Crop Image',
+          ),
+        ],
+      );
+
+      if (croppedFile != null) {
+        setState(() {
+          _image = File(croppedFile.path);
+        });
+      }
+    }
+
+    // setState(() {
+    //   _image = File(image!.path); // 가져온 이미지를 _image에 저장
+    // });
 
     Navigator.pop(context, _image);
   }
