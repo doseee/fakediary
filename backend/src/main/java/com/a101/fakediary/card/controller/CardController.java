@@ -1,6 +1,6 @@
 package com.a101.fakediary.card.controller;
 
-import com.a101.fakediary.card.dto.response.CardResponseDto;
+import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.service.CardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +43,8 @@ public class CardController {
 
             log.info("cardImageFileUrl = " + cardImageFileUrl);
 
-            Long cardId = cardService.saveCard(origImageFile, cardImageFileUrl, styleIndex, styleId, cardSaveRequestDtoString);
-            ret = new ResponseEntity<>("만들어진 카드 id = " + cardId, HttpStatus.OK);
+            CardSaveResponseDto cardSaveResponseDto = cardService.saveCard(origImageFile, cardImageFileUrl, styleIndex, styleId, cardSaveRequestDtoString);
+            ret = new ResponseEntity<>(cardSaveResponseDto, HttpStatus.OK);
         } catch(ParseException e) {
             e.printStackTrace();
         } catch(Exception e) {
@@ -74,7 +74,7 @@ public class CardController {
     @GetMapping("/pick/{cardId}")
     public ResponseEntity<?> findCard(@PathVariable(name = "cardId")Long cardId) {
         log.info("findCard!!!!");
-        CardResponseDto cardResponseDto = null;
+        CardSaveResponseDto cardResponseDto = null;
 
         try {
             cardResponseDto = cardService.findCard(cardId);
@@ -82,10 +82,11 @@ public class CardController {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<>(cardResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(cardResponseDto == null ? "해당 카드가 없음" : cardResponseDto, HttpStatus.OK);
     }
 
     /**
+     * 카드 스타일 가져오기
      *
      * @return
      */
@@ -93,5 +94,25 @@ public class CardController {
     public ResponseEntity<?> findCardStyles() {
         log.info("findCardStyles!!!");
         return new ResponseEntity<>(cardService.getDeepArtEffectsStyles().block(), HttpStatus.OK);
+    }
+
+    /**
+     * 개발용
+     * cardId라는 카드를 제거함
+     *
+     * @param cardId
+     * @return
+     */
+    @DeleteMapping("/{cardId}")
+    public ResponseEntity<?> deleteCardByCardId(@PathVariable("cardId") Long cardId) {
+        long ret = -1;
+
+        try {
+            ret = cardService.deleteCardByCardId(cardId);
+        } catch(Exception e) {
+            e.printStackTrace();;
+        }
+
+        return new ResponseEntity<>("삭제된 카드 번호 = " + ret, HttpStatus.OK);
     }
 }
