@@ -164,9 +164,9 @@ class ApiService {
       print('success');
       final responseData = await response.stream.bytesToString();
 
-      print(responseData);
+      // print(responseData);
       // final responseDto = jsonDecode(responseData);
-      // print(responseDto);
+      // print(responseDto['memberId']);
     } else {
       print('fail');
       print(response.statusCode);
