@@ -1,5 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/menu_screen.dart';
+import 'package:frontend/services/api_service.dart';
 
 class CardList extends StatefulWidget {
   const CardList({Key? key}) : super(key: key);
@@ -57,8 +61,17 @@ class CardModal extends StatelessWidget {
 }
 
 class _CardListState extends State<CardList> {
-  List temp = [];
+  late Future<List<CardModel>> cards;
+  late Future<int> lengthOfCards;
+  
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cards = ApiService().getCardList(100);
+    print(cards);
+  }
   Widget build(BuildContext context) {
     return (Container(
         decoration: BoxDecoration(
@@ -148,54 +161,87 @@ class _CardListState extends State<CardList> {
                   ),
                   Flexible(
                       flex: 5,
-                      child: GridView.count(
-                        crossAxisCount: 3,
-                        // 가로 방향으로 3개의 카드씩 표시
-                        childAspectRatio: 0.7,
-                        // 카드의 가로 세로 비율 설정
-                        mainAxisSpacing: 10.0,
-                        // 카드들의 세로 간격 설정
-                        crossAxisSpacing: 10.0,
-                        // 카드들의 가로 간격 설정
-                        padding: EdgeInsets.all(10.0),
-                        // GridView 자체의 Padding 설정
-                        children: List.generate(
-                          // 카드 리스트 생성
-                          temp.length, // 총 카드 갯수
-                              (index) {
-                            return InkWell(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => CardModal(
-                                        cardIndex: index, cardTitle: temp),
-                                  );
-                                },
-                                child: Card(
-                                  color: Colors.transparent,
-                                  elevation: 0.0,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Image(
-                                        image: AssetImage(
-                                            'assets/img/cardlist_tmpcard.png'),
-                                        height: 110,
-                                        width: 110,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(temp[index],
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 12)),
-                                      ),
-                                    ],
-                                  ),
-                                ));
-                          },
-                        ),
-                      )),
+                      child: FutureBuilder<List<CardModel>>(
+                        future: cards,
+                        builder: (context, snapshot) {
+                          if(snapshot.hasData){
+                            return buildList(snapshot.data);
+                          } else if (snapshot.hasError){
+                            return Text("${snapshot.error}에러!!");
+                          }
+                          return CircularProgressIndicator();
+                        }
+                      )
+                  ),
                 ])))));
   }
+
+  Widget buildList(snapshot) {
+    return GridView.count(
+      crossAxisCount: 3,
+      // 가로 방향으로 3개의 카드씩 표시
+      childAspectRatio: 0.7,
+      // 카드의 가로 세로 비율 설정
+      mainAxisSpacing: 10.0,
+      // 카드들의 세로 간격 설정
+      crossAxisSpacing: 10.0,
+      // 카드들의 가로 간격 설정
+      padding: EdgeInsets.all(10.0),
+      // GridView 자체의 Padding 설정
+      children: List.generate(
+        // 카드 리스트 생성
+        snapshot.length, // 총 카드 갯수
+            (index) {
+          return InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => CardModal(
+                      cardIndex: index, cardTitle: snapshot[index].baseName),
+                );
+              },
+              child: Card(
+                color: Colors.transparent,
+                elevation: 0.0,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      width: 100,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              snapshot[index].cardImageUrl
+                          )
+                        )
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(snapshot[index].baseName,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12)),
+                    ),
+                  ],
+                ),
+              ));
+        },
+      ),
+    );
+  }
+
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices =>
+      {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        // etc.
+      };
 }
