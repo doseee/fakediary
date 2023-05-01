@@ -6,6 +6,8 @@ import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 
+import 'modify_screen.dart';
+
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
 
@@ -214,7 +216,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   desc2: '기본 키워드를 지정할 수 있습니다.',
                                   onSelect: onSelect,
                                   selected: selectedTitle == '정보수정',
-                                  screen: const HomeScreen(),
+                                  screen: const ModifyScreen(),
                                 ),
                                 SizedBox(
                                   width: 4.5 *

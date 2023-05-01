@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ModifyScreen extends StatefulWidget {
@@ -13,27 +14,40 @@ class _ModifyScreenState extends State<ModifyScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController nicknameController = TextEditingController();
   final TextEditingController basenameController = TextEditingController();
+  String hour = '00';
+  String minute = '00';
+  String second = '00';
+  int intHour = 0;
+  int intMinute = 0;
+  int intSecond = 0;
+
+  FixedExtentScrollController hourController = FixedExtentScrollController();
+  FixedExtentScrollController minuteController = FixedExtentScrollController();
+  FixedExtentScrollController secondController = FixedExtentScrollController();
 
   @override
   void initState() {
     super.initState();
-    loadNickname();
+    load();
   }
 
-  Future<void> loadNickname() async {
+  Future<void> load() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    hour = prefs.getInt('hour').toString().padLeft(2, '0');
+    minute = prefs.getInt('minute').toString().padLeft(2, '0');
+    second = prefs.getInt('second').toString().padLeft(2, '0');
+    intHour = prefs.getInt('hour') ?? 0;
+    intMinute = prefs.getInt('minute') ?? 0;
+    intSecond = prefs.getInt('second') ?? 0;
     String nickname = prefs.getString('nickname') ?? '';
-    setState(() {
-      nicknameController.text = nickname;
-    });
-  }
-
-  Future<void> loadBasename() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    nicknameController.text = nickname;
     String basename = prefs.getString('diaryBaseName') ?? '';
-    setState(() {
-      basenameController.text = basename;
-    });
+    basenameController.text = basename;
+    print(intSecond);
+    hourController.jumpToItem(intHour);
+    minuteController.jumpToItem(intMinute);
+    secondController.jumpToItem(intSecond);
+    setState(() {});
   }
 
   @override
@@ -122,10 +136,12 @@ class _ModifyScreenState extends State<ModifyScreen> {
                       SizedBox(
                         width: 70,
                         child: CupertinoPicker(
-                          itemExtent: 32.0, // 각 항목의 높이를 지정합니다.
+                          scrollController: hourController,
+                          itemExtent: 32.0,
                           onSelectedItemChanged: (int index) {
-                            // 선택된 항목이 변경될 때마다 호출되는 콜백입니다.
-                            // 이곳에서 선택된 값을 처리하면 됩니다.
+                            setState(() {
+                              hour = index.toString().padLeft(2, '0');
+                            });
                           },
                           children: List<Widget>.generate(24, (int index) {
                             return Center(
@@ -134,7 +150,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
-                              ), // 숫자를 표시하는 텍스트 위젯을 생성합니다.
+                              ),
                             );
                           }),
                         ),
@@ -142,11 +158,13 @@ class _ModifyScreenState extends State<ModifyScreen> {
                       SizedBox(
                         width: 70,
                         child: CupertinoPicker(
+                          scrollController: minuteController,
                           backgroundColor: Colors.transparent,
-                          itemExtent: 32.0, // 각 항목의 높이를 지정합니다.
+                          itemExtent: 32.0,
                           onSelectedItemChanged: (int index) {
-                            // 선택된 항목이 변경될 때마다 호출되는 콜백입니다.
-                            // 이곳에서 선택된 값을 처리하면 됩니다.
+                            setState(() {
+                              minute = index.toString().padLeft(2, '0');
+                            });
                           },
                           children: List<Widget>.generate(60, (
                             int index,
@@ -157,7 +175,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
-                              ), // 숫자를 표시하는 텍스트 위젯을 생성합니다.
+                              ),
                             );
                           }),
                         ),
@@ -165,10 +183,12 @@ class _ModifyScreenState extends State<ModifyScreen> {
                       SizedBox(
                         width: 70,
                         child: CupertinoPicker(
-                          itemExtent: 32.0, // 각 항목의 높이를 지정합니다.
+                          scrollController: secondController,
+                          itemExtent: 32.0,
                           onSelectedItemChanged: (int index) {
-                            // 선택된 항목이 변경될 때마다 호출되는 콜백입니다.
-                            // 이곳에서 선택된 값을 처리하면 됩니다.
+                            setState(() {
+                              second = index.toString().padLeft(2, '0');
+                            });
                           },
                           children: List<Widget>.generate(60, (int index) {
                             return Center(
@@ -177,7 +197,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
-                              ), // 숫자를 표시하는 텍스트 위젯을 생성합니다.
+                              ),
                             );
                           }),
                         ),
@@ -223,7 +243,10 @@ class _ModifyScreenState extends State<ModifyScreen> {
                     height: 50,
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      ApiService.modifyUser(nicknameController.text, hour,
+                          minute, second, basenameController.text);
+                    },
                     child: Container(
                       width: 267,
                       height: 60,
