@@ -24,10 +24,14 @@ class ApiService {
     );
     if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('email', email);
-      await prefs.setString('nickname', response.body);
+      final respJson = jsonDecode(response.body);
+      await prefs.setInt('memberId', respJson['memberId']);
+      await prefs.setString('nickname', respJson['nickname']);
+      await prefs.setString('diaryBaseName', respJson['diaryBaseName'] ?? '');
       return true;
     } else {
+      print('failed');
+      print(response.body);
       return false;
     }
   }

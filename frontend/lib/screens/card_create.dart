@@ -44,10 +44,21 @@ class _CardCreateState extends State<CardCreate> {
   ImageProvider? _currentImage;
   File? _image;
 
+  late int memberId;
+  double latitude = 37.5721418;
+  double longitude = 126.9772436;
+
   @override
   void initState() {
     super.initState();
     _currentImage = null;
+    initId();
+  }
+
+  initId() async {
+    final prefs = await SharedPreferences.getInstance();
+    memberId = prefs.getInt('memberId')!;
+    setState(() {});
   }
 
   setPerson() {
@@ -100,7 +111,7 @@ class _CardCreateState extends State<CardCreate> {
 
   useDefaultPerson() async {
     final prefs = await SharedPreferences.getInstance();
-    _personController.text = prefs.getString('nickname') ?? '';
+    _personController.text = prefs.getString('diaryBaseName') ?? '';
     personSelected = true;
     setState(() {});
   }
@@ -110,6 +121,8 @@ class _CardCreateState extends State<CardCreate> {
     final position = await ApiService.determinePosition();
     print(position);
     _locationController.text = await ApiService.coordToRegion(position);
+    latitude = position.latitude;
+    longitude = position.longitude;
     locationSelected = true;
     setState(() {});
   }
@@ -451,14 +464,14 @@ class _CardCreateState extends State<CardCreate> {
                             }
 
                             await ApiService.makeCard(
-                                100,
+                                memberId,
                                 personSelected ? _personController.text : '',
                                 locationSelected
                                     ? _locationController.text
                                     : '',
                                 combinedString,
-                                37.5721418,
-                                126.9772436,
+                                latitude,
+                                longitude,
                                 _image!);
 
                             setState(() {
