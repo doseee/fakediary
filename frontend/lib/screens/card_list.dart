@@ -57,24 +57,7 @@ class CardModal extends StatelessWidget {
 }
 
 class _CardListState extends State<CardList> {
-  List temp = [
-    '박소정',
-    '바나프레소',
-    '박박',
-    'IAM',
-    'ㄹㄹ',
-    'ㄱㄱㄱㄱ',
-    '하하하하',
-    '즐거운하루^^',
-    '박소정',
-    '바나프레소',
-    '박박',
-    'IAM',
-    'ㄹㄹ',
-    'ㄱㄱㄱㄱ',
-    '하하하하',
-    '즐거운하루^^'
-  ];
+  List temp = [];
 
   Widget build(BuildContext context) {
     return (Container(
@@ -131,7 +114,7 @@ class _CardListState extends State<CardList> {
             body: Center(
                 child: Column(children: [
                   Flexible(
-                    flex: 1,
+                    flex: 2,
                     child: Scaffold(
                         backgroundColor: Colors.transparent,
                         body: Center(
@@ -164,7 +147,7 @@ class _CardListState extends State<CardList> {
                         )),
                   ),
                   Flexible(
-                      flex: 3,
+                      flex: 5,
                       child: GridView.count(
                         crossAxisCount: 3,
                         // 가로 방향으로 3개의 카드씩 표시

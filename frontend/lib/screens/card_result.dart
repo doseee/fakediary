@@ -3,9 +3,12 @@ import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
+import 'dart:math' as math;
 
 class CardResult extends StatefulWidget {
-  const CardResult({Key? key}) : super(key: key);
+  final Map<String, dynamic> card;
+
+  const CardResult({Key? key, required this.card}) : super(key: key);
 
   @override
   State<CardResult> createState() => _CardResultState();
@@ -131,7 +134,7 @@ class _CardResultState extends State<CardResult>
                           child: Center(
                             child: Transform(
                               transform:
-                              Matrix4.rotationY(_animation.value * 3.14),
+                                  Matrix4.rotationY(_animation.value * 3.14),
                               alignment: Alignment.center,
                               child: _isFrontVisible
                                   ? _buildFront()
@@ -143,24 +146,43 @@ class _CardResultState extends State<CardResult>
                     flex: 4,
                     child: Column(
                       children: [
-                        Flexible(flex: 1, child: Container(),),
-                        Flexible(flex: 4, child: Column(
-                          children: [
-                            Flexible(flex: 2, child:  Center(
-                              child: _buttonList(context),
-                            ),),
-                            Flexible(flex: 3, child:  Center(
-                              child: TextButton(onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const CardList(),
-                                    ));
-                              },
-                              child: Text('카드 목록 보러가기 →', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),),)
-                            ),)
-                          ],
-                        ),),
+                        Flexible(
+                          flex: 1,
+                          child: Container(),
+                        ),
+                        Flexible(
+                          flex: 4,
+                          child: Column(
+                            children: [
+                              Flexible(
+                                flex: 2,
+                                child: Center(
+                                  child: _buttonList(context),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 3,
+                                child: Center(
+                                    child: TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const CardList(),
+                                        ));
+                                  },
+                                  child: Text(
+                                    '카드 목록 보러가기 →',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800),
+                                  ),
+                                )),
+                              )
+                            ],
+                          ),
+                        ),
                         Flexible(flex: 1, child: Container())
                       ],
                     ))
@@ -180,22 +202,18 @@ class _CardResultState extends State<CardResult>
         ),
         borderRadius: BorderRadius.circular(30),
       ),
-      child:Column(
-        children: [
-          Flexible(
-            flex: 8,
-            child: Container(),
+      child: Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.rotationY(math.pi),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage(widget.card['cardImageUrl']),
+            ),
           ),
-          Flexible(
-            flex: 1,
-            child: Container(
-                decoration: BoxDecoration(color: Colors.white)),
-          ),
-          Flexible(
-            flex: 1,
-            child: Container(),
-          )
-        ],
+        ),
       ),
     );
   }
