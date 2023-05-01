@@ -34,7 +34,7 @@ class _LoginEntranceState extends State<LoginEntrance>
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/img/bg_galaxy.png'),
+          image: AssetImage('assets/img/background.png'),
           fit: BoxFit.cover,
         ),
       ),

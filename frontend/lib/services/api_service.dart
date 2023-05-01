@@ -29,7 +29,7 @@ class ApiService {
       final prefs = await SharedPreferences.getInstance();
       final respJson = jsonDecode(utf8.decode(response.bodyBytes));
       print(respJson);
-      final parsedTime = respJson['autoDiaryTime'].split(':') ?? "00:00:00";
+      final parsedTime = respJson['autoDiaryTime']?.split(':') ?? "00:00:00";
       final hour = int.parse(parsedTime[0]);
       final minute = int.parse(parsedTime[1]);
       final second = int.parse(parsedTime[2]);
