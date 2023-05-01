@@ -3,15 +3,19 @@ import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path/path.dart';
 
 class CardResult extends StatefulWidget {
-  const CardResult({Key? key}) : super(key: key);
+  final Map<String, dynamic> card;
+
+  const CardResult({Key? key, required this.card}) : super(key: key);
 
   @override
   State<CardResult> createState() => _CardResultState();
 }
 
 Widget _buttonList(BuildContext context) {
+
   return Container(
     width: 350,
     height: 50,
@@ -67,10 +71,12 @@ class _CardResultState extends State<CardResult>
         opacityLevel = 1.0;
       });
     });
+    print('card: $widget');
   }
 
   @override
   Widget build(BuildContext context) {
+    print('build: $context');
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -180,23 +186,16 @@ class _CardResultState extends State<CardResult>
         ),
         borderRadius: BorderRadius.circular(30),
       ),
-      child:Column(
-        children: [
-          Flexible(
-            flex: 8,
-            child: Container(),
-          ),
-          Flexible(
-            flex: 1,
-            child: Container(
-                decoration: BoxDecoration(color: Colors.white)),
-          ),
-          Flexible(
-            flex: 1,
-            child: Container(),
+      child:Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(
+              widget.card['cardImageUrl']
+            ),
           )
-        ],
-      ),
+        ),
+      )
     );
   }
 

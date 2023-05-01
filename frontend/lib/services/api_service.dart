@@ -6,6 +6,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/Card.dart';
+
 class ApiService {
   static const String baseUrl = "http://10.0.2.2:8080/";
 
@@ -133,7 +135,7 @@ class ApiService {
     }
   }
 
-  static Future<void> makeCard(int memberId, String baseName, String basePlace,
+  static Future<Map<String, dynamic>> makeCard(int memberId, String baseName, String basePlace,
       String keyword, double latitude, double longitude, File img) async {
     Map<String, dynamic> cardSaveRequestData = {
       "memberId": memberId,
@@ -160,17 +162,21 @@ class ApiService {
     );
 
     final response = await request.send();
-    if (response.statusCode == 200) {
+    // if (response.statusCode == 200) {
       print('success');
       final responseData = await response.stream.bytesToString();
 
-      print(responseData);
       // final responseDto = jsonDecode(responseData);
       // print(responseDto);
-    } else {
-      print('fail');
-      print(response.statusCode);
-    }
+      Map<String, dynamic> cardInfo = jsonDecode(responseData);
+      print(cardInfo);
+      return cardInfo;
+
+    // } else {
+    //   print('fail');
+    //   print(response.statusCode);
+    //   return "fail";
+    // }
   }
 
   /// Determine the current position of the device.

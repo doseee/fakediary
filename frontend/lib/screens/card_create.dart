@@ -450,7 +450,7 @@ class _CardCreateState extends State<CardCreate> {
                               return;
                             }
 
-                            await ApiService.makeCard(
+                            Map<String, dynamic> cardinform = (await ApiService.makeCard(
                                 100,
                                 personSelected ? _personController.text : '',
                                 locationSelected
@@ -459,16 +459,18 @@ class _CardCreateState extends State<CardCreate> {
                                 combinedString,
                                 37.5721418,
                                 126.9772436,
-                                _image!);
+                                _image!));
 
                             setState(() {
                               _isLoading = false;
                             });
 
+                            print('cardinform : $cardinform ');
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CardResult()));
+                                    builder: (context) => CardResult(card : cardinform )));
                           },
                           child: Container(
                             width: 268,
