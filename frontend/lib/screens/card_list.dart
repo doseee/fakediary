@@ -182,13 +182,17 @@ class _CardListState extends State<CardList> {
   }
 
   String titleCheck(snapshot, index) {
+    // print('=== $index');
     if (snapshot[index].keywords.length != 0) {
+      // print('$index ?');
       return snapshot[index].keywords[0];
-    } else if (snapshot[index].baseName != null) {
+    } else if (snapshot[index].baseName != '') {
+      // print('$index ??');
       return snapshot[index].baseName;
+    } else {
+      // print('sn: ${snapshot[index].basePlace}');
+      return snapshot[index].basePlace;
     }
-
-    return snapshot[index].location;
   }
 
   Widget buildList(snapshot) {
