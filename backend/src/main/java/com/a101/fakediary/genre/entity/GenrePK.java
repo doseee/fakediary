@@ -1,18 +1,17 @@
 package com.a101.fakediary.genre.entity;
 
 import com.a101.fakediary.diary.entity.Diary;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @Setter
 @Embeddable
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class GenrePK implements Serializable {
     @ManyToOne
     @JoinColumn(name="diary_id", nullable = false)

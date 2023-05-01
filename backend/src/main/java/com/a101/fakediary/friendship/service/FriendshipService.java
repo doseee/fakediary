@@ -18,7 +18,6 @@ import java.util.List;
 public class FriendshipService {
 
     private final FriendshipRepository friendshipRepository;
-    private final MemberRepository memberRepository;
 
     public void saveFriend(FriendshipDto dto) {
         friendshipRepository.save(dto.toEntity());

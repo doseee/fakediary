@@ -57,6 +57,8 @@ public class FriendshipController {
             if (list.isEmpty())
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             return new ResponseEntity<List<Member>>(list, HttpStatus.OK);
+        } catch (NullPointerException e){
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -71,6 +73,8 @@ public class FriendshipController {
             if (list.isEmpty())
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             return new ResponseEntity<List<FriendshipResponseDto>>(list, HttpStatus.OK);
+        } catch (NullPointerException e){
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
