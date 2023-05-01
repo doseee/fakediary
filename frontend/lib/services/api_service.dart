@@ -7,7 +7,7 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "http://k8a101.p.ssafy.io:8080/";
+  static const String baseUrl = "http://10.0.2.2:8080/";
 
   static Future<bool> login(String email, String password) async {
     final url = Uri.parse('$baseUrl/member/login');
@@ -54,6 +54,36 @@ class ApiService {
     }
   }
 
+  static Future<String> getTranslation_papago(String content) async {
+    String clientId = "iaAJOaHEssiAn4KWNlV4";
+    String clientSecret = "UR4EhjWIjn";
+    String contentType = "application/x-www-form-urlencoded; charset=UTF-8";
+    String url = "https://openapi.naver.com/v1/papago/n2mt";
+
+    http.Response trans = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': contentType,
+        'X-Naver-Client-Id': clientId,
+        'X-Naver-Client-Secret': clientSecret
+      },
+      body: {
+        'source': "en",
+        'target': "ko",
+        'text': content,
+      },
+    );
+    if (trans.statusCode == 200) {
+      var dataJson = jsonDecode(trans.body);
+      print(dataJson);
+      var resultPapago = dataJson['message']['result']['translatedText'];
+      return resultPapago;
+    } else {
+      print(trans.statusCode);
+      return content;
+    }
+  }
+
   static Future<List<String>> getCaption(File img) async {
     const apiKey = "AIzaSyA1Py3uRqxEYNs-EczcNSHrGHAjH1Ej80Q";
     final url = Uri.parse(
@@ -92,7 +122,8 @@ class ApiService {
       print(objectAnnotations);
       List<String> objectNames = [];
       for (var objectAnnotation in objectAnnotations) {
-        objectNames.add(objectAnnotation['name']);
+        final ko = await getTranslation_papago(objectAnnotation['name']);
+        objectNames.add(ko);
       }
 
       print(objectNames);
