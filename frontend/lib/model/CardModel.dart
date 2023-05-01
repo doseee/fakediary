@@ -22,7 +22,7 @@ class CardModel {
     nickName = json['nickName'];
     baseName = json['baseName'];
     basePlace = json['basePlace'];
-    keywords = List.castFrom<dynamic, String>(json['keywords']);
+    keywords = List<String>.from(json['keywords'].map((dynamic x) => x as String));
     cardImageUrl = json['cardImageUrl'];
   }
 

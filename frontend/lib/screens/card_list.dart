@@ -1,9 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CardList extends StatefulWidget {
   const CardList({Key? key}) : super(key: key);
@@ -15,7 +17,7 @@ class CardList extends StatefulWidget {
 class CardModal extends StatelessWidget {
   //모달창 class
   final int cardIndex;
-  final List cardTitle;
+  final String cardTitle;
 
   const CardModal({Key? key, required this.cardIndex, required this.cardTitle})
       : super(key: key);
@@ -44,7 +46,7 @@ class CardModal extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            title: Text(cardTitle[cardIndex],
+            title: Text(cardTitle,
                 style: TextStyle(fontWeight: FontWeight.w600)),
           ),
           body: Padding(
@@ -63,13 +65,12 @@ class CardModal extends StatelessWidget {
 class _CardListState extends State<CardList> {
   late Future<List<CardModel>> cards;
   late Future<int> lengthOfCards;
-  
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    cards = ApiService().getCardList(100);
+    cards = ApiService().getCardList();
     print(cards);
   }
   Widget build(BuildContext context) {
@@ -176,6 +177,16 @@ class _CardListState extends State<CardList> {
                 ])))));
   }
 
+  String titleCheck(snapshot, index){
+    if (snapshot[index].keywords.length != 0){
+      return snapshot[index].keywords[0];
+    } else if (snapshot[index].baseName != null){
+      return snapshot[index].baseName;
+    }
+
+    return snapshot[index].location;
+  }
+
   Widget buildList(snapshot) {
     return GridView.count(
       crossAxisCount: 3,
@@ -192,56 +203,56 @@ class _CardListState extends State<CardList> {
         // 카드 리스트 생성
         snapshot.length, // 총 카드 갯수
             (index) {
-          return InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) => CardModal(
-                      cardIndex: index, cardTitle: snapshot[index].baseName),
-                );
-              },
-              child: Card(
-                color: Colors.transparent,
-                elevation: 0.0,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: 100,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              snapshot[index].cardImageUrl
-                          )
-                        )
+          if(snapshot.length == 0){
+            return Container(
+              child: SpinKitFadingCircle(
+                color: Colors.black,
+                size: 70.0,
+              ),
+            );
+          } else {
+            return InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => CardModal(
+                        cardIndex: index, cardTitle: titleCheck(snapshot, index)),
+                  );
+                },
+                child: Card(
+                  color: Colors.transparent,
+                  elevation: 0.0,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: 80,
+                        height: 120,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(color: Colors.white60, width: 4),
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    snapshot[index].cardImageUrl
+                                )
+                            )
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(snapshot[index].baseName,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12)),
-                    ),
-                  ],
-                ),
-              ));
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(titleCheck(snapshot, index),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12)),
+                      ),
+                    ],
+                  ),
+                ));
+          }
         },
       ),
     );
   }
 
-}
-
-class MyCustomScrollBehavior extends MaterialScrollBehavior {
-  // Override behavior methods and getters like dragDevices
-  @override
-  Set<PointerDeviceKind> get dragDevices =>
-      {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-        // etc.
-      };
 }

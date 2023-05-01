@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/CardModel.dart';
 
 class ApiService {
-  static const String baseUrl = "http://10.0.2.2:8080/";
+  static const String baseUrl = "http://k8a101.p.ssafy.io:8080/";
 
   static Future<bool> login(String email, String password) async {
     print('loginstart');
@@ -308,13 +308,17 @@ class ApiService {
     }
   }
 
-  Future<List<CardModel>> getCardList(int memberId) async {
+  Future<List<CardModel>> getCardList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
     final response = await http.get(Uri.parse(
       '$baseUrl/card/$memberId'
     ));
     if(response.statusCode == 200) {
-      List<dynamic> jsonResponse = jsonDecode(response.body);
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
       List<CardModel> cards = jsonResponse.map((dynamic item) => CardModel.fromJson(item)).toList();
+
       return cards;
     } else {
       throw Exception('불러오는 데 실패했습니다');
