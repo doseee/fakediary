@@ -29,10 +29,11 @@ class ApiService {
       final prefs = await SharedPreferences.getInstance();
       final respJson = jsonDecode(utf8.decode(response.bodyBytes));
       print(respJson);
-      final parsedTime = respJson['autoDiaryTime']?.split(':') ?? "00:00:00";
-      final hour = int.parse(parsedTime[0]);
-      final minute = int.parse(parsedTime[1]);
-      final second = int.parse(parsedTime[2]);
+      final parsedTime =
+          respJson['autoDiaryTime']?.split(':') ?? ["00", "00", "00"];
+      final hour = int.parse(parsedTime[0] ?? '00');
+      final minute = int.parse(parsedTime[1] ?? '00');
+      final second = int.parse(parsedTime[2] ?? '00');
       await prefs.setInt('hour', hour);
       await prefs.setInt('minute', minute);
       await prefs.setInt('second', second);
@@ -64,8 +65,11 @@ class ApiService {
       body: json.encode(memberSaveRequestDto),
     );
     if (response.statusCode == 200) {
+      print('success');
       return login(email, password);
     } else {
+      print('failed');
+      print(response.body);
       return false;
     }
   }
@@ -149,8 +153,14 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> makeCard(int memberId, String baseName, String basePlace,
-      String keyword, double latitude, double longitude, File img) async {
+  static Future<Map<String, dynamic>> makeCard(
+      int memberId,
+      String baseName,
+      String basePlace,
+      String keyword,
+      double latitude,
+      double longitude,
+      File img) async {
     Map<String, dynamic> cardSaveRequestData = {
       "memberId": memberId,
       "baseName": baseName,
@@ -177,16 +187,15 @@ class ApiService {
 
     final response = await request.send();
     // if (response.statusCode == 200) {
-      print('success');
-      final responseData = await response.stream.bytesToString();
+    print('success');
+    final responseData = await response.stream.bytesToString();
 
+    // print(responseData);
+    final responseDto = jsonDecode(responseData);
+    // print(responseDto['memberId']);
+    Map<String, dynamic> card = responseDto;
 
-      // print(responseData);
-      final responseDto = jsonDecode(responseData);
-      // print(responseDto['memberId']);
-      Map<String, dynamic> card = responseDto;
-
-      return card;
+    return card;
     // } else {
     //   print('fail');
     //   print(response.statusCode);
