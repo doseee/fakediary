@@ -7,8 +7,8 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "http://10.0.2.2:8080/";
-
+  // static const String baseUrl = "http://10.0.2.2:8080/";
+  static const String baseUrl = "http://k8a101.p.ssafy.io:8080/";
   static Future<bool> login(String email, String password) async {
     print('loginstart');
     final url = Uri.parse('$baseUrl/member/login');

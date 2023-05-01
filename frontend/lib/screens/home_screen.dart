@@ -15,7 +15,7 @@ class _MainScreenState extends State<HomeScreen> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: AssetImage('assets/img/bg_moon.jpg'),
+            image: AssetImage('assets/img/bg_moon.png'),
           ),
         ),
         child: Scaffold(

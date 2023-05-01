@@ -64,38 +64,32 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
             ),
             body: Center(
                 child: Column(children: [
+                  Flexible(flex:2, child:Scaffold(backgroundColor: Colors.transparent,)),
                   Flexible(
-                    flex: 2,
-                    child: Scaffold(
+                    flex: 1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(width: 0.7, color: Colors.white),
+                        ),
+                      ),
+                      child: Scaffold(
                         backgroundColor: Colors.transparent,
                         body: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image(
-                                image:
-                                AssetImage('assets/img/cardlist_topcards.png'),
-                                width: 80,
-                                height: 80,
+                              SizedBox(height: 15),
+                              Text(
+                                '이야기로 만들 기억의 조각을 선택하세요.',
+                                style: TextStyle(fontSize: 10, color: Colors.white),
                               ),
-                              SizedBox(height: 15,),
-                              Text('내가 만든 카드를 확인해보세요',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 15,
-                                      color: Colors.white)),
-                              Text('카드를 누르면 해당 카드로 생성한 일기가 나타납니다.',
-                                  style:
-                                  TextStyle(fontSize: 10, color: Colors.white)),
-                              SizedBox(height: 10,),
-                              Image(
-                                image: AssetImage('assets/img/line_top.png'),
-                                width: 200,
-                                height: 40,
-                              )
+                              SizedBox(height: 10),
                             ],
                           ),
-                        )),
+                        ),
+                      ),
+                    ),
                   ),
                   Flexible(
                       flex: 5,
