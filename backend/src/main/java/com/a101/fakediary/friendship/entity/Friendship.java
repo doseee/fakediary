@@ -14,12 +14,11 @@ import javax.persistence.*;
                 columns = {
                         @ColumnResult(name = "member_id", type = Long.class),
                         @ColumnResult(name = "friend_id", type = Long.class),
-                        @ColumnResult(name = "nickname", type = String.class),
-                        @ColumnResult(name = "exchange_cnt", type = Short.class)
+                        @ColumnResult(name = "nickname", type = String.class)
                 }
         )
 )
-@NamedNativeQuery(name="listFriendQuery", query = "SELECT f.member_id AS member_id, f.friend_id AS friend_id, m.nickname AS nickname, f.exchange_cnt AS exchange_cnt " +
+@NamedNativeQuery(name="listFriendQuery", query = "SELECT f.member_id AS member_id, f.friend_id AS friend_id, m.nickname AS nickname " +
         "FROM Friendship f " +
         "JOIN (SELECT m.member_id AS member_id, m.nickname AS nickname " +
         "FROM Member m " +
@@ -27,7 +26,7 @@ import javax.persistence.*;
         "WHERE f.member_id = :memberId) m " +
         "ON f.friend_id = m.member_id " +
         "WHERE f.member_id = :memberId " +
-        "ORDER BY f.exchange_cnt DESC", resultSetMapping = "FriendshipMapping")
+        "ORDER BY nickname", resultSetMapping = "FriendshipMapping")
 @Setter
 @Getter
 @NoArgsConstructor
