@@ -4,7 +4,6 @@ import 'package:lottie/lottie.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
 import 'login.dart';
-import 'menu_screen.dart';
 
 class LoginEntrance extends StatefulWidget {
   const LoginEntrance({Key? key}) : super(key: key);
@@ -34,7 +33,7 @@ class _LoginEntranceState extends State<LoginEntrance>
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/img/bg_galaxy.png'),
+          image: AssetImage('assets/img/bg_main.png'),
           fit: BoxFit.cover,
         ),
       ),

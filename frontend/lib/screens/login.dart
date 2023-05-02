@@ -127,7 +127,7 @@ class _LoginState extends State<Login> {
                 stops: [0, 0.4, 1.0],
               ),
               image: DecorationImage(
-                image: AssetImage('assets/img/main_background.jpg'),
+                image: AssetImage('assets/img/bg_main.png'),
                 fit: BoxFit.cover,
               ),
             ),

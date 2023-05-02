@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/CardModel.dart';
 
 class ApiService {
+  // static const String baseUrl = "http://10.0.2.2:8080/";
   static const String baseUrl = "http://k8a101.p.ssafy.io:8080/";
 
   static Future<bool> login(String email, String password) async {
@@ -322,6 +323,33 @@ class ApiService {
       return cards;
     } else {
       throw Exception('불러오는 데 실패했습니다');
+    }
+  }
+
+  Future<void> getCards(memberId) async {
+    final url = Uri.parse('$baseUrl/card/$memberId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        // If the API call is successful, update the 'temp' list with the retrieved data
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+
+        // Assuming the card data is returned as a list of Maps
+        final List<Map<String, dynamic>> cardData = jsonData
+            .map((dynamic cardJson) => cardJson as Map<String, dynamic>)
+            .toList();
+
+        // Do something with the card data, e.g. print it
+        print(cardData);
+      } else {
+        // If the API call fails, handle the error appropriately
+        print('Failed to fetch data: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle any exceptions thrown during the API call
+      print('Error fetching data: $e');
     }
   }
 }

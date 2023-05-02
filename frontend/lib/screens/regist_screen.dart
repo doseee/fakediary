@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/main.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/services/api_service.dart';
 
@@ -35,7 +34,7 @@ class _RegistScreenState extends State<RegistScreen> {
             stops: [0, 0.4, 1.0],
           ),
           image: DecorationImage(
-            image: AssetImage('assets/img/bg_galaxy.png'),
+            image: AssetImage('assets/img/bg_main.png'),
             fit: BoxFit.cover,
           ),
         ),
