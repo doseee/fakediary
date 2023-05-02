@@ -190,7 +190,7 @@ class _CardListState extends State<CardList> {
       // print('$index ??');
       return snapshot[index].baseName;
     } else {
-      // print('sn: ${snapshot[index].basePlace}');
+      print('sn: ${snapshot[index].basePlace}');
       return snapshot[index].basePlace;
     }
   }
@@ -225,8 +225,8 @@ class _CardListState extends State<CardList> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    width: 80,
-                    height: 120,
+                    width: 60,
+                    height: 100,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         border: Border.all(color: Colors.white60, width: 4),
