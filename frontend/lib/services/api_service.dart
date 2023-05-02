@@ -152,7 +152,9 @@ class ApiService {
       for (var objectAnnotation in objectAnnotations) {
         // final ko = await getTranslation_papago(objectAnnotation['name']);
         final ko = await getTranslation_papago(objectAnnotation['description']);
-        objectNames.add(ko);
+        String trimmedKo =
+            ko.endsWith('.') ? ko.substring(0, ko.length - 1) : ko;
+        objectNames.add(trimmedKo);
       }
 
       print(objectNames);
