@@ -463,16 +463,19 @@ class _CardCreateState extends State<CardCreate> {
                               return;
                             }
 
-                            Map<String, dynamic> card = await ApiService.makeCard(
-                                memberId,
-                                personSelected ? _personController.text : '',
-                                locationSelected
-                                    ? _locationController.text
-                                    : '',
-                                combinedString,
-                                latitude,
-                                longitude,
-                                _image!);
+                            Map<String, dynamic> card =
+                                await ApiService.makeCard(
+                                    memberId,
+                                    personSelected
+                                        ? _personController.text
+                                        : '',
+                                    locationSelected
+                                        ? _locationController.text
+                                        : '',
+                                    combinedString,
+                                    latitude,
+                                    longitude,
+                                    _image!);
 
                             setState(() {
                               _isLoading = false;
@@ -481,7 +484,8 @@ class _CardCreateState extends State<CardCreate> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CardResult(card : card)));
+                                    builder: (context) =>
+                                        CardResult(card: card)));
                           },
                           child: Container(
                             width: 268,

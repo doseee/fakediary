@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/CardModel.dart';
 
 class ApiService {
-  static const String baseUrl = "http://k8a101.p.ssafy.io:8080/";
+  static String baseUrl = dotenv.get('backendUrl');
 
   static Future<bool> login(String email, String password) async {
     print('loginstart');
@@ -312,12 +312,11 @@ class ApiService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
-    final response = await http.get(Uri.parse(
-      '$baseUrl/card/$memberId'
-    ));
-    if(response.statusCode == 200) {
+    final response = await http.get(Uri.parse('$baseUrl/card/$memberId'));
+    if (response.statusCode == 200) {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-      List<CardModel> cards = jsonResponse.map((dynamic item) => CardModel.fromJson(item)).toList();
+      List<CardModel> cards =
+          jsonResponse.map((dynamic item) => CardModel.fromJson(item)).toList();
 
       return cards;
     } else {

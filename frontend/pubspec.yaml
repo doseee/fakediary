@@ -46,6 +46,7 @@ dependencies:
   http_parser: ^4.0.2
   geolocator: ^9.0.2
   image_cropper: ^3.0.3
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
+    - .env
     - assets/lottie/
     - assets/img/
 
