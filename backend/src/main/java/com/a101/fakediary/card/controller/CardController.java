@@ -1,7 +1,11 @@
 package com.a101.fakediary.card.controller;
 
+import com.a101.fakediary.card.dto.response.CardMadeDiaryResponseDto;
 import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.service.CardService;
+import com.a101.fakediary.diary.dto.DiaryResponseDto;
+import com.a101.fakediary.diary.service.DiaryService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.ParseException;
@@ -10,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -18,6 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CardController {
     private final CardService cardService;
+    private final DiaryService diaryService;
 
     /**
      *
@@ -114,5 +120,23 @@ public class CardController {
         }
 
         return new ResponseEntity<>("삭제된 카드 번호 = " + ret, HttpStatus.OK);
+    }
+    @ApiOperation(value = "특정 카드로 만들어진 일기 리스트 조회")
+    @GetMapping("/diary/{cardId}")
+    public ResponseEntity<?> findDiaryListByCardId(@PathVariable("cardId") Long cardId) {
+        try {
+            //카드&일기 매핑 테이블에서 해당 카드id와 함께 복합키를 이루고 있는 diaryId리스트를 가져와서
+            List<Long> diaryIdsByCardId = cardService.getDiaryIdsByCardId(cardId);
+
+            //해당 diaryId로 responseDto List를 반환해줌(id, 제목, 요약, 썸네일)
+            List<CardMadeDiaryResponseDto> cardMadeDiaryResponseDtos = diaryService.findDiaryListFromCardList(diaryIdsByCardId);
+
+            //이과정에서 이미지 표지를 가져오기위해 diaryId와 일치하는 diaryImageId리스트틀 가져온 이후 가장낮은 id의 diaryImageUrl을 반환하면 표지
+            return ResponseEntity.ok().body(cardMadeDiaryResponseDtos);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

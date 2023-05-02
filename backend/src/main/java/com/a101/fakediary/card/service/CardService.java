@@ -4,8 +4,13 @@ import com.a101.fakediary.card.dto.request.CardSaveRequestDto;
 import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
+import com.a101.fakediary.carddiarymapping.entity.CardDiaryMapping;
+import com.a101.fakediary.carddiarymapping.repository.CardDiaryMappingRepository;
 import com.a101.fakediary.deeparteffects.api.DeepArtEffectsApi;
 import com.a101.fakediary.deeparteffects.styles.DeepArtEffectsStyles;
+import com.a101.fakediary.diary.dto.DiaryResponseDto;
+import com.a101.fakediary.diary.entity.Diary;
+import com.a101.fakediary.diary.repository.DiaryRepository;
 import com.a101.fakediary.imagefile.handler.ImageFileHandler;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
@@ -20,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +34,7 @@ import java.util.*;
 public class CardService {
     private final CardRepository cardRepository;
     private final MemberRepository memberRepository;
+    private final CardDiaryMappingRepository cardDiaryMappingRepository;
     private final ImageFileHandler s3ImageFileHandler;
     private final DeepArtEffectsApi deepArtEffectsApi;
 
@@ -182,5 +189,10 @@ public class CardService {
         }
 
         return ret;
+    }
+
+    //특정 카드로 만들어진 일기Id 리스트 반환
+    public List<Long> getDiaryIdsByCardId(Long cardId) {
+        return cardDiaryMappingRepository.findDiaryIdsByCardId(cardId);
     }
 }
