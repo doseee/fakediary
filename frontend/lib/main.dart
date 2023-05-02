@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/mood_select.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/screens/login_entrance.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -28,7 +29,8 @@ class MainScreen extends StatelessWidget {
   }
 }
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MaterialApp(
     home: MoodSelect(),
   ));
