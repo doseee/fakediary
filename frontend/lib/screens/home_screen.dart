@@ -15,7 +15,7 @@ class _MainScreenState extends State<HomeScreen> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: AssetImage('assets/img/main_background.jpg'),
+            image: AssetImage('assets/img/bg_moon.png'),
           ),
         ),
         child: Scaffold(
@@ -38,8 +38,8 @@ class _MainScreenState extends State<HomeScreen> {
                         children: [
                           Image(
                             image: AssetImage('assets/img/icon_alarm.png'),
-                            width: 50, // set the desired width
-                            height: 50, // set the desired height
+                            width: 45, // set the desired width
+                            height: 45, // set the desired height
                           ),
                         ],
                       ),
