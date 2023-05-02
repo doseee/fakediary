@@ -22,27 +22,28 @@ import java.time.Duration;
 import java.time.Instant;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class DeepArtEffectsApi {
-    @Value("${fake-diary.deep-art.base-url}")
-    private String BASE_URL;
+    private final String BASE_URL;
+    private final String API_KEY;
+    private final String ACCESS_KEY;
+    private final String SECRET_KEY;
+    private final HttpHeaders headers;
 
-    @Value("${fake-diary.deep-art.api-key}")
-    private String API_KEY;
+    public DeepArtEffectsApi(@Value("${fake-diary.deep-art.base-url}") String BASE_URL,  @Value("${fake-diary.deep-art.api-key}") String API_KEY,
+                             @Value("${fake-diary.deep-art.access-key}") String ACCESS_KEY, @Value("${fake-diary.deep-art.secret-key}")String SECRET_KEY) {
+        this.BASE_URL = BASE_URL;
+        this.API_KEY = API_KEY;
+        this.ACCESS_KEY = ACCESS_KEY;
+        this.SECRET_KEY = SECRET_KEY;
 
-    @Value("${fake-diary.deep-art.access-key}")
-    private String ACCESS_KEY;
-
-    @Value("${fake-diary.deep-art.secret-key}")
-    private String SECRET_KEY;
+        headers = new HttpHeaders();
+        headers.set("x-api-key", this.API_KEY);
+        headers.set("x-api-access-key", this.ACCESS_KEY);
+        headers.set("x-api-secret-key", this.SECRET_KEY);
+    }
 
     public Mono<String> getDeepArtEffectsStyles() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("x-api-key", API_KEY);
-        headers.set("x-api-access-key", ACCESS_KEY);
-        headers.set("x-api-secret-key", SECRET_KEY);
-
         //  2. api를 통해 style 목록을 얻어온다.
         WebClient client = WebClient.builder()
                 .baseUrl(BASE_URL)
@@ -67,11 +68,6 @@ public class DeepArtEffectsApi {
      * @throws IOException
      */
     public String uploadImageWithStyleId(MultipartFile origImageFile, String styleId) throws IOException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("x-api-key", API_KEY);
-        headers.set("x-api-access-key", ACCESS_KEY);
-        headers.set("x-api-secret-key", SECRET_KEY);
-
         WebClient webClient = WebClient.builder()
                 .baseUrl(BASE_URL)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -104,11 +100,6 @@ public class DeepArtEffectsApi {
      * @return : 업로드 결과로 생성된 카드 이미지 URL
      */
     public String getCardImageUrl(String submissionId) throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("x-api-key", API_KEY);
-        headers.set("x-api-access-key", ACCESS_KEY);
-        headers.set("x-api-secret-key", SECRET_KEY);
-
         WebClient webClient = WebClient.builder()
                 .baseUrl(BASE_URL)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
