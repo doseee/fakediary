@@ -32,7 +32,7 @@ class MainScreen extends StatelessWidget {
 void main() async {
   await dotenv.load(fileName: ".env");
   runApp(const MaterialApp(
-    home: LoginEntrance(),
+    home: MoodSelect(),
   ));
 }
 
