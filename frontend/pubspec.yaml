@@ -38,7 +38,7 @@ dependencies:
   lottie: ^2.3.2
   carousel_slider: ^4.2.1
   dots_indicator: ^2.1.0
-  http: ^0.13.5
+  http: ^0.13.6
   gradient_borders: ^1.0.0
   shared_preferences: ^2.1.0
   flutter_spinkit: ^5.1.0
@@ -46,6 +46,7 @@ dependencies:
   http_parser: ^4.0.2
   geolocator: ^9.0.2
   image_cropper: ^3.0.3
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
+    - .env
     - assets/lottie/
     - assets/img/
 

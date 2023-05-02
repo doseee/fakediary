@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -10,8 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/CardModel.dart';
 
 class ApiService {
-  // static const String baseUrl = "http://10.0.2.2:8080/";
-  static const String baseUrl = "http://k8a101.p.ssafy.io:8080/";
+  static String baseUrl = dotenv.get('baseUrl');
 
   static Future<bool> login(String email, String password) async {
     print('loginstart');
@@ -79,8 +78,8 @@ class ApiService {
   }
 
   static Future<String> getTranslation_papago(String content) async {
-    String clientId = "iaAJOaHEssiAn4KWNlV4";
-    String clientSecret = "UR4EhjWIjn";
+    String clientId = dotenv.get('papagoClientId');
+    String clientSecret = dotenv.get('papagoClientSecret');
     String contentType = "application/x-www-form-urlencoded; charset=UTF-8";
     String url = "https://openapi.naver.com/v1/papago/n2mt";
 
@@ -109,7 +108,7 @@ class ApiService {
   }
 
   static Future<List<String>> getCaption(File img) async {
-    const apiKey = "AIzaSyA1Py3uRqxEYNs-EczcNSHrGHAjH1Ej80Q";
+    final apiKey = dotenv.get('visionApiKey');
     final url = Uri.parse(
         'https://vision.googleapis.com/v1/images:annotate?key=$apiKey');
 
@@ -145,6 +144,9 @@ class ApiService {
       final objectAnnotations = resp['localizedObjectAnnotations'];
       print(objectAnnotations);
       List<String> objectNames = [];
+      if (objectAnnotations == null) {
+        return [];
+      }
       for (var objectAnnotation in objectAnnotations) {
         final ko = await getTranslation_papago(objectAnnotation['name']);
         objectNames.add(ko);
@@ -250,7 +252,7 @@ class ApiService {
   static Future<String> coordToRegion(Position pos) async {
     final url = Uri.parse(
         'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${pos.longitude}&y=${pos.latitude}');
-    const apiKey = '3d2145c1252e1905524178d5b0d99d30';
+    final apiKey = dotenv.get('kakaoApiKey');
     final response = await http.get(
       url,
       headers: {
@@ -313,12 +315,11 @@ class ApiService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
-    final response = await http.get(Uri.parse(
-      '$baseUrl/card/$memberId'
-    ));
-    if(response.statusCode == 200) {
+    final response = await http.get(Uri.parse('$baseUrl/card/$memberId'));
+    if (response.statusCode == 200) {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-      List<CardModel> cards = jsonResponse.map((dynamic item) => CardModel.fromJson(item)).toList();
+      List<CardModel> cards =
+          jsonResponse.map((dynamic item) => CardModel.fromJson(item)).toList();
 
       return cards;
     } else {
