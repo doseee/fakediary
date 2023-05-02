@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/mood_select.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,13 +13,16 @@ class DiaryCreateCards extends StatefulWidget {
 }
 
 class _DiaryCreateState extends State<DiaryCreateCards> {
-  List temp = ["a", "b", "c", "d", "e", "b"];
+  late Future<List<CardModel>> cards;
+  late Future<int> lengthOfCards;
   List<String> selectedCards = [];
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    initId();
+    cards = ApiService().getCardList();
+    print(cards);
   }
 
   late int memberId;
@@ -157,57 +161,17 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                 ),
               ),
               Flexible(
-                flex: 4,
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  childAspectRatio: 0.7,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  padding: EdgeInsets.all(10.0),
-                  children: List.generate(
-                    temp.length,
-                    (index) {
-                      return InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (selectedCards.contains(temp[index])) {
-                              selectedCards.remove(temp[index]);
-                            } else {
-                              selectedCards.add(temp[index]);
-                            }
-                          });
-                        },
-                        child: Card(
-                          color: selectedCards.contains(temp[index])
-                              ? Colors.blue
-                              : Colors.transparent,
-                          elevation: 0.0,
-                          child: Column(
-                            children: <Widget>[
-                              Image(
-                                image: AssetImage(
-                                    'assets/img/cardlist_tmpcard.png'),
-                                height: 110,
-                                width: 110,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  temp[index],
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
+                  flex: 4,
+                  child: FutureBuilder<List<CardModel>>(
+                      future: cards,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return buildList(snapshot.data);
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}에러!!");
+                        }
+                        return CircularProgressIndicator();
+                      })),
               Flexible(
                   flex: 1,
                   child: GestureDetector(
@@ -252,5 +216,73 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                         )),
                   ))
             ])))));
+  }
+
+  String titleCheck(snapshot, index) {
+    // print('=== $index');
+    if (snapshot[index].keywords.length != 0) {
+      // print('$index ?');
+      return snapshot[index].keywords[0];
+    } else if (snapshot[index].baseName != '') {
+      // print('$index ??');
+      return snapshot[index].baseName;
+    } else {
+      print('sn: ${snapshot[index].basePlace}');
+      return snapshot[index].basePlace;
+    }
+  }
+
+  Widget buildList(snapshot) {
+    return GridView.count(
+      crossAxisCount: 3,
+      // 가로 방향으로 3개의 카드씩 표시
+      childAspectRatio: 0.7,
+      // 카드의 가로 세로 비율 설정
+      mainAxisSpacing: 10.0,
+      // 카드들의 세로 간격 설정
+      crossAxisSpacing: 10.0,
+      // 카드들의 가로 간격 설정
+      padding: EdgeInsets.all(10.0),
+      // GridView 자체의 Padding 설정
+      children: List.generate(
+          // 카드 리스트 생성
+          snapshot.length, // 총 카드 갯수
+          (index) {
+        return InkWell(
+            // onTap: () {
+            //   showModalBottomSheet(
+            //     context: context,
+            //     builder: (context) => CardModal(
+            //         cardIndex: index, cardTitle: titleCheck(snapshot, index)),
+            //   );
+            // },
+            child: Card(
+          color: Colors.transparent,
+          elevation: 0.0,
+          child: Column(
+            children: <Widget>[
+              Container(
+                width: 60,
+                height: 100,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(color: Colors.white60, width: 4),
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(snapshot[index].cardImageUrl))),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(titleCheck(snapshot, index),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12)),
+              ),
+            ],
+          ),
+        ));
+      }),
+    );
   }
 }
