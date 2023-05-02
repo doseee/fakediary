@@ -120,7 +120,7 @@ class ApiService {
           },
           "features": [
             {
-              "type": "OBJECT_LOCALIZATION",
+              "type": "LABEL_DETECTION",
               "maxResults": 3,
             }
           ],
@@ -138,17 +138,20 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
       final responses = jsonResponse['responses'];
       final resp = responses[0];
 
-      final objectAnnotations = resp['localizedObjectAnnotations'];
+      // final objectAnnotations = resp['localizedObjectAnnotations'];
+      final objectAnnotations = resp['labelAnnotations'];
       print(objectAnnotations);
       List<String> objectNames = [];
       if (objectAnnotations == null) {
         return [];
       }
       for (var objectAnnotation in objectAnnotations) {
-        final ko = await getTranslation_papago(objectAnnotation['name']);
+        // final ko = await getTranslation_papago(objectAnnotation['name']);
+        final ko = await getTranslation_papago(objectAnnotation['description']);
         objectNames.add(ko);
       }
 
