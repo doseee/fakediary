@@ -20,7 +20,7 @@ public class DiaryController {
 
     private final DiaryService diaryService;
 
-    @ApiOperation(value = "일기 등록")
+    @ApiOperation(value = "일기 등록.")
     @PostMapping("/save")
     public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
         try {
