@@ -54,6 +54,33 @@ public class RandomExchangePoolService {
         return createRandomExchangePoolResponseDto(randomExchangePool);
     }
 
+    @Transactional
+    public void doRandomMatching() {
+        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getRandomExchangePoolResponseList();
+        int size = randomExchangePoolResponseDtoList.size();    //  랜덤 요청 개수
+        int idx = 0;
+
+        if(size >= 2) {
+            for (; idx < size - 2; idx += 2) {
+                RandomExchangePoolResponseDto reprDto1 = randomExchangePoolResponseDtoList.get(idx);
+                RandomExchangePoolResponseDto reprDto2 = randomExchangePoolResponseDtoList.get(idx + 1);
+
+                RandomExchangePoolUpdateDto repuDto1 = RandomExchangePoolUpdateDto.builder()
+                        .randomId(reprDto1.getRandomExchangePoolId())
+                        .exchangedDiaryId(reprDto2.getDiaryId())
+                        .exchangedOwnerId(reprDto2.getExchangedOwnerId())
+                        .build();
+
+                RandomExchangePoolUpdateDto repuDto2 = RandomExchangePoolUpdateDto.builder()
+                        .randomId(reprDto2.getRandomExchangePoolId())
+                        .exchangedDiaryId(reprDto1.getDiaryId())
+                        .exchangedOwnerId(reprDto1.getExchangedOwnerId())
+                        .build();
+
+            }
+        }
+    }
+
     @Transactional(readOnly = true)
     public List<RandomExchangePoolResponseDto> getRandomExchangePoolResponseList() {
         //  어제 생성된 모든 요청들을 가져옴
