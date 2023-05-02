@@ -12,7 +12,5 @@ import lombok.*;
 @AllArgsConstructor
 public class FriendManageDto {
     private Long friendRequestId;
-    private Long senderId;
-    private Long receiverId;
     private ERequestStatus status;
 }

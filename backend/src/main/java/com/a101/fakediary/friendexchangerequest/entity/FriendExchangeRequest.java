@@ -2,7 +2,6 @@ package com.a101.fakediary.friendexchangerequest.entity;
 
 import com.a101.fakediary.common.BaseEntity;
 import com.a101.fakediary.diary.entity.Diary;
-import com.a101.fakediary.enums.EExchangeType;
 import com.a101.fakediary.enums.ERequestStatus;
 import com.a101.fakediary.member.entity.Member;
 import lombok.*;
@@ -16,7 +15,14 @@ import javax.persistence.*;
 @Builder
 @Entity
 public class FriendExchangeRequest extends BaseEntity {
+    @SequenceGenerator(
+            name="FRIENDEXCHANGEREQUEST_SEQ_GEN",
+            sequenceName = "FRIENDEXCHANGEREQUEST_SEQ",
+            initialValue = 100,
+            allocationSize = 1
+    )
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FRIENDEXCHANGEREQUEST_SEQ_GEN")
     private Long friendExchangeRequestId;
 
     @ManyToOne
