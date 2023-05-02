@@ -33,6 +33,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
     print(memberId);
     await ApiService().getCards(memberId);
   }
+  }
 
   Widget build(BuildContext context) {
     return (Container(
@@ -249,6 +250,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
           snapshot.length, // 총 카드 갯수
           (index) {
         return InkWell(
+
             // onTap: () {
             //   showModalBottomSheet(
             //     context: context,
