@@ -46,15 +46,16 @@ class CardModal extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            title: Text(cardTitle,
-                style: TextStyle(fontWeight: FontWeight.w600)),
+            title:
+                Text(cardTitle, style: TextStyle(fontWeight: FontWeight.w600)),
           ),
           body: Padding(
             padding: EdgeInsets.all(40),
             child: Row(
               children: [
-                Flexible(flex: 1, child: Container(decoration: BoxDecoration(color: Colors.white),)),
-                Flexible(flex: 1, child: Container(decoration: BoxDecoration(color: Colors.black),))
+                Flexible(
+                    flex: 1,
+                    child: Container())
               ],
             ),
           ),
@@ -73,6 +74,7 @@ class _CardListState extends State<CardList> {
     cards = ApiService().getCardList();
     print(cards);
   }
+
   Widget build(BuildContext context) {
     return (Container(
         decoration: BoxDecoration(
@@ -80,15 +82,15 @@ class _CardListState extends State<CardList> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: [
-                  0.3,
-                  0.6,
-                  0.9
-                ],
+              0.3,
+              0.6,
+              0.9
+            ],
                 colors: [
-                  Color(0xff0f2027),
-                  Color(0xff203a43),
-                  Color(0xff2c5364),
-                ])),
+              Color(0xff0f2027),
+              Color(0xff203a43),
+              Color(0xff2c5364),
+            ])),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
@@ -127,64 +129,70 @@ class _CardListState extends State<CardList> {
             ),
             body: Center(
                 child: Column(children: [
-                  Flexible(
-                    flex: 2,
-                    child: Scaffold(
-                        backgroundColor: Colors.transparent,
-                        body: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image(
-                                image:
+              Flexible(
+                flex: 2,
+                child: Scaffold(
+                    backgroundColor: Colors.transparent,
+                    body: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image(
+                            image:
                                 AssetImage('assets/img/cardlist_topcards.png'),
-                                width: 80,
-                                height: 80,
-                              ),
-                              SizedBox(height: 15,),
-                              Text('내가 만든 카드를 확인해보세요',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 15,
-                                      color: Colors.white)),
-                              Text('카드를 누르면 해당 카드로 생성한 일기가 나타납니다.',
-                                  style:
-                                  TextStyle(fontSize: 10, color: Colors.white)),
-                              SizedBox(height: 10,),
-                              Image(
-                                image: AssetImage('assets/img/line_top.png'),
-                                width: 200,
-                                height: 40,
-                              )
-                            ],
+                            width: 80,
+                            height: 80,
                           ),
-                        )),
-                  ),
-                  Flexible(
-                      flex: 5,
-                      child: FutureBuilder<List<CardModel>>(
-                        future: cards,
-                        builder: (context, snapshot) {
-                          if(snapshot.hasData){
-                            return buildList(snapshot.data);
-                          } else if (snapshot.hasError){
-                            return Text("${snapshot.error}에러!!");
-                          }
-                          return CircularProgressIndicator();
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text('내가 만든 카드를 확인해보세요',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15,
+                                  color: Colors.white)),
+                          Text('카드를 누르면 해당 카드로 생성한 일기가 나타납니다.',
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.white)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Image(
+                            image: AssetImage('assets/img/line_top.png'),
+                            width: 200,
+                            height: 40,
+                          )
+                        ],
+                      ),
+                    )),
+              ),
+              Flexible(
+                  flex: 5,
+                  child: FutureBuilder<List<CardModel>>(
+                      future: cards,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return buildList(snapshot.data);
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}에러!!");
                         }
-                      )
-                  ),
-                ])))));
+                        return CircularProgressIndicator();
+                      })),
+            ])))));
   }
 
-  String titleCheck(snapshot, index){
-    if (snapshot[index].keywords.length != 0){
+  String titleCheck(snapshot, index) {
+    // print('=== $index');
+    if (snapshot[index].keywords.length != 0) {
+      // print('$index ?');
       return snapshot[index].keywords[0];
-    } else if (snapshot[index].baseName != null){
+    } else if (snapshot[index].baseName != '') {
+      // print('$index ??');
       return snapshot[index].baseName;
+    } else {
+      print('sn: ${snapshot[index].basePlace}');
+      return snapshot[index].basePlace;
     }
-
-    return snapshot[index].location;
   }
 
   Widget buildList(snapshot) {
@@ -200,59 +208,44 @@ class _CardListState extends State<CardList> {
       padding: EdgeInsets.all(10.0),
       // GridView 자체의 Padding 설정
       children: List.generate(
-        // 카드 리스트 생성
-        snapshot.length, // 총 카드 갯수
-            (index) {
-          if(snapshot.length == 0){
-            return Container(
-              child: SpinKitFadingCircle(
-                color: Colors.black,
-                size: 70.0,
-              ),
-            );
-          } else {
-            return InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) => CardModal(
-                        cardIndex: index, cardTitle: titleCheck(snapshot, index)),
-                  );
-                },
-                child: Card(
-                  color: Colors.transparent,
-                  elevation: 0.0,
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        width: 80,
-                        height: 120,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            border: Border.all(color: Colors.white60, width: 4),
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    snapshot[index].cardImageUrl
-                                )
-                            )
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(titleCheck(snapshot, index),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12)),
-                      ),
-                    ],
+          // 카드 리스트 생성
+          snapshot.length, // 총 카드 갯수
+          (index) {
+        return InkWell(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => CardModal(
+                    cardIndex: index, cardTitle: titleCheck(snapshot, index)),
+              );
+            },
+            child: Card(
+              color: Colors.transparent,
+              elevation: 0.0,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: 60,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.white60, width: 4),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(snapshot[index].cardImageUrl))),
                   ),
-                ));
-          }
-        },
-      ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(titleCheck(snapshot, index),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12)),
+                  ),
+                ],
+              ),
+            ));
+      }),
     );
   }
-
 }
