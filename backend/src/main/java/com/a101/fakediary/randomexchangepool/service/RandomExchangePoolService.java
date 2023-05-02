@@ -1,7 +1,12 @@
 package com.a101.fakediary.randomexchangepool.service;
 
+import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryRepository;
+import com.a101.fakediary.diary.service.DiaryService;
+import com.a101.fakediary.enums.EExchangeType;
+import com.a101.fakediary.exchangediary.dto.request.ExchangedDiarySaveRequestDto;
+import com.a101.fakediary.exchangediary.service.ExchangedDiaryService;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.a101.fakediary.randomexchangepool.dto.request.RandomExchangePoolRegistDto;
@@ -16,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,6 +33,8 @@ public class RandomExchangePoolService {
     private final RandomExchangePoolRepository randomExchangePoolRepository;
     private final MemberRepository memberRepository;
     private final DiaryRepository diaryRepository;
+    private final DiaryService diaryService;
+    private final ExchangedDiaryService exchangedDiaryService;
 
     @Transactional
     public RandomExchangePoolResponseDto registRandomExchange(RandomExchangePoolRegistDto randomExchangePoolRegistDto) throws Exception {
@@ -54,10 +60,15 @@ public class RandomExchangePoolService {
         return createRandomExchangePoolResponseDto(randomExchangePool);
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @Transactional
-    public void doRandomMatching() {
+    public void doRandomMatching() throws Exception {
         List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getRandomExchangePoolResponseList();
         int size = randomExchangePoolResponseDtoList.size();    //  랜덤 요청 개수
+        int remainder = size % 2;
         int idx = 0;
 
         if(size >= 2) {
@@ -66,18 +77,65 @@ public class RandomExchangePoolService {
                 RandomExchangePoolResponseDto reprDto2 = randomExchangePoolResponseDtoList.get(idx + 1);
 
                 RandomExchangePoolUpdateDto repuDto1 = RandomExchangePoolUpdateDto.builder()
-                        .randomId(reprDto1.getRandomExchangePoolId())
+                        .randomExchangePoolId(reprDto1.getRandomExchangePoolId())
                         .exchangedDiaryId(reprDto2.getDiaryId())
                         .exchangedOwnerId(reprDto2.getExchangedOwnerId())
                         .build();
 
                 RandomExchangePoolUpdateDto repuDto2 = RandomExchangePoolUpdateDto.builder()
-                        .randomId(reprDto2.getRandomExchangePoolId())
+                        .randomExchangePoolId(reprDto2.getRandomExchangePoolId())
                         .exchangedDiaryId(reprDto1.getDiaryId())
                         .exchangedOwnerId(reprDto1.getExchangedOwnerId())
                         .build();
 
+                ExchangedDiarySaveRequestDto exchangeDiarySaveRequestDto1 = ExchangedDiarySaveRequestDto.builder()
+                        .sendDiaryId(reprDto1.getDiaryId())
+                        .senderId(reprDto1.getOwnerId())
+                        .receiveDiaryId(reprDto2.getDiaryId())
+                        .receiverId(reprDto2.getOwnerId())
+                        .friendExchangeType(EExchangeType.R)
+                        .build();
+                ExchangedDiarySaveRequestDto exchangeDiarySaveRequestDto2 = ExchangedDiarySaveRequestDto.builder()
+                        .sendDiaryId(reprDto2.getDiaryId())
+                        .senderId(reprDto2.getOwnerId())
+                        .receiveDiaryId(reprDto1.getDiaryId())
+                        .receiverId(reprDto1.getOwnerId())
+                        .friendExchangeType(EExchangeType.R)
+                        .build();
+
+                exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto1);
+                exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto2);
+
+                updateRandomExchangePool(repuDto1);
+                updateRandomExchangePool(repuDto2);
             }
+        }
+        
+        if(remainder == 1) {    //  한 명이 남을 경우
+            RandomExchangePoolResponseDto reprDto = randomExchangePoolResponseDtoList.get(size - 1);
+            List<DiaryResponseDto> developersDiaries = diaryService.getDevelopersDiaries();
+            Random ran = new Random();
+            int index = ran.nextInt(developersDiaries.size());
+
+            DiaryResponseDto developerDiary = developersDiaries.get(index);
+
+            RandomExchangePoolUpdateDto repuDto = RandomExchangePoolUpdateDto.builder()
+                    .randomExchangePoolId(reprDto.getRandomExchangePoolId())
+                    .exchangedDiaryId(developerDiary.getDiaryId())
+                    .exchangedOwnerId(developerDiary.getMemberId())
+                    .build();
+
+            ExchangedDiarySaveRequestDto exchangeDiarySaveRequestDto = ExchangedDiarySaveRequestDto.builder()
+                    .sendDiaryId(reprDto.getDiaryId())
+                    .senderId(reprDto.getOwnerId())
+                    .receiveDiaryId(developerDiary.getDiaryId())
+                    .receiverId(developerDiary.getMemberId())
+                    .friendExchangeType(EExchangeType.R)
+                    .build();
+
+            exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto);
+
+            updateRandomExchangePool(repuDto);
         }
     }
 
@@ -103,7 +161,7 @@ public class RandomExchangePoolService {
     @Transactional
     public RandomExchangePoolResponseDto updateRandomExchangePool
             (RandomExchangePoolUpdateDto randomExchangePoolUpdateDto) throws Exception {
-        RandomExchangePool randomExchangePool = randomExchangePoolRepository.findById(randomExchangePoolUpdateDto.getRandomId())
+        RandomExchangePool randomExchangePool = randomExchangePoolRepository.findById(randomExchangePoolUpdateDto.getRandomExchangePoolId())
                 .orElseThrow(() -> new Exception("random exchange not found!"));
         Diary exchangedDiary = diaryRepository.findById(randomExchangePoolUpdateDto.getExchangedDiaryId())
                 .orElseThrow(() -> new Exception("exchanged diary not found!"));

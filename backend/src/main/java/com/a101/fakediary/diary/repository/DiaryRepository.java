@@ -29,4 +29,13 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Transactional
     @Query("delete from Diary where diaryId =:diaryId")
     void deleteDiary(@Param("diaryId") Long diaryId);
+
+    /**
+     * 개발자가 생성해둔 Dummy 일기 리스트들을 가져옴
+     *
+     * @return
+     */
+    @Query("SELECT new com.a101.fakediary.diary.dto.DiaryResponseDto(d)" +
+            "FROM Diary d WHERE d.diaryId >= 0 AND d.diaryId < 1000 ORDER BY RAND()")
+    List<DiaryResponseDto> getDevelopersDiaries();
 }

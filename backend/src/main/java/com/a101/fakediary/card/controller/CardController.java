@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -62,7 +63,13 @@ public class CardController {
     @GetMapping("/{memberId}")
     public ResponseEntity<?>  listCards(@PathVariable(name = "memberId")Long memberId) {
         log.info("listCards!!!!");
-      return new ResponseEntity<>(cardService.listCards(memberId), HttpStatus.OK);
+        List<CardSaveResponseDto> ret = null;
+        try {
+            ret = cardService.listCards(memberId);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+      return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 
     /**
