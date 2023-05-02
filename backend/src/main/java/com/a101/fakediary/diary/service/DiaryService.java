@@ -76,6 +76,8 @@ public class DiaryService {
                     .title((diary.getTitle()))
                     .summary(diary.getSummary())
                     .diaryImageUrl(diaryThumbnail)
+                    .keyword(diary.getKeyword())
+                    .createdAt(diary.getCreatedAt())
                     .build();
             returnList.add(dto);
         }

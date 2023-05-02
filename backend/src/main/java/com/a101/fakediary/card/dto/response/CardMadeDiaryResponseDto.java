@@ -3,6 +3,7 @@ package com.a101.fakediary.card.dto.response;
 import lombok.*;
 
 import javax.persistence.Entity;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -20,5 +21,9 @@ public class CardMadeDiaryResponseDto {
     private String summary;
 
     private String diaryImageUrl;//표지
+
+    private String keyword;
+
+    private LocalDateTime createdAt;
 
 }
