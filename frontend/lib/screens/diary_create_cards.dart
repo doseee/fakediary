@@ -26,6 +26,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
 
   late int memberId;
 
+  @override
   Widget build(BuildContext context) {
     return (Container(
         decoration: BgThemeGradient(),
@@ -131,7 +132,9 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                       // navigate to the desired class
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MoodSelect()),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                MoodSelect(selectedCards: selectedCards)),
                       );
                     },
                     child: Container(
@@ -205,10 +208,12 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
             onTap: () {
               setState(() {
                 if (selectedCards.contains(snapshot[index])) {
-                  selectedCards.remove(snapshot[index]); // remove selected card from the list
+                  selectedCards.remove(
+                      snapshot[index]); // remove selected card from the list
                 } else {
                   if (selectedCards.length < 10) {
-                    selectedCards.insert(0, snapshot[index]); // append selected card to the list
+                    selectedCards.insert(
+                        0, snapshot[index]); // append selected card to the list
                   } else {
                     // display a warning message
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(

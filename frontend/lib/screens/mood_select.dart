@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
+import '../model/CardModel.dart';
+import '../services/api_service.dart';
+
 class MoodSelect extends StatefulWidget {
-  const MoodSelect({super.key});
+  const MoodSelect({super.key, required this.selectedCards});
+
+  final List<CardModel> selectedCards;
 
   @override
   State<MoodSelect> createState() => _MoodSelectState();
@@ -10,6 +17,7 @@ class MoodSelect extends StatefulWidget {
 
 class _MoodSelectState extends State<MoodSelect> {
   final selectedMood = [];
+
   final activated = {
     'ROMANCE': false,
     'HORROR': false,
@@ -231,36 +239,121 @@ class _MoodSelectState extends State<MoodSelect> {
                         ),
                       ],
                     ),
-                    Container(
-                      width: 268,
-                      height: 61,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            const Color(0xff263344),
-                            const Color(0xff1B2532).withOpacity(0.53),
-                            const Color(0xff1C2A3D).withOpacity(0.5),
-                            const Color(0xff1E2E42).withOpacity(0.46),
-                            const Color(0xff364B66).withOpacity(0.33),
-                            const Color(0xff2471D6).withOpacity(0),
-                          ],
-                          stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xff000000).withOpacity(0.25),
-                            offset: const Offset(0, 4),
-                            blurRadius: 4,
+                    GestureDetector(
+                      onTap: () async {
+                        if (selectedMood.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('장르를 선택해주세요'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                          return;
+                        }
+                        List<Map<String, String>> messages = [];
+                        String person = '등장인물은 ';
+                        List<String> baseNames = widget.selectedCards
+                            .map((card) => card.baseName)
+                            .toList();
+                        for (int i = 0; i < baseNames.length; i++) {
+                          person += baseNames[i];
+                          if (i < baseNames.length - 1) {
+                            person += ', ';
+                          } else {
+                            person += '이고 ';
+                          }
+                        }
+                        String location = '장소는 ';
+                        List<String> basePlaces = widget.selectedCards
+                            .map((card) => card.basePlace)
+                            .toList();
+                        for (int i = 0; i < basePlaces.length; i++) {
+                          location += basePlaces[i];
+                          if (i < basePlaces.length - 1) {
+                            location += ', ';
+                          } else {
+                            location += '이고 ';
+                          }
+                        }
+                        String keyword2 = '키워드는 ';
+                        List<String> keywords = widget.selectedCards
+                            .expand((card) => card.keywords)
+                            .toList();
+                        for (int i = 0; i < keywords.length; i++) {
+                          keyword2 += keywords[i];
+                          if (i < keywords.length - 1) {
+                            keyword2 += ', ';
+                          } else {
+                            keyword2 += '.';
+                          }
+                        }
+                        String prp = person + location + keyword2;
+                        print(prp);
+                        messages =
+                            await ApiService.makeDiaryContents(messages, prp);
+                        String jsonResp = '';
+                        for (var message in messages) {
+                          if (message['role'] == 'assistant') {
+                            jsonResp = jsonResp + message['content']!;
+                          }
+                        }
+                        final decoded = json.decode(jsonResp);
+                        String title = decoded['title'];
+                        String summary = decoded['summary'];
+                        List<dynamic> contents = decoded['contents'];
+                        String detail = contents.join(' ');
+                        List<int> cardIds = widget.selectedCards
+                            .map((card) => card.cardId)
+                            .toList();
+
+                        List<String> diaryImageUrl = [];
+                        String keyword = keywords.join('@');
+                        String prompt = '';
+                        List<String> genre = [];
+                        for (var i = 0; i < selectedMood.length; i++) {
+                          genre.add(selectedMood[i]);
+                        }
+                        ApiService.makeDiary(
+                            cardIds: cardIds,
+                            detail: detail,
+                            diaryImageUrl: diaryImageUrl,
+                            genre: genre,
+                            // keyword: keyword,
+                            prompt: prompt,
+                            summary: summary,
+                            title: title);
+                      },
+                      child: Container(
+                        width: 268,
+                        height: 61,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              const Color(0xff263344),
+                              const Color(0xff1B2532).withOpacity(0.53),
+                              const Color(0xff1C2A3D).withOpacity(0.5),
+                              const Color(0xff1E2E42).withOpacity(0.46),
+                              const Color(0xff364B66).withOpacity(0.33),
+                              const Color(0xff2471D6).withOpacity(0),
+                            ],
+                            stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
                           ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'MAKE YOUR OWN DIARY',
-                          style: TextStyle(color: Colors.white, fontSize: 15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xff000000).withOpacity(0.25),
+                              offset: const Offset(0, 4),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'MAKE YOUR OWN DIARY',
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
                         ),
                       ),
                     ),
