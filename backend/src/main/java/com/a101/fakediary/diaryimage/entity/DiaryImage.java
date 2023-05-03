@@ -13,6 +13,15 @@ import javax.persistence.*;
 @Builder
 @Entity
 public class DiaryImage extends BaseEntity {
+    @SequenceGenerator(
+            name = "DIARY_IMAGE_SEQ_GEN",
+            sequenceName = "DIARY_IMAGE_SEQ",
+            initialValue = 100,
+            allocationSize = 1
+    )
+
+
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DIARY_IMAGE_SEQ_GEN")
     @Id
     private Long diaryImageId;
 
