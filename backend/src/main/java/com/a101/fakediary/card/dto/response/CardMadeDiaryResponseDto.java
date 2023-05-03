@@ -17,11 +17,12 @@ public class CardMadeDiaryResponseDto {
     private Long diaryId;
 
     private String title;
-
+    private String subtitles;
     private String summary;
 
     private String diaryImageUrl;//표지
-
+    private String characters;
+    private String places;
     private String keyword;
 
     private LocalDateTime createdAt;

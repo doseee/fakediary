@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -110,5 +111,20 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
+    /**
+     * 날짜가 변경될 때 모든 회원들의 랜덤 요청 상태를 초기화한다.
+     */
+    @Transactional
+    public void resetRandomExchange() {
+        List<Member> allMemberList = memberRepository.findAll();
 
+        for(Member member : allMemberList)
+            member.setRandomExchanged(false);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkRandomChangeable(Long memberId) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("member does not exists."));
+        return member.isRandomExchanged();
+    }
 }

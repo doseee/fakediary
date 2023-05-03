@@ -39,10 +39,10 @@ public class DiaryController {
             DiaryResponseDto diary = diaryService.detailDiary(diaryId);
             return new ResponseEntity<DiaryResponseDto>(diary, HttpStatus.OK);
         } catch (NullPointerException e){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -53,10 +53,10 @@ public class DiaryController {
             List<DiaryResponseDto> diary = diaryService.allDiary(memberId);
             return new ResponseEntity<List<DiaryResponseDto>>(diary, HttpStatus.OK);
         } catch (NullPointerException e){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,10 +67,10 @@ public class DiaryController {
             List<DiaryResponseDto> diary = diaryService.filterDiary(memberId, genre);
             return new ResponseEntity<List<DiaryResponseDto>>(diary, HttpStatus.OK);
         } catch (NullPointerException e){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -79,10 +79,10 @@ public class DiaryController {
     public ResponseEntity<?> deleteDiary(@PathVariable Long diaryId) {
         try {
             diaryService.deleteDiary(diaryId);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

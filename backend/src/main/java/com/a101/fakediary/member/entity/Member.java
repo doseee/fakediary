@@ -2,6 +2,7 @@ package com.a101.fakediary.member.entity;
 
 import com.a101.fakediary.common.BaseEntity;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalTime;
@@ -45,5 +46,10 @@ public class Member extends BaseEntity {
 
     @Column(name = "provider_id", nullable = true)
     private String providerId;
+
+    @Column(name = "is_random_exchanged")
+    @ColumnDefault("false")
+    @Builder.Default()
+    private boolean isRandomExchanged = false;
 
 }

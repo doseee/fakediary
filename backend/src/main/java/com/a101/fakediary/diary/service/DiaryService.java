@@ -119,8 +119,11 @@ public class DiaryService {
             CardMadeDiaryResponseDto dto = new CardMadeDiaryResponseDto().builder()
                     .diaryId(diary.getDiaryId())
                     .title((diary.getTitle()))
+                    .subtitles(diary.getSubtitles())
                     .summary(diary.getSummary())
                     .diaryImageUrl(diaryThumbnail)
+                    .characters(diary.getCharacters())
+                    .places(diary.getPlaces())
                     .keyword(diary.getKeyword())
                     .createdAt(diary.getCreatedAt())
                     .build();
