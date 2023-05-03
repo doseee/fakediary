@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/card_result.dart';
 import 'package:frontend/screens/menu_screen.dart';
@@ -36,6 +37,9 @@ class _CardCreateState extends State<CardCreate> {
   bool keyword3Modified = true;
 
   bool _isLoading = false;
+  bool imageLoading = false;
+  bool personLoading = false;
+  bool locationLoading = false;
 
   String keyword1 = '';
   String keyword2 = '';
@@ -110,20 +114,28 @@ class _CardCreateState extends State<CardCreate> {
   }
 
   useDefaultPerson() async {
+    setState(() {
+      personLoading = true;
+    });
     final prefs = await SharedPreferences.getInstance();
     _personController.text = prefs.getString('diaryBaseName') ?? '';
     personSelected = true;
+    personLoading = false;
     setState(() {});
   }
 
   useDefaultLocation() async {
     print('location');
+    setState(() {
+      locationLoading = true;
+    });
     final position = await ApiService.determinePosition();
     print(position);
     _locationController.text = await ApiService.coordToRegion(position);
     latitude = position.latitude;
     longitude = position.longitude;
     locationSelected = true;
+    locationLoading = false;
     setState(() {});
   }
 
@@ -191,6 +203,9 @@ class _CardCreateState extends State<CardCreate> {
                           children: [
                             GestureDetector(
                               onTap: () async {
+                                setState(() {
+                                  imageLoading = true;
+                                });
                                 final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -211,6 +226,11 @@ class _CardCreateState extends State<CardCreate> {
                                     keyword3 =
                                         captions.length > 2 ? captions[2] : "";
                                     keyword3Modified = !(captions.length > 2);
+                                    imageLoading = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    imageLoading = false;
                                   });
                                 }
                               },
@@ -225,15 +245,21 @@ class _CardCreateState extends State<CardCreate> {
                         ),
                         Transform.translate(
                           offset: Offset(0, -50),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(25),
-                            child: Image(
-                              image: _currentImage ??
-                                  AssetImage('assets/img/card_example.jpg'),
-                              width: 161,
-                              height: 267,
-                            ),
-                          ),
+                          child: imageLoading
+                              ? SpinKitFadingCircle(
+                                  color: Colors.black,
+                                  size: 70.0,
+                                )
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(25),
+                                  child: Image(
+                                    image: _currentImage ??
+                                        AssetImage(
+                                            'assets/img/card_example.jpg'),
+                                    width: 161,
+                                    height: 267,
+                                  ),
+                                ),
                         ),
                         CheckRow(
                           text: '주인공',
@@ -245,35 +271,41 @@ class _CardCreateState extends State<CardCreate> {
                         SizedBox(
                           height: 10,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 60),
-                          child: TextFormField(
-                            controller: _personController,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                            decoration: const InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.white,
-                                )),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.white,
-                                )),
-                                hintText: '주인공을 입력하세요.',
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
-                                )),
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return '무언가 입력하세요.';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
+                        personLoading
+                            ? SpinKitFadingCircle(
+                                color: Colors.black,
+                                size: 70.0,
+                              )
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 60),
+                                child: TextFormField(
+                                  controller: _personController,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                  decoration: const InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.white,
+                                      )),
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.white,
+                                      )),
+                                      hintText: '주인공을 입력하세요.',
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      )),
+                                  validator: (String? value) {
+                                    if (value == null || value.isEmpty) {
+                                      return '무언가 입력하세요.';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
                         SizedBox(
                           height: 45,
                         ),
@@ -287,35 +319,41 @@ class _CardCreateState extends State<CardCreate> {
                         SizedBox(
                           height: 10,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 60),
-                          child: TextFormField(
-                            controller: _locationController,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                            decoration: const InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.white,
-                                )),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.white,
-                                )),
-                                hintText: '장소를 입력하세요.',
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
-                                )),
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return '무언가 입력하세요.';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
+                        locationLoading
+                            ? SpinKitFadingCircle(
+                                color: Colors.black,
+                                size: 70.0,
+                              )
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 60),
+                                child: TextFormField(
+                                  controller: _locationController,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                  decoration: const InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.white,
+                                      )),
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.white,
+                                      )),
+                                      hintText: '장소를 입력하세요.',
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      )),
+                                  validator: (String? value) {
+                                    if (value == null || value.isEmpty) {
+                                      return '무언가 입력하세요.';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
                         SizedBox(
                           height: 30,
                         ),
@@ -463,16 +501,19 @@ class _CardCreateState extends State<CardCreate> {
                               return;
                             }
 
-                            Map<String, dynamic> card = await ApiService.makeCard(
-                                memberId,
-                                personSelected ? _personController.text : '',
-                                locationSelected
-                                    ? _locationController.text
-                                    : '',
-                                combinedString,
-                                latitude,
-                                longitude,
-                                _image!);
+                            Map<String, dynamic> card =
+                                await ApiService.makeCard(
+                                    memberId,
+                                    personSelected
+                                        ? _personController.text
+                                        : '',
+                                    locationSelected
+                                        ? _locationController.text
+                                        : '',
+                                    combinedString,
+                                    latitude,
+                                    longitude,
+                                    _image!);
 
                             setState(() {
                               _isLoading = false;
@@ -481,7 +522,8 @@ class _CardCreateState extends State<CardCreate> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CardResult(card : card)));
+                                    builder: (context) =>
+                                        CardResult(card: card)));
                           },
                           child: Container(
                             width: 268,
