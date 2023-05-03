@@ -534,4 +534,6 @@ class ApiService {
       throw Exception('일기 리스트 로딩에 실패했습니다');
     }
   }
+
+  // Future<List<FriendModel>>
 }
