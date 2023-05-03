@@ -1,7 +1,5 @@
 package com.a101.fakediary.friendexchangerequest.controller;
 
-import com.a101.fakediary.exchangediary.dto.ExchangedRequestDiaryDto;
-import com.a101.fakediary.exchangediary.service.ExchangedDiaryService;
 import com.a101.fakediary.friendexchangerequest.dto.FriendExchangeManageDto;
 import com.a101.fakediary.friendexchangerequest.dto.FriendExchangeRequestDto;
 import com.a101.fakediary.friendexchangerequest.service.FriendExchangeRequestService;
@@ -24,11 +22,11 @@ public class FriendExchangeRequestController {
     @PostMapping("/request")
     public ResponseEntity<?> requestFriendExchange(@RequestBody FriendExchangeRequestDto request) {
         try {
-            friendExchangeRequestService.requestFriendExchage(request);
-            return new ResponseEntity(HttpStatus.OK);
+            friendExchangeRequestService.requestFriendExchange(request);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -37,10 +35,10 @@ public class FriendExchangeRequestController {
     public ResponseEntity<?> manageFriendExchange(@RequestBody FriendExchangeManageDto manage) {
         try {
             friendExchangeRequestService.manageFriendExchange(manage);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

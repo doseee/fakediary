@@ -23,10 +23,10 @@ public class FriendRequestController {
     public ResponseEntity<?> requestFriend(@RequestBody FriendRequestDto request) {
         try {
             friendRequestService.requestFriend(request);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -35,10 +35,10 @@ public class FriendRequestController {
     public ResponseEntity<?> manageFriend(@RequestBody FriendManageDto manage) {
         try {
             friendRequestService.manageFriend(manage);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

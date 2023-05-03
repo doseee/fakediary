@@ -9,8 +9,8 @@ import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -21,20 +21,22 @@ public class FriendRequestService {
     private final FriendRequestRepository friendRequestRepository;
     private final MemberRepository memberRepository;
 
-    public FriendRequest requestEntity(FriendRequestDto request) {
+    @Transactional
+    public void requestFriend(FriendRequestDto request) {
+        friendRequestRepository.save(requestEntity(request));
+    }
+
+    @Transactional
+    public void manageFriend(FriendManageDto manage) {
+        FriendRequest friend = friendRequestRepository.findByFriendRequestId(manage.getFriendRequestId());
+        friend.setStatus(manage.getStatus());
+    }
+
+    private FriendRequest requestEntity(FriendRequestDto request) {
         return FriendRequest.builder()
                 .senderId(memberRepository.findByMemberId(request.getSenderId()))
                 .receiverId(memberRepository.findByMemberId(request.getReceiverId()))
                 .status(ERequestStatus.valueOf("WAITING"))
                 .build();
-    }
-
-    public void requestFriend(FriendRequestDto request) {
-        friendRequestRepository.save(requestEntity(request));
-    }
-
-    public void manageFriend(FriendManageDto manage) {
-        FriendRequest friend = friendRequestRepository.findByFriendRequestId(manage.getFriendRequestId());
-        friend.setStatus(manage.getStatus());
     }
 }

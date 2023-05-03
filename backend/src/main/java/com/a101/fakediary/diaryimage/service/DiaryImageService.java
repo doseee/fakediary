@@ -18,6 +18,7 @@ public class DiaryImageService {
 
     private final DiaryImageRepository diaryImageRepository;
 
+    @Transactional
     public void createDiaryImages(Long diaryId, List<String> diaryImageUrls) {
         for (String diaryImageUrl : diaryImageUrls) {
             DiaryImage diaryImage = new DiaryImage();

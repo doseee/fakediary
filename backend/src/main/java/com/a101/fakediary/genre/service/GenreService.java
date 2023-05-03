@@ -8,8 +8,8 @@ import com.a101.fakediary.genre.entity.GenrePK;
 import com.a101.fakediary.genre.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Service
 @Transactional
@@ -19,19 +19,22 @@ public class GenreService {
     private final GenreRepository genreRepository;
     private final DiaryRepository diaryRepository;
 
-    public Genre toEntity(GenreDto dto) {
-        return Genre.builder()
-                .id(new GenrePK(diaryRepository.findByDiaryId(dto.getDiaryId()), dto.getGenre()))
-                .build();
-    }
-
+    @Transactional
     public void saveGenre(GenreDto dto) {
         genreRepository.save(toEntity(dto));
     }
 
+    @Transactional
     public void deleteGenre(Long diaryId) {genreRepository.deleteGenre(diaryId);}
 
+    @Transactional(readOnly = true)
     public String searchGenre(Long diaryId) {
         return genreRepository.findByDiaryId(diaryId);
+    }
+
+    private Genre toEntity(GenreDto dto) {
+        return Genre.builder()
+                .id(new GenrePK(diaryRepository.findByDiaryId(dto.getDiaryId()), dto.getGenre()))
+                .build();
     }
 }

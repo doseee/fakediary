@@ -1,7 +1,5 @@
 package com.a101.fakediary.exchangediary.service;
 
-import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
-import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryRepository;
 import com.a101.fakediary.enums.EExchangeType;
@@ -15,10 +13,7 @@ import com.a101.fakediary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +59,12 @@ public class ExchangedDiaryService {
                 .build();
     }
 
-    public ExchangedDiary requestEntity(ExchangedRequestDiaryDto request) {
+    @Transactional
+    public void saveExchangeDiary(ExchangedRequestDiaryDto request) {
+        exchangedDiaryRepository.save(requestEntity(request));
+    }
+
+    private ExchangedDiary requestEntity(ExchangedRequestDiaryDto request) {
         return ExchangedDiary.builder()
                 .sender(memberRepository.findByMemberId(request.getSenderId()))
                 .senderDiary(diaryRepository.findByDiaryId(request.getSendDiaryId()))
@@ -72,9 +72,5 @@ public class ExchangedDiaryService {
                 .receiverDiary(diaryRepository.findByDiaryId(request.getReceiveDiaryId()))
                 .exchangeType(request.getExchangeType())
                 .build();
-    }
-
-    public void saveExchangeDiray(ExchangedRequestDiaryDto request) {
-        exchangedDiaryRepository.save(requestEntity(request));
     }
 }
