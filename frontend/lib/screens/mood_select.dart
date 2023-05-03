@@ -36,11 +36,17 @@ class _MoodSelectState extends State<MoodSelect> {
   };
 
   setter(String content) {
-    // 이미 2개가 선택되었을 경우 작동하지 않음
-    if (!activated[content]! &&
-        selectedMood.length == 2 &&
-        !selectedMood.contains(content)) {
-      return;
+    // // 이미 2개가 선택되었을 경우 작동하지 않음
+    // if (!activated[content]! &&
+    //     selectedMood.length == 2 &&
+    //     !selectedMood.contains(content)) {
+    //   return;
+    // }
+
+    // 이미 2개가 선택되었을 경우 기존에 선택된 것을 해제
+    if (!activated[content]! && selectedMood.length == 2) {
+      activated[selectedMood[0]] = false;
+      selectedMood.removeAt(0);
     }
 
     // 나머지 경우 선택 상태를 반전
@@ -100,8 +106,8 @@ class _MoodSelectState extends State<MoodSelect> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GradientButton(content: '로맨스'),
-                  GradientButton(content: '코믹'),
+                  for (var i = 0; i < selectedMood.length; i++)
+                    GradientButton(content: dict[selectedMood[i]]!),
                 ],
               ),
               SizedBox(

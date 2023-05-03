@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FriendExchangeRequestRepository extends JpaRepository<FriendExchangeRequest, Long> {
+    FriendExchangeRequest findByfriendExchangeRequestId(Long friendExchangeRequestId);
 }

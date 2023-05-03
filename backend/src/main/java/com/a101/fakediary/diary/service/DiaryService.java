@@ -1,5 +1,6 @@
 package com.a101.fakediary.diary.service;
 
+import com.a101.fakediary.card.dto.response.CardMadeDiaryResponseDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +24,7 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
     private final GenreService genreService;
+    private final DiaryRepository diaryImageRepository;
 
     public Diary toEntity(DiaryRequestDto dto) {
         return Diary.builder()
@@ -59,5 +62,26 @@ public class DiaryService {
     public void deleteDiary(Long diaryId) {
         genreService.deleteGenre(diaryId);
         diaryRepository.deleteDiary(diaryId);
+    }
+
+    //카드Id리스트로부터 만들어진 다이어리 리스트 반환
+    public List<CardMadeDiaryResponseDto> findDiaryListFromCardList(List<Long> diaryIdList) {
+        List<CardMadeDiaryResponseDto> returnList = new ArrayList<CardMadeDiaryResponseDto>();
+        for (Long diaryId : diaryIdList) {
+            Diary diary = diaryRepository.findByDiaryId(diaryId);
+            List<String> diaryImageUrls = diaryImageRepository.findDiaryImageUrlByDiaryId(diaryId);
+            String diaryThumbnail = diaryImageUrls.stream().findFirst().orElse("이미지가 없습니다.");//썸네일
+            CardMadeDiaryResponseDto dto = new CardMadeDiaryResponseDto().builder()
+                    .diaryId(diary.getDiaryId())
+                    .title((diary.getTitle()))
+                    .summary(diary.getSummary())
+                    .diaryImageUrl(diaryThumbnail)
+                    .keyword(diary.getKeyword())
+                    .createdAt(diary.getCreatedAt())
+                    .build();
+            returnList.add(dto);
+        }
+        return returnList;
+
     }
 }
