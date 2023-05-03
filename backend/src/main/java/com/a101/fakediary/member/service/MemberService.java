@@ -1,19 +1,12 @@
 package com.a101.fakediary.member.service;
 
-import com.a101.fakediary.member.dto.MemberLoginRequestDto;
-import com.a101.fakediary.member.dto.MemberLoginResponseDto;
-import com.a101.fakediary.member.dto.MemberSaveRequestDto;
-import com.a101.fakediary.member.dto.MemberUpdateRequestDto;
+import com.a101.fakediary.member.dto.*;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -66,6 +59,28 @@ public class MemberService {
 
         return memberLoginResponseDto;
     }
+
+    //유저 조회
+    @Transactional(readOnly = true)
+    public MemberResponseDto findMember(Long memberId){
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 member입니다."));
+
+        return MemberResponseDto.builder()
+                .memberId(member.getMemberId())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .autoDiaryTime(member.getAutoDiaryTime())
+                .diaryBaseName(member.getDiaryBaseName())
+                .firebaseUid(member.getFirebaseUid())
+                .providerId(member.getProviderId())
+                .createdAt(member.getCreatedAt())
+                .updatedAt(member.getUpdatedAt())
+                .build();
+    }
+
+
 
     // 수정
     @Transactional
