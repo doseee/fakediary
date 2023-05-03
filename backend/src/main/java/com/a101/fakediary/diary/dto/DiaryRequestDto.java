@@ -3,6 +3,8 @@ package com.a101.fakediary.diary.dto;
 import com.a101.fakediary.diary.entity.Diary;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -18,5 +20,7 @@ public class DiaryRequestDto {
     private String subtitles;
     private String detail;
     private String summary;
-    private String[] genre;
+    private List<Long> cardIds;
+    private List<String> genre;
+    private List<String> diaryImageUrl;
 }

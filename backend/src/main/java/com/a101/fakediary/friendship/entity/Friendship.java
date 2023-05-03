@@ -19,10 +19,10 @@ import javax.persistence.*;
         )
 )
 @NamedNativeQuery(name="listFriendQuery", query = "SELECT f.member_id AS member_id, f.friend_id AS friend_id, m.nickname AS nickname " +
-        "FROM Friendship f " +
+        "FROM friendship f " +
         "JOIN (SELECT m.member_id AS member_id, m.nickname AS nickname " +
-        "FROM Member m " +
-        "JOIN Friendship f ON f.friend_id = m.member_id " +
+        "FROM member m " +
+        "JOIN friendship f ON f.friend_id = m.member_id " +
         "WHERE f.member_id = :memberId) m " +
         "ON f.friend_id = m.member_id " +
         "WHERE f.member_id = :memberId " +
