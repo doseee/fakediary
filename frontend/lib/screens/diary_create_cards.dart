@@ -3,6 +3,7 @@ import 'package:frontend/screens/menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/mood_select.dart';
+import 'package:frontend/widgets/bg_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DiaryCreateCards extends StatefulWidget {
@@ -37,20 +38,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
 
   Widget build(BuildContext context) {
     return (Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [
-              0.3,
-              0.6,
-              0.9
-            ],
-                colors: [
-              Color(0xff0f2027),
-              Color(0xff203a43),
-              Color(0xff2c5364),
-            ])),
+        decoration: BgThemeGradient(),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
@@ -287,4 +275,3 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
       }),
     );
   }
-}
