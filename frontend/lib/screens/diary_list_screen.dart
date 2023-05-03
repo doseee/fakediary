@@ -97,7 +97,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                   icon: Icon(Icons.info, color: Colors.white),
                                     onPressed: (){
                                     showDialog(context: context, builder: (context){
-                                      return InfoModal(text: '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다');
+                                      return InfoModal(text: '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다', height : 100);
                                     });
                                     }),
                               ),),
