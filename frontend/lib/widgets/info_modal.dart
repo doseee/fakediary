@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class InfoModal extends StatelessWidget {
 
-  final String text;
   final double? height;
+  final Widget widget;
 
-  const InfoModal({Key? key, required this.text, this.height}) : super(key: key);
+  const InfoModal({Key? key, required this.widget, this.height}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class InfoModal extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(20),
               child: Center(
-                child:  Text(text),
+                child: widget,
               )
             ),
         ),
