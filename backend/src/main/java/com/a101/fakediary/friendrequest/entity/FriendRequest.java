@@ -2,11 +2,31 @@ package com.a101.fakediary.friendrequest.entity;
 
 import com.a101.fakediary.common.BaseEntity;
 import com.a101.fakediary.enums.ERequestStatus;
+import com.a101.fakediary.alarm.dto.AlarmResponseDto;
 import com.a101.fakediary.member.entity.Member;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+
+@SqlResultSetMapping(
+        name = "AlarmResponseDtoMapping",
+        classes = @ConstructorResult(
+                targetClass = AlarmResponseDto.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Long.class),
+                        @ColumnResult(name = "status", type = String.class)
+                }
+        )
+)
+@NamedNativeQuery(
+        name = "AlarmResponseQuery",
+        query = "SELECT IF(f.receiver_id = :receiverId, f.friend_exchange_request_id, f.friend_request_id) AS id, " +
+                "IF(f.receiver_id = :memberId, 'exchange', 'friend') AS status " +
+                "FROM friend_exchange_request f, friend_request r " +
+                "WHERE (f.receiver_id = :memberId AND f.status = 'WAITING') " +
+                "OR (r.receiver_id = :memberId AND r.status = 'WAITING')",
+        resultSetMapping = "AlarmResponseDtoMapping"
+)
 
 @Setter
 @Getter

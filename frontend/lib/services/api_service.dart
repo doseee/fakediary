@@ -120,7 +120,7 @@ class ApiService {
           },
           "features": [
             {
-              "type": "OBJECT_LOCALIZATION",
+              "type": "LABEL_DETECTION",
               "maxResults": 3,
             }
           ],
@@ -138,18 +138,23 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
       final responses = jsonResponse['responses'];
       final resp = responses[0];
 
-      final objectAnnotations = resp['localizedObjectAnnotations'];
+      // final objectAnnotations = resp['localizedObjectAnnotations'];
+      final objectAnnotations = resp['labelAnnotations'];
       print(objectAnnotations);
       List<String> objectNames = [];
       if (objectAnnotations == null) {
         return [];
       }
       for (var objectAnnotation in objectAnnotations) {
-        final ko = await getTranslation_papago(objectAnnotation['name']);
-        objectNames.add(ko);
+        // final ko = await getTranslation_papago(objectAnnotation['name']);
+        final ko = await getTranslation_papago(objectAnnotation['description']);
+        String trimmedKo =
+            ko.endsWith('.') ? ko.substring(0, ko.length - 1) : ko;
+        objectNames.add(trimmedKo);
       }
 
       print(objectNames);
@@ -351,6 +356,61 @@ class ApiService {
     } catch (e) {
       // Handle any exceptions thrown during the API call
       print('Error fetching data: $e');
+    }
+  }
+
+  static Future<String> askGpt(String question) async {
+    // Replace with your GPT API key
+    String apiKey = dotenv.get('gptApiKey');
+    // Replace with the chat-based API endpoint
+    String apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    // Set up the headers for the request
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    // Set up the chat-based request payload
+    Map<String, dynamic> body = {
+      'model': 'gpt-3.5-turbo',
+      'messages': [
+        {
+          'role': 'system',
+          'content':
+              '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 내용은 contents에, 한줄 요약은 desc에 넣어줘.'
+        },
+        {
+          'role': 'user',
+          'content': '주인공은 문성현이고 장소는 안드로메다이고 키워드는 커피, 운세, 라벨이야',
+        },
+      ],
+      'max_tokens':
+          2048, // Adjust to control the length of the generated response
+      'n': 1, // Number of completions to generate
+      'stop': null, // Set stopping sequence if needed
+      'temperature':
+          0.5, // Adjust to control the randomness of the generated response
+    };
+
+    // Make the HTTP POST request
+    http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: headers,
+      body: json.encode(body),
+    );
+
+    // Check for a successful response
+    if (response.statusCode == 200) {
+      final respJson = jsonDecode(utf8.decode(response.bodyBytes));
+      Map<String, dynamic> jsonResponse =
+          jsonDecode(utf8.decode(response.bodyBytes));
+      String answer = jsonResponse['choices'][0]['message']['content'].trim();
+      print(answer);
+      return answer;
+    } else {
+      throw Exception(
+          'Failed to get response from GPT: ${response.statusCode}');
     }
   }
 }
