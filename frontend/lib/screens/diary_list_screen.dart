@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -7,7 +8,6 @@ import 'package:frontend/widgets/info_modal.dart';
 
 import '../model/DiaryModel.dart';
 import '../widgets/appbar.dart';
-import 'menu_screen.dart';
 
 class DiaryListScreen extends StatefulWidget {
   const DiaryListScreen({Key? key}) : super(key: key);
@@ -86,7 +86,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                   child: Container(
                     decoration: BtnThemeGradientLine(),
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 30, left: 30),
+                      padding: const EdgeInsets.only(right: 25, left: 25),
                       child: ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -115,14 +115,14 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                   child: Container(
                     decoration: BtnThemeGradient(),
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 30, left: 30),
+                      padding: const EdgeInsets.only(right: 25, left: 25),
                       child: ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   //Todo; [수정필요] 교환 페이지로 이동
-                                  builder: (context) => HomeScreen(),
+                                  builder: (context) => FriendScreen(diaryId: diaryId, exchangeSituation: 1),
                                 ));
                           },
                           style: ElevatedButton.styleFrom(
@@ -149,7 +149,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BgThemeGradient(),
+      decoration: BgThemeIncludeImage(),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: StandAppBar(context),
@@ -163,7 +163,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         flex: 6,
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                             child: DiaryDetail()
                           ),
                         )),
