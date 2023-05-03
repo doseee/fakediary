@@ -527,7 +527,7 @@ class ApiService {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
       List<DiaryModel> diaries = jsonResponse
           .map((dynamic item) => DiaryModel.fromJson(item))
-          .toList();
+          ?.toList() ?? [];
       print('api: ${diaries.length}');
       return diaries;
     } else {
