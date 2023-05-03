@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/widgets/info_modal.dart';
 
 import 'menu_screen.dart';
 
@@ -11,6 +12,7 @@ class DiaryListScreen extends StatefulWidget {
 }
 
 class _DiaryListScreenState extends State<DiaryListScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -82,17 +84,22 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                   Flexible(flex: 2, child: Container(
                     child: Column(
                       children: [
-                        Flexible(flex: 1, child: Container(),),
                         Flexible(flex: 1, child: Row(
                           children: [
                             Flexible(flex: 2, child: Container(),),
-                            Flexible(flex: 6, child: Text('내가 만든 일기를 확인해보세요', style: TextStyle(color: Colors.white),)),
+                            Flexible(flex: 4, child: Text('내가 만든 일기를 확인해보세요', style: TextStyle(color: Colors.white),)),
                             Flexible(flex: 2, child: Row(
 
                               children: [
                                 Flexible(flex: 1, child: Container(),),
-                                Flexible(flex: 1, child: Container(
-                                decoration: BoxDecoration(color: Colors.white),
+                                Flexible(flex: 11, child: Container(
+                                child: IconButton(
+                                  icon: Icon(Icons.info, color: Colors.white),
+                                    onPressed: (){
+                                    showDialog(context: context, builder: (context){
+                                      return InfoModal(text: '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다');
+                                    });
+                                    }),
                               ),),
                                 Flexible(flex: 1, child: Container(),)],
                             )),
