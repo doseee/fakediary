@@ -61,5 +61,18 @@ public class ExchangedDiaryService {
                 .receiveDiaryId(exchangedDiary.getReceiverDiary().getDiaryId())
                 .friendExchangeType(exchangedDiary.getExchangeType())
                 .build();
+
+    public ExchangedDiary requestEntity(ExchangedRequestDiaryDto request) {
+        return ExchangedDiary.builder()
+                .sender(memberRepository.findByMemberId(request.getSenderId()))
+                .senderDiary(diaryRepository.findByDiaryId(request.getSendDiaryId()))
+                .receiver(memberRepository.findByMemberId(request.getReceiveOwnerId()))
+                .receiverDiary(diaryRepository.findByDiaryId(request.getReceiveDiaryId()))
+                .exchangeType(request.getExchangeType())
+                .build();
+    }
+
+    public void saveExchangeDiray(ExchangedRequestDiaryDto request) {
+        exchangedDiaryRepository.save(requestEntity(request));
     }
 }

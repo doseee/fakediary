@@ -16,7 +16,14 @@ import javax.persistence.*;
 @Builder
 @Entity
 public class ExchangedDiary extends BaseEntity {
+    @SequenceGenerator(
+            name="EXCHANGEDDIARY_SEQ_GEN",
+            sequenceName = "EXCHANGEDDIARY_SEQ",
+            initialValue = 100,
+            allocationSize = 1
+    )
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EXCHANGEDDIARY_SEQ_GEN")
     private Long exchangedDiaryId;
 
     @ManyToOne
