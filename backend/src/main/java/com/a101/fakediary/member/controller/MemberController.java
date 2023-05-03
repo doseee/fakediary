@@ -1,9 +1,6 @@
 package com.a101.fakediary.member.controller;
 
-import com.a101.fakediary.member.dto.MemberLoginRequestDto;
-import com.a101.fakediary.member.dto.MemberLoginResponseDto;
-import com.a101.fakediary.member.dto.MemberSaveRequestDto;
-import com.a101.fakediary.member.dto.MemberUpdateRequestDto;
+import com.a101.fakediary.member.dto.*;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.a101.fakediary.member.service.MemberService;
@@ -47,6 +44,19 @@ public class MemberController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    //유저 조회
+    @ApiOperation(value = "유저 조회")
+    @GetMapping("/{memberId}")
+    public ResponseEntity<?> getMember(@PathVariable Long memberId){
+        try {
+            MemberResponseDto memberResponseDto = memberService.findMember(memberId);
+            return ResponseEntity.ok().body(memberResponseDto);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     //회원 정보 수정
