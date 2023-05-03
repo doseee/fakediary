@@ -111,7 +111,7 @@ public class RandomExchangePoolService {
             }
         }
         
-        if(remainder == 1) {    //  한 명이 남을 경우
+        if(remainder == 1)  {    //  한 명이 남을 경우
             RandomExchangePoolResponseDto reprDto = randomExchangePoolResponseDtoList.get(size - 1);
             List<DiaryResponseDto> developersDiaries = diaryService.getDevelopersDiaries();
             Random ran = new Random();

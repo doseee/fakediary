@@ -1,4 +1,4 @@
-package com.a101.fakediary.job.example;
+package com.a101.fakediary.job.random;
 
 import com.a101.fakediary.randomexchangepool.service.RandomExchangePoolService;
 import lombok.RequiredArgsConstructor;
@@ -28,24 +28,25 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @EnableScheduling
 @Slf4j
-public class ExampleJob implements SchedulingConfigurer {
+public class RandomMatchingJob implements SchedulingConfigurer {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final JobLauncher jobLauncher;
+    private final RandomExchangePoolService randomExchangePoolService;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(10);
-        taskScheduler.setThreadNamePrefix("example-batch-scheduler-");
+        taskScheduler.setThreadNamePrefix("batch-scheduler-");
         taskScheduler.initialize();
         taskRegistrar.setTaskScheduler(taskScheduler);
     }
 
-    @Scheduled(cron = "0 28,29,30 13 * * *")
+    @Scheduled(cron = "0 23 15 * * *")
     public void runJob() throws Exception {
 
-        Job job = jobBuilderFactory.get("example-job")
+        Job job = jobBuilderFactory.get("random-exchange-job")
                 .incrementer(new RunIdIncrementer())
                 .flow(step())
                 .end()
@@ -55,14 +56,14 @@ public class ExampleJob implements SchedulingConfigurer {
     }
 
     private Step step() {
-        return stepBuilderFactory.get("example-step")
+        return stepBuilderFactory.get("random-exchange-step")
                 .tasklet(tasklet())
                 .build();
     }
 
     private Tasklet tasklet() {
         return (stepContribution, chunkContext) -> {
-            log.info("Hello Exchange!!!!!!!!! - {}", LocalDateTime.now());
+            randomExchangePoolService.doRandomMatching();
             return RepeatStatus.FINISHED;
         };
     }
