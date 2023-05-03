@@ -1,4 +1,9 @@
+// import 'dart:js';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:frontend/model/FriendModel.dart';
+import 'package:frontend/services/api_service.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
 class DiaryFilter extends StatefulWidget {
@@ -69,6 +74,19 @@ class _DiaryFilterState extends State<DiaryFilter> {
   // final happySelected = false;
   // final actionSelected = false;
   // final comicSelected = false;
+
+  late Future<List<FriendModel>> friends;
+  final int friendIndex;
+  final String nickname;
+  const FriendModel({Key? key, required this.friendIndex, required this.nickname})
+      : super(key: key);
+
+
+  void initState() {
+    super.initState();
+    friends = ApiService().getFriends();
+    print(friends);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -289,13 +307,65 @@ class _DiaryFilterState extends State<DiaryFilter> {
                     ],
                   ),
                 ),
-              )
+
+              ),
+              Flexible(
+                  flex: 5,
+                  child: FutureBuilder<List<FriendModel>>(
+                      future: friends,
+                      builder: (context, snapshot) {
+                        if(snapshot.hasData){
+                          return buildList(snapshot.data);
+                        } else if (snapshot.hasError){
+                          return Text("${snapshot.error}에러!!");
+                        }
+                        return CircularProgressIndicator();
+                      }
+                  )
+              ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+
+Widget buildList(snapshot) {
+  return (GridView.count(
+    crossAxisCount: 3,
+    // 가로 방향으로 3개의 카드씩 표시
+    crossAxisSpacing: 10.0,
+    // 카드들의 가로 간격 설정
+    padding: EdgeInsets.all(10.0),
+    // GridView 자체의 Padding 설정
+    children: List.generate(
+      // 카드 리스트 생성
+      snapshot.length, // 총 카드 갯수
+          (index) {
+        if(snapshot.length == 0){
+          return Container(
+            child: SpinKitFadingCircle(
+              color: Colors.black,
+              size: 70.0,
+            ),
+          );
+        } else {
+          return InkWell(
+              onTap: () {},
+              child: Card(
+                color: Colors.transparent,
+                elevation: 0.0,
+                child:
+                  Text(
+                    'friends.[nickname]'
+                  ))
+                );
+        }
+      },
+    ),
+  ));
 }
 
 class GradientButton extends StatelessWidget {
