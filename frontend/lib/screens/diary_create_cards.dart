@@ -3,7 +3,8 @@ import 'package:frontend/screens/menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/mood_select.dart';
-import 'package:frontend/widgets/bg_theme.dart';
+
+import '../widgets/theme.dart';
 
 class DiaryCreateCards extends StatefulWidget {
   const DiaryCreateCards({Key? key}) : super(key: key);
@@ -19,7 +20,6 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     cards = ApiService().getCardList();
   }

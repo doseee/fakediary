@@ -3,6 +3,7 @@ import 'package:frontend/screens/regist_screen.dart';
 import 'package:lottie/lottie.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
+import '../widgets/theme.dart';
 import 'login.dart';
 
 class LoginEntrance extends StatefulWidget {
@@ -59,12 +60,7 @@ class _LoginEntranceState extends State<LoginEntrance>
                   child: Container(
                     width: 250,
                     height: 50,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          Color(0xff79F1A4),
-                          Color(0xff0E5CAD),
-                        ]),
-                        borderRadius: BorderRadius.circular(25)),
+                    decoration: BtnThemeGradient(),
                     child: Column(
                       children: [
                         Flexible(
@@ -74,7 +70,7 @@ class _LoginEntranceState extends State<LoginEntrance>
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const Login(),
+                                      builder: (context) => Login(),
                                     ));
                               },
                               style: ElevatedButton.styleFrom(
@@ -98,15 +94,7 @@ class _LoginEntranceState extends State<LoginEntrance>
               Container(
                   width: 250,
                   height: 50,
-                  decoration: BoxDecoration(
-                    border: GradientBoxBorder(
-                        gradient: LinearGradient(colors: [
-                          Color(0xff79F1A4),
-                          Color(0xff0E5CAD),
-                        ]),
-                        width: 2),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
+                  decoration: BtnThemeGradientLine(),
                   child: Column(
                     children: [
                       Flexible(

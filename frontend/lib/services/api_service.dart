@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/CardModel.dart';
+import '../model/DiaryModel.dart';
 
 class ApiService {
   static String baseUrl = dotenv.get('baseUrl');
@@ -153,7 +154,7 @@ class ApiService {
         // final ko = await getTranslation_papago(objectAnnotation['name']);
         final ko = await getTranslation_papago(objectAnnotation['description']);
         String trimmedKo =
-            ko.endsWith('.') ? ko.substring(0, ko.length - 1) : ko;
+        ko.endsWith('.') ? ko.substring(0, ko.length - 1) : ko;
         objectNames.add(trimmedKo);
       }
 
@@ -324,11 +325,11 @@ class ApiService {
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
       List<CardModel> cards =
-          jsonResponse.map((dynamic item) => CardModel.fromJson(item)).toList();
+      jsonResponse.map((dynamic item) => CardModel.fromJson(item)).toList();
 
       return cards;
     } else {
-      throw Exception('불러오는 데 실패했습니다');
+      throw Exception('카드 리스트를 불러오는 데 실패했습니다');
     }
   }
 
@@ -351,7 +352,7 @@ class ApiService {
         {
           'role': 'system',
           'content':
-              '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 내용은 contents에, 한줄 요약은 desc에 넣어줘.'
+          '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 내용은 contents에, 한줄 요약은 desc에 넣어줘.'
         },
         {
           'role': 'user',
@@ -359,11 +360,11 @@ class ApiService {
         },
       ],
       'max_tokens':
-          2048, // Adjust to control the length of the generated response
+      2048, // Adjust to control the length of the generated response
       'n': 1, // Number of completions to generate
       'stop': null, // Set stopping sequence if needed
       'temperature':
-          0.5, // Adjust to control the randomness of the generated response
+      0.5, // Adjust to control the randomness of the generated response
     };
 
     // Make the HTTP POST request
@@ -377,7 +378,7 @@ class ApiService {
     if (response.statusCode == 200) {
       final respJson = jsonDecode(utf8.decode(response.bodyBytes));
       Map<String, dynamic> jsonResponse =
-          jsonDecode(utf8.decode(response.bodyBytes));
+      jsonDecode(utf8.decode(response.bodyBytes));
       String answer = jsonResponse['choices'][0]['message']['content'].trim();
       print(answer);
       return answer;
@@ -386,4 +387,21 @@ class ApiService {
           'Failed to get response from GPT: ${response.statusCode}');
     }
   }
+
+  Future<List<DiaryModel>> getDiaries() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    final response = await http.get(Uri.parse('$baseUrl/diary/all/$memberId'));
+
+    if(response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<DiaryModel> diaries = jsonResponse.map((dynamic item) => DiaryModel.fromJson(item)).toList();
+      print('api: ${diaries.length}');
+      return diaries;
+    } else {
+      throw Exception('일기 리스트 로딩에 실패했습니다');
+    }
+  }
 }
+

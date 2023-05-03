@@ -10,9 +10,9 @@ class InfoModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(opacity: 0.5,
+    return Opacity(opacity: 1,
     child: Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xff0f2027),
       child: SizedBox(
         height: height,
         child: Padding(
