@@ -24,11 +24,11 @@ public class ExchangedDiaryController {
     @PostMapping("/save")
     public ResponseEntity<?> saveExchangeDiary(@RequestBody ExchangedRequestDiaryDto exchange) {
         try {
-            exchangedDiaryService.saveExchangeDiray(exchange);
-            return new ResponseEntity(HttpStatus.OK);
+            exchangedDiaryService.saveExchangeDiary(exchange);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

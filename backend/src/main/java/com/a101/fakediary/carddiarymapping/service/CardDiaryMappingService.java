@@ -10,8 +10,9 @@ import com.a101.fakediary.diary.repository.DiaryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class CardDiaryMappingService {
     private final CardRepository cardRepository;
     private final DiaryRepository diaryRepository;
 
-
+    @Transactional
     public void createCardDiaryMappings(Long diaryId, List<Long> cardIds) {
         for (int i = 0; i < cardIds.size(); i++) {
             Card card = cardRepository.findById(cardIds.get(i)).orElseThrow();
