@@ -534,4 +534,29 @@ class ApiService {
       throw Exception('일기 리스트 로딩에 실패했습니다');
     }
   }
+
+  static Future<bool> RandomChange(int diaryId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    print('diaryId: diaryId');
+    final url = Uri.parse('$baseUrl/random-exchange');
+    final randomExchangePoolRegistDto = {
+      'diaryId': diaryId,
+      'ownerId': memberId,
+    };
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(randomExchangePoolRegistDto),
+    );
+    if (response.statusCode == 200) {
+      print('success');
+      return true;
+    }
+
+    return false;
+  }
 }
