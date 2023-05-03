@@ -58,16 +58,10 @@ class _ModifyScreenState extends State<ModifyScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff0F2027),
-              Color(0xff203A43),
-              Color(0xff2C5364),
-            ],
-            stops: [0, 0.4, 1.0],
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/img/background_pink_darken.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: Scaffold(
