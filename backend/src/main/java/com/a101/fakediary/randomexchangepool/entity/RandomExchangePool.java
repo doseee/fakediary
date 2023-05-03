@@ -15,7 +15,14 @@ import java.time.LocalDate;
 @Builder
 @Entity
 public class RandomExchangePool extends BaseEntity {
+    @SequenceGenerator(
+            name="RANDOM_EXCHANGE_POOL_SEQ_GEN",
+            sequenceName = "RANDOM_EXCHANGE_POOL_SEQ",
+            initialValue = 100,
+            allocationSize = 1
+    )
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RANDOM_EXCHANGE_POOL_SEQ_GEN")
     private Long randomExchangePoolId;
 
     @OneToOne
