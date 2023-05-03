@@ -4,17 +4,21 @@ import com.a101.fakediary.card.dto.response.CardMadeDiaryResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
+import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
+import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
 import com.a101.fakediary.diaryimage.service.DiaryImageService;
+import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,7 @@ public class DiaryService {
     private final CardDiaryMappingService cardDiaryMappingService;
     private final CardRepository cardRepository;
     private final DiaryImageService diaryImageService;
+    private final DiaryQueryRepository diaryQueryRepository;
 
     public Diary toEntity(DiaryRequestDto dto) {
         return Diary.builder()
@@ -42,9 +47,18 @@ public class DiaryService {
                 .build();
     }
 
+    public List<DiaryResponseDto> changeResponse(List<Diary> diary) {
+        List<DiaryResponseDto> list = new ArrayList<>();
+        for (int i = 0; i < diary.size(); i++) {
+            DiaryResponseDto tmp = new DiaryResponseDto(diary.get(i));
+            tmp.setGenre(EGenre.valueOf(genreService.searchGenre(tmp.getDiaryId())));
+            list.add(tmp);
+        }
+        return list;
+    }
+
     @Transactional
     public Diary createDiary(DiaryRequestDto dto) {
-
         //dto 키워드 채우기
         StringBuilder keyword = new StringBuilder();
 
@@ -75,7 +89,7 @@ public class DiaryService {
         }
 
         // 카드&일기 매핑테이블 생성
-            cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIds);
+        cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIds);
 
         //일기&이미지파일 테이블 만들기 프론트에서 url받아왔다 가정
         diaryImageService.createDiaryImages(diary.getDiaryId(), dto.getDiaryImageUrl());
@@ -90,12 +104,14 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public List<DiaryResponseDto> allDiary(Long memberId) {
-        return diaryRepository.allDiary(memberId);
+        List<Diary> diary = diaryRepository.allDiary(memberId);
+        return changeResponse(diary);
     }
 
     @Transactional(readOnly = true)
-    public List<DiaryResponseDto> filterDiary(Long memberId, String genre) {
-        return diaryRepository.filterDiary(memberId, genre);
+    public List<DiaryResponseDto> filterDiary(DiaryFilterDto filter) {//선택한 memberId, 요청한 memberId, 장르
+        List<Diary> diary = diaryQueryRepository.searchDiaryByFilter(filter);
+        return changeResponse(diary);
     }
 
     @Transactional(readOnly = true)
@@ -130,6 +146,5 @@ public class DiaryService {
             returnList.add(dto);
         }
         return returnList;
-
     }
 }
