@@ -5,6 +5,7 @@ import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryRepository;
 import com.a101.fakediary.enums.EExchangeType;
+import com.a101.fakediary.exchangediary.dto.ExchangedRequestDiaryDto;
 import com.a101.fakediary.exchangediary.dto.request.ExchangedDiarySaveRequestDto;
 import com.a101.fakediary.exchangediary.dto.response.ExchangedDiaryResponseDto;
 import com.a101.fakediary.exchangediary.entity.ExchangedDiary;
@@ -61,6 +62,7 @@ public class ExchangedDiaryService {
                 .receiveDiaryId(exchangedDiary.getReceiverDiary().getDiaryId())
                 .friendExchangeType(exchangedDiary.getExchangeType())
                 .build();
+    }
 
     public ExchangedDiary requestEntity(ExchangedRequestDiaryDto request) {
         return ExchangedDiary.builder()
