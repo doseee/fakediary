@@ -29,7 +29,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
     'WARM': '따뜻한',
     'SAD': '슬픈',
     'TOUCHING': '감동적인',
-    'COMFORTING': '위로를 주는',
+    'COMFORTING': '위로 하는',
     'HAPPY': '행복한',
     'ACTION': '액션',
     'COMIC': '코믹',
@@ -76,16 +76,10 @@ class _DiaryFilterState extends State<DiaryFilter> {
         FocusScope.of(context).unfocus();
       },
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff0F2027),
-              Color(0xff203A43),
-              Color(0xff2C5364),
-            ],
-            stops: [0, 0.4, 1.0],
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/img/background_pink_darken.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: Scaffold(
@@ -161,11 +155,6 @@ class _DiaryFilterState extends State<DiaryFilter> {
                           activated: activated['HORROR']!,
                           dict: dict,
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
                         GradientSelectButton(
                           content: 'THRILL',
                           setter: setter,
@@ -178,28 +167,23 @@ class _DiaryFilterState extends State<DiaryFilter> {
                           activated: activated['WARM']!,
                           dict: dict,
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
+
                         GradientSelectButton(
                           content: 'SAD',
                           setter: setter,
                           activated: activated['SAD']!,
                           dict: dict,
-                        ),
+                        ),]
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
                         GradientSelectButton(
                           content: 'TOUCHING',
                           setter: setter,
                           activated: activated['TOUCHING']!,
                           dict: dict,
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
                         GradientSelectButton(
                           content: 'COMFORTING',
                           setter: setter,
@@ -212,11 +196,8 @@ class _DiaryFilterState extends State<DiaryFilter> {
                           activated: activated['HAPPY']!,
                           dict: dict,
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
+
+
                         GradientSelectButton(
                           content: 'ACTION',
                           setter: setter,
@@ -235,27 +216,10 @@ class _DiaryFilterState extends State<DiaryFilter> {
                       width: 268,
                       height: 61,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            const Color(0xff263344),
-                            const Color(0xff1B2532).withOpacity(0.53),
-                            const Color(0xff1C2A3D).withOpacity(0.5),
-                            const Color(0xff1E2E42).withOpacity(0.46),
-                            const Color(0xff364B66).withOpacity(0.33),
-                            const Color(0xff2471D6).withOpacity(0),
-                          ],
-                          stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+                        image: DecorationImage(
+                          image: AssetImage('assets/img/background_1.png'),
+                          fit: BoxFit.cover,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xff000000).withOpacity(0.25),
-                            offset: const Offset(0, 4),
-                            blurRadius: 4,
-                          ),
-                        ],
                       ),
                       child: const Center(
                         child: Text(
@@ -289,7 +253,7 @@ class GradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 140,
+      width: 70,
       height: 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
@@ -348,8 +312,8 @@ class GradientSelectButton extends StatelessWidget {
         setter(content);
       },
       child: Container(
-        width: 140,
-        height: 40,
+        width: 65,
+        height: 35,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           border: GradientBoxBorder(
@@ -380,7 +344,7 @@ class GradientSelectButton extends StatelessWidget {
             dict[content]!,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 15,
+              fontSize: 13,
             ),
           ),
         ),

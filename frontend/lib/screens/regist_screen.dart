@@ -34,7 +34,7 @@ class _RegistScreenState extends State<RegistScreen> {
             stops: [0, 0.4, 1.0],
           ),
           image: DecorationImage(
-            image: AssetImage('assets/img/bg_main.png'),
+            image: AssetImage('assets/img/background_1_littledark.png'),
             fit: BoxFit.cover,
           ),
         ),

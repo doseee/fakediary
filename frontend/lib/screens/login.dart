@@ -116,18 +116,8 @@ class _LoginState extends State<Login> {
         },
         child: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xff0F2027),
-                  Color(0xff203A43),
-                  Color(0xff2C5364),
-                ],
-                stops: [0, 0.4, 1.0],
-              ),
               image: DecorationImage(
-                image: AssetImage('assets/img/background1.png'),
+                image: AssetImage('assets/img/background_1_littledark.png'),
                 fit: BoxFit.cover,
               ),
             ),
