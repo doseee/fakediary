@@ -11,6 +11,7 @@ import com.a101.fakediary.deeparteffects.styles.DeepArtEffectsStyles;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryRepository;
+import com.a101.fakediary.diary.service.DiaryService;
 import com.a101.fakediary.imagefile.handler.ImageFileHandler;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
@@ -37,6 +38,7 @@ public class CardService {
     private final CardDiaryMappingRepository cardDiaryMappingRepository;
     private final ImageFileHandler s3ImageFileHandler;
     private final DeepArtEffectsApi deepArtEffectsApi;
+    private final DiaryService diaryService;
 
     @Transactional
     public CardSaveResponseDto saveCard(MultipartFile origImageFile, String cardImageFileUrl, int styleIndex, String styleId, String saveCardDtoString) throws Exception {
@@ -109,13 +111,9 @@ public class CardService {
     public List<CardSaveResponseDto> listCards(Long memberId) throws Exception {
         List<CardSaveResponseDto> ret  = new ArrayList<>();
 
-        try {
-            List<Card> cardList = cardRepository.findAllByMemberId(memberId).orElseThrow(() -> new Exception("Card of member not found"));
-            for (Card card : cardList) {
-                ret.add(createCardSaveResponseDto(card));
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+        List<Card> cardList = cardRepository.findAllByMemberId(memberId).orElseThrow(() -> new Exception("Card of member not found"));
+        for (Card card : cardList) {
+            ret.add(createCardSaveResponseDto(card));
         }
 
         return ret;
@@ -138,6 +136,18 @@ public class CardService {
 
         cardRepository.delete(card);
         return ret;
+    }
+
+    //특정 카드로 만들어진 일기Id 리스트 반환
+    @Transactional(readOnly = true)
+    public List<Long> getDiaryIdsByCardId(Long cardId) {
+        return cardDiaryMappingRepository.findDiaryIdsByCardId(cardId);
+    }
+
+    //  특정 카드로 만들어진 일기 반환
+    @Transactional(readOnly = true)
+    public List<DiaryResponseDto> getDiariesByCardId(Long cardId) throws Exception {
+        return diaryService.getDiariesByCardId(cardId);
     }
 
     private CardSaveRequestDto createCardSaveRequestDto(Map<String, Object> map) {
@@ -189,10 +199,5 @@ public class CardService {
         }
 
         return ret;
-    }
-
-    //특정 카드로 만들어진 일기Id 리스트 반환
-    public List<Long> getDiaryIdsByCardId(Long cardId) {
-        return cardDiaryMappingRepository.findDiaryIdsByCardId(cardId);
     }
 }

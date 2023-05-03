@@ -36,7 +36,7 @@ public class DiaryService {
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
 
-    public Diary toEntity(DiaryRequestDto dto) {
+    private Diary toEntity(DiaryRequestDto dto) {
         return Diary.builder()
                 .member(memberRepository.findByMemberId(dto.getMemberId()))
                 .keyword(dto.getKeyword()) // 받아온 카드리스트기반으로 키워드 추출
@@ -47,10 +47,10 @@ public class DiaryService {
                 .build();
     }
 
-    public List<DiaryResponseDto> changeResponse(List<Diary> diary) {
+    private List<DiaryResponseDto> changeResponse(List<Diary> diary) {
         List<DiaryResponseDto> list = new ArrayList<>();
-        for (int i = 0; i < diary.size(); i++) {
-            DiaryResponseDto tmp = new DiaryResponseDto(diary.get(i));
+        for (Diary value : diary) {
+            DiaryResponseDto tmp = new DiaryResponseDto(value);
             tmp.setGenre(EGenre.valueOf(genreService.searchGenre(tmp.getDiaryId())));
             list.add(tmp);
         }
@@ -126,6 +126,7 @@ public class DiaryService {
     }
 
     //카드Id리스트로부터 만들어진 다이어리 리스트 반환
+    @Transactional(readOnly = true)
     public List<CardMadeDiaryResponseDto> findDiaryListFromCardList(List<Long> diaryIdList) {
         List<CardMadeDiaryResponseDto> returnList = new ArrayList<CardMadeDiaryResponseDto>();
         for (Long diaryId : diaryIdList) {
@@ -146,5 +147,16 @@ public class DiaryService {
             returnList.add(dto);
         }
         return returnList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<DiaryResponseDto> getDiariesByCardId(Long cardId) throws Exception {
+        List<Diary> diaries = diaryRepository.findDiariesByCardId(cardId).orElseThrow(() -> new Exception("cardId에 해당하는 일기 존재하지 않음"));
+        List<DiaryResponseDto> ret = new ArrayList<>();
+
+        for(Diary diary : diaries)
+            ret.add(new DiaryResponseDto(diary));
+
+        return ret;
     }
 }
