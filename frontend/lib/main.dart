@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend/screens/login_entrance.dart';
+import 'package:frontend/screens/diary_detail.dart';
 import 'package:frontend/screens/splash.dart';
 
 class MainScreen extends StatelessWidget {
@@ -33,7 +33,7 @@ class MainScreen extends StatelessWidget {
 void main() async {
   await dotenv.load(fileName: ".env");
   runApp(const MaterialApp(
-    home: LoginEntrance(),
+    home: DiaryDetail(),
   ));
 }
 

@@ -47,6 +47,7 @@ dependencies:
   geolocator: ^9.0.2
   image_cropper: ^3.0.3
   flutter_dotenv: ^5.0.2
+  flutter_animate: ^4.1.1+1
 
 dev_dependencies:
   flutter_test:
