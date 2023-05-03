@@ -1,12 +1,15 @@
 package com.a101.fakediary.diary.service;
 
 import com.a101.fakediary.card.dto.response.CardMadeDiaryResponseDto;
+import com.a101.fakediary.card.entity.Card;
+import com.a101.fakediary.card.repository.CardRepository;
+import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryRepository;
+import com.a101.fakediary.diaryimage.service.DiaryImageService;
 import com.a101.fakediary.genre.dto.GenreDto;
-import com.a101.fakediary.genre.repository.GenreRepository;
 import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,27 +27,60 @@ public class DiaryService {
     private final MemberRepository memberRepository;
     private final GenreService genreService;
     private final DiaryRepository diaryImageRepository;
+    private final CardDiaryMappingService cardDiaryMappingService;
+    private final CardRepository cardRepository;
+    private final DiaryImageService diaryImageService;
 
     public Diary toEntity(DiaryRequestDto dto) {
         return Diary.builder()
                 .member(memberRepository.findByMemberId(dto.getMemberId()))
-                .keyword(dto.getKeyword())
-                .prompt(dto.getPrompt())
-                .title(dto.getTitle())
-                .detail(dto.getDetail())
-                .summary(dto.getSummary())
+                .keyword(dto.getKeyword()) // 받아온 카드리스트기반으로 키워드 추출
+                .prompt(dto.getPrompt()) //프론트GPT
+                .title(dto.getTitle()) //프론트GPT
+                .detail(dto.getDetail()) //프론트GPT
+                .summary(dto.getSummary()) //프론트GPT
                 .build();
     }
 
     @Transactional
-    public void saveDiary(DiaryRequestDto dto) {
-        Diary diary = diaryRepository.save(toEntity(dto)); //일기 저장
-        String[] s = dto.getGenre();
+    public Diary createDiary(DiaryRequestDto dto) {
 
-        for (int i = 0; i < s.length; i++) {
-            GenreDto gen = new GenreDto(diary.getDiaryId(), s[i]);
+        //dto 키워드 채우기
+        StringBuilder keyword = new StringBuilder();
+
+        List<Long> cardIds = dto.getCardIds();
+        for(Long id : cardIds){
+            Card card = cardRepository.findById(id).orElseThrow();
+            keyword.append(card.getKeyword()).append("@"); //키워드@키워드@키워드@ 식으로 제작
+        }
+        keyword.deleteCharAt(keyword.length()-1);//마지막 골뱅이 제거
+        if (0 < keyword.length() && keyword.charAt(keyword.length() -1) == '@'){
+            keyword.deleteCharAt(keyword.length() - 1); // 마지막 골뱅이 제거
+        }
+        dto.setKeyword(keyword.toString());
+        //dto 키워드 채우기 end
+
+
+        //GPT API날려서 dto내용채우고하려했는데 일단은 프론트쪽에서 하는것으로.
+
+        //일기 생성
+        Diary diary = diaryRepository.save(toEntity(dto));
+
+        //장르 테이블 생성
+        List<String> genreList = dto.getGenre();
+
+        for (String genre : genreList) {
+            GenreDto gen = new GenreDto(diary.getDiaryId(), genre);
             genreService.saveGenre(gen); //장르 저장
         }
+
+        // 카드&일기 매핑테이블 생성
+            cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIds);
+
+        //일기&이미지파일 테이블 만들기 프론트에서 url받아왔다 가정
+        diaryImageService.createDiaryImages(diary.getDiaryId(), dto.getDiaryImageUrl());
+
+        return diary;
     }
 
     @Transactional(readOnly = true)
