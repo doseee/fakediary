@@ -102,7 +102,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                           SizedBox(height: 15),
                           Text(
                             '이야기로 만들 기억의 조각을 선택하세요.',
-                            style: TextStyle(fontSize: 10, color: Colors.white),
+                            style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
                           SizedBox(height: 10),
                         ],
