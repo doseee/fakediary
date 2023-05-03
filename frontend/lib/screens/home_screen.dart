@@ -66,7 +66,8 @@ class _MainScreenState extends State<HomeScreen> {
                           'assets/img/icon_menu.png',
                         ),
                         iconSize: 80,
-                      ))
+                      )),
+
                 ],
               ),
             )));
