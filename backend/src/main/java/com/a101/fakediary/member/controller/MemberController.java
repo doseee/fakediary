@@ -7,6 +7,7 @@ import com.a101.fakediary.member.service.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,5 +89,19 @@ public class MemberController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @ApiOperation(value = "회원 랜덤 교환 신청 가능 여부 확인")
+    @GetMapping("/random-exchange/{memberId}")
+    public ResponseEntity<?> checkRandomExchangeable(@PathVariable(name = "memberId")Long memberId) {
+        Boolean ret = null;
+
+        try {
+            ret = memberService.checkRandomChangeable(memberId);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 }

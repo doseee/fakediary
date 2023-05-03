@@ -27,12 +27,18 @@ public class Diary extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="member_id", nullable = false)
     private Member member;
-    @Column(nullable = false, length = 500)
+    @Column(length = 500)
+    private String characters;
+    @Column(length = 500)
+    private String places;
+    @Column(length = 500)
     private String keyword;
     @Column(nullable = false, length = 2000)
     private String prompt;
     @Column(nullable = false, length = 400)
     private String title;
+    @Column(length = 400)
+    private String subtitles;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String detail;
     @Column(nullable = false, length = 1000)

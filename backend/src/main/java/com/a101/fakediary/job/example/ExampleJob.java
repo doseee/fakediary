@@ -42,7 +42,7 @@ public class ExampleJob implements SchedulingConfigurer {
         taskRegistrar.setTaskScheduler(taskScheduler);
     }
 
-    @Scheduled(cron = "0 28,29,30 13 * * *")
+    @Scheduled(cron = "0 55 15 * * *")
     public void runJob() throws Exception {
 
         Job job = jobBuilderFactory.get("example-job")
