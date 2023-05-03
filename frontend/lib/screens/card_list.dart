@@ -7,6 +7,9 @@ import 'package:frontend/screens/menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../widgets/theme.dart';
+import '../widgets/appbar.dart';
+
 class CardList extends StatefulWidget {
   const CardList({Key? key}) : super(key: key);
 
@@ -25,22 +28,7 @@ class CardModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff0F2027),
-              Color(0xff203A43),
-              Color(0xff2C5364),
-            ],
-            stops: [0, 0.4, 1.0],
-          ),
-          image: DecorationImage(
-            image: AssetImage('assets/img/bg_galaxy.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: BgThemeIncludeImage(),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -68,63 +56,16 @@ class _CardListState extends State<CardList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     cards = ApiService().getCardList();
     print(cards);
   }
   Widget build(BuildContext context) {
     return (Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [
-                  0.3,
-                  0.6,
-                  0.9
-                ],
-                colors: [
-                  Color(0xff0f2027),
-                  Color(0xff203a43),
-                  Color(0xff2c5364),
-                ])),
+        decoration: BgThemeGradient(),
         child: Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
-              actions: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MenuScreen()));
-                            },
-                            child: Image(
-                              image: AssetImage(
-                                'assets/img/icon_menu_page.png',
-                              ),
-                              width: 45,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
+            appBar: StandAppBar(context),
             body: Center(
                 child: Column(children: [
                   Flexible(
@@ -180,11 +121,11 @@ class _CardListState extends State<CardList> {
   String titleCheck(snapshot, index){
     if (snapshot[index].keywords.length != 0){
       return snapshot[index].keywords[0];
-    } else if (snapshot[index].baseName != null){
+    } else if (snapshot[index].baseName != ''){
       return snapshot[index].baseName;
     }
 
-    return snapshot[index].location;
+    return snapshot[index].basePlace;
   }
 
   Widget buildList(snapshot) {
@@ -244,7 +185,7 @@ class _CardListState extends State<CardList> {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w400,
-                                fontSize: 12)),
+                                fontSize: 11)),
                       ),
                     ],
                   ),

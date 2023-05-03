@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend/screens/diary_detail.dart';
+import 'package:frontend/screens/login_entrance.dart';
+import 'package:frontend/screens/splash.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -32,7 +33,7 @@ class MainScreen extends StatelessWidget {
 void main() async {
   await dotenv.load(fileName: ".env");
   runApp(const MaterialApp(
-    home: DiaryDetail(),
+    home: LoginEntrance(),
   ));
 }
 
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MainScreen(),
+      home: const Splash(),
     );
   }
 }

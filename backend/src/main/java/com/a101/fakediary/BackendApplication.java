@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
-//@EnableJpaAuditing	//	JPA Auditing 활성화
+@EnableJpaAuditing	//	JPA Auditing 활성화
 @SpringBootApplication
 public class BackendApplication {
 

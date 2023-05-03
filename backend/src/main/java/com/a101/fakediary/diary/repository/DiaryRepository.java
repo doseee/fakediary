@@ -30,8 +30,16 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Query("delete from Diary where diaryId =:diaryId")
     void deleteDiary(@Param("diaryId") Long diaryId);
 
+    /**
+     * 개발자가 생성해둔 Dummy 일기 리스트들을 가져옴
+     *
+     * @return
+     */
+    @Query("SELECT new com.a101.fakediary.diary.dto.DiaryResponseDto(d)" +
+            "FROM Diary d WHERE d.diaryId >= 0 AND d.diaryId < 1000 ORDER BY RAND()")
+    List<DiaryResponseDto> getDevelopersDiaries();
+
     //다이어리 id의 이미지들을 오름차순으로 정렬. 가장 앞에있는것이 썸네일
     @Query("SELECT d.diaryImageUrl FROM DiaryImage d WHERE d.diary.diaryId = :diaryId ORDER BY d.diaryImageId ASC")
     List<String> findDiaryImageUrlByDiaryId(@Param("diaryId") Long diaryId);
-
 }

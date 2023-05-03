@@ -6,6 +6,7 @@ import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
 
+import 'diary_list_screen.dart';
 import 'modify_screen.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -185,7 +186,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   desc2: '내가 작성한 일기를 볼 수 있습니다.',
                                   onSelect: onSelect,
                                   selected: selectedTitle == '일기목록',
-                                  screen: const HomeScreen(),
+                                  screen: const DiaryListScreen(),
                                 ),
                               ],
                             ),
