@@ -359,7 +359,129 @@ class ApiService {
     }
   }
 
-  static Future<String> askGpt(String question) async {
+  static bool isValidJson(String str) {
+    int openBrackets = 0;
+    int closeBrackets = 0;
+    print(str.length);
+
+    for (int i = 0; i < str.length; i++) {
+      if (str[i] == '[') {
+        print('open');
+        print(i);
+        openBrackets++;
+      } else if (str[i] == ']') {
+        closeBrackets++;
+        print('close');
+        print(i);
+      }
+    }
+
+    return openBrackets == closeBrackets;
+  }
+
+  static Future<List<Map<String, String>>> makeDiaryContents(
+      List<Map<String, String>> messages, String input) async {
+    print('start');
+    String apiKey = dotenv.get('gptApiKey');
+    String apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    if (messages.isEmpty) {
+      messages.add({
+        'role': 'system',
+        'content':
+            '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 desc에, 내용은 contents에 넣어줘. 이야기를 한 장 당 1000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘.'
+      });
+    }
+    messages.add({'role': 'user', 'content': input});
+
+    Map<String, dynamic> body = {
+      'model': 'gpt-3.5-turbo',
+      'messages': messages,
+      'max_tokens': 500,
+      'n': 1,
+      'stop': null,
+      'temperature': 0.5,
+    };
+
+    http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: headers,
+      body: json.encode(body),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse =
+          jsonDecode(utf8.decode(response.bodyBytes));
+      String answer = jsonResponse['choices'][0]['message']['content'].trim();
+      messages.add({"role": "assistant", "content": answer});
+      // print(answer);
+      print('encode');
+      // print(json.decode(answer)['contents']);
+      // print(isValidJson(answer));
+      print(answer.endsWith('}'));
+      if (!answer.endsWith('}')) {
+        print(answer);
+        messages = await makeDiaryContents(messages,
+            '끊어진 부분부터 이어서 답변해줘. 비슷한 내용을 반복하지 말고 되도록 지정한 json 형식대로 답변을 빨리 마무리해줘.');
+        print('이어서 답변');
+      }
+      return messages;
+    } else {
+      throw Exception(
+          'Failed to get response from GPT: ${response.statusCode}');
+    }
+  }
+
+  static Future<String> continueGptConversation(String id) async {
+    print('끊어짐');
+    // Your API key and URL remain the same
+    String apiKey = dotenv.get('gptApiKey');
+    String apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    Map<String, dynamic> body = {
+      'model': 'gpt-3.5-turbo',
+      'messages': [
+        {
+          'role': 'user',
+          'content': '정확히 끊어진 부분부터 이야기를 계속 해줘 계속 해야 할 답변의 id는 "$id"야.',
+        },
+      ],
+      'max_tokens': 3921,
+      'n': 1,
+      'stop': null,
+      'temperature': 0.5,
+    };
+
+    http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: headers,
+      body: json.encode(body),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse =
+          jsonDecode(utf8.decode(response.bodyBytes));
+      String answer = jsonResponse['choices'][0]['message']['content'].trim();
+      print(answer);
+      return answer;
+    } else {
+      throw Exception(
+          'Failed to get response from GPT: ${response.statusCode}');
+    }
+  }
+
+  static Future<String> askGpt(var messages) async {
+    print('gpt요청');
     // Replace with your GPT API key
     String apiKey = dotenv.get('gptApiKey');
     // Replace with the chat-based API endpoint
@@ -378,7 +500,7 @@ class ApiService {
         {
           'role': 'system',
           'content':
-              '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 내용은 contents에, 한줄 요약은 desc에 넣어줘.'
+              '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 desc에, 내용은 contents에 넣어줘. 이야기를 한 장 당 1000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 최대한 길게 부탁해.'
         },
         {
           'role': 'user',
@@ -386,7 +508,7 @@ class ApiService {
         },
       ],
       'max_tokens':
-          2048, // Adjust to control the length of the generated response
+          2500, // Adjust to control the length of the generated response
       'n': 1, // Number of completions to generate
       'stop': null, // Set stopping sequence if needed
       'temperature':
@@ -402,11 +524,18 @@ class ApiService {
 
     // Check for a successful response
     if (response.statusCode == 200) {
-      final respJson = jsonDecode(utf8.decode(response.bodyBytes));
       Map<String, dynamic> jsonResponse =
           jsonDecode(utf8.decode(response.bodyBytes));
+      print(jsonResponse);
       String answer = jsonResponse['choices'][0]['message']['content'].trim();
       print(answer);
+      print(answer.substring(answer.length - 1, answer.length - 1));
+      print('이거위');
+      print(answer.endsWith('}'));
+      print(answer.endsWith(']'));
+      if (!answer.endsWith('}')) {
+        continueGptConversation(jsonResponse['id']);
+      }
       return answer;
     } else {
       throw Exception(
