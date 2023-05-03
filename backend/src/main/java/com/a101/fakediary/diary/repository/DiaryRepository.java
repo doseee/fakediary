@@ -15,10 +15,10 @@ import java.util.List;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Diary findByDiaryId(Long diaryId);
 
-    @Query("select new com.a101.fakediary.diary.dto.DiaryResponseDto(d) " +
+    @Query("select d " +
             "from Diary d " +
             "where d.member.memberId =:memberId")
-    List<DiaryResponseDto> allDiary(Long memberId);
+    List<Diary> allDiary(Long memberId);
 
     @Query("select new com.a101.fakediary.diary.dto.DiaryResponseDto(d) " +
             "from Diary d , Genre g " +

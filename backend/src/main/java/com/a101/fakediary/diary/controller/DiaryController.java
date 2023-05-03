@@ -1,5 +1,6 @@
 package com.a101.fakediary.diary.controller;
 
+import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.service.DiaryService;
@@ -60,11 +61,11 @@ public class DiaryController {
         }
     }
 
-    @ApiOperation(value = "일기 필터 조회")
-    @GetMapping("/filter/{memberId}/{genre}")
-    public ResponseEntity<?> filterDiary(@PathVariable Long memberId, @PathVariable String genre) {
+    @ApiOperation(value = "일기 필터 조회, id: 선택한 사람 id, memberId: 조회한 사람 id, genre: 장르")
+    @PostMapping("/filter")
+    public ResponseEntity<?> filterDiary(@RequestBody DiaryFilterDto filter) {
         try {
-            List<DiaryResponseDto> diary = diaryService.filterDiary(memberId, genre);
+            List<DiaryResponseDto> diary = diaryService.filterDiary(filter);
             return new ResponseEntity<List<DiaryResponseDto>>(diary, HttpStatus.OK);
         } catch (NullPointerException e){
             return new ResponseEntity(HttpStatus.NO_CONTENT);
