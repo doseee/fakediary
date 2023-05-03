@@ -531,10 +531,13 @@ class ApiService {
           ?.toList() ?? [];
       print('api: ${diaries.length}');
       return diaries;
-    } else {
-      throw Exception('일기 리스트 로딩에 실패했습니다');
+    } else if(response.statusCode == 204) {
+        return [];
+    } else{
+        throw Exception('일기 리스트 로딩에 실패했습니다');
+      }
     }
-  }
+
 
   static Future<bool> RandomChange(int diaryId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

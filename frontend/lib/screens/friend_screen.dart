@@ -60,7 +60,8 @@ class _FriendScreenState extends State<FriendScreen> {
                   if (recieverId == -1) {
                     result = await ApiService.RandomChange(widget.diaryId);
                   } else {
-                    result = await ApiService.DiaryChangeBetweenFriends(widget.diaryId, recieverId);
+                    result = await ApiService.DiaryChangeBetweenFriends(
+                        widget.diaryId, recieverId);
                   }
 
                   if (!mounted) return;
@@ -92,12 +93,37 @@ class _FriendScreenState extends State<FriendScreen> {
             children: [
               Flexible(
                   flex: 4,
-                  child: Text(
-                    'RANDOM',
-                    style: TextStyle(fontSize: 24, color: Colors.white70),
+                  child: Row(
+                    children: [
+                      Flexible(flex: 5, child: Text(
+                        'RANDOM',
+                        style: TextStyle(fontSize: 24, color: Colors.white70),
+                      ),),
+                      Flexible(flex: 1, child: Container(
+                        child: IconButton(
+                            icon: Icon(Icons.info,
+                                color: Colors.white),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return InfoModal(
+                                        widget: Text(
+                                          '✉ 랜덤 일기는 랜덤 친구와 일기를 교환할 수 있는 기능으로, 하루에 한 번만 보낼 수 있습니다.',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .white,
+                                              fontSize:
+                                              14),
+                                        ),
+                                        height: 100);
+                                  });
+                            }),
+                      ),)
+                    ],
                   )),
               Flexible(
-                flex: 4,
+                flex: 3,
                 child: Container(),
               ),
               Flexible(
@@ -105,7 +131,7 @@ class _FriendScreenState extends State<FriendScreen> {
                 child: Center(
                   child: Container(
                     width: 250,
-                    height: 40,
+                    height: 50,
                     decoration: BoxDecoration(
                         gradient: LinearGradient(colors: [
                           Color(0xff79F1A4),
@@ -152,6 +178,52 @@ class _FriendScreenState extends State<FriendScreen> {
     return SizedBox(
       height: 5,
     );
+  }
+
+  Widget ChangeCheck(FriendModel friend) {
+    if (widget.exchangeSituation == 1) {
+      return Flexible(
+          flex: 1,
+          child: Container(
+            decoration: BtnThemeGradientLine(),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => const Login(),
+                    //     ));
+                    print(widget.diaryId);
+                    setState(() {
+                      recieverId = friend.friendId;
+                    });
+                    //Todo; api 먼저 보내서 오늘 랜덤 일기 교환했는지 여부 확인 후 다른 상태 Modal 띄우기
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return InfoModal(
+                            widget: ChangeModal(widget.diaryId),
+                            height: 140,
+                          );
+                        });
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      )),
+                  child: Text(
+                    'SEND',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  )),
+            ),
+          ));
+    }
+    return Container();
   }
 
   @override
@@ -244,59 +316,27 @@ class _FriendScreenState extends State<FriendScreen> {
                               itemCount: snapshot.data!.length,
                               itemBuilder: (context, index) {
                                 final friend = snapshot.data![index];
-                                return ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
-                                  ),
-                                  title: Row(
-                                    children: [
-                                      Flexible(flex: 1,
-                                      child: Text(
-                                        friend.nickname,
-                                        style: TextStyle(
-                                            color: Colors.white70,
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 24),
-                                      ),),
-                                      Flexible(flex: 1, child: Container()),
-                                      Flexible(flex: 1, child: Container(
-                                        decoration: BtnThemeGradientLine(),
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                          child: ElevatedButton(
-                                              onPressed: () async {
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //       builder: (context) => const Login(),
-                                                //     ));
-                                                print(widget.diaryId);
-                                                //Todo; api 먼저 보내서 오늘 랜덤 일기 교환했는지 여부 확인 후 다른 상태 Modal 띄우기
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return InfoModal(
-                                                        widget: ChangeModal(widget.diaryId),
-                                                        height: 140,
-                                                      );
-                                                    });
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.transparent,
-                                                  shadowColor: Colors.transparent,
-                                                  elevation: 0.0,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(30.0),
-                                                  )),
-                                              child: Text(
-                                                'SEND',
-                                                style: TextStyle(color: Colors.white, fontSize: 14),
-                                              )),
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 10, bottom: 5),
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
+                                    ),
+                                    title: Row(children: [
+                                      Flexible(
+                                        flex: 1,
+                                        child: Text(
+                                          friend.nickname,
+                                          style: TextStyle(
+                                              color: Colors.white70,
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 24),
                                         ),
-                                      ))
-
-                                    ],
+                                      ),
+                                      Flexible(flex: 2, child: Container()),
+                                      ChangeCheck(friend),
+                                    ]),
                                   ),
                                 );
                               });
