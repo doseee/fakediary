@@ -106,11 +106,11 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
-    public List<CardSaveResponseDto> listCards(Long memberId){
+    public List<CardSaveResponseDto> listCards(Long memberId) throws Exception {
         List<CardSaveResponseDto> ret  = new ArrayList<>();
 
         try {
-            List<Card> cardList = cardRepository.findAllByMemberId(memberId).orElseThrow(() -> new Exception());
+            List<Card> cardList = cardRepository.findAllByMemberId(memberId).orElseThrow(() -> new Exception("Card of member not found"));
             for (Card card : cardList) {
                 ret.add(createCardSaveResponseDto(card));
             }
@@ -125,7 +125,7 @@ public class CardService {
     public CardSaveResponseDto findCard(Long cardId) throws Exception {
         CardSaveResponseDto ret = null;
 
-        Card card = cardRepository.findById(cardId).orElseThrow(() -> new Exception());
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new Exception("Card not found"));
         ret = createCardSaveResponseDto(card);
 
         return ret;
@@ -133,7 +133,7 @@ public class CardService {
 
     @Transactional
     public Long deleteCardByCardId(Long cardId) throws Exception {
-        Card card = cardRepository.findById(cardId).orElseThrow(() -> new Exception());
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new Exception("Card not found"));
         Long ret = card.getCardId();
 
         cardRepository.delete(card);

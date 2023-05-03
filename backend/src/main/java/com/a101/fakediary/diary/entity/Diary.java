@@ -17,7 +17,7 @@ public class Diary extends BaseEntity {
     @SequenceGenerator(
             name="DIARY_SEQ_GEN",
             sequenceName = "DIARY_SEQ",
-            initialValue = 100,
+            initialValue = 1000,
             allocationSize = 1
     )
     @Id

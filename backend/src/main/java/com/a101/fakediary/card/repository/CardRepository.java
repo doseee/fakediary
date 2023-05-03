@@ -1,6 +1,8 @@
 package com.a101.fakediary.card.repository;
 
+import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.entity.Card;
+import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
