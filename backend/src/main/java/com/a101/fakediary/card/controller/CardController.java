@@ -68,7 +68,13 @@ public class CardController {
     @GetMapping("/{memberId}")
     public ResponseEntity<?>  listCards(@PathVariable(name = "memberId")Long memberId) {
         log.info("listCards!!!!");
-      return new ResponseEntity<>(cardService.listCards(memberId), HttpStatus.OK);
+        List<CardSaveResponseDto> ret = null;
+        try {
+            ret = cardService.listCards(memberId);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+      return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 
     /**

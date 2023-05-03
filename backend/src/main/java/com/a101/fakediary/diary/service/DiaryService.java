@@ -14,8 +14,7 @@ import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,18 +83,27 @@ public class DiaryService {
         return diary;
     }
 
+    @Transactional(readOnly = true)
     public DiaryResponseDto detailDiary(Long diaryId) {
         return new DiaryResponseDto(diaryRepository.findByDiaryId(diaryId));
     }
 
+    @Transactional(readOnly = true)
     public List<DiaryResponseDto> allDiary(Long memberId) {
         return diaryRepository.allDiary(memberId);
     }
 
+    @Transactional(readOnly = true)
     public List<DiaryResponseDto> filterDiary(Long memberId, String genre) {
         return diaryRepository.filterDiary(memberId, genre);
     }
 
+    @Transactional(readOnly = true)
+    public List<DiaryResponseDto> getDevelopersDiaries() {
+        return diaryRepository.getDevelopersDiaries();
+    }
+
+    @Transactional
     public void deleteDiary(Long diaryId) {
         genreService.deleteGenre(diaryId);
         diaryRepository.deleteDiary(diaryId);
