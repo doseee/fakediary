@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @Transactional
@@ -28,7 +30,7 @@ public class GenreService {
     public void deleteGenre(Long diaryId) {genreRepository.deleteGenre(diaryId);}
 
     @Transactional(readOnly = true)
-    public String searchGenre(Long diaryId) {
+    public List<String> searchGenre(Long diaryId) {
         return genreRepository.findByDiaryId(diaryId);
     }
 

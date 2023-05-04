@@ -21,11 +21,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
             "where d.member.memberId =:memberId")
     List<Diary> allDiary(Long memberId);
 
-    @Query("select new com.a101.fakediary.diary.dto.DiaryResponseDto(d) " +
-            "from Diary d , Genre g " +
-            "where d.member.memberId =:memberId and d.diaryId = g.id.diary.diaryId and g.id.genre =:genre")
-    List<DiaryResponseDto> filterDiary(@Param("memberId") Long memberId, @Param("genre") String genre);
-
     @Modifying
     @Transactional
     @Query("delete from Diary where diaryId =:diaryId")

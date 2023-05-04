@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Long>{
@@ -18,5 +19,5 @@ public interface GenreRepository extends JpaRepository<Genre, Long>{
     void deleteGenre(@Param("diaryId") Long diaryId);
 
     @Query("select g.id.genre from Genre g where g.id.diary.diaryId =:diaryId")
-    String findByDiaryId(Long diaryId);
+    List<String> findByDiaryId(Long diaryId);
 }
