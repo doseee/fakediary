@@ -31,56 +31,58 @@ class _FriendScreenState extends State<FriendScreen> {
   }
 
   Widget ChangeModal(int diaryId) {
-    return Column(
-      children: [
-        Flexible(
-          flex: 1,
-          child: Center(
-            child: Text(
-              '교환하시겠습니까?',
-              style: TextStyle(fontSize: 16, color: Colors.white60),
+      return Column(
+        children: [
+          Flexible(
+            flex: 1,
+            child: Center(
+              child: Text(
+                '교환하시겠습니까?',
+                style: TextStyle(fontSize: 16, color: Colors.white60),
+              ),
             ),
           ),
-        ),
-        Flexible(
-          flex: 1,
-          child: Container(
-            decoration: BtnThemeGradientLine(),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    elevation: 0.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    )),
-                onPressed: () async {
-                  late bool result;
+          Flexible(
+            flex: 1,
+            child: Container(
+              decoration: BtnThemeGradientLine(),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      )),
+                  onPressed: () async {
+                    late bool result;
 
-                  if (recieverId == -1) {
-                    result = await ApiService.RandomChange(widget.diaryId);
-                  } else {
-                    result = await ApiService.DiaryChangeBetweenFriends(
-                        widget.diaryId, recieverId);
-                  }
+                    if (recieverId == -1) {
+                      result = await ApiService.RandomChange(widget.diaryId);
+                    } else {
+                      print('recieverId : $recieverId');
+                      result = await ApiService.DiaryChangeBetweenFriends(
+                          widget.diaryId, recieverId);
+                      print('friend diary change: ${widget.diaryId}');
+                    }
 
-                  if (!mounted) return;
-                  if (result) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DiaryListScreen()));
-                  } else {
-                    print('전송 실패');
-                  }
-                },
-                child: Center(
-                  child: Text('신청'),
-                )),
-          ),
-        )
-      ],
-    );
+                    if (!mounted) return;
+                    if (result) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DiaryListScreen()));
+                    } else {
+                      print('전송 실패');
+                    }
+                  },
+                  child: Center(
+                    child: Text('신청'),
+                  )),
+            ),
+          )
+        ],
+      );
   }
 
   Widget RandomDiary() {
@@ -123,7 +125,7 @@ class _FriendScreenState extends State<FriendScreen> {
                     ],
                   )),
               Flexible(
-                flex: 3,
+                flex: 2,
                 child: Container(),
               ),
               Flexible(
@@ -132,12 +134,7 @@ class _FriendScreenState extends State<FriendScreen> {
                   child: Container(
                     width: 250,
                     height: 50,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          Color(0xff79F1A4),
-                          Color(0xff0E5CAD),
-                        ]),
-                        borderRadius: BorderRadius.circular(25)),
+                    decoration: BtnThemeGradient(),
                     child: ElevatedButton(
                         onPressed: () async {
                           // Navigator.push(
@@ -147,14 +144,30 @@ class _FriendScreenState extends State<FriendScreen> {
                           //     ));
                           print(widget.diaryId);
                           //Todo; api 먼저 보내서 오늘 랜덤 일기 교환했는지 여부 확인 후 다른 상태 Modal 띄우기
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return InfoModal(
-                                  widget: ChangeModal(widget.diaryId),
-                                  height: 180,
-                                );
-                              });
+                          final bool result = await ApiService.CheckChange();
+
+                          if (!mounted) return;
+
+                          print(result);
+                          if(result) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return InfoModal(
+                                    widget: Text('오늘은 이미 교환일기를 보냈습니다', style: TextStyle(color: Colors.white60),),
+                                    height: 140,
+                                  );
+                                });
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return InfoModal(
+                                    widget: ChangeModal(widget.diaryId),
+                                    height: 180,
+                                  );
+                                });
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
@@ -183,31 +196,32 @@ class _FriendScreenState extends State<FriendScreen> {
   Widget ChangeCheck(FriendModel friend) {
     if (widget.exchangeSituation == 1) {
       return Flexible(
-          flex: 1,
+          flex: 2,
           child: Container(
+            width: 250,
+            height: 50,
             decoration: BtnThemeGradientLine(),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: ElevatedButton(
+            child: ElevatedButton(
                   onPressed: () async {
+                    setState(() {
+                      recieverId = friend.friendId;
+                    });
                     // Navigator.push(
                     //     context,
                     //     MaterialPageRoute(
                     //       builder: (context) => const Login(),
                     //     ));
-                    print(widget.diaryId);
-                    setState(() {
-                      recieverId = friend.friendId;
-                    });
-                    //Todo; api 먼저 보내서 오늘 랜덤 일기 교환했는지 여부 확인 후 다른 상태 Modal 띄우기
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return InfoModal(
-                            widget: ChangeModal(widget.diaryId),
-                            height: 140,
-                          );
-                        });
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return InfoModal(
+                              widget: ChangeModal(widget.diaryId),
+                              height: 180,
+                            );
+                          });
+
+                      print('친구 : ${friend.friendId}');
+
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
@@ -220,7 +234,6 @@ class _FriendScreenState extends State<FriendScreen> {
                     'SEND',
                     style: TextStyle(color: Colors.white, fontSize: 14),
                   )),
-            ),
           ));
     }
     return Container();
@@ -325,16 +338,18 @@ class _FriendScreenState extends State<FriendScreen> {
                                     ),
                                     title: Row(children: [
                                       Flexible(
-                                        flex: 1,
-                                        child: Text(
-                                          friend.nickname,
-                                          style: TextStyle(
-                                              color: Colors.white70,
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 24),
-                                        ),
+                                        flex: 3,
+                                        child: SizedBox(
+                                          width: 200,
+                                          child: Text(
+                                            friend.nickname,
+                                            style: TextStyle(
+                                                color: Colors.white70,
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 24),
+                                          ),
+                                        )
                                       ),
-                                      Flexible(flex: 2, child: Container()),
                                       ChangeCheck(friend),
                                     ]),
                                   ),

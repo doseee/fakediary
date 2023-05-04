@@ -75,7 +75,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Flexible(flex: 2, child: Padding(
+                Flexible(flex: 3, child: Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Text(title, style: TextStyle(color: Colors.white60, fontSize: 18, fontWeight: FontWeight.w600),),
                 ),),
@@ -131,6 +131,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BgThemeIncludeImage(),
+      // BoxDecoration(
+      //   color: Colors.white60,
+      // ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: StandAppBar(context),

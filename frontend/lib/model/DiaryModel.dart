@@ -4,7 +4,7 @@ class DiaryModel {
     required this.memberId,
     this.characters,
     this.places,
-    required this.keyword,
+    this.keyword,
     required this.prompt,
     required this.title,
     this.subtitles,
@@ -15,29 +15,29 @@ class DiaryModel {
   });
   late final int diaryId;
   late final int memberId;
-  late final Null characters;
-  late final Null places;
-  late final List<String> keyword;
+  late final List<String>? characters;
+  late final List<String>? places;
+  late final List<String>? keyword;
   late final String prompt;
   late final String title;
-  late final Null subtitles;
+  late final List<String>? subtitles;
   late final String detail;
   late final String summary;
-  late final String genre;
+  late final List<String> genre;
   late final bool exchanged;
 
   DiaryModel.fromJson(Map<String, dynamic> json){
     diaryId = json['diaryId'];
     memberId = json['memberId'];
-    characters = json.containsKey('characters') ? json['characters'] : null;
-    places = json.containsKey('places') ? json['places'] : null;
-    keyword = List.castFrom<dynamic, String>(json['keyword']);
+    characters = json['characters'] != null ? List<String>.from(json['characters'].map((dynamic x) => x as String)) : [];
+    places = json['places'] != null ? List<String>.from(json['places'].map((dynamic x) => x as String)) : [];
+    keyword = json['keyword'] != null ? List<String>.from(json['keyword'].map((dynamic x) => x as String)) : [];
     prompt = json['prompt'];
     title = json['title'];
-    subtitles = json.containsKey('subtitles') ? json['subtitles'] : null;
+    subtitles = json['subtitles'] != null ? List<String>.from(json['subtitles'].map((dynamic x) => x as String)) : [];
     detail = json['detail'];
     summary = json['summary'];
-    genre = json['genre'];
+    genre = List.castFrom<dynamic, String>(json['genre']);
     exchanged = json['exchanged'];
   }
 
