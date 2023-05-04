@@ -2,8 +2,8 @@ package com.a101.fakediary.card.controller;
 
 import com.a101.fakediary.card.dto.response.CardMadeDiaryResponseDto;
 import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
+import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.card.service.CardService;
-import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.service.DiaryService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,7 @@ import java.util.Map;
 public class CardController {
     private final CardService cardService;
     private final DiaryService diaryService;
+    private final CardRepository cardRepository;
 
     /**
      *
@@ -130,6 +131,10 @@ public class CardController {
     @ApiOperation(value = "특정 카드로 만들어진 일기 리스트 조회")
     @GetMapping("/diary/{cardId}")
     public ResponseEntity<?> findDiaryListByCardId(@PathVariable("cardId") Long cardId) {
+        if(cardRepository.findById(cardId).isEmpty()){
+            return ResponseEntity.badRequest().body("존재하지 않는 카드 아이디입니다.");
+        }
+
         try {
             //카드&일기 매핑 테이블에서 해당 카드id와 함께 복합키를 이루고 있는 diaryId리스트를 가져와서
             List<Long> diaryIdsByCardId = cardService.getDiaryIdsByCardId(cardId);

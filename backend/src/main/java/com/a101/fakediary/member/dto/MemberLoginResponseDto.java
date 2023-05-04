@@ -25,4 +25,6 @@ public class MemberLoginResponseDto {
     private String firebaseUid;
 
     private String providerId;
+
+    private boolean isRandomExchanged;
 }

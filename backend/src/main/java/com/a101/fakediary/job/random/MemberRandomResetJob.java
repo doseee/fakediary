@@ -1,5 +1,6 @@
 package com.a101.fakediary.job.random;
 
+import com.a101.fakediary.member.service.MemberService;
 import com.a101.fakediary.randomexchangepool.service.RandomExchangePoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +29,11 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @EnableScheduling
 @Slf4j
-public class RandomMatchingJob implements SchedulingConfigurer {
+public class MemberRandomResetJob implements SchedulingConfigurer {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final JobLauncher jobLauncher;
-    private final RandomExchangePoolService randomExchangePoolService;
+    private final MemberService memberService;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
@@ -43,10 +44,10 @@ public class RandomMatchingJob implements SchedulingConfigurer {
         taskRegistrar.setTaskScheduler(taskScheduler);
     }
 
-    @Scheduled(cron = "0 57 15 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void runJob() throws Exception {
 
-        Job job = jobBuilderFactory.get("random-exchange-job")
+        Job job = jobBuilderFactory.get("reset-random-exchange-job")
                 .incrementer(new RunIdIncrementer())
                 .flow(step())
                 .end()
@@ -56,14 +57,14 @@ public class RandomMatchingJob implements SchedulingConfigurer {
     }
 
     private Step step() {
-        return stepBuilderFactory.get("random-exchange-step")
+        return stepBuilderFactory.get("reset-random-exchange-step")
                 .tasklet(tasklet())
                 .build();
     }
 
     private Tasklet tasklet() {
         return (stepContribution, chunkContext) -> {
-            randomExchangePoolService.doRandomMatching();
+            memberService.resetRandomExchange();
             return RepeatStatus.FINISHED;
         };
     }

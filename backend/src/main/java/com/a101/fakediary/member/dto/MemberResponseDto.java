@@ -27,6 +27,8 @@ public class MemberResponseDto {
 
     private String providerId;
 
+    private boolean isRandomExchanged;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

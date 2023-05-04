@@ -1,9 +1,10 @@
 package com.a101.fakediary.diary.controller;
 
+import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
+import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.service.DiaryService;
-import com.a101.fakediary.friendship.dto.FriendshipDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,14 +22,14 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @ApiOperation(value = "일기 등록")
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
         try {
-            diaryService.saveDiary(dto);
-            return new ResponseEntity(HttpStatus.OK);
+            Diary diary = diaryService.createDiary(dto);
+            return ResponseEntity.ok().body(diary);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -39,10 +40,10 @@ public class DiaryController {
             DiaryResponseDto diary = diaryService.detailDiary(diaryId);
             return new ResponseEntity<DiaryResponseDto>(diary, HttpStatus.OK);
         } catch (NullPointerException e){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -53,24 +54,24 @@ public class DiaryController {
             List<DiaryResponseDto> diary = diaryService.allDiary(memberId);
             return new ResponseEntity<List<DiaryResponseDto>>(diary, HttpStatus.OK);
         } catch (NullPointerException e){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @ApiOperation(value = "일기 필터 조회")
-    @GetMapping("/filter/{memberId}/{genre}")
-    public ResponseEntity<?> filterDiary(@PathVariable Long memberId, @PathVariable String genre) {
+    @ApiOperation(value = "일기 필터 조회, id: 선택한 사람 id, memberId: 조회한 사람 id, genre: 장르")
+    @PostMapping("/filter")
+    public ResponseEntity<?> filterDiary(@RequestBody DiaryFilterDto filter) {
         try {
-            List<DiaryResponseDto> diary = diaryService.filterDiary(memberId, genre);
+            List<DiaryResponseDto> diary = diaryService.filterDiary(filter);
             return new ResponseEntity<List<DiaryResponseDto>>(diary, HttpStatus.OK);
         } catch (NullPointerException e){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -79,10 +80,10 @@ public class DiaryController {
     public ResponseEntity<?> deleteDiary(@PathVariable Long diaryId) {
         try {
             diaryService.deleteDiary(diaryId);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

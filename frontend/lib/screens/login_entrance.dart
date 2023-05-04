@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/regist_screen.dart';
 import 'package:lottie/lottie.dart';
-import 'package:gradient_borders/gradient_borders.dart';
 
 import '../widgets/theme.dart';
 import 'login.dart';
@@ -34,7 +33,7 @@ class _LoginEntranceState extends State<LoginEntrance>
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/img/bg_main.png'),
+          image: AssetImage('assets/img/background_1_littledark.png'),
           fit: BoxFit.cover,
         ),
       ),
