@@ -88,36 +88,15 @@ public class RandomExchangePoolService {
 
                 log.info("reprDto1 = " + reprDto1);
                 log.info("reprDto2 = " + reprDto2);
-
-                RandomExchangePoolUpdateDto repuDto1 = RandomExchangePoolUpdateDto.builder()
-                        .randomExchangePoolId(reprDto1.getRandomExchangePoolId())
-                        .exchangedDiaryId(reprDto2.getDiaryId())
-                        .exchangedOwnerId(reprDto2.getOwnerId())
-                        .build();
-
-                RandomExchangePoolUpdateDto repuDto2 = RandomExchangePoolUpdateDto.builder()
-                        .randomExchangePoolId(reprDto2.getRandomExchangePoolId())
-                        .exchangedDiaryId(reprDto1.getDiaryId())
-                        .exchangedOwnerId(reprDto1.getOwnerId())
-                        .build();
+                
+                RandomExchangePoolUpdateDto repuDto1 = getRepuDto(reprDto1, reprDto2);
+                RandomExchangePoolUpdateDto repuDto2 = getRepuDto(reprDto2, reprDto1);
 
                 log.info("repuDto1 = " + repuDto1);
                 log.info("repuDto2 = " + repuDto2);
 
-                ExchangedDiarySaveRequestDto exchangeDiarySaveRequestDto1 = ExchangedDiarySaveRequestDto.builder()
-                        .sendDiaryId(reprDto1.getDiaryId())
-                        .senderId(reprDto1.getOwnerId())
-                        .receiveDiaryId(reprDto2.getDiaryId())
-                        .receiverId(reprDto2.getOwnerId())
-                        .friendExchangeType(EExchangeType.R)
-                        .build();
-                ExchangedDiarySaveRequestDto exchangeDiarySaveRequestDto2 = ExchangedDiarySaveRequestDto.builder()
-                        .sendDiaryId(reprDto2.getDiaryId())
-                        .senderId(reprDto2.getOwnerId())
-                        .receiveDiaryId(reprDto1.getDiaryId())
-                        .receiverId(reprDto1.getOwnerId())
-                        .friendExchangeType(EExchangeType.R)
-                        .build();
+                ExchangedDiarySaveRequestDto exchangeDiarySaveRequestDto1 = createEDSRDto(reprDto1, reprDto2);
+                ExchangedDiarySaveRequestDto exchangeDiarySaveRequestDto2 = createEDSRDto(reprDto2, reprDto1);
 
                 log.info("exchangeDiarySaveRequestDto1 = " + exchangeDiarySaveRequestDto1);
                 log.info("exchangeDiarySaveRequestDto2 = " + exchangeDiarySaveRequestDto1);
@@ -219,6 +198,24 @@ public class RandomExchangePoolService {
                 .randomDate(randomExchangePool.getRandomDate())
                 .exchangedDiaryId(exchangedDiary != null ? exchangedDiary.getDiaryId() : null)
                 .exchangedOwnerId(exchangedOwner != null ? exchangedOwner.getMemberId() : null)
+                .build();
+    }
+
+    private RandomExchangePoolUpdateDto getRepuDto(RandomExchangePoolResponseDto reprDto1, RandomExchangePoolResponseDto reprDto2) {
+        return RandomExchangePoolUpdateDto.builder()
+                .randomExchangePoolId(reprDto1.getRandomExchangePoolId())
+                .exchangedDiaryId(reprDto2.getDiaryId())
+                .exchangedOwnerId(reprDto2.getOwnerId())
+                .build();
+    }
+
+    private ExchangedDiarySaveRequestDto createEDSRDto(RandomExchangePoolResponseDto reprDto1, RandomExchangePoolResponseDto reprDto2) {
+        return ExchangedDiarySaveRequestDto.builder()
+                .sendDiaryId(reprDto1.getDiaryId())
+                .senderId(reprDto1.getOwnerId())
+                .receiveDiaryId(reprDto2.getDiaryId())
+                .receiverId(reprDto2.getOwnerId())
+                .friendExchangeType(EExchangeType.R)
                 .build();
     }
 }
