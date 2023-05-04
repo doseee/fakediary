@@ -31,7 +31,7 @@ public class DiaryResponseDto {
         this.diaryId = entity.getDiaryId();
         this.memberId = entity.getMember().getMemberId();
         String keyword = entity.getKeyword();
-        if (keyword != null) {
+        if (keyword != null && !keyword.equals("")) {
             StringTokenizer st = new StringTokenizer(keyword, "@");
             String[] keywordArr = new String[st.countTokens()];
 
@@ -41,7 +41,7 @@ public class DiaryResponseDto {
         }
 
         String characters = entity.getCharacters();
-        if (characters != null) {
+        if (characters != null && !characters.equals("")) {
             i = 0;
             StringTokenizer st = new StringTokenizer(characters, "@");
             String[] characterArr = new String[st.countTokens()];
@@ -52,7 +52,7 @@ public class DiaryResponseDto {
         }
 
         String places = entity.getPlaces();
-        if (places != null) {
+        if (places != null && !places.equals("")) {
             i = 0;
             StringTokenizer st = new StringTokenizer(places, "@");
             String[] placeArr = new String[st.countTokens()];
@@ -66,7 +66,7 @@ public class DiaryResponseDto {
         this.title = entity.getTitle();
 
         String subtitle = entity.getSubtitles();
-        if (subtitle != null) {
+        if (subtitle != null && !subtitle.equals("")) {
             i = 0;
             StringTokenizer st = new StringTokenizer(subtitle, "@");
             String[] subtitleArr = new String[st.countTokens()];

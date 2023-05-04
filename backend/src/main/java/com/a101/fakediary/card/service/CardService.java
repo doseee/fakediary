@@ -73,6 +73,9 @@ public class CardService {
                 .cardStyleId(styleId)
                 .build();
 
+        if(card.getBaseName().equals("") && card.getBasePlace().equals("") && card.getKeyword().equals(""))
+            throw new Exception("키워드가 존재하지 않음!!");
+
         cardRepository.save(card);
         ret = createCardSaveResponseDto(card);
 

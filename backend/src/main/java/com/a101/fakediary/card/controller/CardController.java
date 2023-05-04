@@ -33,6 +33,7 @@ public class CardController {
      * @param cardSaveRequestDtoString : FE에서 전송한 카드에 넣을 정보들
      * @return
      */
+    @ApiOperation(value = "카드 생성 요청", notes = "body를 form-data 형태로 origImageFile과 cardSaveRequestDtoString을 묶어서 함께 전송")
     @PostMapping
     public ResponseEntity<?> saveCard(
             @RequestPart(value = "origImageFile", required = true) MultipartFile origImageFile,
@@ -66,6 +67,7 @@ public class CardController {
      * @param memberId
      * @return
      */
+    @ApiOperation(value = "카드 조회 요청", notes = "memberId에 해당하는 회원이 보유한 카드 전체 리스트를 반환함")
     @GetMapping("/{memberId}")
     public ResponseEntity<?>  listCards(@PathVariable(name = "memberId")Long memberId) {
         log.info("listCards!!!!");

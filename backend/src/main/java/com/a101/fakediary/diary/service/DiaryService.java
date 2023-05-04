@@ -65,7 +65,7 @@ public class DiaryService {
     }
 
     @Transactional
-    public Diary createDiary(DiaryRequestDto dto) {
+    public Diary createDiary(DiaryRequestDto dto) throws Exception {
         //dto 키워드 채우기
         StringBuilder keywords = new StringBuilder();
         StringBuilder names = new StringBuilder();
@@ -101,6 +101,9 @@ public class DiaryService {
 
         //일기 생성
         Diary diary = diaryRepository.save(toEntity(dto));
+
+        if(diary.getCharacters().equals("") && diary.getPlaces().equals("") && diary.getKeyword().equals(""))
+            throw new Exception("주인공, 장소, 키워드 모두 존재하지 않음");
 
         //장르 테이블 생성
         List<String> genreList = dto.getGenre();
