@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/CardModel.dart';
+import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/screens/menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -175,7 +176,11 @@ class CardModal extends StatelessWidget {
                   ),
                   Flexible(flex: 2, child:GestureDetector(
                       onTap: () {
-                        print('일기생성');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DiaryCreateCards(cardIdFromList: card.cardId),
+                            ));
                       },
                       child: Center(
                         child: Container(
