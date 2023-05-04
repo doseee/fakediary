@@ -23,7 +23,7 @@ public class DiaryResponseDto {
     private String detail;
     private String summary;
     private boolean isExchanged;
-    private EGenre genre;
+    private EGenre[] genre;
 
     public DiaryResponseDto(Diary entity) {
         int i = 0;

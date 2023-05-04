@@ -51,7 +51,12 @@ public class DiaryService {
         List<DiaryResponseDto> list = new ArrayList<>();
         for (Diary value : diary) {
             DiaryResponseDto tmp = new DiaryResponseDto(value);
-            tmp.setGenre(EGenre.valueOf(genreService.searchGenre(tmp.getDiaryId())));
+            List<String> genre = genreService.searchGenre(tmp.getDiaryId());
+            EGenre[] eGenres = new EGenre[genre.size()];
+            int i = 0;
+            for (String s : genre)
+                eGenres[i++] = EGenre.valueOf(s);
+            tmp.setGenre(eGenres);
             list.add(tmp);
         }
         return list;
