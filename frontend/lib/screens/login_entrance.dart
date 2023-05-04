@@ -64,24 +64,30 @@ class _LoginEntranceState extends State<LoginEntrance>
                       children: [
                         Flexible(
                           flex: 1,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Login(),
-                                    ));
+                          child: GestureDetector(
+                              onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Login(),
+                                          ));
                               },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  elevation: 0.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  )),
-                              child: Text(
-                                'LOGIN',
-                                style: TextStyle(color: Colors.white, fontSize: 14),
+                              child: Center(
+                                child: Container(
+                                  width: 250,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(colors: [
+                                        Color(0xff79F1A4),
+                                        Color(0xff0E5CAD),
+                                      ]),
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: Center(
+                                      child: Text(
+                                        'LOGIN',
+                                        style: TextStyle(color: Colors.white, fontSize: 14),
+                                      )),
+                                ),
                               )),
                         ),
                       ],
