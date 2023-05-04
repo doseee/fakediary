@@ -37,7 +37,7 @@ class _MoodSelectState extends State<MoodSelect> {
     'WARM': '따뜻한',
     'SAD': '슬픈',
     'TOUCHING': '감동적인',
-    'COMFORTING': '위로를 주는',
+    'COMFORTING': '위로하는',
     'HAPPY': '행복한',
     'ACTION': '액션',
     'COMIC': '코믹',
@@ -251,43 +251,75 @@ class _MoodSelectState extends State<MoodSelect> {
                           return;
                         }
                         List<Map<String, String>> messages = [];
-                        String person = '등장인물은 ';
+                        String person = '';
                         List<String> baseNames = widget.selectedCards
                             .map((card) => card.baseName)
+                            .toSet()
                             .toList();
-                        for (int i = 0; i < baseNames.length; i++) {
-                          person += baseNames[i];
-                          if (i < baseNames.length - 1) {
-                            person += ', ';
-                          } else {
-                            person += '이고 ';
+                        if (baseNames.isNotEmpty) {
+                          person = '등장인물은 ';
+                          for (int i = 0; i < baseNames.length; i++) {
+                            if (baseNames[i].trim() != '') {
+                              person += baseNames[i];
+                            }
+                            if (i < baseNames.length - 1) {
+                              person += ', ';
+                            } else {
+                              person += '이고 ';
+                            }
                           }
                         }
-                        String location = '장소는 ';
+                        String location = '';
                         List<String> basePlaces = widget.selectedCards
                             .map((card) => card.basePlace)
+                            .toSet()
                             .toList();
-                        for (int i = 0; i < basePlaces.length; i++) {
-                          location += basePlaces[i];
-                          if (i < basePlaces.length - 1) {
-                            location += ', ';
-                          } else {
-                            location += '이고 ';
+                        if (basePlaces.isNotEmpty) {
+                          location = '장소는 ';
+                          for (int i = 0; i < basePlaces.length; i++) {
+                            if (basePlaces[i].trim() != '') {
+                              location += basePlaces[i];
+                            }
+                            if (i < basePlaces.length - 1) {
+                              location += ', ';
+                            } else {
+                              location += '이고 ';
+                            }
                           }
                         }
-                        String keyword2 = '키워드는 ';
+                        String keyword2 = '';
                         List<String> keywords = widget.selectedCards
                             .expand((card) => card.keywords)
+                            .toSet()
                             .toList();
-                        for (int i = 0; i < keywords.length; i++) {
-                          keyword2 += keywords[i];
-                          if (i < keywords.length - 1) {
-                            keyword2 += ', ';
-                          } else {
-                            keyword2 += '.';
+                        if (keywords.isNotEmpty) {
+                          keyword2 = '키워드는 ';
+                          for (int i = 0; i < keywords.length; i++) {
+                            if (keywords[i].trim() != '') {
+                              keyword2 += keywords[i];
+                            }
+                            if (i < keywords.length - 1) {
+                              keyword2 += ', ';
+                            } else {
+                              keyword2 += '.';
+                            }
                           }
                         }
-                        String prp = person + location + keyword2;
+                        String genre2 = '장르는 ';
+                        for (int i = 0; i < selectedMood.length; i++) {
+                          if (selectedMood[i].trim() != '') {
+                            genre2 += dict[selectedMood[i]]!;
+                          }
+                          if (i < selectedMood.length - 1) {
+                            genre2 += ', ';
+                          } else {
+                            genre2 += '이고 ';
+                          }
+                        }
+                        if (keywords.isEmpty && genre2.endsWith('이고 ')) {
+                          genre2 = '${genre2.substring(0, genre2.length - 3)}.';
+                        }
+                        String prp = person + location + genre2 + keyword2;
                         print(prp);
                         messages =
                             await ApiService.makeDiaryContents(messages, prp);
@@ -308,7 +340,6 @@ class _MoodSelectState extends State<MoodSelect> {
 
                         List<String> diaryImageUrl = [];
                         String keyword = keywords.join('@');
-                        String prompt = '';
                         List<String> genre = [];
                         for (var i = 0; i < selectedMood.length; i++) {
                           genre.add(selectedMood[i]);
@@ -319,7 +350,7 @@ class _MoodSelectState extends State<MoodSelect> {
                             diaryImageUrl: diaryImageUrl,
                             genre: genre,
                             // keyword: keyword,
-                            prompt: prompt,
+                            prompt: prp,
                             summary: summary,
                             title: title);
                       },
