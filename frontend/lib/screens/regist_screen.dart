@@ -177,9 +177,22 @@ class _RegistScreenState extends State<RegistScreen> {
                         if (!mounted) return;
                         if (result) {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Center(child: Text('login success!')),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('duplicate information.'),
+                            ),
+                          );
                         }
                       }
                     },
