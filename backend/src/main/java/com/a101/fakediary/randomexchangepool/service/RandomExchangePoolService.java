@@ -72,8 +72,8 @@ public class RandomExchangePoolService {
      */
     @Transactional
     public void doRandomMatching() throws Exception {
-//        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getYesterdayRandomExchangePoolResponseList();
-        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getTodayRandomExchangePoolResponseList();
+        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getYesterdayRandomExchangePoolResponseList();
+//        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getTodayRandomExchangePoolResponseList();
 
         log.info("randomExchangePoolResponseDtoList = " + randomExchangePoolResponseDtoList);
 
@@ -88,7 +88,7 @@ public class RandomExchangePoolService {
 
                 log.info("reprDto1 = " + reprDto1);
                 log.info("reprDto2 = " + reprDto2);
-                
+
                 RandomExchangePoolUpdateDto repuDto1 = getRepuDto(reprDto1, reprDto2);
                 RandomExchangePoolUpdateDto repuDto2 = getRepuDto(reprDto2, reprDto1);
 
