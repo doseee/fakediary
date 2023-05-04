@@ -19,14 +19,16 @@ class CardList extends StatefulWidget {
 
 class CardModal extends StatelessWidget {
   //모달창 class
-  final int cardIndex;
+  final int cardId;
   final String cardTitle;
+  final String cardUrl;
 
-  const CardModal({Key? key, required this.cardIndex, required this.cardTitle})
+  const CardModal({Key? key, required this.cardId, required this.cardTitle, required this.cardUrl})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print('cardId : $cardId');
     return Container(
         decoration: BgThemeIncludeImage(),
         child: Scaffold(
@@ -39,12 +41,37 @@ class CardModal extends StatelessWidget {
           ),
           body: Padding(
             padding: EdgeInsets.all(40),
-            child: Row(
+            child: Column(
               children: [
-                Flexible(flex: 1, child: Container(decoration: BoxDecoration(color: Colors.white),)),
-                Flexible(flex: 1, child: Container(decoration: BoxDecoration(color: Colors.black),))
+                Flexible(flex: 1, child: Text('sss', style: TextStyle(color: Colors.white),),),
+                Flexible(flex: 10, child: Center(
+                  child: Row(
+                    children: [
+                      Flexible(flex: 1,
+                          child: Container(
+                            width: 200,
+                            height: 240,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                              border: Border.all(color: Colors.white60, width: 4),
+                              image: DecorationImage(image: NetworkImage(cardUrl), fit: BoxFit.cover),
+                            ),
+                          )),
+                      SizedBox(width: 5,),
+                      Flexible(flex: 1,
+                          child: Container(
+                            width: 200,
+                            height: 240,
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Container(decoration: BoxDecoration(color: Colors.white10),),
+                            ),
+                          )),
+                    ],
+                  ),
+                ),)
               ],
-            ),
+            )
           ),
         ));
   }
@@ -157,7 +184,8 @@ class _CardListState extends State<CardList> {
                   showModalBottomSheet(
                     context: context,
                     builder: (context) => CardModal(
-                        cardIndex: index, cardTitle: titleCheck(snapshot, index)),
+                        cardId: snapshot[index].cardId, cardTitle: titleCheck(snapshot, index),
+                    cardUrl : snapshot[index].cardImageUrl),
                   );
                 },
                 child: Card(

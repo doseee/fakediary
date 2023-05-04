@@ -207,7 +207,7 @@ class _CardResultState extends State<CardResult>
         transform: Matrix4.rotationY(math.pi),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(25)),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
             image: DecorationImage(
               fit: BoxFit.cover,
               image: NetworkImage(widget.card['cardImageUrl']),
