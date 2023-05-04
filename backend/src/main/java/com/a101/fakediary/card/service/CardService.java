@@ -194,6 +194,7 @@ public class CardService {
                 .basePlace(card.getBasePlace())
                 .keywords(new ArrayList<>())
                 .cardImageUrl(card.getCardImageUrl())
+                .createdAt(card.getCreatedAt())
                 .build();
 
         StringTokenizer tokens = new StringTokenizer(card.getKeyword(), "@");
