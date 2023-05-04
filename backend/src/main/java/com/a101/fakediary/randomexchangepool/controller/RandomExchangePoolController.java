@@ -64,4 +64,20 @@ public class RandomExchangePoolController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    /**
+     * 랜덤 매칭 요청 보냄
+     *
+     * @return
+     */
+    @PostMapping("/random-matching")
+    public ResponseEntity<?> doRandomMatching() {
+        try {
+            randomExchangePoolService.doRandomMatching();
+            return new ResponseEntity<>("랜덤 매칭 성공", HttpStatus.OK);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
