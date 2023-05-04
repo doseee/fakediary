@@ -40,6 +40,8 @@ public class DiaryService {
         return Diary.builder()
                 .member(memberRepository.findByMemberId(dto.getMemberId()))
                 .keyword(dto.getKeyword()) // 받아온 카드리스트기반으로 키워드 추출
+                .characters(dto.getCharacters())
+                .places(dto.getPlaces())
                 .prompt(dto.getPrompt()) //프론트GPT
                 .title(dto.getTitle()) //프론트GPT
                 .detail(dto.getDetail()) //프론트GPT
@@ -65,20 +67,35 @@ public class DiaryService {
     @Transactional
     public Diary createDiary(DiaryRequestDto dto) {
         //dto 키워드 채우기
-        StringBuilder keyword = new StringBuilder();
+        StringBuilder keywords = new StringBuilder();
+        StringBuilder names = new StringBuilder();
+        StringBuilder places = new StringBuilder();
 
         List<Long> cardIds = dto.getCardIds();
-        for(Long id : cardIds){
+        for (Long id : cardIds) {
             Card card = cardRepository.findById(id).orElseThrow();
-            keyword.append(card.getKeyword()).append("@"); //키워드@키워드@키워드@ 식으로 제작
+            //빈것보냈을때 null로저장되는지 ""로저장되는지 확인필요 값이 존재하면 이어줌
+            if (card.getKeyword() != null && !card.getKeyword().equals(""))
+                keywords.append(card.getKeyword()).append("@"); //키워드@키워드@키워드@ 식으로 제작
+            if (card.getBaseName() != null && !card.getBaseName().equals(""))
+                names.append(card.getBaseName()).append("@");
+            if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
+                places.append(card.getBasePlace()).append("@");
         }
-        keyword.deleteCharAt(keyword.length()-1);//마지막 골뱅이 제거
-        if (0 < keyword.length() && keyword.charAt(keyword.length() -1) == '@'){
-            keyword.deleteCharAt(keyword.length() - 1); // 마지막 골뱅이 제거
-        }
-        dto.setKeyword(keyword.toString());
-        //dto 키워드 채우기 end
 
+        if (0 < keywords.length() && keywords.charAt(keywords.length() - 1) == '@') {
+            keywords.deleteCharAt(keywords.length() - 1); // 마지막 골뱅이 제거
+        }
+        if (0 < names.length() && names.charAt(names.length() - 1) == '@') {
+            names.deleteCharAt(names.length() - 1);
+        }
+        if (0 < places.length() && places.charAt(places.length() - 1) == '@') {
+            places.deleteCharAt(places.length() - 1);
+        }
+        dto.setKeyword(keywords.toString());
+        dto.setCharacters(names.toString());
+        dto.setPlaces(places.toString());
+        //dto 키워드 채우기 end
 
         //GPT API날려서 dto내용채우고하려했는데 일단은 프론트쪽에서 하는것으로.
 

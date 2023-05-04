@@ -5,6 +5,7 @@ import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.service.DiaryService;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,10 +19,9 @@ import java.util.List;
 @RequestMapping("/diary")
 @RequiredArgsConstructor
 public class DiaryController {
-
     private final DiaryService diaryService;
 
-    @ApiOperation(value = "일기 등록")
+    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters는 \"\"으로 넣어주시면 됩니다.")
     @PostMapping
     public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
         try {
