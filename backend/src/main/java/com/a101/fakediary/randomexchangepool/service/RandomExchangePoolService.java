@@ -52,6 +52,8 @@ public class RandomExchangePoolService {
         if(owner.isRandomExchanged())
             throw new Exception("이미 랜덤 교환을 요청한 회원입니다!");
 
+        owner.setRandomExchanged(true);
+
         RandomExchangePool randomExchangePool = RandomExchangePool.builder()
                 .diary(diary)
                 .owner(owner)
