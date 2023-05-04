@@ -74,6 +74,9 @@ public class RandomExchangePoolService {
     public void doRandomMatching() throws Exception {
 //        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getYesterdayRandomExchangePoolResponseList();
         List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getTodayRandomExchangePoolResponseList();
+
+        log.info("randomExchangePoolResponseDtoList = " + randomExchangePoolResponseDtoList);
+
         int size = randomExchangePoolResponseDtoList.size();    //  랜덤 요청 개수
         int remainder = size % 2;
         int idx = 0;
@@ -83,17 +86,23 @@ public class RandomExchangePoolService {
                 RandomExchangePoolResponseDto reprDto1 = randomExchangePoolResponseDtoList.get(idx);
                 RandomExchangePoolResponseDto reprDto2 = randomExchangePoolResponseDtoList.get(idx + 1);
 
+                log.info("reprDto1 = " + reprDto1);
+                log.info("reprDto2 = " + reprDto2);
+
                 RandomExchangePoolUpdateDto repuDto1 = RandomExchangePoolUpdateDto.builder()
                         .randomExchangePoolId(reprDto1.getRandomExchangePoolId())
                         .exchangedDiaryId(reprDto2.getDiaryId())
-                        .exchangedOwnerId(reprDto2.getExchangedOwnerId())
+                        .exchangedOwnerId(reprDto2.getOwnerId())
                         .build();
 
                 RandomExchangePoolUpdateDto repuDto2 = RandomExchangePoolUpdateDto.builder()
                         .randomExchangePoolId(reprDto2.getRandomExchangePoolId())
                         .exchangedDiaryId(reprDto1.getDiaryId())
-                        .exchangedOwnerId(reprDto1.getExchangedOwnerId())
+                        .exchangedOwnerId(reprDto1.getOwnerId())
                         .build();
+
+                log.info("repuDto1 = " + repuDto1);
+                log.info("repuDto2 = " + repuDto2);
 
                 ExchangedDiarySaveRequestDto exchangeDiarySaveRequestDto1 = ExchangedDiarySaveRequestDto.builder()
                         .sendDiaryId(reprDto1.getDiaryId())
@@ -109,6 +118,9 @@ public class RandomExchangePoolService {
                         .receiverId(reprDto1.getOwnerId())
                         .friendExchangeType(EExchangeType.R)
                         .build();
+
+                log.info("exchangeDiarySaveRequestDto1 = " + exchangeDiarySaveRequestDto1);
+                log.info("exchangeDiarySaveRequestDto2 = " + exchangeDiarySaveRequestDto1);
 
                 exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto1);
                 exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto2);
