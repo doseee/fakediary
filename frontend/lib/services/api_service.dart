@@ -550,4 +550,22 @@ class ApiService {
 
     return false;
   }
+
+  static Future<bool> CheckChange() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+    final url = Uri.parse('$baseUrl/member/random-exchange/$memberId');
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      bool jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      if(jsonResponse){
+        return true;
+      }
+      return false;
+    } else {
+      throw Exception('친구 목록을 불러오는 데 실패했습니다');
+    }
+  }
+
 }
