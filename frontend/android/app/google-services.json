@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "282853362540",
+    "project_id": "lieary",
+    "storage_bucket": "lieary.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282853362540:android:391057b70295a185414149",
+        "android_client_info": {
+          "package_name": "com.a101.lieary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "282853362540-jmj3skdm6baicnk1kofaja7p9hpmsin0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8IxuK93CsCK2xCyUIP5UUrDN8EiOuywI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "282853362540-jmj3skdm6baicnk1kofaja7p9hpmsin0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "282853362540-jcg94amsmmg7ca6174il5090cmk5mjti.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.frontend"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

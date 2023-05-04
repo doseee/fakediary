@@ -1,6 +1,9 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:frontend/screens/login_entrance.dart';
+import 'firebase_options.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/screens/splash.dart';
 
 class MainScreen extends StatelessWidget {
@@ -32,8 +35,13 @@ class MainScreen extends StatelessWidget {
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  runApp(const MaterialApp(
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  runApp(MaterialApp(
     home: LoginEntrance(),
+    navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
   ));
 }
 
