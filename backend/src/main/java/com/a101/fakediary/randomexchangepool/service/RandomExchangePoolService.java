@@ -52,7 +52,8 @@ public class RandomExchangePoolService {
         if(owner.isRandomExchanged())
             throw new Exception("이미 랜덤 교환을 요청한 회원입니다!");
 
-        owner.setRandomExchanged(true);
+        owner.setRandomExchanged(true); //  회원이 오늘 랜덤 교환을 신청한 상태로 변경(다음 날까지는 다시 신청 못함)
+        diary.setExchanged(true);       //  일기가 이미 랜덤 교환에 사용됨. 다시는 사용될 수 없음
 
         RandomExchangePool randomExchangePool = RandomExchangePool.builder()
                 .diary(diary)
