@@ -49,6 +49,9 @@ public class RandomExchangePoolService {
 
         Member owner = memberRepository.findById(ownerId).orElseThrow(() -> new Exception("owner not found!"));
 
+        if(owner.isRandomExchanged())
+            throw new Exception("이미 랜덤 교환을 요청한 회원입니다!");
+
         RandomExchangePool randomExchangePool = RandomExchangePool.builder()
                 .diary(diary)
                 .owner(owner)
