@@ -72,7 +72,8 @@ public class RandomExchangePoolService {
      */
     @Transactional
     public void doRandomMatching() throws Exception {
-        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getRandomExchangePoolResponseList();
+//        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getYesterdayRandomExchangePoolResponseList();
+        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getTodayRandomExchangePoolResponseList();
         int size = randomExchangePoolResponseDtoList.size();    //  랜덤 요청 개수
         int remainder = size % 2;
         int idx = 0;
@@ -146,9 +147,22 @@ public class RandomExchangePoolService {
     }
 
     @Transactional(readOnly = true)
-    public List<RandomExchangePoolResponseDto> getRandomExchangePoolResponseList() {
+    public List<RandomExchangePoolResponseDto> getYesterdayRandomExchangePoolResponseList() {
         //  어제 생성된 모든 요청들을 가져옴
         List<RandomExchangePool> randomExchangePoolList = randomExchangePoolRepository.findAllCreatedYesterday();
+        List<RandomExchangePoolResponseDto> ret = new ArrayList<>();
+
+        for(RandomExchangePool randomExchangePool : randomExchangePoolList) {
+            ret.add(createRandomExchangePoolResponseDto(randomExchangePool));
+        }
+
+        return ret;
+    }
+
+    @Transactional(readOnly = true)
+    public List<RandomExchangePoolResponseDto> getTodayRandomExchangePoolResponseList() {
+        //  어제 생성된 모든 요청들을 가져옴
+        List<RandomExchangePool> randomExchangePoolList = randomExchangePoolRepository.findAllCreatedToday();
         List<RandomExchangePoolResponseDto> ret = new ArrayList<>();
 
         for(RandomExchangePool randomExchangePool : randomExchangePoolList) {

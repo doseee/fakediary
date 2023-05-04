@@ -171,7 +171,7 @@ public class CardService {
         String basePlace = basePlaceObj != null ? String.valueOf(basePlaceObj) : null;
         String keyword = String.valueOf(map.get("keyword"));
         BigDecimal latitude = latitudeObj != null ? new BigDecimal(String.valueOf(latitudeObj)) : null;
-        BigDecimal longitude = longitudeObj != null ? new BigDecimal(String.valueOf(latitudeObj)) : null;
+        BigDecimal longitude = longitudeObj != null ? new BigDecimal(String.valueOf(longitudeObj)) : null;
 
         return CardSaveRequestDto.builder()
                 .memberId(memberId)
