@@ -42,7 +42,22 @@ public class RandomExchangePoolController {
     @GetMapping("/yesterday")
     public ResponseEntity<?> getYesterdayRandomExchangeRequests() {
         try {
-            List<RandomExchangePoolResponseDto> ret = randomExchangePoolService.getRandomExchangePoolResponseList();
+            List<RandomExchangePoolResponseDto> ret = randomExchangePoolService.getYesterdayRandomExchangePoolResponseList();
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * 오늘 들어온 모든 랜덤 요청들을 가져옴(개발용)
+     * @return
+     */
+    @GetMapping("/today")
+    public ResponseEntity<?> getTodayRandomExchangeRequests() {
+        try {
+            List<RandomExchangePoolResponseDto> ret = randomExchangePoolService.getTodayRandomExchangePoolResponseList();
             return new ResponseEntity<>(ret, HttpStatus.OK);
         } catch(Exception e) {
             e.printStackTrace();

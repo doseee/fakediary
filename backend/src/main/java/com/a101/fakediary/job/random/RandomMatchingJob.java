@@ -43,7 +43,7 @@ public class RandomMatchingJob implements SchedulingConfigurer {
         taskRegistrar.setTaskScheduler(taskScheduler);
     }
 
-    @Scheduled(cron = "0 0 12 * * *")
+    @Scheduled(cron = "0 20 14 * * *")
     public void runJob() throws Exception {
 
         Job job = jobBuilderFactory.get("random-exchange-job")
