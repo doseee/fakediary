@@ -1,5 +1,6 @@
 package com.a101.fakediary.genre.repository;
 
+import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.entity.Genre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,4 +16,7 @@ public interface GenreRepository extends JpaRepository<Genre, Long>{
     @Transactional
     @Query("delete from Genre where id.diary.diaryId =:diaryId")
     void deleteGenre(@Param("diaryId") Long diaryId);
+
+    @Query("select g.id.genre from Genre g where g.id.diary.diaryId =:diaryId")
+    String findByDiaryId(Long diaryId);
 }

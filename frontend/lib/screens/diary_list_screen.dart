@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
 
 import '../model/DiaryModel.dart';
+import '../widgets/ChangeButton.dart';
 import '../widgets/appbar.dart';
-import 'menu_screen.dart';
 
 class DiaryListScreen extends StatefulWidget {
-  const DiaryListScreen({Key? key}) : super(key: key);
+  final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
+  
+  const DiaryListScreen({Key? key, this.recieverId}) : super(key: key);
 
   @override
   State<DiaryListScreen> createState() => _DiaryListScreenState();
@@ -19,6 +22,7 @@ class DiaryListScreen extends StatefulWidget {
 class _DiaryListScreenState extends State<DiaryListScreen> {
   late Future<List<DiaryModel>> diaries;
   late Future<int> lengthDiaries;
+  int exchangeSituation = 1; //1이면 내가 교환 보내는 상황 2면 답장하는 상황
 
   int diaryId = -1;
   String title = '', summary = '';
@@ -28,6 +32,11 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
     super.initState();
     diaries = ApiService().getDiaries();
     print(diaries);
+    if(widget.recieverId != null){
+      setState(() {
+        exchangeSituation = 2;
+      });
+    }
   }
 
   onSelect(
@@ -86,7 +95,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                   child: Container(
                     decoration: BtnThemeGradientLine(),
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 30, left: 30),
+                      padding: const EdgeInsets.only(right: 25, left: 25),
                       child: ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -110,35 +119,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     ),
                   ),
                 ),),
-                Flexible(flex: 3, child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BtnThemeGradient(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 30, left: 30),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  //Todo; [수정필요] 교환 페이지로 이동
-                                  builder: (context) => HomeScreen(),
-                                ));
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              elevation: 0.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              )),
-                          child: Text(
-                            '교환하기',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          )),
-                    ),
-                  ),
-                ),),
+                ChangeButton(exchangeSituation: exchangeSituation, diaryId: diaryId,),
               ],
             ),
           ),)
@@ -149,7 +130,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BgThemeGradient(),
+      decoration: BgThemeIncludeImage(),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: StandAppBar(context),
@@ -163,7 +144,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         flex: 6,
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                             child: DiaryDetail()
                           ),
                         )),

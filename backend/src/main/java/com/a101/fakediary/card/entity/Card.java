@@ -36,7 +36,7 @@ public class Card extends BaseEntity {
     @Column
     private String basePlace;   //  장소 이름
 
-    @Column(name = "keyword", length = 30, nullable = false)
+    @Column(name = "keyword", length = 30)
     private String keyword;
 
     @Column(name = "latitude", nullable = true, precision = 20, scale = 10)
