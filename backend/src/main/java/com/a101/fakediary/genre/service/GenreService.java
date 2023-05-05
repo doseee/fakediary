@@ -1,14 +1,17 @@
 package com.a101.fakediary.genre.service;
 
 import com.a101.fakediary.diary.repository.DiaryRepository;
+import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.entity.Genre;
 import com.a101.fakediary.genre.entity.GenrePK;
 import com.a101.fakediary.genre.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.List;
+
 
 @Service
 @Transactional
@@ -18,14 +21,22 @@ public class GenreService {
     private final GenreRepository genreRepository;
     private final DiaryRepository diaryRepository;
 
-    public Genre toEntity(GenreDto dto) {
+    @Transactional
+    public void saveGenre(GenreDto dto) {
+        genreRepository.save(toEntity(dto));
+    }
+
+    @Transactional
+    public void deleteGenre(Long diaryId) {genreRepository.deleteGenre(diaryId);}
+
+    @Transactional(readOnly = true)
+    public List<String> searchGenre(Long diaryId) {
+        return genreRepository.findByDiaryId(diaryId);
+    }
+
+    private Genre toEntity(GenreDto dto) {
         return Genre.builder()
                 .id(new GenrePK(diaryRepository.findByDiaryId(dto.getDiaryId()), dto.getGenre()))
                 .build();
     }
-
-    public void saveGenre(GenreDto dto) {
-        genreRepository.save(toEntity(dto));
-    }
-    public void deleteGenre(Long diaryId) {genreRepository.deleteGenre(diaryId);}
 }

@@ -91,17 +91,15 @@ public class MemberController {
         }
     }
 
-    @ApiOperation(value = "회원 랜덤 교환 신청 가능 여부 확인")
+    @ApiOperation(value = "회원 랜덤 교환 신청 가능 여부 확인", notes = "\"/member/random-exchange/{memberId}\" 이런 식으로 URL에 조회하려는 회원 id 포함해서 입력")
     @GetMapping("/random-exchange/{memberId}")
     public ResponseEntity<?> checkRandomExchangeable(@PathVariable(name = "memberId")Long memberId) {
-        Boolean ret = null;
-
         try {
-            ret = memberService.checkRandomChangeable(memberId);
+            boolean ret = memberService.checkRandomChangeable(memberId);
+            return new ResponseEntity<>(ret, HttpStatus.OK);
         } catch(Exception e) {
             e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 }

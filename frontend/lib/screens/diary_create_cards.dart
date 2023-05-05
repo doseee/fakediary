@@ -7,7 +7,9 @@ import 'package:frontend/screens/mood_select.dart';
 import '../widgets/theme.dart';
 
 class DiaryCreateCards extends StatefulWidget {
-  const DiaryCreateCards({Key? key}) : super(key: key);
+  final int? cardIdFromList;
+
+  const DiaryCreateCards({Key? key, this.cardIdFromList}) : super(key: key);
 
   @override
   _DiaryCreateState createState() => _DiaryCreateState();
@@ -17,15 +19,31 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
   late Future<List<CardModel>> cards;
   late Future<int> lengthOfCards;
   late List<CardModel> selectedCards = [];
+  late List<CardModel> _cards;
 
   @override
   void initState() {
     super.initState();
     cards = ApiService().getCardList();
+    ApiService().getCardList().then((cards) {
+      setState(() {
+        _cards = cards;
+        // 선택한 카드의 인덱스를 찾습니다.
+        int index = _cards.indexWhere((card) => card.cardId == widget.cardIdFromList);
+        if (index != -1) {
+          setState(() {
+            selectedCards.insert(0, cards[index]);
+          });
+        } else {
+          print("Selected card not found");
+        }
+      });
+    });
   }
 
   late int memberId;
 
+  @override
   Widget build(BuildContext context) {
     return (Container(
         decoration: BgThemeGradient(),
@@ -131,7 +149,9 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                       // navigate to the desired class
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MoodSelect()),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                MoodSelect(selectedCards: selectedCards)),
                       );
                     },
                     child: Container(
@@ -205,10 +225,12 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
             onTap: () {
               setState(() {
                 if (selectedCards.contains(snapshot[index])) {
-                  selectedCards.remove(snapshot[index]); // remove selected card from the list
+                  selectedCards.remove(
+                      snapshot[index]); // remove selected card from the list
                 } else {
                   if (selectedCards.length < 10) {
-                    selectedCards.insert(0, snapshot[index]); // append selected card to the list
+                    selectedCards.insert(
+                        0, snapshot[index]); // append selected card to the list
                   } else {
                     // display a warning message
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(

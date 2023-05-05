@@ -127,8 +127,8 @@ public class DeepArtEffectsStyles {
                     "98fcbb08-bdc5-4268-9bd9-26c4d82247cc",
                     "dd4e344b-089d-4f2f-99af-f25fef9cd4cf"};
 
-    //  사용할 스타일의 index 모음
-    private final static int[] indices = {1, 3, 4, 5, 7, 8, 9, 10, 12, 13, 14, 17, 20, 22, 25, 27, 29, 30, 31, 33, 39, 41, 45, 46, 47, 48, 50, 53, 57, 60, 63, 64, 65, 67, 69, 70, 73, 74, 77, 78, 79 ,81 ,84 ,85 ,87 ,89 ,92 ,93 ,95 ,97 ,98 ,100 ,102, 103, 104 ,106 ,107 ,109 ,110 ,112 ,113 ,117 ,120};
+    //  사용할 스타일의 index 모음 2차변경 완료
+    private final static int[] indices = {1, 3, 5, 8, 9, 10, 13, 17, 20, 25, 27, 31, 33, 41, 47, 48, 53, 60, 63, 64, 69, 70, 78, 84 , 89 ,92 ,93 ,97 ,100 ,102, 107 ,109 ,110 , 117 ,120};
 
     public static int getRandomStyleIdx() {
         return indices[new Random().nextInt(indices.length)];

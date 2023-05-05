@@ -7,6 +7,7 @@ class CardModel {
     required this.basePlace,
     required this.keywords,
     required this.cardImageUrl,
+    required this.createdAt,
   });
   late final int cardId;
   late final int memberId;
@@ -15,6 +16,7 @@ class CardModel {
   late final String basePlace;
   late final List<String> keywords;
   late final String cardImageUrl;
+  late final String createdAt;
 
   CardModel.fromJson(Map<String, dynamic> json){
     cardId = json['cardId'];
@@ -24,6 +26,7 @@ class CardModel {
     basePlace = json['basePlace'];
     keywords = List<String>.from(json['keywords'].map((dynamic x) => x as String));
     cardImageUrl = json['cardImageUrl'];
+    createdAt = json['createdAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class CardModel {
     _data['basePlace'] = basePlace;
     _data['keywords'] = keywords;
     _data['cardImageUrl'] = cardImageUrl;
+    _data['createdAt'] = createdAt;
     return _data;
   }
 }

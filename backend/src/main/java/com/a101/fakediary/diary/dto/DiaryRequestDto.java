@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiaryRequestDto {
+    //키워드, characters, places 없어도됨
     private Long memberId;
     private String characters;
     private String places;

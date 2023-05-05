@@ -14,7 +14,7 @@ class DiaryDetail extends StatefulWidget {
 class _DiaryDetailState extends State<DiaryDetail> {
   List<Map<String, String>> messages = [];
   String title = '';
-  String desc = '';
+  String summary = '';
   List<dynamic> contents = [];
 
   @override
@@ -35,14 +35,14 @@ class _DiaryDetailState extends State<DiaryDetail> {
               }
               final decoded = json.decode(jsonResp);
               title = decoded['title'];
-              desc = decoded['desc'];
+              summary = decoded['summary'];
               contents = decoded['contents'];
               setState(() {});
             },
             child: Icon(Icons.arrow_back),
           ),
           Text(title),
-          Text(desc),
+          Text(summary),
           for (var content in contents) Text(content),
         ],
       ),

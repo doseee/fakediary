@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/CardModel.dart';
 import '../model/DiaryModel.dart';
+import '../model/FriendModel.dart';
 
 class ApiService {
   static String baseUrl = dotenv.get('baseUrl');
@@ -527,14 +528,154 @@ class ApiService {
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
       List<DiaryModel> diaries = jsonResponse
-          .map((dynamic item) => DiaryModel.fromJson(item))
-          .toList();
+              .map((dynamic item) => DiaryModel.fromJson(item))
+              .toList() ??
+          [];
       print('api: ${diaries.length}');
       return diaries;
+    } else if (response.statusCode == 204) {
+      return [];
     } else {
       throw Exception('일기 리스트 로딩에 실패했습니다');
     }
   }
+
+  static Future<bool> RandomChange(int diaryId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    print('diaryId: diaryId');
+    final url = Uri.parse('$baseUrl/random-exchange');
+    final randomExchangePoolRegistDto = {
+      'diaryId': diaryId,
+      'ownerId': memberId,
+    };
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(randomExchangePoolRegistDto),
+    );
+    if (response.statusCode == 200) {
+      print('success');
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<List<FriendModel>> getFriends() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    final response =
+        await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<FriendModel> friends = jsonResponse
+          .map((dynamic item) => FriendModel.fromJson(item))
+          .toList();
+
+      return friends;
+    } else {
+      throw Exception('친구 목록을 불러오는 데 실패했습니다');
+    }
+  }
+
+  static Future<void> makeDiary({
+    required List<int> cardIds,
+    required String detail,
+    required List<String> diaryImageUrl,
+    required List<String> genre,
+    // required String keyword,
+    required String prompt,
+    required String summary,
+    required String title,
+  }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    final url = Uri.parse('$baseUrl/diary');
+    final dto = {
+      "cardIds": cardIds,
+      'detail': detail,
+      'genre': genre,
+      'diaryImageUrl': diaryImageUrl,
+      // 'keyword': keyword,
+      'memberId': memberId,
+      'prompt': prompt,
+      'summary': summary,
+      'title': title,
+    };
+    print(dto['cardIds']);
+    print(dto['genre']);
+    // print(dto['keyword']);
+    print(dto['memberId']);
+    print(dto['prompt']);
+    print(dto['summary']);
+    print(dto['title']);
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(dto),
+    );
+    if (response.statusCode == 200) {
+      print('success');
+    } else {
+      print('fail');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<bool> DiaryChangeBetweenFriends(
+      int diaryId, int recieverId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    print('diaryId: $recieverId');
+    final url = Uri.parse('$baseUrl/friendexchange/request');
+    final FriendExchangeRequestDto = {
+      'receiverId': recieverId,
+      'senderDiaryId': diaryId,
+      'senderId': memberId,
+    };
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(FriendExchangeRequestDto),
+    );
+    if (response.statusCode == 200) {
+      print('success');
+      return true;
+    }
+
+    return false;
+  }
+
+  static Future<bool> CheckChange() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+    final url = Uri.parse('$baseUrl/member/random-exchange/$memberId');
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      bool jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      if(jsonResponse){
+        return true;
+      }
+      return false;
+    } else {
+      throw Exception('친구 목록을 불러오는 데 실패했습니다');
+    }
+  }
+
+}
 
   Future<List<FriendModel>> getFriends() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

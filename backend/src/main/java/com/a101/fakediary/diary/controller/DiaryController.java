@@ -1,9 +1,11 @@
 package com.a101.fakediary.diary.controller;
 
+import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.service.DiaryService;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,10 +19,9 @@ import java.util.List;
 @RequestMapping("/diary")
 @RequiredArgsConstructor
 public class DiaryController {
-
     private final DiaryService diaryService;
 
-    @ApiOperation(value = "일기 등록")
+    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters는 \"\"으로 넣어주시면 됩니다.")
     @PostMapping
     public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
         try {
@@ -60,11 +61,11 @@ public class DiaryController {
         }
     }
 
-    @ApiOperation(value = "일기 필터 조회")
-    @GetMapping("/filter/{memberId}/{genre}")
-    public ResponseEntity<?> filterDiary(@PathVariable Long memberId, @PathVariable String genre) {
+    @ApiOperation(value = "일기 필터 조회, id: 선택한 사람 id, memberId: 조회한 사람 id, genre: 장르")
+    @PostMapping("/filter")
+    public ResponseEntity<?> filterDiary(@RequestBody DiaryFilterDto filter) {
         try {
-            List<DiaryResponseDto> diary = diaryService.filterDiary(memberId, genre);
+            List<DiaryResponseDto> diary = diaryService.filterDiary(filter);
             return new ResponseEntity<List<DiaryResponseDto>>(diary, HttpStatus.OK);
         } catch (NullPointerException e){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
