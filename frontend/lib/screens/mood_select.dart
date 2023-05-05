@@ -44,14 +44,6 @@ class _MoodSelectState extends State<MoodSelect> {
   };
 
   setter(String content) {
-    // // 이미 2개가 선택되었을 경우 작동하지 않음
-    // if (!activated[content]! &&
-    //     selectedMood.length == 2 &&
-    //     !selectedMood.contains(content)) {
-    //   return;
-    // }
-
-    // 이미 2개가 선택되었을 경우 기존에 선택된 것을 해제
     if (!activated[content]! && selectedMood.length == 2) {
       activated[selectedMood[0]] = false;
       selectedMood.removeAt(0);
@@ -66,16 +58,6 @@ class _MoodSelectState extends State<MoodSelect> {
     }
     setState(() {});
   }
-  // final romanceSelected = false;
-  // final horrorSeleted = false;
-  // final thrillSelected = false;
-  // final warmSelected = false;
-  // final sadSelected = false;
-  // final touchingSelected = false;
-  // final comfortingSelected = false;
-  // final happySelected = false;
-  // final actionSelected = false;
-  // final comicSelected = false;
 
   @override
   Widget build(BuildContext context) {
