@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/model/FriendModel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -369,7 +370,7 @@ class ApiService {
       messages.add({
         'role': 'system',
         'content':
-            '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 summary에, 내용은 contents에 넣어줘. 이야기를 한 장 당 1000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘.'
+            '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 desc에, 내용은 contents에 넣어줘. 이야기를 한 장 당 1000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘.'
       });
     }
     messages.add({'role': 'user', 'content': input});
@@ -406,6 +407,112 @@ class ApiService {
         print('이어서 답변');
       }
       return messages;
+    } else {
+      throw Exception(
+          'Failed to get response from GPT: ${response.statusCode}');
+    }
+  }
+
+  static Future<String> continueGptConversation(String id) async {
+    print('끊어짐');
+    // Your API key and URL remain the same
+    String apiKey = dotenv.get('gptApiKey');
+    String apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    Map<String, dynamic> body = {
+      'model': 'gpt-3.5-turbo',
+      'messages': [
+        {
+          'role': 'user',
+          'content': '정확히 끊어진 부분부터 이야기를 계속 해줘 계속 해야 할 답변의 id는 "$id"야.',
+        },
+      ],
+      'max_tokens': 3921,
+      'n': 1,
+      'stop': null,
+      'temperature': 0.5,
+    };
+
+    http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: headers,
+      body: json.encode(body),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse =
+          jsonDecode(utf8.decode(response.bodyBytes));
+      String answer = jsonResponse['choices'][0]['message']['content'].trim();
+      print(answer);
+      return answer;
+    } else {
+      throw Exception(
+          'Failed to get response from GPT: ${response.statusCode}');
+    }
+  }
+
+  static Future<String> askGpt(var messages) async {
+    print('gpt요청');
+    // Replace with your GPT API key
+    String apiKey = dotenv.get('gptApiKey');
+    // Replace with the chat-based API endpoint
+    String apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    // Set up the headers for the request
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    // Set up the chat-based request payload
+    Map<String, dynamic> body = {
+      'model': 'gpt-3.5-turbo',
+      'messages': [
+        {
+          'role': 'system',
+          'content':
+              '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 desc에, 내용은 contents에 넣어줘. 이야기를 한 장 당 1000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 최대한 길게 부탁해.'
+        },
+        {
+          'role': 'user',
+          'content': '주인공은 문성현이고 장소는 안드로메다이고 키워드는 커피, 운세, 라벨이야',
+        },
+      ],
+      'max_tokens':
+          2500, // Adjust to control the length of the generated response
+      'n': 1, // Number of completions to generate
+      'stop': null, // Set stopping sequence if needed
+      'temperature':
+          0.5, // Adjust to control the randomness of the generated response
+    };
+
+    // Make the HTTP POST request
+    http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: headers,
+      body: json.encode(body),
+    );
+
+    // Check for a successful response
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse =
+          jsonDecode(utf8.decode(response.bodyBytes));
+      print(jsonResponse);
+      String answer = jsonResponse['choices'][0]['message']['content'].trim();
+      print(answer);
+      print(answer.substring(answer.length - 1, answer.length - 1));
+      print('이거위');
+      print(answer.endsWith('}'));
+      print(answer.endsWith(']'));
+      if (!answer.endsWith('}')) {
+        continueGptConversation(jsonResponse['id']);
+      }
+      return answer;
     } else {
       throw Exception(
           'Failed to get response from GPT: ${response.statusCode}');
@@ -569,3 +676,22 @@ class ApiService {
   }
 
 }
+
+  Future<List<FriendModel>> getFriends() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    final response = await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
+
+    if(response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<FriendModel> friends = jsonResponse.map((dynamic item) => FriendModel.fromJson(item)).toList();
+      print('api: ${friends.length}');
+      return friends;}
+    else {
+      throw Exception('친구 리스트 로딩에 실패했습니다.');
+    }
+    }
+
+
+  }
