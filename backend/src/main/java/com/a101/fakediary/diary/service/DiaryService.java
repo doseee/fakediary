@@ -184,4 +184,11 @@ public class DiaryService {
 
         return ret;
     }
+
+    @Transactional
+    public void setAllDiariesRandomExchangedUnused() {
+        List<Diary> allDiaries = diaryRepository.findAll();
+        for(Diary diary : allDiaries)
+            diary.setExchanged(false);
+    }
 }

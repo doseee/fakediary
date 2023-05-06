@@ -86,4 +86,19 @@ public class DiaryController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * for developing : 모든 일기 랜덤 교환 사용 내역 초기화
+     * @return
+     */
+    @PutMapping("/reset")
+    public ResponseEntity<?> setAllDiariesRandomExchangedUnused() {
+        try {
+            diaryService.setAllDiariesRandomExchangedUnused();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
