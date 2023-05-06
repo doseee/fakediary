@@ -34,7 +34,7 @@ BoxDecoration BtnThemeGradientLine(){
           Color(0xff79F1A4),
           Color(0xff0E5CAD),
         ]),
-        width: 2),
+        width: 1),
     borderRadius: BorderRadius.circular(25),
   );
 }

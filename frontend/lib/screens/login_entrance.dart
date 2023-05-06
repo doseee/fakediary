@@ -80,7 +80,7 @@ class _LoginEntranceState extends State<LoginEntrance>
                                   child: Center(
                                       child: Text(
                                         'LOGIN',
-                                        style: TextStyle(color: Colors.white, fontSize: 14),
+                                        style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800),
                                       )),
                                 ),
                               )),

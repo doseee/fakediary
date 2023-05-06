@@ -104,3 +104,17 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  fonts:
+    - family: Nanum_Square_Neo
+      fonts:
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Lt.otf
+          weight: 100
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Rg.otf
+          weight: 200
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Bd.otf
+          weight: 400
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Eb.otf
+          weight: 600
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Hv.otf
+          weight: 800
