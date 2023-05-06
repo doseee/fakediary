@@ -86,6 +86,17 @@ class _LoginState extends State<Login> {
             if (result) {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => HomeScreen()));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Center(child: Text('login success!')),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Center(child: Text('login failed.')),
+                ),
+              );
             }
           }
         },

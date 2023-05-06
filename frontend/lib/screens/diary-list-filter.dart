@@ -76,12 +76,12 @@ class _DiaryFilterState extends State<DiaryFilter> {
   // final comicSelected = false;
 
   late Future<List<FriendModel>> friends;
-  final int friendIndex;
-  final String nickname;
-  const FriendModel({Key? key, required this.friendIndex, required this.nickname})
-      : super(key: key);
+  // final int friendIndex;
+  // final String nickname;
+  // const FriendModel({Key? key, required this.friendIndex, required this.nickname})
+  // : super(key: key);
 
-
+  @override
   void initState() {
     super.initState();
     friends = ApiService().getFriends();
@@ -236,7 +236,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
                   child: Column(
                     children: [
                       Container(
-                        // 필터적용 버튼
+                          // 필터적용 버튼
                           width: 268,
                           height: 61,
                           decoration: BoxDecoration(
@@ -256,7 +256,8 @@ class _DiaryFilterState extends State<DiaryFilter> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xff000000).withOpacity(0.25),
+                                color:
+                                    const Color(0xff000000).withOpacity(0.25),
                                 offset: const Offset(0, 4),
                                 blurRadius: 4,
                               ),
@@ -265,11 +266,12 @@ class _DiaryFilterState extends State<DiaryFilter> {
                           child: const Center(
                             child: Text(
                               '검색하기',
-                              style: TextStyle(color: Colors.white, fontSize: 15),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
                             ),
                           )),
                       Container(
-                        // 필터적용 버튼
+                          // 필터적용 버튼
                           width: 268,
                           height: 61,
                           decoration: BoxDecoration(
@@ -289,7 +291,8 @@ class _DiaryFilterState extends State<DiaryFilter> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xff000000).withOpacity(0.25),
+                                color:
+                                    const Color(0xff000000).withOpacity(0.25),
                                 offset: const Offset(0, 4),
                                 blurRadius: 4,
                               ),
@@ -298,7 +301,8 @@ class _DiaryFilterState extends State<DiaryFilter> {
                           child: const Center(
                             child: Text(
                               '취소',
-                              style: TextStyle(color: Colors.white, fontSize: 15),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
                             ),
                           )),
                       Image(
@@ -307,22 +311,19 @@ class _DiaryFilterState extends State<DiaryFilter> {
                     ],
                   ),
                 ),
-
               ),
               Flexible(
                   flex: 5,
                   child: FutureBuilder<List<FriendModel>>(
                       future: friends,
                       builder: (context, snapshot) {
-                        if(snapshot.hasData){
+                        if (snapshot.hasData) {
                           return buildList(snapshot.data);
-                        } else if (snapshot.hasError){
+                        } else if (snapshot.hasError) {
                           return Text("${snapshot.error}에러!!");
                         }
                         return CircularProgressIndicator();
-                      }
-                  )
-              ),
+                      })),
             ],
           ),
         ),
@@ -330,7 +331,6 @@ class _DiaryFilterState extends State<DiaryFilter> {
     );
   }
 }
-
 
 Widget buildList(snapshot) {
   return (GridView.count(
@@ -343,8 +343,8 @@ Widget buildList(snapshot) {
     children: List.generate(
       // 카드 리스트 생성
       snapshot.length, // 총 카드 갯수
-          (index) {
-        if(snapshot.length == 0){
+      (index) {
+        if (snapshot.length == 0) {
           return Container(
             child: SpinKitFadingCircle(
               color: Colors.black,
@@ -355,13 +355,9 @@ Widget buildList(snapshot) {
           return InkWell(
               onTap: () {},
               child: Card(
-                color: Colors.transparent,
-                elevation: 0.0,
-                child:
-                  Text(
-                    'friends.[nickname]'
-                  ))
-                );
+                  color: Colors.transparent,
+                  elevation: 0.0,
+                  child: Text('friends.[nickname]')));
         }
       },
     ),
