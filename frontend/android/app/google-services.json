@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1081616661628",
+    "project_id": "lieary2",
+    "storage_bucket": "lieary2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081616661628:android:98398968f521260b955df9",
+        "android_client_info": {
+          "package_name": "com.a1012.frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081616661628-5kc4psmg1n5s17sv573fo47vgdip63sg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a1012.frontend",
+            "certificate_hash": "f7254b39857dcde89f3ea69b001ba6de7592f745"
+          }
+        },
+        {
+          "client_id": "1081616661628-b5fqrfhb3m07apsmm3ilaqvhq08k512o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9l2aGXWaz-ErAAyODwBzHc_pHITfHcy0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1081616661628-b5fqrfhb3m07apsmm3ilaqvhq08k512o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1081616661628-1ihepten4dmbnesfpaukfvjaap6pcp7n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.frontend"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
