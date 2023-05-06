@@ -15,11 +15,9 @@ class TestPage extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   Image(
-                  image: AssetImage('assets/gif-file/moon.gif'),
+                  image: AssetImage('assets/gif-file/moon_real.gif'),
                     // backgroundimage AssetImage('assets/gif-file/moon.gif'),
                   ),
-
-                  Text('행성'),
                   Transform(
                       transform: Matrix4.identity()
                         ..translate(radius * cos(radians(-75)),
