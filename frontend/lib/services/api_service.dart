@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/CardModel.dart';
 import '../model/DiaryModel.dart';
+// import '../model/FriendModel.dart';
 
 class ApiService {
   static String baseUrl = dotenv.get('baseUrl');
@@ -564,6 +565,24 @@ class ApiService {
     return false;
   }
 
+  Future<List<FriendModel>> getFriends() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    final response =
+        await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<FriendModel> friends = jsonResponse
+          .map((dynamic item) => FriendModel.fromJson(item))
+          .toList();
+
+      return friends;
+    } else {
+      throw Exception('친구 목록을 불러오는 데 실패했습니다');
+    }
+  }
+
   static Future<void> makeDiary({
     required List<int> cardIds,
     required String detail,
@@ -656,24 +675,24 @@ class ApiService {
     }
   }
 
-  Future<List<FriendModel>> getFriends() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? memberId = prefs.getInt('memberId');
-
-    final response =
-        await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
-
-    if (response.statusCode == 200) {
-      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-      List<FriendModel> friends = jsonResponse
-          .map((dynamic item) => FriendModel.fromJson(item))
-          .toList();
-      print('api: ${friends.length}');
-      return friends;
-    } else {
-      throw Exception('친구 리스트 로딩에 실패했습니다.');
-    }
-  }
+  // Future<List<FriendModel>> getFriends() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   int? memberId = prefs.getInt('memberId');
+  //
+  //   final response =
+  //       await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
+  //
+  //   if (response.statusCode == 200) {
+  //     List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+  //     List<FriendModel> friends = jsonResponse
+  //         .map((dynamic item) => FriendModel.fromJson(item))
+  //         .toList();
+  //     print('api: ${friends.length}');
+  //     return friends;
+  //   } else {
+  //     throw Exception('친구 리스트 로딩에 실패했습니다.');
+  //   }
+  // }
 
   //    Future<List<FriendModel>> getFriends() async {
   //   final SharedPreferences prefs = await SharedPreferences.getInstance();

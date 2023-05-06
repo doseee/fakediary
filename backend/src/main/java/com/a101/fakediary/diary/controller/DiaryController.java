@@ -21,7 +21,7 @@ import java.util.List;
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters는 \"\"으로 넣어주시면 됩니다.")
+    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters, diaryImageUrl \"\"으로 넣어주시면 됩니다.")
     @PostMapping
     public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
         try {

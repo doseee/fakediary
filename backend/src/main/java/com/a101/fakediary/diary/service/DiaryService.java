@@ -4,9 +4,7 @@ import com.a101.fakediary.card.dto.response.CardMadeDiaryResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
-import com.a101.fakediary.diary.dto.DiaryFilterDto;
-import com.a101.fakediary.diary.dto.DiaryRequestDto;
-import com.a101.fakediary.diary.dto.DiaryResponseDto;
+import com.a101.fakediary.diary.dto.*;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
@@ -15,12 +13,27 @@ import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.repository.MemberRepository;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
+import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 @Transactional
@@ -35,6 +48,17 @@ public class DiaryService {
     private final CardRepository cardRepository;
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
+
+    //aws credentials key
+    @Value("${cloud.aws.credentials.access-key}")
+    private String accessKey;
+
+    @Value("${cloud.aws.credentials.secret-key}")
+    private String secretKey;
+
+    //  버킷
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     private Diary toEntity(DiaryRequestDto dto) {
         return Diary.builder()
@@ -97,13 +121,17 @@ public class DiaryService {
         dto.setPlaces(places.toString());
         //dto 키워드 채우기 end
 
-        //GPT API날려서 dto내용채우고하려했는데 일단은 프론트쪽에서 하는것으로.
+        //GPT API날려서 dto에 GPT관련 내용채우기
+
+        if(dto.getCharacters().equals("") && dto.getPlaces().equals("") && dto.getKeyword().equals(""))
+            throw new Exception("주인공,장소, 키워드 모두 존재하지 않음");
 
         //일기 생성
         Diary diary = diaryRepository.save(toEntity(dto));
 
-        if(diary.getCharacters().equals("") && diary.getPlaces().equals("") && diary.getKeyword().equals(""))
-            throw new Exception("주인공, 장소, 키워드 모두 존재하지 않음");
+//        검증 로직 일기생성전 처리하게 변경 문제없을시 아래코드삭제
+//        if(diary.getCharacters().equals("") && diary.getPlaces().equals("") && diary.getKeyword().equals(""))
+//            throw new Exception("주인공, 장소, 키워드 모두 존재하지 않음");
 
         //장르 테이블 생성
         List<String> genreList = dto.getGenre();
@@ -116,7 +144,106 @@ public class DiaryService {
         // 카드&일기 매핑테이블 생성
         cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIds);
 
-        //일기&이미지파일 테이블 만들기 프론트에서 url받아왔다 가정
+        //stable diffusion 활용하여 썸네일 생성
+        //webClient 최대 버퍼 크기 128MB로 설정
+        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1024 * 128))
+                .build();
+
+        WebClient webClient = WebClient.builder()
+                .exchangeStrategies(exchangeStrategies)
+                .build();
+
+        Map<String, Object> map = new HashMap<>();
+        //중요한것은 prompt, steps, sampler_index
+        map.put("prompt", dto.getTitle());
+        map.put("steps", 20);
+        map.put("sampler_index", "Euler a");
+        map.put("enable_hr", false);
+        map.put("denoising_strength", 0);
+        map.put("firstphase_width", 0);
+        map.put("firstphase_height", 0);
+        map.put("hr_scale", 2);
+        map.put("hr_upscaler", "");
+        map.put("hr_second_pass_steps", 0);
+        map.put("hr_resize_x", 0);
+        map.put("hr_resize_y", 0);
+        map.put("styles", new ArrayList<>());
+        map.put("seed", -1);
+        map.put("subseed", -1);
+        map.put("subseed_strength", 0);
+        map.put("seed_resize_from_h", -1);
+        map.put("seed_resize_from_w", -1);
+        map.put("sampler_name", "");
+        map.put("batch_size", 1);
+        map.put("n_iter", 1);
+        map.put("cfg_scale", 7);
+        map.put("width", 512);
+        map.put("height", 512);
+        map.put("restore_faces", false);
+        map.put("tiling", false);
+        map.put("do_not_save_samples", false);
+        map.put("do_not_save_grid", false);
+        map.put("negative_prompt", "");
+        map.put("eta", 0);
+        map.put("s_churn", 0);
+        map.put("s_tmax", 0);
+        map.put("s_tmin", 0);
+        map.put("s_noise", 1);
+        map.put("override_settings", new HashMap<>());
+        map.put("override_settings_restore_afterwards", true);
+        map.put("script_args", new ArrayList<>());
+        map.put("script_name", "");
+        map.put("send_images", true);
+        map.put("save_images", false);
+        map.put("alwayson_scripts", new HashMap<>());
+
+
+        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+        AmazonS3 s3client = new AmazonS3Client(credentials);
+
+        String key = "image-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".png";
+
+
+        ClientResponse response = webClient.post()
+                .uri("https://139c90dbebf5.ngrok.app/sdapi/v1/txt2img")//매일매일 주소 바뀜
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(map)
+                .exchange()
+                .block();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String stableDiffusionThumbnailUrl;
+        if (response.statusCode().equals(HttpStatus.OK)) {//200응답
+            String responseBody = response.bodyToMono(String.class).block();
+            StableDiffusion200ResponseDto response200Dto = objectMapper.readValue(responseBody, StableDiffusion200ResponseDto.class);
+            String imageData = response200Dto.getImages().get(0);
+            byte[] decodedImg = Base64.getDecoder().decode(imageData.getBytes("UTF-8"));
+            Path destinationFile = Paths.get("image.png");
+            Files.write(destinationFile, decodedImg);
+
+            // S3에 업로드
+            s3client.putObject(bucket, key, destinationFile.toFile());
+
+            // 이미지 url얻고
+            stableDiffusionThumbnailUrl = s3client.getUrl(bucket, key).toString();
+
+            // 이미지url찍어보기 잘찍힘.
+//            System.out.println(stableDiffusionThumbnailUrl);
+            List<String> dtoImageUrl = dto.getDiaryImageUrl();
+            dtoImageUrl.add(stableDiffusionThumbnailUrl);
+            dto.setDiaryImageUrl(dtoImageUrl);
+
+
+        } else if (response.statusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) { //422응답
+            String responseBody = response.bodyToMono(String.class).block();
+            StableDiffusion422ResponseDto response422Dto = objectMapper.readValue(responseBody, StableDiffusion422ResponseDto.class);
+        } else {
+            throw new Exception("Stable Diffusion Exception");
+        }
+        //-- end stable diffusion 활용하여 썸네일 생성 end--
+
+        //일기&이미지파일 테이블 만들기 현재 썸네일만 있는 상태
         diaryImageService.createDiaryImages(diary.getDiaryId(), dto.getDiaryImageUrl());
 
         return diary;
