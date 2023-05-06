@@ -1,4 +1,4 @@
-package com.a101.lieary
+package com.a1012.frontend
 
 import io.flutter.embedding.android.FlutterActivity
 

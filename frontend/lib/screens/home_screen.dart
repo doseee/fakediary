@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/diary-list-filter.dart';
-import 'package:frontend/screens/menu_screen.dart';
+
+import 'menu_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,11 +37,11 @@ class _MainScreenState extends State<HomeScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Image(
-                            image: AssetImage('assets/img/icon_alarm.png'),
-                            width: 45, // set the desired width
-                            height: 45, // set the desired height
-                          ),
+                          // Image(
+                          //   image: AssetImage('assets/img/icon_alarm.png'),
+                          //   width: 45, // set the desired width
+                          //   height: 45, // set the desired height
+                          // ),
                         ],
                       ),
                     ),
@@ -68,22 +68,21 @@ class _MainScreenState extends State<HomeScreen> {
                         ),
                         iconSize: 80,
                       )),
-                  Flexible(
-                      flex: 1,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DiaryFilter()),
-                          );
-                        },
-                        icon: Image.asset(
-                          'assets/img/icon_menu.png',
-                        ),
-                        iconSize: 80,
-                      )),
-
+                  // Flexible(
+                  //     flex: 1,
+                  //     child: IconButton(
+                  //       onPressed: () {
+                  //         Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => DiaryFilter()),
+                  //         );
+                  //       },
+                  //       icon: Image.asset(
+                  //         'assets/img/icon_menu.png',
+                  //       ),
+                  //       iconSize: 80,
+                  //     )),
                 ],
               ),
             )));
