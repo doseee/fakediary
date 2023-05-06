@@ -76,12 +76,7 @@ class _LoginEntranceState extends State<LoginEntrance>
                                 child: Container(
                                   width: 250,
                                   height: 50,
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(colors: [
-                                        Color(0xff79F1A4),
-                                        Color(0xff0E5CAD),
-                                      ]),
-                                      borderRadius: BorderRadius.circular(25)),
+                                  decoration: BtnThemeGradient(),
                                   child: Center(
                                       child: Text(
                                         'LOGIN',
@@ -104,25 +99,25 @@ class _LoginEntranceState extends State<LoginEntrance>
                     children: [
                       Flexible(
                         flex: 1,
-                        child: ElevatedButton(
-                            onPressed: () {
+                        child:GestureDetector(
+                            onTap: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => const RegistScreen(),
                                   ));
                             },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                elevation: 0.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                )),
-                            child: Text(
-                              '회원이 아니신가요? JOIN',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
+                            child: Center(
+                              child: Container(
+                                width: 250,
+                                height: 50,
+                                decoration: BtnThemeGradientLine(),
+                                child: Center(
+                                    child: Text(
+                                      '회원이 아니신가요? JOIN',
+                                      style: TextStyle(color: Colors.white, fontSize: 14),
+                                    )),
+                              ),
                             )),
                       ),
                     ],

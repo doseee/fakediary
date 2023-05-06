@@ -7,7 +7,9 @@ import 'package:frontend/screens/mood_select.dart';
 import '../widgets/theme.dart';
 
 class DiaryCreateCards extends StatefulWidget {
-  const DiaryCreateCards({Key? key}) : super(key: key);
+  final int? cardIdFromList;
+
+  const DiaryCreateCards({Key? key, this.cardIdFromList}) : super(key: key);
 
   @override
   _DiaryCreateState createState() => _DiaryCreateState();
@@ -17,11 +19,26 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
   late Future<List<CardModel>> cards;
   late Future<int> lengthOfCards;
   late List<CardModel> selectedCards = [];
+  late List<CardModel> _cards;
 
   @override
   void initState() {
     super.initState();
     cards = ApiService().getCardList();
+    ApiService().getCardList().then((cards) {
+      setState(() {
+        _cards = cards;
+        // 선택한 카드의 인덱스를 찾습니다.
+        int index = _cards.indexWhere((card) => card.cardId == widget.cardIdFromList);
+        if (index != -1) {
+          setState(() {
+            selectedCards.insert(0, cards[index]);
+          });
+        } else {
+          print("Selected card not found");
+        }
+      });
+    });
   }
 
   late int memberId;
