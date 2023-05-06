@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'colors.dart';
 import 'gift_card_page.dart';
 
 class GiftCardListPage extends StatefulWidget {
@@ -55,7 +54,7 @@ class _GiftCardListPageState extends State<GiftCardListPage> {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return Scaffold(
-      backgroundColor: kBackgroundColor,
+      backgroundColor:Color(0xff18181f),
       body: Stack(
         children: [
           // 리스트.
