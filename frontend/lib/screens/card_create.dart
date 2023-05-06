@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
@@ -519,6 +520,9 @@ class _CardCreateState extends State<CardCreate> {
                               _isLoading = false;
                             });
 
+                            FirebaseAnalytics.instance
+                                .logEvent(name: 'card_create_complete');
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -551,7 +555,7 @@ class _CardCreateState extends State<CardCreate> {
                             ),
                             child: Center(
                               child: Text(
-                                'MAKE YOUR OWN CARD',
+                                '나만의 일상 카드 만들기',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
