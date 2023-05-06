@@ -32,7 +32,10 @@ class MainScreen extends StatelessWidget {
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
+    theme: ThemeData(
+      fontFamily: 'Nanum_Square_Neo'
+    ),
     home: LoginEntrance(),
   ));
 }
