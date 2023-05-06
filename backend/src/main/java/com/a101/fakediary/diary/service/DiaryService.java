@@ -15,7 +15,10 @@ import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.repository.MemberRepository;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +38,7 @@ public class DiaryService {
     private final CardRepository cardRepository;
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
+    private final PapagoTranslator papagoTranslator;
 
     private Diary toEntity(DiaryRequestDto dto) {
         return Diary.builder()
@@ -183,5 +187,17 @@ public class DiaryService {
             ret.add(new DiaryResponseDto(diary));
 
         return ret;
+    }
+
+    @Async
+    public String translate(String text) { //메소드 불러서 바꾸고 싶은 내용 text에 넣으면 한 -> 영 바꿔서 return
+        String translatedText = papagoTranslator.translate(text).block();
+        Pattern pattern = Pattern.compile("\"translatedText\":\"([^\"]*)\"");
+        Matcher matcher = pattern.matcher(translatedText);
+        if (matcher.find()) {
+            String trans = matcher.group(1);
+            return trans;
+        }
+        return null;
     }
 }
