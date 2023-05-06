@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'exchange_animation/gift_card_list_page.dart';
 // import 'package:frontend/screens/diary-list-filter.dart';
 import 'package:frontend/screens/menu_screen.dart';
@@ -77,6 +78,20 @@ class _MainScreenState extends State<HomeScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => GiftCardListPage()),
+                          );
+                        },
+                        icon: Image.asset(
+                          'assets/img/icon_menu.png',
+                        ),
+                        iconSize: 80,
+                      )),                  Flexible(
+                      flex: 1,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TestPage()),
                           );
                         },
                         icon: Image.asset(
