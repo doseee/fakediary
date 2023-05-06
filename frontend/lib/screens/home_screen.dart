@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './gift_card_list_page.dart';
+import 'exchange_animation/gift_card_list_page.dart';
 // import 'package:frontend/screens/diary-list-filter.dart';
 import 'package:frontend/screens/menu_screen.dart';
 
