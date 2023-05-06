@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'menu_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -51,21 +53,21 @@ class _MainScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   Flexible(flex: 2, child: Container()),
-                  // Flexible(
-                  //     flex: 1,
-                  //     child: IconButton(
-                  //       onPressed: () {
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //               builder: (context) => MenuScreen()),
-                  //         );
-                  //       },
-                  //       icon: Image.asset(
-                  //         'assets/img/icon_menu.png',
-                  //       ),
-                  //       iconSize: 80,
-                  //     )),
+                  Flexible(
+                      flex: 1,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MenuScreen()),
+                          );
+                        },
+                        icon: Image.asset(
+                          'assets/img/icon_menu.png',
+                        ),
+                        iconSize: 80,
+                      )),
                   // Flexible(
                   //     flex: 1,
                   //     child: IconButton(
