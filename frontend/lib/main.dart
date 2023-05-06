@@ -49,7 +49,8 @@ void main() async {
       print('Message also contained a notification: ${message.notification}');
     }
   });
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
+    theme: ThemeData(fontFamily: 'Nanum_Square_Neo'),
     home: LoginEntrance(),
   ));
 }
