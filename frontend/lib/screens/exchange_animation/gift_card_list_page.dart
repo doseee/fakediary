@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import './colors.dart';
-import './gift_card_page.dart';
+import 'colors.dart';
+import 'gift_card_page.dart';
 
 class GiftCardListPage extends StatefulWidget {
   const GiftCardListPage({Key? key}) : super(key: key);
