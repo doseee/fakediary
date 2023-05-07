@@ -675,40 +675,74 @@ class ApiService {
     }
   }
 
-  // Future<List<FriendModel>> getFriends() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   int? memberId = prefs.getInt('memberId');
-  //
-  //   final response =
-  //       await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
-  //
-  //   if (response.statusCode == 200) {
-  //     List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-  //     List<FriendModel> friends = jsonResponse
-  //         .map((dynamic item) => FriendModel.fromJson(item))
-  //         .toList();
-  //     print('api: ${friends.length}');
-  //     return friends;
-  //   } else {
-  //     throw Exception('친구 리스트 로딩에 실패했습니다.');
-  //   }
-  // }
+  static Future<List<DiaryModel>> filterDiaries(dynamic genre, dynamic writer) async {
+    // 다이어리 필터 api
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
 
-  //    Future<List<FriendModel>> getFriends() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   int? memberId = prefs.getInt('memberId');
+    final diaryFilterRequestDto = {
+      "genre": genre,
+      "id": memberId,
+      "memberId": writer
+    };
+print(diaryFilterRequestDto);
+    final response = await http.post(Uri.parse('$baseUrl/diary/filter'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(diaryFilterRequestDto));
 
-  //   final response =
-  //       await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
-  //   if (response.statusCode == 200) {
-  //     List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-  //     List<FriendModel> friends = jsonResponse
-  //         .map((dynamic item) => FriendModel.fromJson(item))
-  //         .toList();
+    if (response.statusCode == 200) {
+      print('success');
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<DiaryModel> diaries = jsonResponse
+              .map((dynamic item) => DiaryModel.fromJson(item))
+              .toList() ??
+          [];
+      print('api: ${diaries.length}');
+      return diaries;
 
-  //     return friends;
-  //   } else {
-  //     throw Exception('친구 목록을 불러오는 데 실패했습니다');
-  //   }
-  // }
+
+    } else if (response.statusCode == 204) {
+      return [];
+    } else {
+      throw Exception('일기 리스트 로딩에 실패했습니다');
+    }
+  }
+// // Future<List<FriendModel>> getFriends() async {
+//   final SharedPreferences prefs = await SharedPreferences.getInstance();
+//   int? memberId = prefs.getInt('memberId');
+//
+//   final response =
+//       await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
+//
+//   if (response.statusCode == 200) {
+//     List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+//     List<FriendModel> friends = jsonResponse
+//         .map((dynamic item) => FriendModel.fromJson(item))
+//         .toList();
+//     print('api: ${friends.length}');
+//     return friends;
+//   } else {
+//     throw Exception('친구 리스트 로딩에 실패했습니다.');
+//   }
+// }
+
+//    Future<List<FriendModel>> getFriends() async {
+//   final SharedPreferences prefs = await SharedPreferences.getInstance();
+//   int? memberId = prefs.getInt('memberId');
+
+//   final response =
+//       await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
+//   if (response.statusCode == 200) {
+//     List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+//     List<FriendModel> friends = jsonResponse
+//         .map((dynamic item) => FriendModel.fromJson(item))
+//         .toList();
+
+//     return friends;
+//   } else {
+//     throw Exception('친구 목록을 불러오는 데 실패했습니다');
+//   }
+// }
 }

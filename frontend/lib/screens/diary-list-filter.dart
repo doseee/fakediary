@@ -1,11 +1,16 @@
 // import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/model/DiaryModel.dart';
+
 // import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/FriendModel.dart';
+import 'package:frontend/screens/diary_list_filtered_screen.dart';
+import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DiaryFilter extends StatefulWidget {
   const DiaryFilter({super.key});
@@ -14,9 +19,11 @@ class DiaryFilter extends StatefulWidget {
   State<DiaryFilter> createState() => _DiaryFilterState();
 }
 
+late dynamic userId;
+dynamic selectedMood;
+
 class _DiaryFilterState extends State<DiaryFilter> {
-  final selectedWriter = [];
-  final selectedMood = [];
+  Map<String, dynamic> selectedWriter = {};
 
   final dict = {
     'ROMANCE': '로맨스',
@@ -44,33 +51,42 @@ class _DiaryFilterState extends State<DiaryFilter> {
     'COMIC': false,
   };
 
-  moodSetter(String content) {
-    // 이미 2개가 선택되었을 경우 기존에 선택된 것을 해제
-    if (!activated[content]! && selectedMood.length == 1) {
-      activated[selectedMood[0]] = false;
-      selectedMood.removeAt(0);
-    }
-
-    // 나머지 경우 선택 상태를 반전
-    activated[content] = !activated[content]!;
-    if (activated[content]!) {
-      selectedMood.add(content);
+  moodSetter(moodname) {
+    if (activated[moodname] == true) {
+      activated[moodname] = false;
+      selectedMood = null;
     } else {
-      selectedMood.remove(content);
+      activated.updateAll((key, value) => false);
+      activated[moodname] = true;
+      selectedMood = moodname;
     }
     setState(() {});
+    print(selectedMood);
+    // 이미 2개가 선택되었을 경우 기존에 선택된 것을 해제
+    // if (!activated[content]! && selectedMood.length == 1) {
+    //   activated[selectedMood[0]] = false;
+    //   selectedMood.removeAt(0);
+    // }
+
+    // 나머지 경우 선택 상태를 반전
+    // activated[content] = !activated[content]!;
+    // if (activated[content]!) {
+    //   selectedMood.add(content);
+    // } else {
+    //   selectedMood.remove(content);
+    // }
   }
 
-  writerSetter(nickname) {
+  writerSetter(nickname, friendId) {
     if (selectedWriter.length == 1) {
-      if (selectedWriter[0] == nickname) {
-        selectedWriter.removeAt(0);
+      if (selectedWriter.containsKey(nickname)) {
+        selectedWriter.clear();
       } else {
-        selectedWriter.removeAt(0);
-        selectedWriter.add(nickname);
+        selectedWriter.clear();
+        selectedWriter[nickname] = friendId;
       }
     } else {
-      selectedWriter.add(nickname);
+      selectedWriter[nickname] = friendId;
     }
     setState(() {});
     print(selectedWriter);
@@ -80,8 +96,16 @@ class _DiaryFilterState extends State<DiaryFilter> {
 
   void initState() {
     super.initState();
+    _loadId();
     friends = ApiService().getFriends();
     print(friends);
+  }
+
+  Future<void> _loadId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+    userId = memberId;
+    print(userId);
   }
 
   @override
@@ -119,9 +143,10 @@ class _DiaryFilterState extends State<DiaryFilter> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    for (var i = 0; i < selectedMood.length; i++)
-                      GradientButton(content: dict[selectedMood[i]]!),
-                    if (selectedWriter.isNotEmpty && selectedWriter[0] != '외계인')
+                    if (selectedMood != null)
+                      GradientButton(content: dict[selectedMood]!),
+                    if (selectedWriter.isNotEmpty &&
+                        selectedWriter.keys.first.toString() != '외계인')
                       Row(
                         children: [
                           CircleAvatar(
@@ -133,29 +158,28 @@ class _DiaryFilterState extends State<DiaryFilter> {
                             width: 5,
                           ),
                           Text(
-                            selectedWriter[0],
+                            selectedWriter.keys.first.toString(),
                             style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
                         ],
                       ),
-
-                    if (selectedWriter.isNotEmpty && selectedWriter[0] == '외계인')
-
+                    if (selectedWriter.isNotEmpty &&
+                        selectedWriter.keys.first.toString() == '외계인')
                       Row(
                         children: [
                           Container(
-                            child : Lottie.asset('assets/lottie/random.json'),width: 40,
+                            child: Lottie.asset('assets/lottie/random.json'),
+                            width: 40,
                           ),
                           SizedBox(
                             width: 5,
                           ),
                           Text(
-                            selectedWriter[0],
+                            selectedWriter.keys.first.toString(),
                             style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
                         ],
                       ),
-
                   ],
                 ),
               ),
@@ -305,39 +329,71 @@ class _DiaryFilterState extends State<DiaryFilter> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                        // 필터적용 버튼
-                        width: 268,
-                        height: 61,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              const Color(0xff263344),
-                              const Color(0xff1B2532).withOpacity(0.53),
-                              const Color(0xff1C2A3D).withOpacity(0.5),
-                              const Color(0xff1E2E42).withOpacity(0.46),
-                              const Color(0xff364B66).withOpacity(0.33),
-                              const Color(0xff2471D6).withOpacity(0),
-                            ],
-                            stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff000000).withOpacity(0.25),
-                              offset: const Offset(0, 4),
-                              blurRadius: 4,
+                    GestureDetector(
+                        // onTap: () {
+                        //   ApiService.filterDiaries(
+                        //       selectedMood,
+                        //       selectedWriter.isEmpty? null :
+                        //       selectedWriter.values.first);
+                        //   Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //   builder: (context) => DiaryListScreen()));
+                        // },
+                        onTap: () async {
+                          List<DiaryModel> filteredDiaries =
+                              await ApiService.filterDiaries(
+                            selectedMood,
+                            selectedWriter.isEmpty
+                                ? null
+                                : selectedWriter.values.first,
+                          );
+                          print(filteredDiaries);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DiaryFilteredScreen(
+                                diaries: filteredDiaries,
+                              ),
                             ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '검색하기',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
-                          ),
-                        )),
+                          );
+                        },
+                        child: Container(
+                            // 필터적용 버튼
+                            width: 268,
+                            height: 61,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  const Color(0xff263344),
+                                  const Color(0xff1B2532).withOpacity(0.53),
+                                  const Color(0xff1C2A3D).withOpacity(0.5),
+                                  const Color(0xff1E2E42).withOpacity(0.46),
+                                  const Color(0xff364B66).withOpacity(0.33),
+                                  const Color(0xff2471D6).withOpacity(0),
+                                ],
+                                stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color(0xff000000).withOpacity(0.25),
+                                  offset: const Offset(0, 4),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Text(
+                                '검색하기',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
+                            ))),
                     Container(
                         // 필터적용 버튼
                         width: 268,
@@ -391,7 +447,7 @@ Widget buildList(snapshot, setter) {
     children: [
       GestureDetector(
         onTap: () {
-          setter('외계인');
+          setter('외계인', -1);
         },
         child: Row(
           children: [
@@ -408,6 +464,33 @@ Widget buildList(snapshot, setter) {
           ],
         ),
       ),
+      GestureDetector(
+        onTap: () {
+          setter('나', userId);
+        },
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(
+                  'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
+              radius: 15.0,
+            ),
+            SizedBox(width: 5),
+            Text(
+              '나',
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Container(
+              height: double.infinity,
+              width: 0.1,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
       Expanded(
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -415,7 +498,7 @@ Widget buildList(snapshot, setter) {
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
               onTap: () {
-                setter(snapshot[index].nickname);
+                setter(snapshot[index].nickname, snapshot[index].friendId);
               },
               child: Padding(
                 padding: const EdgeInsets.all(15.0),

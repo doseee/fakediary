@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/services/api_service.dart';
@@ -11,16 +10,17 @@ import '../widgets/ChangeButton.dart';
 import '../widgets/appbar.dart';
 
 
-class DiaryListScreen extends StatefulWidget {
+class DiaryFilteredScreen extends StatefulWidget {
+  final List<DiaryModel> diaries;// diaries 변수 추가
   final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
   
-  const DiaryListScreen({Key? key,this.recieverId}) : super(key: key);
+  const DiaryFilteredScreen({Key? key, required this.diaries,this.recieverId}) : super(key: key);
 
   @override
-  State<DiaryListScreen> createState() => _DiaryListScreenState();
+  State<DiaryFilteredScreen> createState() => _DiaryListScreenState();
 }
 
-class _DiaryListScreenState extends State<DiaryListScreen> {
+class _DiaryListScreenState extends State<DiaryFilteredScreen> {
   late Future<List<DiaryModel>> diaries;
   late Future<List<DiaryModel>> holeDiaries;
   late Future<int> lengthDiaries;
@@ -31,7 +31,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   @override
   void initState() {
     super.initState();
-      diaries = ApiService().getDiaries();
+      diaries = Future.value(widget.diaries);
     // diaries = Future.value(widget.diaries);
     // holeDiaries = ApiService().getDiaries();
     print(diaries);
@@ -107,7 +107,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                 context,
                                 MaterialPageRoute(
                                   //Todo; [수정필요] 일기 디테일 페이지로 이동
-                                  builder: (context) => DiaryDetailCoverScreen(diaryId: diaryId, exchangeSituation: exchangeSituation,),
+                                  builder: (context) => HomeScreen(),
                                 ));
                           },
                           style: ElevatedButton.styleFrom(
