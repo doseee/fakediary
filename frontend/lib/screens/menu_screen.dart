@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
+import 'package:frontend/screens/diary-list-filter.dart';
 import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
@@ -168,12 +169,12 @@ class _MenuScreenState extends State<MenuScreen> {
                                       867.4285714285714,
                                 ),
                                 MenuButton(
-                                  title: '메인',
-                                  desc1: '메인 페이지로',
+                                  title: '필터',
+                                  desc1: '일기 필터 페이지로',
                                   desc2: '이동합니다.',
                                   onSelect: onSelect,
                                   selected: selectedTitle == '메인',
-                                  screen: const HomeScreen(),
+                                  screen: const DiaryFilter(),
                                 ),
                                 SizedBox(
                                   width: 4.5 *
