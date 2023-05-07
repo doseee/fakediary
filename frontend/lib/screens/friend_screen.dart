@@ -71,7 +71,7 @@ class _FriendScreenState extends State<FriendScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DiaryListScreen()));
+                              builder: (context) => DiaryListScreen(diaries: [])));
                     } else {
                       print('전송 실패');
                     }

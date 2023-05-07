@@ -5,15 +5,15 @@ import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
-
 import '../model/DiaryModel.dart';
 import '../widgets/ChangeButton.dart';
 import '../widgets/appbar.dart';
 
 class DiaryListScreen extends StatefulWidget {
+  final List<DiaryModel> diaries; // diaries 변수 추가
   final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
   
-  const DiaryListScreen({Key? key, this.recieverId}) : super(key: key);
+  const DiaryListScreen({Key? key, required this.diaries,this.recieverId}) : super(key: key);
 
   @override
   State<DiaryListScreen> createState() => _DiaryListScreenState();
@@ -23,7 +23,6 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   late Future<List<DiaryModel>> diaries;
   late Future<int> lengthDiaries;
   int exchangeSituation = 1; //1이면 내가 교환 보내는 상황 2면 답장하는 상황
-
   int diaryId = -1;
   String title = '', summary = '';
 
@@ -37,7 +36,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
         exchangeSituation = 2;
       });
     }
+
   }
+
 
   onSelect(
     int diaryId,

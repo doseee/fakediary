@@ -187,7 +187,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   desc2: '내가 작성한 일기를 볼 수 있습니다.',
                                   onSelect: onSelect,
                                   selected: selectedTitle == '일기목록',
-                                  screen: const DiaryListScreen(),
+                                  screen: const DiaryListScreen(diaries: []),
                                 ),
                               ],
                             ),
