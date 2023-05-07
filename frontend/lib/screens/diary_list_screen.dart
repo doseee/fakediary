@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/services/api_service.dart';
@@ -102,7 +103,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                 context,
                                 MaterialPageRoute(
                                   //Todo; [수정필요] 일기 디테일 페이지로 이동
-                                  builder: (context) => HomeScreen(),
+                                  builder: (context) => DiaryDetailCoverScreen(diaryId: diaryId, exchangeSituation: exchangeSituation,),
                                 ));
                           },
                           style: ElevatedButton.styleFrom(
