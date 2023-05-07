@@ -124,3 +124,6 @@ flutter:
           weight: 600
         - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Hv.otf
           weight: 800
+    - family: Cafe24
+      fonts:
+        - asset: assets/font/Cafe24/Cafe24SsurroundAir.ttf

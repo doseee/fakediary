@@ -19,8 +19,8 @@ class ChangeButton extends StatelessWidget {
         decoration: BtnThemeGradient(),
         child: Padding(
           padding: const EdgeInsets.only(right: 25, left: 25),
-          child: ElevatedButton(
-              onPressed: () {
+          child: GestureDetector(
+              onTap: () {
                 if(exchangeSituation == 1) { //내가 먼저 교환 보내는 상황
                   // 친구 선택
                   Navigator.push(
@@ -32,16 +32,15 @@ class ChangeButton extends StatelessWidget {
                 //todo; 답장으로 교환일기 보내는 상황
                 print('답장');
               },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  elevation: 0.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  )),
-              child: Text(
-                '교환하기',
-                style: TextStyle(color: Colors.white, fontSize: 14),
+              child: Container(
+                  width: 250,
+                  height: 50,
+                  child: Center(
+                    child: Text(
+                    '교환하기',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ),
               )),
         ),
       ),
