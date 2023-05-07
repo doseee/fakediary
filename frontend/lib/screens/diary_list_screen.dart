@@ -20,7 +20,11 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   late Future<List<DiaryModel>> diaries;
   late Future<List<DiaryModel>> holeDiaries;
   late Future<int> lengthDiaries;
-  int exchangeSituation = 1; //1이면 내가 교환 보내는 상황 2면 답장하는 상황
+
+  /// 1 은 내 일기 보기 && 친구 선택 안됨
+  /// 2 는 내 일기 보기 && 친구에게 답장
+  /// 3은 친구 일기 보기 && 카드, 교환버튼 표시 안됨
+  int exchangeSituation = 1;
   int diaryId = -1;
   String title = '', summary = '';
 
