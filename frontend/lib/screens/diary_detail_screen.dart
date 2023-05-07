@@ -10,6 +10,9 @@ import '../widgets/line_widget.dart';
 
 class DiaryDetailScreen extends StatefulWidget {
   final int diaryId;
+
+  /// 1 or 2는 내 일기라서 카드, 교환 버튼 표시
+  /// 3은 친구 일기라 카드, 교환버튼 표시 안됨
   final int exchangeSituation;
 
   const DiaryDetailScreen(
@@ -38,6 +41,19 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
     {'slideName': 'slideSeven', 'selected': false, 'content': ''},
     {'slideName': 'slideEight', 'selected': false, 'content': ''},
     {'slideName': 'slideNine', 'selected': false, 'content': ''},
+  ];
+
+  final List<Color> colors = [
+    Colors.red,
+    Colors.green,
+    Colors.blue,
+    Colors.orange,
+    Colors.purple,
+    Colors.teal,
+    Colors.yellow,
+    Colors.cyan,
+    Colors.brown,
+    Colors.grey,
   ];
 
   @override
@@ -101,24 +117,41 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
             ...allSlides.map((e) {
               return getCards(e);
             }).toList(),
+            CheckFriendLetter(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget CheckCard(){
+    if(colors.isEmpty){
+      return Container();
+    }
+
+    return DiaryDetailCardList(colors: colors);
+  }
+
+
+  Widget CheckFriendLetter(){
+    if(widget.exchangeSituation == 3){
+      return Container();
+    }
+
+    return SizedBox(
+      height: 250,
+      child: Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: Column(
+          children: [
+            Center(child: CheckCard()),
             SizedBox(
-              height: 250,
-              child: Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Column(
-                  children: [
-                    Center(child: DiaryDetailCardList()),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    ChangeButton(
-                      exchangeSituation: widget.exchangeSituation,
-                      diaryId: widget.diaryId,
-                    )
-                  ],
-                ),
-              ),
+              height: 30,
             ),
+            ChangeButton(
+              exchangeSituation: widget.exchangeSituation,
+              diaryId: widget.diaryId,
+            )
           ],
         ),
       ),
