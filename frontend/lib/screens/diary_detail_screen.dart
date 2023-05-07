@@ -4,6 +4,8 @@ import 'package:frontend/widgets/ChangeButton.dart';
 import 'package:frontend/widgets/dashed_line.dart';
 import 'package:frontend/widgets/diary_detail_card_list.dart';
 import 'package:frontend/widgets/theme.dart';
+import 'package:flutter/foundation.dart';
+
 
 import '../widgets/line_img_animation.dart';
 import '../widgets/line_widget.dart';
@@ -25,6 +27,7 @@ class DiaryDetailScreen extends StatefulWidget {
 
 class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   late ScrollController _scrollController;
+  late int slideNum = 0;
 
   List allSlides = [
     {
@@ -56,15 +59,27 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
     Colors.grey,
   ];
 
+  bool fontFam = true;
+
   @override
   void initState() {
     super.initState();
     print(widget.diaryId);
 
     _scrollController = ScrollController();
+    _scrollController.addListener((changeSelector));
   }
 
-  bool fontFam = true;
+  changeSelector() {
+    var maxScrollValue = _scrollController.position.maxScrollExtent;
+    var scrollValue = _scrollController.offset.round();
+    var divisor = (maxScrollValue / (allSlides.length + 2)) + 20;
+    var slideNum = (scrollValue / divisor).round();
+    setState(() {
+      this.slideNum = slideNum;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +130,11 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
               ),
             ),
             ...allSlides.map((e) {
-              return getCards(e);
+              final index = allSlides.indexOf(e);
+              return AnimatedOpacity(opacity: index < slideNum ? 1.0 : 0.5 ,
+                  duration: Duration(microseconds: 500),
+                  curve: Curves.ease,
+                  child: getCards(e));
             }).toList(),
             CheckFriendLetter(),
           ],
