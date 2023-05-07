@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/diary_detail.dart';
+import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
-
 import '../model/DiaryModel.dart';
 import '../widgets/ChangeButton.dart';
 import '../widgets/appbar.dart';
@@ -19,9 +18,9 @@ class DiaryListScreen extends StatefulWidget {
 
 class _DiaryListScreenState extends State<DiaryListScreen> {
   late Future<List<DiaryModel>> diaries;
+  late Future<List<DiaryModel>> holeDiaries;
   late Future<int> lengthDiaries;
   int exchangeSituation = 1; //1이면 내가 교환 보내는 상황 2면 답장하는 상황
-
   int diaryId = -1;
   String title = '', summary = '';
 
@@ -29,6 +28,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   void initState() {
     super.initState();
     diaries = ApiService().getDiaries();
+    // diaries = Future.value(widget.diaries);
+    // holeDiaries = ApiService().getDiaries();
     print(diaries);
     if (widget.recieverId != null) {
       setState(() {
@@ -125,8 +126,10 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                   context,
                                   MaterialPageRoute(
                                     //Todo; [수정필요] 일기 디테일 페이지로 이동
-                                    builder: (context) => DiaryDetailScreen(
+                                    builder: (context) =>
+                                        DiaryDetailCoverScreen(
                                       diaryId: diaryId,
+                                      exchangeSituation: exchangeSituation,
                                     ),
                                   ));
                             },
