@@ -5,6 +5,7 @@ import 'package:frontend/model/DiaryModel.dart';
 
 // import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/FriendModel.dart';
+import 'package:frontend/screens/diary_list_filtered_screen.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:gradient_borders/gradient_borders.dart';
@@ -352,7 +353,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DiaryListScreen(
+                              builder: (context) => DiaryFilteredScreen(
                                 diaries: filteredDiaries,
                               ),
                             ),
