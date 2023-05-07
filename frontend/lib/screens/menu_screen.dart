@@ -3,10 +3,10 @@ import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/diary-list-filter.dart';
 import 'package:frontend/screens/friend_screen.dart';
-import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
 
+import 'diary_detail.dart';
 import 'diary_list_screen.dart';
 import 'modify_screen.dart';
 
@@ -161,7 +161,10 @@ class _MenuScreenState extends State<MenuScreen> {
                                   desc2: '일기를 교환할 수 있습니다.',
                                   onSelect: onSelect,
                                   selected: selectedTitle == '친구목록',
-                                  screen: FriendScreen(diaryId: -100, exchangeSituation: 0,),
+                                  screen: FriendScreen(
+                                    diaryId: -100,
+                                    exchangeSituation: 0,
+                                  ),
                                 ),
                                 SizedBox(
                                   width: 4.5 *
@@ -205,7 +208,9 @@ class _MenuScreenState extends State<MenuScreen> {
                                   desc2: '필요한 페이지로 이동할 수 있습니다.',
                                   onSelect: onSelect,
                                   selected: selectedTitle == '알림',
-                                  screen: const HomeScreen(),
+                                  screen: const DiaryDetailScreen(
+                                    diaryId: 100,
+                                  ),
                                 ),
                                 SizedBox(
                                   width: 4.5 *

@@ -110,6 +110,36 @@ class ApiService {
     }
   }
 
+  static Future<String> getTranslation_papago_en(String content) async {
+    String clientId = dotenv.get('papagoClientId');
+    String clientSecret = dotenv.get('papagoClientSecret');
+    String contentType = "application/x-www-form-urlencoded; charset=UTF-8";
+    String url = "https://openapi.naver.com/v1/papago/n2mt";
+
+    http.Response trans = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': contentType,
+        'X-Naver-Client-Id': clientId,
+        'X-Naver-Client-Secret': clientSecret
+      },
+      body: {
+        'source': "ko",
+        'target': "en",
+        'text': content,
+      },
+    );
+    if (trans.statusCode == 200) {
+      var dataJson = jsonDecode(trans.body);
+      print(dataJson);
+      var resultPapago = dataJson['message']['result']['translatedText'];
+      return resultPapago;
+    } else {
+      print(trans.statusCode);
+      return content;
+    }
+  }
+
   static Future<List<String>> getCaption(File img) async {
     final apiKey = dotenv.get('visionApiKey');
     final url = Uri.parse(
@@ -519,6 +549,69 @@ class ApiService {
     }
   }
 
+  static Future<List<Map<String, String>>> askGpt4(
+      var messages, String prompt) async {
+    print('gpt4 요청');
+
+    if (messages.isEmpty) {
+      messages.add({
+        'role': 'system',
+        'content':
+            '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 summary에, 소제목은 subtitles에, 내용은 contents에 넣어줘. 이야기를 한 장 당 2000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 각 장의 제목이 되는 subtitles도 contents와 같이 문자열 배열로 만들어줘.'
+      });
+    }
+    // if (messages.isEmpty) {
+    //   messages.add({
+    //     'role': 'system',
+    //     'content':
+    //         "Write an engaging Korean story in JSON format, including 'title', 'summary', and 'contents', 'subtitles'. Organize the story into 3 chapters of about 1000 words per chapter and make the contents an array of strings. 'subtitles' is subtitle of each element of contents. Do not include non-story phrases or code blocks in answer."
+    //   });
+    // }
+
+    messages.add({'role': 'user', 'content': prompt});
+
+    String apiKey = dotenv.get('gpt4ApiKey');
+    String apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    // Set up the headers for the request
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    Map<String, dynamic> body = {
+      'model': 'gpt-4',
+      'messages': messages,
+      'max_tokens': 2500,
+      'temperature':
+          0.5, // Adjust to control the randomness of the generated response
+    };
+
+    http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: headers,
+      body: json.encode(body),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse =
+          jsonDecode(utf8.decode(response.bodyBytes));
+      print(jsonResponse);
+      String answer = jsonResponse['choices'][0]['message']['content'].trim();
+      messages.add({"role": "assistant", "content": answer});
+      print(answer);
+      if (!answer.endsWith('}')) {
+        print('중단됨');
+        messages = await askGpt4(messages,
+            "Answer me from the cut off part. Don't repeat similar content, and finish the answer as quickly as possible in the specified json format.");
+      }
+      return messages;
+    } else {
+      throw Exception(
+          'Failed to get response from GPT: ${response.statusCode}');
+    }
+  }
+
   Future<List<DiaryModel>> getDiaries() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
@@ -590,6 +683,7 @@ class ApiService {
     required List<String> genre,
     // required String keyword,
     required String prompt,
+    required String subtitles,
     required String summary,
     required String title,
   }) async {
@@ -597,22 +691,23 @@ class ApiService {
     int? memberId = prefs.getInt('memberId');
 
     final url = Uri.parse('$baseUrl/diary');
+    print('su: $subtitles');
     final dto = {
       "cardIds": cardIds,
       'detail': detail,
       'genre': genre,
       'diaryImageUrl': diaryImageUrl,
-      // 'keyword': keyword,
       'memberId': memberId,
       'prompt': prompt,
+      'subtitles': subtitles,
       'summary': summary,
       'title': title,
     };
     print(dto['cardIds']);
     print(dto['genre']);
-    // print(dto['keyword']);
     print(dto['memberId']);
     print(dto['prompt']);
+    print(dto['subtitles']);
     print(dto['summary']);
     print(dto['title']);
     final response = await http.post(
@@ -675,7 +770,121 @@ class ApiService {
     }
   }
 
-  static Future<List<DiaryModel>> filterDiaries(dynamic genre, dynamic writer) async {
+  // 프롬프트(요약문)을 통해 표지 이미지를 생성하는 메서드
+  static Future<String> makeCoverImage(String summary) async {
+    // 한글 요약문을 영어로 변환
+    final prompt = await getTranslation_papago_en(summary);
+    print(prompt);
+    // Stability AI 스테이블 디퓨전 XL 엔드포인트로 url 설정
+    final url = Uri.parse(
+        'https://api.stability.ai/v1/generation/stable-diffusion-xl-beta-v2-2-2/text-to-image');
+
+    //  .env에서 api key 가져오기
+    final apiKey = dotenv.env['stabilityApiKey'];
+
+    // 헤더 설정(셋 다 필수)
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    // post 요청 body 설정(너비, 높이, 샘플러, 스텝, 프롬프트 등 지정)
+    Map<String, dynamic> body = {
+      'cfg_scale': 7,
+      'clip_guidance_preset': 'FAST_BLUE',
+      'height': 512,
+      'width': 256,
+      'sampler': 'K_DPM_2_ANCESTRAL',
+      'samples': 1,
+      'steps': 75,
+      'text_prompts': [
+        {
+          'text': prompt,
+          'weight': 1,
+        },
+      ],
+    };
+
+    HttpClient client = HttpClient();
+    client.badCertificateCallback =
+        ((X509Certificate cert, String host, int port) => true);
+
+    HttpClientRequest request = await client.postUrl(url);
+    request.headers.set('Content-Type', 'application/json');
+    request.headers.set('Accept', 'application/json');
+    request.headers.set('Authorization', 'Bearer $apiKey');
+
+    request.add(utf8.encode(json.encode(body)));
+
+    HttpClientResponse response = await request.close();
+
+    // 요청 처리 결과 확인
+    if (response.statusCode == 200) {
+      String responseBody = await response.transform(utf8.decoder).join();
+      print('표지 생성 완료');
+      return jsonDecode(responseBody)['artifacts'][0]['base64'];
+    } else {
+      print('Failed to make the request. Status code: ${response.statusCode}');
+      return '';
+    }
+
+    // // 요청 전송
+    // http.Response response = await http.post(
+    //   url,
+    //   headers: headers,
+    //   body: jsonEncode(body),
+    // );
+
+    // print('난거임?');
+
+    // // 성공 시 base64 형태의 이미지 반환 실패 시 빈 문자열 반환
+    // if (response.statusCode == 200) {
+    //   print('표지 생성 완료');
+    //   return jsonDecode(response.body)['artifacts'][0]['base64'];
+    // } else {
+    //   print('Failed to make the request. Status code: ${response.statusCode}');
+    //   return '';
+    // }
+  }
+
+  static Future<DiaryModel> getDiaryDetail(int diaryId) async {
+    // url 설정
+    final url = Uri.parse('$baseUrl/diary/detail/$diaryId');
+
+    // get 요청
+    final response = await http.get(url);
+
+    // 성공 시 DiaryModel 반환
+    if (response.statusCode == 200) {
+      DiaryModel diary =
+          DiaryModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      return diary;
+    } else {
+      throw Exception('일기 상세 정보를 불러오는 데 실패했습니다');
+    }
+  }
+
+  // Future<List<FriendModel>> getFriends() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   int? memberId = prefs.getInt('memberId');
+  //
+  //   final response =
+  //       await http.get(Uri.parse('$baseUrl/friendship/list/$memberId'));
+  //
+  //   if (response.statusCode == 200) {
+  //     List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+  //     List<FriendModel> friends = jsonResponse
+  //         .map((dynamic item) => FriendModel.fromJson(item))
+  //         .toList();
+  //     print('api: ${friends.length}');
+  //     return friends;
+  //   } else {
+  //     throw Exception('친구 리스트 로딩에 실패했습니다.');
+  //   }
+  // }
+  static Future<List<DiaryModel>> filterDiaries(
+      dynamic genre, dynamic writer) async {
     // 다이어리 필터 api
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
@@ -685,7 +894,7 @@ class ApiService {
       "id": memberId,
       "memberId": writer
     };
-print(diaryFilterRequestDto);
+    print(diaryFilterRequestDto);
     final response = await http.post(Uri.parse('$baseUrl/diary/filter'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -701,8 +910,6 @@ print(diaryFilterRequestDto);
           [];
       print('api: ${diaries.length}');
       return diaries;
-
-
     } else if (response.statusCode == 204) {
       return [];
     } else {

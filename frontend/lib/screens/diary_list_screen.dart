@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/diary_detail_cover_screen.dart';
-import 'package:frontend/screens/friend_screen.dart';
-import 'package:frontend/screens/home_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
@@ -10,11 +7,10 @@ import '../model/DiaryModel.dart';
 import '../widgets/ChangeButton.dart';
 import '../widgets/appbar.dart';
 
-
 class DiaryListScreen extends StatefulWidget {
   final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
-  
-  const DiaryListScreen({Key? key,this.recieverId}) : super(key: key);
+
+  const DiaryListScreen({Key? key, this.recieverId}) : super(key: key);
 
   @override
   State<DiaryListScreen> createState() => _DiaryListScreenState();
@@ -31,18 +27,16 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   @override
   void initState() {
     super.initState();
-      diaries = ApiService().getDiaries();
+    diaries = ApiService().getDiaries();
     // diaries = Future.value(widget.diaries);
     // holeDiaries = ApiService().getDiaries();
     print(diaries);
-    if(widget.recieverId != null){
+    if (widget.recieverId != null) {
       setState(() {
         exchangeSituation = 2;
       });
     }
-
   }
-
 
   onSelect(
     int diaryId,
@@ -56,38 +50,61 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
     });
   }
 
-  Widget DiaryDetail(){
-    if(diaryId == -1){
+  Widget DiaryDetail() {
+    if (diaryId == -1) {
       return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage(
-                    'assets/img/diary_list.png'))),
+                image: AssetImage('assets/img/diary_list.png'))),
       );
     }
 
     return Row(
       children: [
-        Flexible(flex: 1,
-        child: Padding(
-          padding: EdgeInsets.only(left: 10, right: 5),
-          child: Container(decoration: BoxDecoration(color: Colors.yellow, borderRadius: BorderRadius.all(Radius.circular(15))),
-        ),),),
-        Flexible(flex: 1,
+        Flexible(
+          flex: 1,
+          child: Padding(
+            padding: EdgeInsets.only(left: 10, right: 5),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.yellow,
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 1,
           child: Padding(
             padding: const EdgeInsets.only(left: 15, right: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Flexible(flex: 3, child: Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Text(title, style: TextStyle(color: Colors.white60, fontSize: 18, fontWeight: FontWeight.w600),),
-                ),),
-                Flexible(flex: 3, child: Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Text(summary, style: TextStyle(color: Colors.white60, fontSize: 14), maxLines: 2, overflow: TextOverflow.ellipsis,),
-                ),),
+                Flexible(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                          color: Colors.white60,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Text(
+                      summary,
+                      style: TextStyle(color: Colors.white60, fontSize: 14),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
                 // Flexible(flex: 2, child: Row(
                 //   children: [
                 //     Flexible(flex: 1, child: Container(decoration: BoxDecoration(color: Colors.yellow)),),
@@ -95,39 +112,51 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 //   ],
                 // ),),
                 // SizedBox(height: 10,),
-                Flexible(flex: 3, child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BtnThemeGradientLine(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 25, left: 25),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  //Todo; [수정필요] 일기 디테일 페이지로 이동
-                                  builder: (context) => DiaryDetailCoverScreen(diaryId: diaryId, exchangeSituation: exchangeSituation,),
-                                ));
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              elevation: 0.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              )),
-                          child: Text(
-                            '상세보기',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          )),
+                Flexible(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BtnThemeGradientLine(),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 25, left: 25),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    //Todo; [수정필요] 일기 디테일 페이지로 이동
+                                    builder: (context) =>
+                                        DiaryDetailCoverScreen(
+                                      diaryId: diaryId,
+                                      exchangeSituation: exchangeSituation,
+                                    ),
+                                  ));
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                elevation: 0.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                )),
+                            child: Text(
+                              '상세보기',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            )),
+                      ),
                     ),
                   ),
-                ),),
-                ChangeButton(exchangeSituation: exchangeSituation, diaryId: diaryId,),
+                ),
+                ChangeButton(
+                  exchangeSituation: exchangeSituation,
+                  diaryId: diaryId,
+                ),
               ],
             ),
-          ),)
+          ),
+        )
       ],
     );
   }
@@ -152,9 +181,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         flex: 6,
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                            child: DiaryDetail()
-                          ),
+                              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              child: DiaryDetail()),
                         )),
                     Flexible(
                       flex: 2,
@@ -260,7 +288,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
         print('length : ${snapshot.length}');
         return InkWell(
           onTap: () {
-            print('${snapshot[index].diaryId}, ${snapshot[index].title}, ${snapshot[index].summary}');
+            print(
+                '${snapshot[index].diaryId}, ${snapshot[index].title}, ${snapshot[index].summary}');
             onSelect(snapshot[index].diaryId, snapshot[index].title,
                 snapshot[index].summary);
           },
