@@ -18,6 +18,25 @@ BoxDecoration BgThemeGradient(){
           ]));
 }
 
+BoxDecoration BgThemeGradientDiary(){
+  return  BoxDecoration(
+      // gradient: LinearGradient(
+      //     begin: Alignment.topCenter,
+      //     end: Alignment.bottomCenter,
+      //     stops: [
+      //       0.3,
+      //       0.6,
+      //       0.9
+      //     ],
+      //     colors: [
+      //       Color(0xff2C5364),
+      //       Color(0xff203A43),
+      //       Color(0xff0F2027),
+      //     ])
+    color: Color(0xff0F2027)
+  );
+}
+
 BoxDecoration BtnThemeGradient(){
   return BoxDecoration(
       gradient: LinearGradient(colors: [
