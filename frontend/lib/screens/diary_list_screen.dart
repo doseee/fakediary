@@ -284,7 +284,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   Widget buildList(snapshot) {
     return GridView.count(
       crossAxisCount: 2,
-      childAspectRatio: 0.85,
+      childAspectRatio: 0.8,
       mainAxisSpacing: 10.0,
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       children: List.generate(snapshot.length, (index) {
@@ -297,7 +297,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 snapshot[index].summary);
           },
           child: Card(
-              color: Colors.blue,
+              color: Colors.transparent,
               elevation: 0.0,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
