@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/widgets/ChangeButton.dart';
+import 'package:frontend/widgets/compass_divider.dart';
 import 'package:frontend/widgets/dashed_line.dart';
 import 'package:frontend/widgets/diary_detail_card_list.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -80,67 +82,109 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
     });
   }
 
+  late bool _isTransparent = false;
+  late bool _isExpanded = true;
+
+  String title () {
+    if(slideNum > 0 && slideNum <= allSlides.length ) {
+      setState(() {
+        _isTransparent = true;
+        _isExpanded = false;
+      });
+      return allSlides[slideNum-1]['slideName'];
+    } else if(slideNum == 0){
+      setState(() {
+        _isExpanded = true;
+      });
+      return '';
+    }
+    else {
+      setState(() {
+        _isTransparent = false;
+      });
+      return '';
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(onWillPop: () async {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => DiaryListScreen()));
+      return false;
+    },
+    child: Scaffold(
       body: Container(
         decoration: BgThemeGradientDiary(),
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
+        child: CustomScrollView(
           controller: _scrollController,
-          children: [
-            SizedBox(
-              height: 500,
-              child: Column(
-                children: [
-                  Flexible(
-                    flex: 2,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/img/temp.jpg'),
-                              fit: BoxFit.cover)),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
-                      child: Column(
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: LineImgAnimation(),
-                          ),
-                          Flexible(
-                            flex: 4,
-                            child: buildArtworkTitle('말하는 감자의 싸피 일기'),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: LineWidget(),
-                          ),
-                        ],
+          slivers: [
+            SliverAppBar(
+              backgroundColor: _isTransparent ? Color(0xff0F2027) : Colors.transparent,
+              elevation: 0,
+              title: Text(title()),
+              pinned: true,
+              floating: false,
+              expandedHeight: 200.0,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Image(
+                  image: AssetImage('assets/img/temp.jpg'),
+                  fit: BoxFit.cover,
+                )
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 250,
+                child: Column(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+                        child: Column(
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: CompassDivider(isExpanded: _isExpanded,),
+                              // LineImgAnimation(),
+                            ),
+                            Flexible(
+                              flex: 4,
+                              child: buildArtworkTitle('말하는 감자의 싸피 일기'),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: LineWidget(),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
             ...allSlides.map((e) {
               final index = allSlides.indexOf(e);
-              return AnimatedOpacity(opacity: index < slideNum ? 1.0 : 0.5 ,
-                  duration: Duration(microseconds: 500),
-                  curve: Curves.ease,
-                  child: getCards(e));
+              return SliverAnimatedOpacity(
+                opacity: index < slideNum ? 1.0 : 0.5 ,
+                duration: Duration(microseconds: 500),
+                curve: Curves.ease,
+                sliver: SliverToBoxAdapter(
+                  child: getCards(e),
+                ),
+              );
             }).toList(),
-            CheckFriendLetter(),
+            SliverToBoxAdapter(
+              child: CheckFriendLetter(),
+            ),
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget CheckCard(){
