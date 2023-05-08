@@ -148,6 +148,7 @@ class _LoginState extends State<Login> {
                           child: Lottie.asset('assets/lottie/stars.json'),
                         ),
                         Column(
+                          mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -160,15 +161,19 @@ class _LoginState extends State<Login> {
                               height: 40,
                             ),
                             _buttonLogin(),
-                            SizedBox(
-                              height: 280,
-                            ),
-                            Text(
-                              'My Lieary',
-                              style: TextStyle(color: Colors.blueGrey),
-                            )
+                            // SizedBox(
+                            //   height: 280,
+                            // ),
                           ],
                         ),
+                        Expanded(child: Container()),
+                        Text(
+                          'My Lieary',
+                          style: TextStyle(color: Colors.blueGrey),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        )
                       ]),
                     )))));
   }
