@@ -19,12 +19,13 @@ public class DiaryImageService {
     private final DiaryImageRepository diaryImageRepository;
 
     @Transactional
-    public void createDiaryImages(Long diaryId, List<String> diaryImageUrls) {
-        for (String diaryImageUrl : diaryImageUrls) {
+    public void createDiaryImages(Long diaryId, List<String> diaryImageUrls, List<String> diaryImagePrompt) {
+
+        for(int i=0; i< diaryImageUrls.size(); i++){
             DiaryImage diaryImage = new DiaryImage();
             diaryImage.setDiary(diaryRepository.findById(diaryId).orElseThrow());
-            diaryImage.setDiaryImageUrl(diaryImageUrl);
-
+            diaryImage.setDiaryImageUrl(diaryImageUrls.get(i));
+            diaryImage.setImagePrompt(diaryImagePrompt.get(i));
             diaryImageRepository.save(diaryImage);
         }
     }

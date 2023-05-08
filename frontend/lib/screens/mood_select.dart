@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
 import '../model/CardModel.dart';
@@ -308,6 +310,17 @@ class _MoodSelectState extends State<MoodSelect> {
                         }
                         String prp = person + location + genre2 + keyword2;
                         print(prp);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Center(
+                                child: Text('다이어리 생성 중입니다. 완료 시 알림이 나타납니다.')),
+                          ),
+                        );
                         messages = await ApiService.askGpt4(messages, prp);
                         String jsonResp = '';
                         for (var message in messages) {
@@ -336,7 +349,8 @@ class _MoodSelectState extends State<MoodSelect> {
                         for (var i = 0; i < selectedMood.length; i++) {
                           genre.add(selectedMood[i]);
                         }
-                        ApiService.makeDiary(
+
+                        await ApiService.makeDiary(
                             cardIds: cardIds,
                             detail: detail,
                             diaryImageUrl: diaryImageUrl,
@@ -345,6 +359,21 @@ class _MoodSelectState extends State<MoodSelect> {
                             subtitles: subtitle,
                             summary: summary,
                             title: title);
+
+                        const AndroidNotificationDetails
+                            androidNotificationDetails =
+                            AndroidNotificationDetails(
+                                'your channel id', 'your channel name',
+                                channelDescription: 'your channel description',
+                                importance: Importance.max,
+                                priority: Priority.high,
+                                ticker: 'ticker');
+                        const NotificationDetails notificationDetails =
+                            NotificationDetails(
+                                android: androidNotificationDetails);
+                        await FlutterLocalNotificationsPlugin().show(0,
+                            '일기 생성 완료', '일기 생성이 완료되었습니다!', notificationDetails,
+                            payload: 'item x');
                       },
                       child: Container(
                         width: 268,

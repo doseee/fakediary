@@ -31,4 +31,7 @@ public class DiaryImage extends BaseEntity {
 
     @Column(nullable = false)
     private String diaryImageUrl;
+
+    @Column(nullable = false)
+    private String ImagePrompt;
 }
