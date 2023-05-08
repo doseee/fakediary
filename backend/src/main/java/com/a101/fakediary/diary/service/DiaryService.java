@@ -238,18 +238,20 @@ public class DiaryService {
         String STABLE_DIFFUSION_URL = "https://f44ca12b95ab.ngrok.app";
 
         //subtitles 파싱해서 리스트로 들고있기
-        //큐에다가 제목, subtitle을 순서대로 하나씩 넣는다. 각각 썸네일, 삽화들 만들용도
-        Queue<String> diaryImagePrompt = new LinkedList<>();
+        //리스트에 제목, subtitle을 순서대로 영어로 넣는다. 각각 썸네일, 삽화들 만들용도
+        List<String> diaryImagePrompt = new ArrayList<>();
         diaryImagePrompt.add(translate(dto.getTitle()));
         String[] subtitles = dto.getSubtitles().split(DELIMITER);
-        diaryImagePrompt.addAll(Arrays.asList(subtitles));
+        for (String subtitle : subtitles) {
+            diaryImagePrompt.add(translate(subtitle));
+        }
 
         List<String> dtoImageUrl = new ArrayList<>(); // 다이어리 이미지 url들 저장할것
         // Title, subtitle들 번역해서 프롬프트로 넣고 stablediffusion 이미지 생성
         //아래작업은 비동기로하면 좋을것같은데.. 리팩토링시 봐야할듯
-        while (!diaryImagePrompt.isEmpty()) {
-            String poll = diaryImagePrompt.poll();
-            map.put("prompt", translate(poll));
+        for (int i=0; i< diaryImagePrompt.size(); i++) {
+            String translatedPrompt = diaryImagePrompt.get(i);
+            map.put("prompt", translatedPrompt);
 
             ClientResponse response = webClient.post()
                     .uri(STABLE_DIFFUSION_URL + "/sdapi/v1/txt2img")
@@ -290,7 +292,7 @@ public class DiaryService {
         }
         dto.setDiaryImageUrl(dtoImageUrl);
         //일기&이미지파일 테이블 에 등록
-        diaryImageService.createDiaryImages(diary.getDiaryId(), dto.getDiaryImageUrl());
+        diaryImageService.createDiaryImages(diary.getDiaryId(), dto.getDiaryImageUrl(), diaryImagePrompt);
         //-- end stable diffusion 활용하여 썸네일 생성 end--
 
 
