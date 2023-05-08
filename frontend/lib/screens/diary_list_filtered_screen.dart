@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/friend_screen.dart';
-import 'package:frontend/screens/home_screen.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
