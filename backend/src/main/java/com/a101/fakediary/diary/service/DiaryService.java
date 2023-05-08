@@ -411,6 +411,10 @@ public class DiaryService {
             }
         }
 
+        logger.info("characters = " + characters);
+        logger.info("places = " + places);
+        logger.info("keywords = " + keywords);
+
         return chatGptApi.askGpt(characters, places, keywords);
     }
 

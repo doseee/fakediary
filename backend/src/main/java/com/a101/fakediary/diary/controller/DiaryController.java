@@ -1,5 +1,6 @@
 package com.a101.fakediary.diary.controller;
 
+import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
@@ -33,9 +34,14 @@ public class DiaryController {
         }
     }
 
-    @PostMapping("/cards")
+    @PostMapping("/cardIdList")
     public ResponseEntity<?> saveDiaryWithCardList(@RequestBody List<Long> cardIdList) {
-        return null;
+        try {
+            DiaryResultDto diaryResultDto = diaryService.getResultDto(cardIdList);
+            return new ResponseEntity<>(diaryResultDto, HttpStatus.OK);
+        } catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @ApiOperation(value = "일기 상세 조회")

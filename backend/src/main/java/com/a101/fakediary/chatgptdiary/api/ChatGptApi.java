@@ -39,38 +39,12 @@ public class ChatGptApi {
         this.TEMPERATURE = TEMPERATURE;
     }
 
-
-//    /**
-//     * Chat-GPT에게 카드로부터 추출한 등장인물(characters), 장소(places), 키워드(keywords)들을 이용해 프롬프트를 생성해 이야기를 받도록 함
-//     * @param characters : 등장인물 리스트
-//     * @param places : 장소 리스트
-//     * @param keywords : 키워드 리스트
-//     * @return : 생성된 이야기
-//     */
-//    public String askGpt(List<String> characters, List<String> places, List<String> keywords) {
-//        ChatGptDiaryRequestDto chatGptDiaryRequestDto = ChatGptDiaryRequestDto.builder()
-//                .model("gpt-3.5-turbo")
-//                .messages(new ArrayList<>())
-//                .maxTokens(3000)
-//                .n(1)
-////                .stop(null)
-//                .temperature(0.5)
-//                .build();
-//
-////        chatGptRequestDto.getMessages().add(Map.of("role", "system", "content", ChatGptPrompts.generateSystemPrompt()));
-////        chatGptRequestDto.getMessages().add(Map.of("role", "user", "content", ChatGptPrompts.generateUserPrompt(characters, places, keywords)));
-//        chatGptDiaryRequestDto.getMessages().add(new Message("system", ChatGptPrompts.generateSystemPrompt()));
-//        chatGptDiaryRequestDto.getMessages().add(new Message("user", ChatGptPrompts.generateUserPrompt(characters, places, keywords)));
-////        HttpEntity<ChatGptDiaryRequestDto> chatGptRequestDtoHttpEntity = new HttpEntity<>(chatGptDiaryRequestDto, headers);
-//        return null;
-//    }
-
     /**
      * Chat-GPT에게 카드로부터 추출한 등장인물(characters), 장소(places), 키워드(keywords)들을 이용해 프롬프트를 생성해 이야기를 받도록 함
      * @param characters : 등장인물 리스트
      * @param places : 장소 리스트
      * @param keywords : 키워드 리스트
-     * @return : 생성된 이야기
+     * @return : DiaryResultDto : ChatGPT가 만들어준 title, subtitle, summary, content와 그 대답이 나온 prompt를 묶어 반환함
      */
     public DiaryResultDto askGpt(List<String> characters, List<String> places, List<String> keywords) throws Exception {
         ChatGptDiaryRequestDto requestDto = ChatGptDiaryRequestDto.builder()
