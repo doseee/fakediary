@@ -87,7 +87,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   changeSelector() {
     var maxScrollValue = _scrollController.position.maxScrollExtent;
     var scrollValue = _scrollController.offset.round();
-    var divisor = (maxScrollValue / (details.length + 2)) + 20;
+    var divisor = (maxScrollValue / (details.length + 2)) + 80;
     var slideNum = (scrollValue / divisor).round();
     setState(() {
       this.slideNum = slideNum;
@@ -96,7 +96,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
     var isTransparent = false;
     if(slideNum == 0){
       isExpanded = true;
-    }else if(slideNum > 0 && slideNum < details.length){
+    }else if(slideNum > 0 && slideNum <= details.length){
       isTransparent = true;
       isExpanded = false;
     }
