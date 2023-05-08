@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/ChangeButton.dart';
 import '../widgets/appbar.dart';
+import 'diary_detail.dart';
 
 class DiaryListScreen extends StatefulWidget {
   final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
@@ -130,10 +130,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                   context,
                                   MaterialPageRoute(
                                     //Todo; [수정필요] 일기 디테일 페이지로 이동
-                                    builder: (context) =>
-                                        DiaryDetailCoverScreen(
+                                    builder: (context) => DiaryDetailScreen(
                                       diaryId: diaryId,
-                                      exchangeSituation: exchangeSituation,
+                                      // exchangeSituation: exchangeSituation,
                                     ),
                                   ));
                             },
@@ -285,9 +284,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   Widget buildList(snapshot) {
     return GridView.count(
       crossAxisCount: 2,
-      childAspectRatio: 0.9,
+      childAspectRatio: 0.85,
       mainAxisSpacing: 10.0,
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.symmetric(horizontal: 10.0),
       children: List.generate(snapshot.length, (index) {
         print('length : ${snapshot.length}');
         return InkWell(
@@ -298,15 +297,16 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 snapshot[index].summary);
           },
           child: Card(
-              color: Colors.transparent,
+              color: Colors.blue,
               elevation: 0.0,
               child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   Card(
                     color: Colors.transparent,
                     elevation: 0.0,
                     child: Column(
-                      children: <Widget>[
+                      children: [
                         Container(
                           width: 100,
                           height: 140,
@@ -323,17 +323,16 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                             color: Colors.white,
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            snapshot[index].title,
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 16),
-                          ),
-                        ),
                       ],
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Text(
+                      snapshot[index].title,
+                      style: TextStyle(color: Colors.white60, fontSize: 16),
+                    ),
+                  ),
                 ],
               )),
         );
