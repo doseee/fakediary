@@ -24,10 +24,11 @@ class SearchFriendModel {
   late final Null providerId;
   late final bool randomExchanged;
 
-  AutoGenerate.fromJson(Map<String, dynamic> json){
+  SearchFriendModel.fromJson(Map<String, dynamic> json){
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    memberId = json['memberId'];
+    memberId = json['mem'
+        'berId'];
     email = json['email'];
     password = json['password'];
     nickname = json['nickname'];

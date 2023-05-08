@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/services/api_service.dart';
+import 'package:lottie/lottie.dart';
 
 class FriendAdd extends StatefulWidget {
   const FriendAdd({super.key});
@@ -36,8 +38,45 @@ Widget _friendWidget() {
   );
 }
 
+Widget _buttonSearch() {
+  return GestureDetector(
+      onTap: () async {
+        // if (_formKey.currentState!.validate()) {
+        //   print(_emailController.text);
+        //   print(_passwordController.text);
+        //   final bool result = await ApiService.login(
+        //       _emailController.text, _passwordController.text);
+        //   if (!mounted) return;
+        //   if (result) {
+        //     Navigator.push(context,
+        //         MaterialPageRoute(builder: (context) => HomeScreen()));
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       SnackBar(
+        //         content: Center(child: Text('login success!')),
+        //       ),
+        //     );
+        //   } else {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       SnackBar(
+        //         content: Center(child: Text('login failed.')),
+        //       ),
+        //     );
+        //   }
+        // }
+      },
+      child: Center(
+        child: Lottie.asset('assets/lottie/searchFriend.json')
+      ));
+}
+
 class _FriendAddState extends State<FriendAdd> {
   late String searchText;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {

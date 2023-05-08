@@ -903,20 +903,51 @@ class ApiService {
     }
   }
 
-static Future<List<SearchFriendModel>> getSearchFriend (String nickname)
-async {
-final SharedPreferences prefs = await SharedPreferences.getInstance();
-int? memberId = prefs.getInt('memberId');
+  Future<List<SearchFriendModel>> getSearchFriends(
+      String nickname) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
 
-final response = await http.get(Uri.parse('$baseUrl/friendship/search/$nickname/$memberId'));
+    final response = await http
+        .get(Uri.parse('$baseUrl/friendship/search/$nickname/$memberId'));
 
-if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<SearchFriendModel> searchedFriends = jsonResponse
+              .map((dynamic item) => SearchFriendModel.fromJson(item))
+              .toList() ??
+          [];
+      return searchedFriends;
+    } else if (response.statusCode == 204) {
+      return [];
+    } else {
+      throw Exception('일기 리스트 로딩에 실패했습니다');
+    }
+  }
 
-  SearchFriendModel jsonResponse = SearchFriendModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-  List<
-  return newFriend; SearchFriendModel
-}
+  static Future<bool> AddFriend(int receiverId) async {
 
-}
+    SharedPreferences prefs =await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    final AddFriendDto = {
+      "receiverId": receiverId,
+      "senderId": memberId
+    };
+
+    final response = await http.post(Uri.parse('$baseUrl/friendrequest/request'),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: json.encode(AddFriendDto));
+
+    if( response.statusCode == 200 ) {
+      print('success');
+      return true;
+    } else {
+      print('fail');
+      return false;
+    }
+  }
 
 }
