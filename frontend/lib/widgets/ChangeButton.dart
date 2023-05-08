@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/theme.dart';
 import '../screens/friend_screen.dart';
-import '../screens/home_screen.dart';
+import '../screens/old_home_screen.dart';
 
 
 class ChangeButton extends StatelessWidget {

@@ -25,6 +25,7 @@ public class DiaryResponseDto {
     private String summary;
     private boolean isExchanged;
     private EGenre[] genre;
+    private String[] diaryImageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

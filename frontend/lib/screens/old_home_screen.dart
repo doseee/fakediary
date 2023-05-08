@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'exchange_animation/gift_card_list_page.dart';
 // import 'package:frontend/screens/diary-list-filter.dart';
-import 'package:frontend/screens/menu_screen.dart';
+import 'package:frontend/screens/old_menu_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class OldHomeScreen extends StatefulWidget {
+  const OldHomeScreen({super.key});
 
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<HomeScreen> {
+class _MainScreenState extends State<OldHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -91,7 +91,7 @@ class _MainScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => TestPage()),
+                                builder: (context) => HomeScreen()),
                           );
                         },
                         icon: Image.asset(

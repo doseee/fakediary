@@ -69,7 +69,7 @@ class _SearchAnimationPainter extends CustomPainter {
 
     // define the paint style
     final Paint paint = Paint()
-      ..color = Color(0xff638A9B)
+      ..color = Color(0xFFBEABA1)
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;

@@ -26,7 +26,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   /// 3은 친구 일기 보기 && 카드, 교환버튼 표시 안됨
   int exchangeSituation = 1;
   int diaryId = -1;
-  String title = '', summary = '';
+  String title = '', summary = '', imageUrl = '';
 
   @override
   void initState() {
@@ -43,14 +43,16 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   }
 
   onSelect(
-    int diaryId,
-    String title,
-    String summary,
-  ) {
+      int diaryId,
+      String title,
+      String summary,
+      String imageUrl,
+      ) {
     setState(() {
       this.diaryId = diaryId;
       this.title = title;
       this.summary = summary;
+      this.imageUrl = imageUrl;
     });
   }
 
@@ -66,16 +68,18 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
     return Row(
       children: [
         Flexible(
-          flex: 1,
-          child: Padding(
-            padding: EdgeInsets.only(left: 10, right: 5),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-            ),
-          ),
-        ),
+            flex: 1,
+            child: Padding(
+              padding: EdgeInsets.only(left: 10, right: 5),
+              child: Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+            )),
         Flexible(
           flex: 1,
           child: Padding(
@@ -132,9 +136,10 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                     //Todo; [수정필요] 일기 디테일 페이지로 이동
                                     builder: (context) =>
                                         DiaryDetailCoverScreen(
-                                      diaryId: diaryId,
-                                      exchangeSituation: exchangeSituation,
-                                    ),
+                                          diaryId: diaryId,
+                                          exchangeSituation: exchangeSituation,
+                                          imageUrl: imageUrl,
+                                        ),
                                   ));
                             },
                             style: ElevatedButton.styleFrom(
@@ -147,7 +152,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                             child: Text(
                               '상세보기',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
+                              TextStyle(color: Colors.white, fontSize: 14),
                             )),
                       ),
                     ),
@@ -236,7 +241,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                                                       color: Colors
                                                                           .white,
                                                                       fontSize:
-                                                                          14),
+                                                                      14),
                                                                 ),
                                                                 height: 100);
                                                           });
@@ -274,8 +279,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     },
                   ),
                 )
-                // child: Container(),
-                )
+              // child: Container(),
+            )
           ],
         ),
       ),
@@ -283,19 +288,20 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   }
 
   Widget buildList(snapshot) {
+    print('imgUrl: ${snapshot[0].diaryImageUrl[0]}');
     return GridView.count(
       crossAxisCount: 2,
       childAspectRatio: 0.9,
       mainAxisSpacing: 10.0,
       padding: EdgeInsets.all(10.0),
       children: List.generate(snapshot.length, (index) {
-        print('length : ${snapshot.length}');
+        print('pic : ${snapshot[index].diaryImageUrl[0]}');
         return InkWell(
           onTap: () {
             print(
                 '${snapshot[index].diaryId}, ${snapshot[index].title}, ${snapshot[index].summary}');
             onSelect(snapshot[index].diaryId, snapshot[index].title,
-                snapshot[index].summary);
+                snapshot[index].summary, snapshot[index].diaryImageUrl[0]);
           },
           child: Card(
               color: Colors.transparent,
@@ -311,16 +317,16 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                           width: 100,
                           height: 140,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            border: Border.all(color: Colors.white60, width: 4),
-                            // Todo; 나중에 커버 이미지 url로 변경
-                            // image: DecorationImage(
-                            //     fit: BoxFit.cover,
-                            //     image: NetworkImage(
-                            //         snapshot[index].coverUrl
-                            //     )
-                            // )
-                            color: Colors.white,
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(10)),
+                              border:
+                              Border.all(color: Colors.white60, width: 4),
+                              // Todo; 나중에 커버 이미지 url로 변경
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                      snapshot[index].diaryImageUrl[0]))
+                            // color: Colors.white,
                           ),
                         ),
                         Padding(
@@ -328,7 +334,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                           child: Text(
                             snapshot[index].title,
                             style:
-                                TextStyle(color: Colors.white60, fontSize: 16),
+                            TextStyle(color: Colors.white60, fontSize: 16),
                           ),
                         ),
                       ],
