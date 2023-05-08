@@ -33,6 +33,11 @@ public class DiaryController {
         }
     }
 
+    @PostMapping("/cards")
+    public ResponseEntity<?> saveDiaryWithCardList(@RequestBody List<Long> cardIdList) {
+        return null;
+    }
+
     @ApiOperation(value = "일기 상세 조회")
     @GetMapping("/detail/{diaryId}")
     public ResponseEntity<?> detailDiary(@PathVariable Long diaryId) {

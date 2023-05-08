@@ -1,9 +1,12 @@
 package com.a101.fakediary.diary.service;
 
 import com.a101.fakediary.card.dto.response.CardMadeDiaryResponseDto;
+import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
+import com.a101.fakediary.chatgptdiary.api.ChatGptApi;
+import com.a101.fakediary.chatgptdiary.dto.result.ResultDto;
 import com.a101.fakediary.diary.dto.*;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
@@ -55,6 +58,7 @@ public class DiaryService {
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
     private final PapagoTranslator papagoTranslator;
+    private final ChatGptApi chatGptApi;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     //aws credentials key
@@ -387,5 +391,27 @@ public class DiaryService {
             return trans;
         }
         return null;
+    }
+
+    @Transactional(readOnly = true)
+    public ResultDto getResultDto(List<Long> cardList) throws Exception {
+        List<String> characters = new ArrayList<>();
+        List<String> places = new ArrayList<>();
+        List<String> keywords = new ArrayList<>();
+
+        for(Long cardPk : cardList) {
+            Card card = cardRepository.findById(cardPk).orElseThrow(() -> new Exception("cardList에 저장된 카드 PK와 일치하는 카드가 없음"));
+            CardSaveResponseDto dto = CardSaveResponseDto.getCardSaveResponseDto(card);
+            
+            if(dto.getBaseName() != null && !dto.getBaseName().equals(""))  //  카드에 등장인물이 존재할 경우
+                characters.add(dto.getBaseName());
+            if(dto.getBasePlace() != null && !dto.getBasePlace().equals(""))    //  카드에 장소가 존재할 경우
+                places.add(dto.getBasePlace());
+            if(dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드가 존재하는 경우
+                keywords.addAll(dto.getKeywords());
+            }
+        }
+
+        return chatGptApi.askGpt(characters, places, keywords);
     }
 }
