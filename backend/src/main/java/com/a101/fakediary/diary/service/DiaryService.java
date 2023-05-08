@@ -16,6 +16,8 @@ import com.a101.fakediary.member.repository.MemberRepository;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -53,6 +55,7 @@ public class DiaryService {
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
     private final PapagoTranslator papagoTranslator;
+    private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     //aws credentials key
     @Value("${cloud.aws.credentials.access-key}")
@@ -64,6 +67,9 @@ public class DiaryService {
     //  버킷
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    // stable diffusion 서버 url 매일 달라짐 수동으로 수정 필요
+    private String stableDiffusionURL = "https://f44ca12b95ab.ngrok.app"; //230508
 
     private Diary toEntity(DiaryRequestDto dto) {
         return Diary.builder()
@@ -161,7 +167,7 @@ public class DiaryService {
 
         Map<String, Object> map = new HashMap<>();
         //중요한것은 prompt, steps, sampler_index
-        map.put("prompt", dto.getTitle());
+        map.put("prompt", translate(dto.getTitle()));
         map.put("steps", 20);
         map.put("sampler_index", "Euler a");
         map.put("enable_hr", false);
@@ -211,7 +217,7 @@ public class DiaryService {
 
 
         ClientResponse response = webClient.post()
-                .uri("https://139c90dbebf5.ngrok.app/sdapi/v1/txt2img")//매일매일 주소 바뀜
+                .uri(stableDiffusionURL+"/sdapi/v1/txt2img")//매일매일 주소 바뀜
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(map)
                 .exchange()
@@ -233,9 +239,7 @@ public class DiaryService {
             // 이미지 url얻고
             stableDiffusionThumbnailUrl = s3client.getUrl(bucket, key).toString();
 
-            // 이미지url찍어보기 잘찍힘.
-//            System.out.println(stableDiffusionThumbnailUrl);
-            List<String> dtoImageUrl = dto.getDiaryImageUrl();
+            List<String> dtoImageUrl = new ArrayList<>();
             dtoImageUrl.add(stableDiffusionThumbnailUrl);
             dto.setDiaryImageUrl(dtoImageUrl);
 
@@ -324,6 +328,8 @@ public class DiaryService {
         Matcher matcher = pattern.matcher(translatedText);
         if (matcher.find()) {
             String trans = matcher.group(1);
+            logger.info("번역할 언어 : {}", text);
+            logger.info("번역된 언어 : {}", trans);
             return trans;
         }
         return null;
