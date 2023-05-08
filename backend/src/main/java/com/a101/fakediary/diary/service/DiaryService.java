@@ -24,7 +24,6 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,9 +67,6 @@ public class DiaryService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    // stable diffusion 서버 url 매일 달라짐 수동으로 수정 필요
-    private String stableDiffusionURL = "https://f44ca12b95ab.ngrok.app"; //230508
-
     private Diary toEntity(DiaryRequestDto dto) {
         return Diary.builder()
                 .member(memberRepository.findByMemberId(dto.getMemberId()))
@@ -107,7 +103,6 @@ public class DiaryService {
         StringBuilder names = new StringBuilder();
         StringBuilder places = new StringBuilder();
         final String DELIMITER = "@";//구분문자
-        final char CHAR_DELIMITER = '@';//구분문자
 
         List<Long> cardIds = dto.getCardIds();
         for (Long id : cardIds) {
@@ -121,15 +116,18 @@ public class DiaryService {
                 places.append(card.getBasePlace()).append(DELIMITER);
         }
 
-        if (0 < keywords.length() && keywords.charAt(keywords.length() - 1) == CHAR_DELIMITER) {
-            keywords.deleteCharAt(keywords.length() - 1); // 마지막 골뱅이 제거
+        //마지막 골뱅이 제거
+        if (0 < keywords.length() && keywords.toString().endsWith(DELIMITER)) {
+            keywords.setLength(keywords.length() - 1);
         }
-        if (0 < names.length() && names.charAt(names.length() - 1) == CHAR_DELIMITER) {
-            names.deleteCharAt(names.length() - 1);
+        if (0 < names.length() && names.toString().endsWith(DELIMITER)) {
+            names.setLength(names.length() - 1);
         }
-        if (0 < places.length() && places.charAt(places.length() - 1) == CHAR_DELIMITER) {
-            places.deleteCharAt(places.length() - 1);
+        if (0 < places.length() && places.toString().endsWith(DELIMITER)) {
+            places.setLength(places.length() - 1);
         }
+
+
         dto.setKeyword(keywords.toString());
         dto.setCharacters(names.toString());
         dto.setPlaces(places.toString());
@@ -219,8 +217,11 @@ public class DiaryService {
         String key = "image-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".png";
 
 
+        // stable diffusion 서버 url 매일 달라짐 수동으로 수정 필요
+        // 230508
+        String STABLE_DIFFUSION_URL = "https://f44ca12b95ab.ngrok.app";
         ClientResponse response = webClient.post()
-                .uri(stableDiffusionURL+"/sdapi/v1/txt2img")//매일매일 주소 바뀜
+                .uri(STABLE_DIFFUSION_URL +"/sdapi/v1/txt2img")//매일매일 주소 바뀜
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(map)
                 .exchange()
