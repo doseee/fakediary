@@ -40,6 +40,13 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   // handle action
 }
 
+Future<void> _backgroundMessageHandler(RemoteMessage message) async {
+  print('Handling a background message: ${message.messageId}');
+  // print('Message data: ${message.data}');
+  // print((message.data['FLUTTER_NOTIFICATION_CLICK']));
+  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
+}
+
 void main() async {
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(
@@ -55,6 +62,7 @@ void main() async {
     provisional: false,
     sound: true,
   );
+  FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
   print('User granted permission: ${settings.authorizationStatus}');
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message whilst in the foreground!');

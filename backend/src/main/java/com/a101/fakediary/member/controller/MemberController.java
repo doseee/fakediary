@@ -102,4 +102,19 @@ public class MemberController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    /**
+     * for developing : 모든 회원 랜덤 교환 사용 내역 초기화
+     * @return
+     */
+    @PutMapping("/reset")
+    public ResponseEntity<?> setAllMembersRandomExchangedUnused() {
+        try {
+            memberService.setAllMembersRandomExchangedUnused();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

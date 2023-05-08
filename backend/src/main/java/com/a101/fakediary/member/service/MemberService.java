@@ -127,4 +127,11 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("member does not exists."));
         return member.isRandomExchanged();
     }
+
+    @Transactional
+    public void setAllMembersRandomExchangedUnused() {
+        List<Member> allMembers = memberRepository.findAll();
+        for(Member member : allMembers)
+            member.setRandomExchanged(false);
+    }
 }

@@ -1,14 +1,16 @@
 package com.a101.fakediary.diary.service;
 
 import com.a101.fakediary.card.dto.response.CardMadeDiaryResponseDto;
+import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
+import com.a101.fakediary.chatgptdiary.api.ChatGptApi;
+import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.diary.dto.*;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
-import com.a101.fakediary.diaryimage.repository.DiaryImageRepository;
 import com.a101.fakediary.diaryimage.service.DiaryImageService;
 import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
@@ -35,8 +37,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,6 +55,7 @@ public class DiaryService {
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
     private final PapagoTranslator papagoTranslator;
+    private final ChatGptApi chatGptApi;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     //aws credentials key
@@ -370,6 +371,13 @@ public class DiaryService {
         return ret;
     }
 
+    @Transactional
+    public void setAllDiariesRandomExchangedUnused() {
+        List<Diary> allDiaries = diaryRepository.findAll();
+        for (Diary diary : allDiaries)
+            diary.setExchanged(false);
+    }
+
     @Async
     public String translate(String text) { //메소드 불러서 바꾸고 싶은 내용 text에 넣으면 한 -> 영 바꿔서 return
         String translatedText = papagoTranslator.translate(text).block();
@@ -382,5 +390,36 @@ public class DiaryService {
             return trans;
         }
         return null;
+    }
+
+    @Transactional(readOnly = true)
+    public DiaryResultDto getResultDto(List<Long> cardList) throws Exception {
+        List<String> characters = new ArrayList<>();
+        List<String> places = new ArrayList<>();
+        List<String> keywords = new ArrayList<>();
+
+        for(Long cardPk : cardList) {
+            Card card = cardRepository.findById(cardPk).orElseThrow(() -> new Exception("cardList에 저장된 카드 PK와 일치하는 카드가 없음"));
+            CardSaveResponseDto dto = CardSaveResponseDto.getCardSaveResponseDto(card);
+            
+            if(dto.getBaseName() != null && !dto.getBaseName().equals(""))  //  카드에 등장인물이 존재할 경우
+                characters.add(dto.getBaseName());
+            if(dto.getBasePlace() != null && !dto.getBasePlace().equals(""))    //  카드에 장소가 존재할 경우
+                places.add(dto.getBasePlace());
+            if(dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드가 존재하는 경우
+                keywords.addAll(dto.getKeywords());
+            }
+        }
+
+        return chatGptApi.askGpt(characters, places, keywords);
+    }
+
+    @Transactional
+    public void createDiary(List<Long> cardList) throws Exception {
+        DiaryResultDto diaryResultDto = getResultDto(cardList);
+        String title = diaryResultDto.getTitle();
+        String summary = diaryResultDto.getSummary();
+        List<String> subtitles = diaryResultDto.getSubtitles();
+        List<List<String>> contents = diaryResultDto.getContents();
     }
 }
