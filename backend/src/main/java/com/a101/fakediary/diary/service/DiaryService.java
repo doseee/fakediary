@@ -82,6 +82,7 @@ public class DiaryService {
                 .title(dto.getTitle()) //프론트GPT
                 .detail(dto.getDetail()) //프론트GPT
                 .summary(dto.getSummary()) //프론트GPT
+                .subtitles(dto.getSubtitles())
                 .build();
     }
 
@@ -119,26 +120,28 @@ public class DiaryService {
         StringBuilder keywords = new StringBuilder();
         StringBuilder names = new StringBuilder();
         StringBuilder places = new StringBuilder();
+        final String DELIMITER = "@";//구분문자
+        final char CHAR_DELIMITER = '@';//구분문자
 
         List<Long> cardIds = dto.getCardIds();
         for (Long id : cardIds) {
             Card card = cardRepository.findById(id).orElseThrow();
             //빈것보냈을때 null로저장되는지 ""로저장되는지 확인필요 값이 존재하면 이어줌
             if (card.getKeyword() != null && !card.getKeyword().equals(""))
-                keywords.append(card.getKeyword()).append("@"); //키워드@키워드@키워드@ 식으로 제작
+                keywords.append(card.getKeyword()).append(DELIMITER); //키워드@키워드@키워드@ 식으로 제작
             if (card.getBaseName() != null && !card.getBaseName().equals(""))
-                names.append(card.getBaseName()).append("@");
+                names.append(card.getBaseName()).append(DELIMITER);
             if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
-                places.append(card.getBasePlace()).append("@");
+                places.append(card.getBasePlace()).append(DELIMITER);
         }
 
-        if (0 < keywords.length() && keywords.charAt(keywords.length() - 1) == '@') {
+        if (0 < keywords.length() && keywords.charAt(keywords.length() - 1) == CHAR_DELIMITER) {
             keywords.deleteCharAt(keywords.length() - 1); // 마지막 골뱅이 제거
         }
-        if (0 < names.length() && names.charAt(names.length() - 1) == '@') {
+        if (0 < names.length() && names.charAt(names.length() - 1) == CHAR_DELIMITER) {
             names.deleteCharAt(names.length() - 1);
         }
-        if (0 < places.length() && places.charAt(places.length() - 1) == '@') {
+        if (0 < places.length() && places.charAt(places.length() - 1) == CHAR_DELIMITER) {
             places.deleteCharAt(places.length() - 1);
         }
         dto.setKeyword(keywords.toString());
