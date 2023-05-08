@@ -33,7 +33,7 @@ BoxDecoration BgThemeGradientDiary(){
       //       Color(0xff203A43),
       //       Color(0xff0F2027),
       //     ])
-    color: Color(0xff0F2027)
+    color: Color(0xff0E2526)
   );
 }
 

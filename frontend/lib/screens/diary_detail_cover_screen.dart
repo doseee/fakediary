@@ -5,9 +5,10 @@ import 'package:frontend/screens/diary_detail_screen.dart';
 
 class DiaryDetailCoverScreen extends StatefulWidget {
   final int diaryId;
-  final int exchangeSituation; // 내 일기는 1 0r 2로 넘어오고 친구가 보낸 일기는 3으로 넘길 것
+  final int exchangeSituation;
+  final String imageUrl;// 내 일기는 1 0r 2로 넘어오고 친구가 보낸 일기는 3으로 넘길 것
 
-  const DiaryDetailCoverScreen({Key? key, required this.diaryId, required this.exchangeSituation})
+  const DiaryDetailCoverScreen({Key? key, required this.diaryId, required this.exchangeSituation, required this.imageUrl})
       : super(key: key);
 
   @override
@@ -83,9 +84,9 @@ class _DiaryDetailCoverScreenState extends State<DiaryDetailCoverScreen>
               duration: const Duration(seconds: 2),
               opacity: _showCover ? 1.0 : 0.0,
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/img/temp.jpg'),
+                    image: NetworkImage( widget.imageUrl ),
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -11,6 +11,7 @@ class DiaryModel {
     required this.detail,
     required this.summary,
     required this.genre,
+    required this.diaryImageUrl,
     required this.exchanged,
   });
   late final int diaryId;
@@ -24,6 +25,7 @@ class DiaryModel {
   late final String detail;
   late final String summary;
   late final List<String> genre;
+  late final List<String> diaryImageUrl;
   late final bool exchanged;
 
   DiaryModel.fromJson(Map<String, dynamic> json) {
@@ -48,6 +50,7 @@ class DiaryModel {
     genre = json['genre'] != null
         ? List.castFrom<dynamic, String>(json['genre'])
         : [];
+    diaryImageUrl = json['diaryImageUrl'].isEmpty ? ['https://i.pinimg.com/originals/0c/13/17/0c131751a945ab87dfcbc819a805b954.jpg'] : List<String>.from(json['diaryImageUrl'].map((dynamic x) => x as String));
     exchanged = json['exchanged'];
   }
 
@@ -64,6 +67,7 @@ class DiaryModel {
     data['detail'] = detail;
     data['summary'] = summary;
     data['genre'] = genre;
+    data['diaryImageUrl'] = diaryImageUrl;
     data['exchanged'] = exchanged;
     return data;
   }
