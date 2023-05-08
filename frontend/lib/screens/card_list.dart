@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
-import 'package:frontend/screens/menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+// import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/theme.dart';
 import '../widgets/appbar.dart';
 

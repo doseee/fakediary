@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/card_result.dart';
-import 'package:frontend/screens/menu_screen.dart';
+import 'package:frontend/screens/old_menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:shared_preferences/shared_preferences.dart';
