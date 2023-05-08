@@ -25,8 +25,8 @@ public class DiaryController {
     @PostMapping
     public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
         try {
-            Diary diary = diaryService.createDiary(dto);
-            return ResponseEntity.ok().body(diary);
+            DiaryResponseDto diaryResponseDto = diaryService.createDiary(dto);
+            return ResponseEntity.ok().body(diaryResponseDto);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

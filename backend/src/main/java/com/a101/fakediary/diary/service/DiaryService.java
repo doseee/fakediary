@@ -97,7 +97,7 @@ public class DiaryService {
     }
 
     @Transactional
-    public Diary createDiary(DiaryRequestDto dto) throws Exception {
+    public DiaryResponseDto createDiary(DiaryRequestDto dto) throws Exception {
         //dto 키워드 채우기
         StringBuilder keywords = new StringBuilder();
         StringBuilder names = new StringBuilder();
@@ -280,7 +280,15 @@ public class DiaryService {
         //-- end stable diffusion 활용하여 썸네일 생성 end--
 
 
-        return diary;
+        //장르 추가
+        DiaryResponseDto returnDto = new DiaryResponseDto(diary);
+        List<String> genres = genreService.searchGenre(diary.getDiaryId());
+        EGenre[] genreArray = genres.stream()
+                .map(EGenre::valueOf)
+                .toArray(EGenre[]::new);
+        returnDto.setGenre(genreArray);
+
+        return returnDto;
     }
 
     @Transactional(readOnly = true)
