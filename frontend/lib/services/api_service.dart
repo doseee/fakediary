@@ -671,6 +671,8 @@ class ApiService {
           .toList();
 
       return friends;
+    } else if (response.statusCode == 204) {
+      return [];
     } else {
       throw Exception('친구 목록을 불러오는 데 실패했습니다');
     }
