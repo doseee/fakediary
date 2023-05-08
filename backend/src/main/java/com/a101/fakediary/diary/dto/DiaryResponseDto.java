@@ -4,6 +4,7 @@ import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.enums.EGenre;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.StringTokenizer;
 
 @Getter
@@ -25,6 +26,8 @@ public class DiaryResponseDto {
     private boolean isExchanged;
     private EGenre[] genre;
     private String[] diaryImageUrl;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public DiaryResponseDto(Diary entity) {
         int i = 0;
@@ -80,5 +83,7 @@ public class DiaryResponseDto {
         this.detail = entity.getDetail();
         this.summary = entity.getSummary();
         this.isExchanged = entity.isExchanged();
+        this.createdAt = entity.getCreatedAt();
+        this.updatedAt = entity.getUpdatedAt();
     }
 }
