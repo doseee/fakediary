@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
+import 'package:frontend/screens/friend_add.dart';
 import 'package:frontend/screens/menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
@@ -294,7 +294,8 @@ class _FriendScreenState extends State<FriendScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      print('Go frined add page');
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => FriendAdd()));
                     },
                     child: Image(
                       image: AssetImage(
