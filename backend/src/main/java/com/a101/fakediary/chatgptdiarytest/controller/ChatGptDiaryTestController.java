@@ -31,11 +31,12 @@ public class ChatGptDiaryTestController {
     private String apiUrl;
 
     @GetMapping("/chat")
-    public String chat(@RequestParam String prompt) {
+    public ChatGptDiaryTestResponseDto chat(@RequestParam String prompt) {
         //  create request
         ChatGptDiaryTestRequestDto requestDto = ChatGptDiaryTestRequestDto.builder()
                 .model(model)
                 .n(1)
+                .maxTokens(3000)
                 .temperature(0.5)
                 .messages(new ArrayList<>())
                 .build();
@@ -48,9 +49,11 @@ public class ChatGptDiaryTestController {
         //  call the API
         ChatGptDiaryTestResponseDto responseDto = restTemplate.postForObject(apiUrl, requestDto, ChatGptDiaryTestResponseDto.class);
 
-        if(responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty())
-            return "No response";
+        if(responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
+            log.info("no response!!!");
+            return null;
+        }
 
-        return responseDto.getChoices().get(0).getMessage().getContent();
+        return responseDto;
     }
 }
