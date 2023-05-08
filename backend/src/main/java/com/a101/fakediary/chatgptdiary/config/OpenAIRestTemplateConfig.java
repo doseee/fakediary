@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 public class OpenAIRestTemplateConfig {
     private static String openAiApiKey;
 
-    public OpenAIRestTemplateConfig(@Value("${fake-diary.gpt.api-key}") String openAiApiKey) {
+    public OpenAIRestTemplateConfig(@Value("${fake-diary.chat-gpt.api-key}") String openAiApiKey) {
         OpenAIRestTemplateConfig.openAiApiKey = openAiApiKey;
     }
 //    @Bean

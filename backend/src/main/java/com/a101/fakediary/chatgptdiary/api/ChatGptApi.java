@@ -26,11 +26,11 @@ public class ChatGptApi {
     private final Integer N;
     private final Double TEMPERATURE;
 
-    public ChatGptApi(@Value("${fake-diary.gpt.model}")String MODEL,
-                      @Value("${fake-diary.gpt.chat-gpt-base-url}")String API_URL,
-                      @Value("${fake-diary.gpt.max-tokens}")Integer MAX_TOKENS,
-                      @Value("${fake-diary.gpt.n}")Integer N,
-                      @Value("${fake-diary.gpt.temperature}")Double TEMPERATURE) {
+    public ChatGptApi(@Value("${fake-diary.chat-gpt.model}")String MODEL,
+                      @Value("${fake-diary.chat-gpt.base-url}")String API_URL,
+                      @Value("${fake-diary.chat-gpt.max-tokens}")Integer MAX_TOKENS,
+                      @Value("${fake-diary.chat-gpt.n}")Integer N,
+                      @Value("${fake-diary.chat-gpt.temperature}")Double TEMPERATURE) {
         this.restTemplate = OpenAIRestTemplateConfig.openAiRestTemplate();
         this.MODEL = MODEL;
         this.API_URL = API_URL;
@@ -82,7 +82,8 @@ public class ChatGptApi {
                 .build();
 
         requestDto.getMessages().add(new Message("system", ChatGptPrompts.generateSystemPrompt()));
-        requestDto.getMessages().add(new Message("user", ChatGptPrompts.generateUserPrompt(characters, places, keywords)));
+        String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords);
+        requestDto.getMessages().add(new Message("user", prompt));
 
         ChatGptDiaryResponseDto responseDto = restTemplate.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
 
@@ -96,6 +97,7 @@ public class ChatGptApi {
 
         ObjectMapper objectMapper = new ObjectMapper();
         DiaryResultDto diaryResultDto = objectMapper.readValue(diaryContent, DiaryResultDto.class);
+        diaryResultDto.setPrompt(prompt);
 
         log.info("resultDto = " + diaryResultDto);
 
