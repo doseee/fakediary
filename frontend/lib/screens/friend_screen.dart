@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/friend_add.dart';
+import 'package:frontend/screens/friend_searchnew.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -296,7 +297,7 @@ class _FriendScreenState extends State<FriendScreen> {
                   GestureDetector(
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => FriendAdd()));
+                          MaterialPageRoute(builder: (context) => SearchScreen()));
                     },
                     child: Image(
                       image: AssetImage(
