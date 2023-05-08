@@ -29,7 +29,8 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
       setState(() {
         _cards = cards;
         // 선택한 카드의 인덱스를 찾습니다.
-        int index = _cards.indexWhere((card) => card.cardId == widget.cardIdFromList);
+        int index =
+            _cards.indexWhere((card) => card.cardId == widget.cardIdFromList);
         if (index != -1) {
           setState(() {
             selectedCards.insert(0, cards[index]);
@@ -278,11 +279,12 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
 
   Widget selectedList(selectedCards) {
     return GridView.count(
+      childAspectRatio: 0.6,
       crossAxisCount: 10,
       // 가로 방향으로 3개의 카드씩 표시
       crossAxisSpacing: 10.0,
       // 카드들의 가로 간격 설정
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.symmetric(horizontal: 10.0),
       // GridView 자체의 Padding 설정
       children: List.generate(
           // 카드 리스트 생성

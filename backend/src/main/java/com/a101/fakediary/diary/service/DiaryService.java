@@ -8,24 +8,24 @@ import com.a101.fakediary.diary.dto.*;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
+import com.a101.fakediary.diaryimage.repository.DiaryImageRepository;
 import com.a101.fakediary.diaryimage.service.DiaryImageService;
 import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.repository.MemberRepository;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -38,6 +38,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -53,6 +55,7 @@ public class DiaryService {
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
     private final PapagoTranslator papagoTranslator;
+    private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     //aws credentials key
     @Value("${cloud.aws.credentials.access-key}")
@@ -75,6 +78,7 @@ public class DiaryService {
                 .title(dto.getTitle()) //프론트GPT
                 .detail(dto.getDetail()) //프론트GPT
                 .summary(dto.getSummary()) //프론트GPT
+                .subtitles(dto.getSubtitles())
                 .build();
     }
 
@@ -88,39 +92,56 @@ public class DiaryService {
             for (String s : genre)
                 eGenres[i++] = EGenre.valueOf(s);
             tmp.setGenre(eGenres);
+            tmp.setDiaryImageUrl(diaryImageService.readDiaryImages(value.getDiaryId()));
             list.add(tmp);
         }
         return list;
     }
 
+    private DiaryResponseDto changeResponse(Diary diary) {
+        DiaryResponseDto tmp = new DiaryResponseDto(diary);
+        List<String> genre = genreService.searchGenre(tmp.getDiaryId());
+        EGenre[] eGenres = new EGenre[genre.size()];
+        int i = 0;
+        for (String s : genre)
+            eGenres[i++] = EGenre.valueOf(s);
+        tmp.setGenre(eGenres);
+        tmp.setDiaryImageUrl(diaryImageService.readDiaryImages(diary.getDiaryId()));
+        return tmp;
+    }
+
     @Transactional
     public Diary createDiary(DiaryRequestDto dto) throws Exception {
-        //dto 키워드 채우기
+        //dto 키워드+ 채우기
         StringBuilder keywords = new StringBuilder();
         StringBuilder names = new StringBuilder();
         StringBuilder places = new StringBuilder();
+        final String DELIMITER = "@";//구분문자
 
         List<Long> cardIds = dto.getCardIds();
         for (Long id : cardIds) {
             Card card = cardRepository.findById(id).orElseThrow();
             //빈것보냈을때 null로저장되는지 ""로저장되는지 확인필요 값이 존재하면 이어줌
             if (card.getKeyword() != null && !card.getKeyword().equals(""))
-                keywords.append(card.getKeyword()).append("@"); //키워드@키워드@키워드@ 식으로 제작
+                keywords.append(card.getKeyword()).append(DELIMITER); //키워드@키워드@키워드@ 식으로 제작
             if (card.getBaseName() != null && !card.getBaseName().equals(""))
-                names.append(card.getBaseName()).append("@");
+                names.append(card.getBaseName()).append(DELIMITER);
             if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
-                places.append(card.getBasePlace()).append("@");
+                places.append(card.getBasePlace()).append(DELIMITER);
         }
 
-        if (0 < keywords.length() && keywords.charAt(keywords.length() - 1) == '@') {
-            keywords.deleteCharAt(keywords.length() - 1); // 마지막 골뱅이 제거
+        //마지막 골뱅이 제거
+        if (0 < keywords.length() && keywords.toString().endsWith(DELIMITER)) {
+            keywords.setLength(keywords.length() - 1);
         }
-        if (0 < names.length() && names.charAt(names.length() - 1) == '@') {
-            names.deleteCharAt(names.length() - 1);
+        if (0 < names.length() && names.toString().endsWith(DELIMITER)) {
+            names.setLength(names.length() - 1);
         }
-        if (0 < places.length() && places.charAt(places.length() - 1) == '@') {
-            places.deleteCharAt(places.length() - 1);
+        if (0 < places.length() && places.toString().endsWith(DELIMITER)) {
+            places.setLength(places.length() - 1);
         }
+
+
         dto.setKeyword(keywords.toString());
         dto.setCharacters(names.toString());
         dto.setPlaces(places.toString());
@@ -128,7 +149,7 @@ public class DiaryService {
 
         //GPT API날려서 dto에 GPT관련 내용채우기
 
-        if(dto.getCharacters().equals("") && dto.getPlaces().equals("") && dto.getKeyword().equals(""))
+        if (dto.getCharacters().equals("") && dto.getPlaces().equals("") && dto.getKeyword().equals(""))
             throw new Exception("주인공,장소, 키워드 모두 존재하지 않음");
 
         //일기 생성
@@ -161,7 +182,7 @@ public class DiaryService {
 
         Map<String, Object> map = new HashMap<>();
         //중요한것은 prompt, steps, sampler_index
-        map.put("prompt", dto.getTitle());
+//        map.put("prompt", translate(dto.getTitle()));
         map.put("steps", 20);
         map.put("sampler_index", "Euler a");
         map.put("enable_hr", false);
@@ -207,56 +228,78 @@ public class DiaryService {
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
         AmazonS3 s3client = new AmazonS3Client(credentials);
 
-        String key = "image-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".png";
+//        안씀
+//        String key = "image-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".png";
 
 
-        ClientResponse response = webClient.post()
-                .uri("https://139c90dbebf5.ngrok.app/sdapi/v1/txt2img")//매일매일 주소 바뀜
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(map)
-                .exchange()
-                .block();
+        //StableDiffusion 이미지 만들기 썸네일, 삽화
+        // stable diffusion 서버 url 매일 달라짐 수동으로 수정 필요
+        // 230508
+        String STABLE_DIFFUSION_URL = "https://f44ca12b95ab.ngrok.app";
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String stableDiffusionThumbnailUrl;
-        if (response.statusCode().equals(HttpStatus.OK)) {//200응답
-            String responseBody = response.bodyToMono(String.class).block();
-            StableDiffusion200ResponseDto response200Dto = objectMapper.readValue(responseBody, StableDiffusion200ResponseDto.class);
-            String imageData = response200Dto.getImages().get(0);
-            byte[] decodedImg = Base64.getDecoder().decode(imageData.getBytes("UTF-8"));
-            Path destinationFile = Paths.get("image.png");
-            Files.write(destinationFile, decodedImg);
+        //subtitles 파싱해서 리스트로 들고있기
+        //큐에다가 제목, subtitle을 순서대로 하나씩 넣는다. 각각 썸네일, 삽화들 만들용도
+        Queue<String> diaryImagePrompt = new LinkedList<>();
+        diaryImagePrompt.add(translate(dto.getTitle()));
+        String[] subtitles = dto.getSubtitles().split(DELIMITER);
+        diaryImagePrompt.addAll(Arrays.asList(subtitles));
 
-            // S3에 업로드
-            s3client.putObject(bucket, key, destinationFile.toFile());
+        List<String> dtoImageUrl = new ArrayList<>(); // 다이어리 이미지 url들 저장할것
+        // Title, subtitle들 번역해서 프롬프트로 넣고 stablediffusion 이미지 생성
+        //아래작업은 비동기로하면 좋을것같은데.. 리팩토링시 봐야할듯
+        while (!diaryImagePrompt.isEmpty()) {
+            String poll = diaryImagePrompt.poll();
+            map.put("prompt", translate(poll));
 
-            // 이미지 url얻고
-            stableDiffusionThumbnailUrl = s3client.getUrl(bucket, key).toString();
+            ClientResponse response = webClient.post()
+                    .uri(STABLE_DIFFUSION_URL + "/sdapi/v1/txt2img")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(map)
+                    .exchange()
+                    .block();
 
-            // 이미지url찍어보기 잘찍힘.
-//            System.out.println(stableDiffusionThumbnailUrl);
-            List<String> dtoImageUrl = dto.getDiaryImageUrl();
-            dtoImageUrl.add(stableDiffusionThumbnailUrl);
-            dto.setDiaryImageUrl(dtoImageUrl);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String stableDiffusionResultUrl;
+            if (response.statusCode().equals(HttpStatus.OK)) {//200응답
+                String responseBody = response.bodyToMono(String.class).block();
+                StableDiffusion200ResponseDto response200Dto = objectMapper.readValue(responseBody, StableDiffusion200ResponseDto.class);
+                String imageData = response200Dto.getImages().get(0);
+                byte[] decodedImg = Base64.getDecoder().decode(imageData.getBytes("UTF-8"));
+                Path destinationFile = Paths.get("image.png");
+                Files.write(destinationFile, decodedImg);
+
+                // S3에 업로드
+                String uniqueKey = UUID.randomUUID().toString();
+                s3client.putObject(bucket, uniqueKey, destinationFile.toFile());
+
+                // 이미지 url얻고
+                stableDiffusionResultUrl = s3client.getUrl(bucket, uniqueKey).toString();
+
+                dtoImageUrl.add(stableDiffusionResultUrl);
 
 
-        } else if (response.statusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) { //422응답
-            String responseBody = response.bodyToMono(String.class).block();
-            StableDiffusion422ResponseDto response422Dto = objectMapper.readValue(responseBody, StableDiffusion422ResponseDto.class);
-        } else {
-            throw new Exception("Stable Diffusion Exception");
+            } else if (response.statusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) { //422응답
+                String responseBody = response.bodyToMono(String.class).block();
+                StableDiffusion422ResponseDto response422Dto = objectMapper.readValue(responseBody, StableDiffusion422ResponseDto.class);
+
+                logger.error("StableDiffusion API returned 422: " + response422Dto);
+
+            } else {
+                throw new Exception("Stable Diffusion Exception");
+            }
         }
+        dto.setDiaryImageUrl(dtoImageUrl);
+        //일기&이미지파일 테이블 에 등록
+        diaryImageService.createDiaryImages(diary.getDiaryId(), dto.getDiaryImageUrl());
         //-- end stable diffusion 활용하여 썸네일 생성 end--
 
-        //일기&이미지파일 테이블 만들기 현재 썸네일만 있는 상태
-        diaryImageService.createDiaryImages(diary.getDiaryId(), dto.getDiaryImageUrl());
 
         return diary;
     }
 
     @Transactional(readOnly = true)
     public DiaryResponseDto detailDiary(Long diaryId) {
-        return new DiaryResponseDto(diaryRepository.findByDiaryId(diaryId));
+        return changeResponse(diaryRepository.findByDiaryId(diaryId));
     }
 
     @Transactional(readOnly = true)
@@ -285,7 +328,7 @@ public class DiaryService {
     //카드Id리스트로부터 만들어진 다이어리 리스트 반환
     @Transactional(readOnly = true)
     public List<CardMadeDiaryResponseDto> findDiaryListFromCardList(List<Long> diaryIdList) {
-        List<CardMadeDiaryResponseDto> returnList = new ArrayList<CardMadeDiaryResponseDto>();
+        List<CardMadeDiaryResponseDto> returnList = new ArrayList<>();
         for (Long diaryId : diaryIdList) {
             Diary diary = diaryRepository.findByDiaryId(diaryId);
             List<String> diaryImageUrls = diaryImageRepository.findDiaryImageUrlByDiaryId(diaryId);
@@ -311,7 +354,7 @@ public class DiaryService {
         List<Diary> diaries = diaryRepository.findDiariesByCardId(cardId).orElseThrow(() -> new Exception("cardId에 해당하는 일기 존재하지 않음"));
         List<DiaryResponseDto> ret = new ArrayList<>();
 
-        for(Diary diary : diaries)
+        for (Diary diary : diaries)
             ret.add(new DiaryResponseDto(diary));
 
         return ret;
@@ -324,6 +367,8 @@ public class DiaryService {
         Matcher matcher = pattern.matcher(translatedText);
         if (matcher.find()) {
             String trans = matcher.group(1);
+            logger.info("번역할 언어 : {}", text);
+            logger.info("번역된 언어 : {}", trans);
             return trans;
         }
         return null;

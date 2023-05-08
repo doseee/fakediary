@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/CardModel.dart';
@@ -88,11 +86,12 @@ class CardModal extends StatelessWidget {
                         )),
                   )),
               Flexible(
-                flex: 1,
-                child:  Align(
-                  alignment: Alignment.topLeft,
-                  child:Text(keywords, style: TextStyle(color: Colors.white)),
-                ))
+                  flex: 1,
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child:
+                        Text(keywords, style: TextStyle(color: Colors.white)),
+                  ))
             ],
           )));
     }
@@ -122,7 +121,9 @@ class CardModal extends StatelessWidget {
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Flexible(
                     flex: 1,
                     child: Text(
@@ -155,7 +156,7 @@ class CardModal extends StatelessWidget {
                           ),
                           Flexible(
                               flex: 1,
-                              child: Container(
+                              child: SizedBox(
                                 width: 200,
                                 height: 240,
                                 child: Padding(
@@ -172,34 +173,38 @@ class CardModal extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Flexible(flex: 2, child:GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DiaryCreateCards(cardIdFromList: card.cardId),
-                            ));
-                      },
-                      child: Center(
-                        child: Container(
-                          width: 400,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: [
-                                Color(0xff79F1A4),
-                                Color(0xff0E5CAD),
-                              ]),
-                              borderRadius: BorderRadius.circular(25)),
-                          child: Center(
-                              child: Text(
-                                '일기생성',
-                                style: TextStyle(color: Colors.white, fontSize: 14),
-                              )),
-                        ),
-                      )),)
+                  Flexible(
+                    flex: 2,
+                    child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DiaryCreateCards(
+                                    cardIdFromList: card.cardId),
+                              ));
+                        },
+                        child: Center(
+                          child: Container(
+                            width: 400,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(colors: [
+                                  Color(0xff79F1A4),
+                                  Color(0xff0E5CAD),
+                                ]),
+                                borderRadius: BorderRadius.circular(25)),
+                            child: Center(
+                                child: Text(
+                              '일기생성',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            )),
+                          ),
+                        )),
+                  )
                 ],
-              )
-          ),
+              )),
         ));
   }
 }
@@ -215,16 +220,18 @@ class _CardListState extends State<CardList> {
     print(cards);
   }
 
+  @override
   Widget build(BuildContext context) {
     return (Container(
-        decoration: BgThemeGradient(),
-        child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: StandAppBar(context),
-            body: Center(
-                child: Column(children: [
+      decoration: BgThemeGradient(),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: StandAppBar(context),
+        body: Center(
+          child: Column(
+            children: [
               Flexible(
-                flex: 2,
+                flex: 5,
                 child: Scaffold(
                     backgroundColor: Colors.transparent,
                     body: Center(
@@ -261,7 +268,7 @@ class _CardListState extends State<CardList> {
                     )),
               ),
               Flexible(
-                  flex: 5,
+                  flex: 10,
                   child: FutureBuilder<List<CardModel>>(
                       future: cards,
                       builder: (context, snapshot) {
@@ -272,7 +279,11 @@ class _CardListState extends State<CardList> {
                         }
                         return CircularProgressIndicator();
                       })),
-            ])))));
+            ],
+          ),
+        ),
+      ),
+    ));
   }
 
   String titleCheck(snapshot, index) {
@@ -334,8 +345,11 @@ class _CardListState extends State<CardList> {
                                 image: NetworkImage(
                                     snapshot[index].cardImageUrl))),
                       ),
+                      SizedBox(
+                        height: 8,
+                      ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(titleCheck(snapshot, index),
                             style: TextStyle(
                                 color: Colors.white,
