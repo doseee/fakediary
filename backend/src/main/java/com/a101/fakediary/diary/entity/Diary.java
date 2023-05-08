@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Setter
 @Getter
@@ -36,6 +37,7 @@ public class Diary extends BaseEntity {
     @Column(nullable = false, length = 2000)
     private String prompt;
     @Column(nullable = false, length = 400)
+    @Size(max = 10, message = "Title은 띄어쓰기 포함 10글자 이내여야합니다.")
     private String title;
     @Column(length = 400)
     private String subtitles;

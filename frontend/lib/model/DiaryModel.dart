@@ -11,6 +11,7 @@ class DiaryModel {
     required this.detail,
     required this.summary,
     required this.genre,
+    required this.diaryImageUrl,
     required this.exchanged,
   });
   late final int diaryId;
@@ -24,37 +25,50 @@ class DiaryModel {
   late final String detail;
   late final String summary;
   late final List<String> genre;
+  late final List<String> diaryImageUrl;
   late final bool exchanged;
 
-  DiaryModel.fromJson(Map<String, dynamic> json){
+  DiaryModel.fromJson(Map<String, dynamic> json) {
     diaryId = json['diaryId'];
     memberId = json['memberId'];
-    characters = json['characters'] != null ? List<String>.from(json['characters'].map((dynamic x) => x as String)) : [];
-    places = json['places'] != null ? List<String>.from(json['places'].map((dynamic x) => x as String)) : [];
-    keyword = json['keyword'] != null ? List<String>.from(json['keyword'].map((dynamic x) => x as String)) : [];
+    characters = json['characters'] != null
+        ? List<String>.from(json['characters'].map((dynamic x) => x as String))
+        : [];
+    places = json['places'] != null
+        ? List<String>.from(json['places'].map((dynamic x) => x as String))
+        : [];
+    keyword = json['keyword'] != null
+        ? List<String>.from(json['keyword'].map((dynamic x) => x as String))
+        : [];
     prompt = json['prompt'];
     title = json['title'];
-    subtitles = json['subtitles'] != null ? List<String>.from(json['subtitles'].map((dynamic x) => x as String)) : [];
+    subtitles = json['subtitles'] != null
+        ? List<String>.from(json['subtitles'].map((dynamic x) => x as String))
+        : [];
     detail = json['detail'];
     summary = json['summary'];
-    genre = List.castFrom<dynamic, String>(json['genre']);
+    genre = json['genre'] != null
+        ? List.castFrom<dynamic, String>(json['genre'])
+        : [];
+    diaryImageUrl = json['diaryImageUrl'].isEmpty ? ['https://i.pinimg.com/originals/0c/13/17/0c131751a945ab87dfcbc819a805b954.jpg'] : List<String>.from(json['diaryImageUrl'].map((dynamic x) => x as String));
     exchanged = json['exchanged'];
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['diaryId'] = diaryId;
-    _data['memberId'] = memberId;
-    _data['characters'] = characters;
-    _data['places'] = places;
-    _data['keyword'] = keyword;
-    _data['prompt'] = prompt;
-    _data['title'] = title;
-    _data['subtitles'] = subtitles;
-    _data['detail'] = detail;
-    _data['summary'] = summary;
-    _data['genre'] = genre;
-    _data['exchanged'] = exchanged;
-    return _data;
+    final data = <String, dynamic>{};
+    data['diaryId'] = diaryId;
+    data['memberId'] = memberId;
+    data['characters'] = characters;
+    data['places'] = places;
+    data['keyword'] = keyword;
+    data['prompt'] = prompt;
+    data['title'] = title;
+    data['subtitles'] = subtitles;
+    data['detail'] = detail;
+    data['summary'] = summary;
+    data['genre'] = genre;
+    data['diaryImageUrl'] = diaryImageUrl;
+    data['exchanged'] = exchanged;
+    return data;
   }
 }
