@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GPTResponseDto {
+public class GPT3ResponseDto {
     private String id;
     private String object;
     private LocalDate created;

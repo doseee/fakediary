@@ -1,4 +1,4 @@
-package com.a101.fakediary.gpt.request;
+package com.a101.fakediary.gpt3.request;
 
 import lombok.*;
 

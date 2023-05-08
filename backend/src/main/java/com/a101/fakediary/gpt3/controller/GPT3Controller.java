@@ -1,8 +1,8 @@
 package com.a101.fakediary.gpt3.controller;
 
 import com.a101.fakediary.gpt3.dto.request.QuestionRequestDto;
-import com.a101.fakediary.gpt3.dto.response.GPTResponseDto;
-import com.a101.fakediary.gpt3.service.GPTService;
+import com.a101.fakediary.gpt3.dto.response.GPT3ResponseDto;
+import com.a101.fakediary.gpt3.service.GPT3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/chat-gpt")
-public class GPTController {
-    private final GPTService gptService;
+@RequestMapping("/gpt-3")
+public class GPT3Controller {
+    private final GPT3Service gpt3Service;
 
     @PostMapping
-    public GPTResponseDto sendQuestion(@RequestBody QuestionRequestDto requestDto) {
-        return gptService.askQuestion(requestDto);
+    public GPT3ResponseDto sendQuestion(@RequestBody QuestionRequestDto requestDto) {
+        return gpt3Service.askQuestion(requestDto);
     }
 
 }

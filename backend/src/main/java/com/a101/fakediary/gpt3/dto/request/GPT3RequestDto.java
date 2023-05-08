@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GPTRequestDto implements Serializable {
+public class GPT3RequestDto implements Serializable {
     private String model;
     private String prompt;
     @JsonProperty("max_tokens")

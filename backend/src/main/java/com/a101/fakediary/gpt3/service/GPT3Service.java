@@ -1,9 +1,9 @@
 package com.a101.fakediary.gpt3.service;
 
 import com.a101.fakediary.gpt3.config.GPTConfig;
-import com.a101.fakediary.gpt3.dto.request.GPTRequestDto;
+import com.a101.fakediary.gpt3.dto.request.GPT3RequestDto;
 import com.a101.fakediary.gpt3.dto.request.QuestionRequestDto;
-import com.a101.fakediary.gpt3.dto.response.GPTResponseDto;
+import com.a101.fakediary.gpt3.dto.response.GPT3ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -18,30 +18,30 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class GPTService {
+public class GPT3Service {
     private static RestTemplate restTemplate = new RestTemplate();
 
-    public HttpEntity<GPTRequestDto> buildHttpEntity(GPTRequestDto gptRequestDto) {
+    public HttpEntity<GPT3RequestDto> buildHttpEntity(GPT3RequestDto gpt3RequestDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(GPTConfig.MEDIA_TYPE));
         headers.add(GPTConfig.AUTHORIZATION, GPTConfig.BEARER + GPTConfig.API_KEY);
-        return new HttpEntity<>(gptRequestDto, headers);
+        return new HttpEntity<>(gpt3RequestDto, headers);
     }
 
-    public GPTResponseDto getResponse(HttpEntity<GPTRequestDto> gptRequestDtoHttpEntity) {
-        ResponseEntity<GPTResponseDto> responseEntity = restTemplate.postForEntity(
+    public GPT3ResponseDto getResponse(HttpEntity<GPT3RequestDto> gptRequestDtoHttpEntity) {
+        ResponseEntity<GPT3ResponseDto> responseEntity = restTemplate.postForEntity(
                 GPTConfig.URL,
                 gptRequestDtoHttpEntity,
-                GPTResponseDto.class
+                GPT3ResponseDto.class
         );
 
         return responseEntity.getBody();
     }
 
-    public GPTResponseDto askQuestion(QuestionRequestDto requestDto) {
+    public GPT3ResponseDto askQuestion(QuestionRequestDto requestDto) {
         return this.getResponse(
                 this.buildHttpEntity(
-                        new GPTRequestDto(
+                        new GPT3RequestDto(
                                 GPTConfig.MODEL,
                                 requestDto.getQuestion(),
                                 GPTConfig.MAX_TOKEN,

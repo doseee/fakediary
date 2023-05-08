@@ -1,18 +1,11 @@
-package com.a101.fakediary.gpt.api;
+package com.a101.fakediary.gpt3.api;
 
-import com.a101.fakediary.gpt.request.ChatGPTRequest;
-import com.a101.fakediary.gpt.response.ChatGPTResponse;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.a101.fakediary.gpt3.request.ChatGPTRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -27,7 +20,7 @@ public class ChatGPTApi {
     private final WebClient webClient;
     private final ObjectMapper OBJECT_MAPPER;
 
-    public ChatGPTApi(@Value("${fake-diary.gpt.base-url}") String BASE_URL, @Value("${fake-diary.gpt.api-key}") String API_KEY) {
+    public ChatGPTApi(@Value("${fake-diary.gpt.chat-gpt-base-url}") String BASE_URL, @Value("${fake-diary.gpt.api-key}") String API_KEY) {
         this.BASE_URL = BASE_URL;
         this.API_KEY = API_KEY;
         this.OBJECT_MAPPER = new ObjectMapper();
