@@ -21,7 +21,7 @@ import java.util.List;
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters, diaryImageUrl \"\"으로 넣어주시면 됩니다. subtitles는 소제목1@소제목2@소제목3 이런식으로 넣어주면 됩니다.")
+    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters, diaryImageUrl \"\"으로 넣어주시면 됩니다. subtitles는 소제목1@소제목2@소제목3 이런식으로 넣어주면 됩니다, title은 띄어쓰기 포함 10글자 이하여야만합니다.")
     @PostMapping
     public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
         try {
