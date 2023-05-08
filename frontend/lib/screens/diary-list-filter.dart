@@ -1,10 +1,16 @@
 // import 'dart:js';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:frontend/model/DiaryModel.dart';
+
+// import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/FriendModel.dart';
+import 'package:frontend/screens/diary_list_filtered_screen.dart';
+import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:gradient_borders/gradient_borders.dart';
+import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DiaryFilter extends StatefulWidget {
   const DiaryFilter({super.key});
@@ -13,20 +19,12 @@ class DiaryFilter extends StatefulWidget {
   State<DiaryFilter> createState() => _DiaryFilterState();
 }
 
+late dynamic userId;
+dynamic selectedMood;
+
 class _DiaryFilterState extends State<DiaryFilter> {
-  final selectedMood = [];
-  final activated = {
-    'ROMANCE': false,
-    'HORROR': false,
-    'THRILL': false,
-    'WARM': false,
-    'SAD': false,
-    'TOUCHING': false,
-    'COMFORTING': false,
-    'HAPPY': false,
-    'ACTION': false,
-    'COMIC': false,
-  };
+  Map<String, dynamic> selectedWriter = {};
+
   final dict = {
     'ROMANCE': '로맨스',
     'HORROR': '호러',
@@ -40,97 +38,170 @@ class _DiaryFilterState extends State<DiaryFilter> {
     'COMIC': '코믹',
   };
 
-  setter(String content) {
-    // // 이미 2개가 선택되었을 경우 작동하지 않음
-    // if (!activated[content]! &&
-    //     selectedMood.length == 2 &&
-    //     !selectedMood.contains(content)) {
-    //   return;
-    // }
+  final activated = {
+    'ROMANCE': false,
+    'HORROR': false,
+    'THRILL': false,
+    'WARM': false,
+    'SAD': false,
+    'TOUCHING': false,
+    'COMFORTING': false,
+    'HAPPY': false,
+    'ACTION': false,
+    'COMIC': false,
+  };
 
-    // 이미 2개가 선택되었을 경우 기존에 선택된 것을 해제
-    if (!activated[content]! && selectedMood.length == 1) {
-      activated[selectedMood[0]] = false;
-      selectedMood.removeAt(0);
-    }
-
-    // 나머지 경우 선택 상태를 반전
-    activated[content] = !activated[content]!;
-    if (activated[content]!) {
-      selectedMood.add(content);
+  moodSetter(moodname) {
+    if (activated[moodname] == true) {
+      activated[moodname] = false;
+      selectedMood = null;
     } else {
-      selectedMood.remove(content);
+      activated.updateAll((key, value) => false);
+      activated[moodname] = true;
+      selectedMood = moodname;
     }
     setState(() {});
+    print(selectedMood);
+    // 이미 2개가 선택되었을 경우 기존에 선택된 것을 해제
+    // if (!activated[content]! && selectedMood.length == 1) {
+    //   activated[selectedMood[0]] = false;
+    //   selectedMood.removeAt(0);
+    // }
+
+    // 나머지 경우 선택 상태를 반전
+    // activated[content] = !activated[content]!;
+    // if (activated[content]!) {
+    //   selectedMood.add(content);
+    // } else {
+    //   selectedMood.remove(content);
+    // }
   }
 
-  // final romanceSelected = false;
-  // final horrorSeleted = false;
-  // final thrillSelected = false;
-  // final warmSelected = false;
-  // final sadSelected = false;
-  // final touchingSelected = false;
-  // final comfortingSelected = false;
-  // final happySelected = false;
-  // final actionSelected = false;
-  // final comicSelected = false;
+  writerSetter(nickname, friendId) {
+    if (selectedWriter.length == 1) {
+      if (selectedWriter.containsKey(nickname)) {
+        selectedWriter.clear();
+      } else {
+        selectedWriter.clear();
+        selectedWriter[nickname] = friendId;
+      }
+    } else {
+      selectedWriter[nickname] = friendId;
+    }
+    setState(() {});
+    print(selectedWriter);
+  }
 
   late Future<List<FriendModel>> friends;
-  // final int friendIndex;
-  // final String nickname;
-  // const FriendModel({Key? key, required this.friendIndex, required this.nickname})
-  // : super(key: key);
 
-  @override
   void initState() {
     super.initState();
+    _loadId();
     friends = ApiService().getFriends();
     print(friends);
   }
 
+  Future<void> _loadId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+    userId = memberId;
+    print(userId);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/img/background_pink_darken.png'),
-            fit: BoxFit.cover,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/img/background_pink_darken.png'),
+          fit: BoxFit.cover,
         ),
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-          ),
+      ),
+      child: Scaffold(
+        appBar: AppBar(
           backgroundColor: Colors.transparent,
-          body: Column(
+          shadowColor: Colors.transparent,
+        ),
+        backgroundColor: Colors.transparent,
+        body: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Flexible(
-                  flex: 1,
-                  child: Row(
-                    children: [
-                      Text(
-                        '      MOOD  ',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          color: Colors.white,
-                          thickness: 1,
-                        ),
-                      ),
-                    ],
+              Flexible(
+                flex: 1,
+                child: Text(
+                  'FILTER',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if (selectedMood != null)
+                      GradientButton(content: dict[selectedMood]!),
+                    if (selectedWriter.isNotEmpty &&
+                        selectedWriter.keys.first.toString() != '외계인')
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
+                            radius: 15.0,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            selectedWriter.keys.first.toString(),
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    if (selectedWriter.isNotEmpty &&
+                        selectedWriter.keys.first.toString() == '외계인')
+                      Row(
+                        children: [
+                          Container(
+                            child: Lottie.asset('assets/lottie/random.json'),
+                            width: 40,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            selectedWriter.keys.first.toString(),
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  children: [
+                    Text(
+                      '      MOOD  ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: Colors.white,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Flexible(
@@ -138,33 +209,33 @@ class _DiaryFilterState extends State<DiaryFilter> {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      GradientSelectButton(
+                      MoodSelectButton(
                         content: 'ROMANCE',
-                        setter: setter,
+                        setter: moodSetter,
                         activated: activated['ROMANCE']!,
                         dict: dict,
                       ),
-                      GradientSelectButton(
+                      MoodSelectButton(
                         content: 'HORROR',
-                        setter: setter,
+                        setter: moodSetter,
                         activated: activated['HORROR']!,
                         dict: dict,
                       ),
-                      GradientSelectButton(
+                      MoodSelectButton(
                         content: 'THRILL',
-                        setter: setter,
+                        setter: moodSetter,
                         activated: activated['THRILL']!,
                         dict: dict,
                       ),
-                      GradientSelectButton(
+                      MoodSelectButton(
                         content: 'WARM',
-                        setter: setter,
+                        setter: moodSetter,
                         activated: activated['WARM']!,
                         dict: dict,
                       ),
-                      GradientSelectButton(
+                      MoodSelectButton(
                         content: 'SAD',
-                        setter: setter,
+                        setter: moodSetter,
                         activated: activated['SAD']!,
                         dict: dict,
                       ),
@@ -175,33 +246,33 @@ class _DiaryFilterState extends State<DiaryFilter> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    GradientSelectButton(
+                    MoodSelectButton(
                       content: 'TOUCHING',
-                      setter: setter,
+                      setter: moodSetter,
                       activated: activated['TOUCHING']!,
                       dict: dict,
                     ),
-                    GradientSelectButton(
+                    MoodSelectButton(
                       content: 'COMFORTING',
-                      setter: setter,
+                      setter: moodSetter,
                       activated: activated['COMFORTING']!,
                       dict: dict,
                     ),
-                    GradientSelectButton(
+                    MoodSelectButton(
                       content: 'HAPPY',
-                      setter: setter,
+                      setter: moodSetter,
                       activated: activated['HAPPY']!,
                       dict: dict,
                     ),
-                    GradientSelectButton(
+                    MoodSelectButton(
                       content: 'ACTION',
-                      setter: setter,
+                      setter: moodSetter,
                       activated: activated['ACTION']!,
                       dict: dict,
                     ),
-                    GradientSelectButton(
+                    MoodSelectButton(
                       content: 'COMIC',
-                      setter: setter,
+                      setter: moodSetter,
                       activated: activated['COMIC']!,
                       dict: dict,
                     ),
@@ -229,101 +300,139 @@ class _DiaryFilterState extends State<DiaryFilter> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(28.0),
-                child: Flexible(
-                  flex: 1,
-                  child: Column(
-                    children: [
-                      Container(
-                          // 필터적용 버튼
-                          width: 268,
-                          height: 61,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                const Color(0xff263344),
-                                const Color(0xff1B2532).withOpacity(0.53),
-                                const Color(0xff1C2A3D).withOpacity(0.5),
-                                const Color(0xff1E2E42).withOpacity(0.46),
-                                const Color(0xff364B66).withOpacity(0.33),
-                                const Color(0xff2471D6).withOpacity(0),
-                              ],
-                              stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color:
-                                    const Color(0xff000000).withOpacity(0.25),
-                                offset: const Offset(0, 4),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
-                          child: const Center(
-                            child: Text(
-                              '검색하기',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                          )),
-                      Container(
-                          // 필터적용 버튼
-                          width: 268,
-                          height: 61,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                const Color(0xff263344),
-                                const Color(0xff1B2532).withOpacity(0.53),
-                                const Color(0xff1C2A3D).withOpacity(0.5),
-                                const Color(0xff1E2E42).withOpacity(0.46),
-                                const Color(0xff364B66).withOpacity(0.33),
-                                const Color(0xff2471D6).withOpacity(0),
-                              ],
-                              stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color:
-                                    const Color(0xff000000).withOpacity(0.25),
-                                offset: const Offset(0, 4),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
-                          child: const Center(
-                            child: Text(
-                              '취소',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                          )),
-                      Image(
-                        image: AssetImage('assets/img/small_moon.png'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // Flexible(
+              //     flex: 1,
+              //     child: Row(children: [
+              //       Container(
+              //         child:
+              //             Lottie.asset('assets/lottie/random.json', width: 60),
+              //       ),
+              //       Text(
+              //         '외계인',
+              //         style: TextStyle(color: Colors.white),
+              //       )
+              //     ])),
               Flexible(
-                  flex: 5,
+                  flex: 1,
                   child: FutureBuilder<List<FriendModel>>(
                       future: friends,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          return buildList(snapshot.data);
+                          return buildList(snapshot.data, writerSetter);
                         } else if (snapshot.hasError) {
                           return Text("${snapshot.error}에러!!");
                         }
                         return CircularProgressIndicator();
                       })),
+              Flexible(
+                flex: 3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                        // onTap: () {
+                        //   ApiService.filterDiaries(
+                        //       selectedMood,
+                        //       selectedWriter.isEmpty? null :
+                        //       selectedWriter.values.first);
+                        //   Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //   builder: (context) => DiaryListScreen()));
+                        // },
+                        onTap: () async {
+                          List<DiaryModel> filteredDiaries =
+                              await ApiService.filterDiaries(
+                            selectedMood,
+                            selectedWriter.isEmpty
+                                ? null
+                                : selectedWriter.values.first,
+                          );
+                          print(filteredDiaries);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DiaryFilteredScreen(
+                                diaries: filteredDiaries,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            // 필터적용 버튼
+                            width: 268,
+                            height: 61,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  const Color(0xff263344),
+                                  const Color(0xff1B2532).withOpacity(0.53),
+                                  const Color(0xff1C2A3D).withOpacity(0.5),
+                                  const Color(0xff1E2E42).withOpacity(0.46),
+                                  const Color(0xff364B66).withOpacity(0.33),
+                                  const Color(0xff2471D6).withOpacity(0),
+                                ],
+                                stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color(0xff000000).withOpacity(0.25),
+                                  offset: const Offset(0, 4),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Text(
+                                '검색하기',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
+                            ))),
+                    Container(
+                        // 필터적용 버튼
+                        width: 268,
+                        height: 61,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              const Color(0xff263344),
+                              const Color(0xff1B2532).withOpacity(0.53),
+                              const Color(0xff1C2A3D).withOpacity(0.5),
+                              const Color(0xff1E2E42).withOpacity(0.46),
+                              const Color(0xff364B66).withOpacity(0.33),
+                              const Color(0xff2471D6).withOpacity(0),
+                            ],
+                            stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xff000000).withOpacity(0.25),
+                              offset: const Offset(0, 4),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            '취소',
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                        )),
+                    Image(
+                      image: AssetImage('assets/img/small_moon.png'),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -332,39 +441,96 @@ class _DiaryFilterState extends State<DiaryFilter> {
   }
 }
 
-Widget buildList(snapshot) {
-  return (GridView.count(
-    crossAxisCount: 3,
-    // 가로 방향으로 3개의 카드씩 표시
-    crossAxisSpacing: 10.0,
-    // 카드들의 가로 간격 설정
-    padding: EdgeInsets.all(10.0),
-    // GridView 자체의 Padding 설정
-    children: List.generate(
-      // 카드 리스트 생성
-      snapshot.length, // 총 카드 갯수
-      (index) {
-        if (snapshot.length == 0) {
-          return Container(
-            child: SpinKitFadingCircle(
-              color: Colors.black,
-              size: 70.0,
+Widget buildList(snapshot, setter) {
+  //유저버튼
+  return Row(
+    children: [
+      GestureDetector(
+        onTap: () {
+          setter('외계인', -1);
+        },
+        child: Row(
+          children: [
+            Container(
+              child: Lottie.asset('assets/lottie/random.json', width: 60),
             ),
-          );
-        } else {
-          return InkWell(
-              onTap: () {},
-              child: Card(
-                  color: Colors.transparent,
-                  elevation: 0.0,
-                  child: Text('friends.[nickname]')));
-        }
-      },
-    ),
-  ));
+            Text(
+              '외계인',
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              width: 10,
+            )
+          ],
+        ),
+      ),
+      GestureDetector(
+        onTap: () {
+          setter('나', userId);
+        },
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(
+                  'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
+              radius: 15.0,
+            ),
+            SizedBox(width: 5),
+            Text(
+              '나',
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Container(
+              height: double.infinity,
+              width: 0.1,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: snapshot.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                setter(snapshot[index].nickname, snapshot[index].friendId);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
+                      radius: 15.0,
+                    ),
+                    SizedBox(width: 5),
+                    Card(
+                      color: Colors.transparent,
+                      elevation: 0.0,
+                      child: Text(
+                        snapshot[index].nickname,
+                        style: TextStyle(fontSize: 15, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
 }
 
 class GradientButton extends StatelessWidget {
+  // 상단에 올라갈 장르버튼
   final String content;
 
   const GradientButton({
@@ -375,7 +541,7 @@ class GradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 70,
+      width: 100,
       height: 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
@@ -413,13 +579,14 @@ class GradientButton extends StatelessWidget {
   }
 }
 
-class GradientSelectButton extends StatelessWidget {
+class MoodSelectButton extends StatelessWidget {
+  //장르버튼
   final String content;
   final Function setter;
   final bool activated;
   final Map<String, String> dict;
 
-  const GradientSelectButton({
+  const MoodSelectButton({
     super.key,
     required this.content,
     required this.setter,
@@ -434,8 +601,8 @@ class GradientSelectButton extends StatelessWidget {
         setter(content);
       },
       child: Container(
-        width: 65,
-        height: 35,
+        width: 70,
+        height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           border: GradientBoxBorder(
@@ -466,11 +633,11 @@ class GradientSelectButton extends StatelessWidget {
             dict[content]!,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 13,
+              fontSize: 15,
             ),
           ),
         ),
       ),
     );
   }
-}
+} //장르버튼

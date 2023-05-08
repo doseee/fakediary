@@ -31,58 +31,58 @@ class _FriendScreenState extends State<FriendScreen> {
   }
 
   Widget ChangeModal(int diaryId) {
-      return Column(
-        children: [
-          Flexible(
-            flex: 1,
-            child: Center(
-              child: Text(
-                '교환하시겠습니까?',
-                style: TextStyle(fontSize: 16, color: Colors.white60),
-              ),
+    return Column(
+      children: [
+        Flexible(
+          flex: 1,
+          child: Center(
+            child: Text(
+              '교환하시겠습니까?',
+              style: TextStyle(fontSize: 16, color: Colors.white60),
             ),
           ),
-          Flexible(
-            flex: 1,
-            child: Container(
-              decoration: BtnThemeGradientLine(),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      elevation: 0.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      )),
-                  onPressed: () async {
-                    late bool result;
+        ),
+        Flexible(
+          flex: 1,
+          child: Container(
+            decoration: BtnThemeGradientLine(),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    elevation: 0.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    )),
+                onPressed: () async {
+                  late bool result;
 
-                    if (recieverId == -1) {
-                      result = await ApiService.RandomChange(widget.diaryId);
-                    } else {
-                      print('recieverId : $recieverId');
-                      result = await ApiService.DiaryChangeBetweenFriends(
-                          widget.diaryId, recieverId);
-                      print('friend diary change: ${widget.diaryId}');
-                    }
+                  if (recieverId == -1) {
+                    result = await ApiService.RandomChange(widget.diaryId);
+                  } else {
+                    print('recieverId : $recieverId');
+                    result = await ApiService.DiaryChangeBetweenFriends(
+                        widget.diaryId, recieverId);
+                    print('friend diary change: ${widget.diaryId}');
+                  }
 
-                    if (!mounted) return;
-                    if (result) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DiaryListScreen()));
-                    } else {
-                      print('전송 실패');
-                    }
-                  },
-                  child: Center(
-                    child: Text('신청'),
-                  )),
-            ),
-          )
-        ],
-      );
+                  if (!mounted) return;
+                  if (result) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DiaryListScreen()));
+                  } else {
+                    print('전송 실패');
+                  }
+                },
+                child: Center(
+                  child: Text('신청'),
+                )),
+          ),
+        )
+      ],
+    );
   }
 
   Widget RandomDiary() {
@@ -97,31 +97,34 @@ class _FriendScreenState extends State<FriendScreen> {
                   flex: 4,
                   child: Row(
                     children: [
-                      Flexible(flex: 5, child: Text(
-                        'RANDOM',
-                        style: TextStyle(fontSize: 24, color: Colors.white70),
-                      ),),
-                      Flexible(flex: 1, child: Container(
-                        child: IconButton(
-                            icon: Icon(Icons.info,
-                                color: Colors.white),
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return InfoModal(
-                                        widget: Text(
-                                          '✉ 랜덤 일기는 랜덤 친구와 일기를 교환할 수 있는 기능으로, 하루에 한 번만 보낼 수 있습니다.',
-                                          style: TextStyle(
-                                              color: Colors
-                                                  .white,
-                                              fontSize:
-                                              14),
-                                        ),
-                                        height: 100);
-                                  });
-                            }),
-                      ),)
+                      Flexible(
+                        flex: 5,
+                        child: Text(
+                          'RANDOM',
+                          style: TextStyle(fontSize: 24, color: Colors.white70),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          child: IconButton(
+                              icon: Icon(Icons.info, color: Colors.white),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return InfoModal(
+                                          widget: Text(
+                                            '✉ 랜덤 일기는 랜덤 친구와 일기를 교환할 수 있는 기능으로, 하루에 한 번만 보낼 수 있습니다.',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          height: 100);
+                                    });
+                              }),
+                        ),
+                      )
                     ],
                   )),
               Flexible(
@@ -149,12 +152,15 @@ class _FriendScreenState extends State<FriendScreen> {
                           if (!mounted) return;
 
                           print(result);
-                          if(result) {
+                          if (result) {
                             showDialog(
                                 context: context,
                                 builder: (context) {
                                   return InfoModal(
-                                    widget: Text('오늘은 이미 교환일기를 보냈습니다', style: TextStyle(color: Colors.white60),),
+                                    widget: Text(
+                                      '오늘은 이미 교환일기를 보냈습니다',
+                                      style: TextStyle(color: Colors.white60),
+                                    ),
                                     height: 140,
                                   );
                                 });
@@ -202,38 +208,37 @@ class _FriendScreenState extends State<FriendScreen> {
             height: 50,
             decoration: BtnThemeGradientLine(),
             child: ElevatedButton(
-                  onPressed: () async {
-                    setState(() {
-                      recieverId = friend.friendId;
-                    });
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => const Login(),
-                    //     ));
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return InfoModal(
-                              widget: ChangeModal(widget.diaryId),
-                              height: 180,
-                            );
-                          });
+                onPressed: () async {
+                  setState(() {
+                    recieverId = friend.friendId;
+                  });
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => const Login(),
+                  //     ));
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return InfoModal(
+                          widget: ChangeModal(widget.diaryId),
+                          height: 180,
+                        );
+                      });
 
-                      print('친구 : ${friend.friendId}');
-
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      elevation: 0.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      )),
-                  child: Text(
-                    'SEND',
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  )),
+                  print('친구 : ${friend.friendId}');
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    elevation: 0.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    )),
+                child: Text(
+                  'SEND',
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                )),
           ));
     }
     return Container();
@@ -330,7 +335,8 @@ class _FriendScreenState extends State<FriendScreen> {
                               itemBuilder: (context, index) {
                                 final friend = snapshot.data![index];
                                 return Padding(
-                                  padding: const EdgeInsets.only(top: 10, bottom: 5),
+                                  padding:
+                                      const EdgeInsets.only(top: 10, bottom: 5),
                                   child: ListTile(
                                     leading: CircleAvatar(
                                       backgroundImage: NetworkImage(
@@ -338,18 +344,17 @@ class _FriendScreenState extends State<FriendScreen> {
                                     ),
                                     title: Row(children: [
                                       Flexible(
-                                        flex: 3,
-                                        child: SizedBox(
-                                          width: 200,
-                                          child: Text(
-                                            friend.nickname,
-                                            style: TextStyle(
-                                                color: Colors.white70,
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 24),
-                                          ),
-                                        )
-                                      ),
+                                          flex: 3,
+                                          child: SizedBox(
+                                            width: 200,
+                                            child: Text(
+                                              friend.nickname,
+                                              style: TextStyle(
+                                                  color: Colors.white70,
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 24),
+                                            ),
+                                          )),
                                       ChangeCheck(friend),
                                     ]),
                                   ),

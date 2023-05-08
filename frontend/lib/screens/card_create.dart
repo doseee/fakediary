@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/card_result.dart';
@@ -519,6 +520,30 @@ class _CardCreateState extends State<CardCreate> {
                               _isLoading = false;
                             });
 
+                            // print('analytics 전송');
+                            // FirebaseAnalytics.instance
+                            //     .logEvent(name: 'card_create_complete');
+                            // FirebaseAnalytics.instance.logEvent(name: 'aa');
+                            // print('aa');
+                            const AndroidNotificationDetails
+                                androidNotificationDetails =
+                                AndroidNotificationDetails(
+                                    'your channel id', 'your channel name',
+                                    channelDescription:
+                                        'your channel description',
+                                    importance: Importance.max,
+                                    priority: Priority.high,
+                                    ticker: 'ticker');
+                            const NotificationDetails notificationDetails =
+                                NotificationDetails(
+                                    android: androidNotificationDetails);
+                            await FlutterLocalNotificationsPlugin().show(
+                                0,
+                                '카드 생성 완료',
+                                '카드 생성이 완료되었습니다!',
+                                notificationDetails,
+                                payload: 'item x');
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -551,7 +576,7 @@ class _CardCreateState extends State<CardCreate> {
                             ),
                             child: Center(
                               child: Text(
-                                'MAKE YOUR OWN CARD',
+                                '나만의 일상 카드 만들기',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,

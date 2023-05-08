@@ -47,6 +47,14 @@ dependencies:
   geolocator: ^9.0.2
   image_cropper: ^3.0.3
   flutter_dotenv: ^5.0.2
+  firebase_core: ^2.11.0
+  firebase_analytics: ^10.3.0
+  firebase_messaging: ^14.5.0
+  firebase_in_app_messaging: ^0.7.2
+  flutter_local_notifications: ^14.0.0+1
+  flutter_launcher_icons: ^0.13.1
+  flutter_svg: ^2.0.5
+  flutter_animate: ^4.1.1+1
 
 dev_dependencies:
   flutter_test:
@@ -104,3 +112,20 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  fonts:
+    - family: Nanum_Square_Neo
+      fonts:
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Lt.otf
+          weight: 100
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Rg.otf
+          weight: 200
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Bd.otf
+          weight: 400
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Eb.otf
+          weight: 600
+        - asset: assets/font/Nanum_Square_Neo/NanumSquareNeoOTF-Hv.otf
+          weight: 800
+    - family: Cafe24
+      fonts:
+        - asset: assets/font/Cafe24/Cafe24SsurroundAir.ttf

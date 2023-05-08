@@ -43,14 +43,8 @@ class _MoodSelectState extends State<MoodSelect> {
     'COMIC': '코믹',
   };
 
+  // STORY MOOD 텍스트 아래 10개의 버튼들을 누를 때 작동하는 함수
   setter(String content) {
-    // // 이미 2개가 선택되었을 경우 작동하지 않음
-    // if (!activated[content]! &&
-    //     selectedMood.length == 2 &&
-    //     !selectedMood.contains(content)) {
-    //   return;
-    // }
-
     // 이미 2개가 선택되었을 경우 기존에 선택된 것을 해제
     if (!activated[content]! && selectedMood.length == 2) {
       activated[selectedMood[0]] = false;
@@ -66,16 +60,6 @@ class _MoodSelectState extends State<MoodSelect> {
     }
     setState(() {});
   }
-  // final romanceSelected = false;
-  // final horrorSeleted = false;
-  // final thrillSelected = false;
-  // final warmSelected = false;
-  // final sadSelected = false;
-  // final touchingSelected = false;
-  // final comfortingSelected = false;
-  // final happySelected = false;
-  // final actionSelected = false;
-  // final comicSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +237,8 @@ class _MoodSelectState extends State<MoodSelect> {
                         List<Map<String, String>> messages = [];
                         String person = '';
                         List<String> baseNames = widget.selectedCards
-                            .map((card) => card.baseName)
+                            .map((card) => card.baseName.trim())
+                            .where((baseName) => baseName.isNotEmpty)
                             .toSet()
                             .toList();
                         if (baseNames.isNotEmpty) {
@@ -271,7 +256,8 @@ class _MoodSelectState extends State<MoodSelect> {
                         }
                         String location = '';
                         List<String> basePlaces = widget.selectedCards
-                            .map((card) => card.basePlace)
+                            .map((card) => card.basePlace.trim())
+                            .where((basePlace) => basePlace.isNotEmpty)
                             .toSet()
                             .toList();
                         if (basePlaces.isNotEmpty) {
@@ -290,6 +276,7 @@ class _MoodSelectState extends State<MoodSelect> {
                         String keyword2 = '';
                         List<String> keywords = widget.selectedCards
                             .expand((card) => card.keywords)
+                            .where((keyword) => keyword.isNotEmpty)
                             .toSet()
                             .toList();
                         if (keywords.isNotEmpty) {
@@ -321,8 +308,7 @@ class _MoodSelectState extends State<MoodSelect> {
                         }
                         String prp = person + location + genre2 + keyword2;
                         print(prp);
-                        messages =
-                            await ApiService.makeDiaryContents(messages, prp);
+                        messages = await ApiService.askGpt4(messages, prp);
                         String jsonResp = '';
                         for (var message in messages) {
                           if (message['role'] == 'assistant') {
@@ -333,12 +319,18 @@ class _MoodSelectState extends State<MoodSelect> {
                         String title = decoded['title'];
                         String summary = decoded['summary'];
                         List<dynamic> contents = decoded['contents'];
-                        String detail = contents.join(' ');
+                        String detail = contents.join('@');
+                        List<dynamic> subtitles = decoded['subtitles'];
+                        String subtitle = subtitles.join('@');
                         List<int> cardIds = widget.selectedCards
                             .map((card) => card.cardId)
                             .toList();
-
+                        String coverImg =
+                            await ApiService.makeCoverImage(summary);
                         List<String> diaryImageUrl = [];
+                        diaryImageUrl.add(coverImg);
+                        print(diaryImageUrl.length);
+                        diaryImageUrl = [];
                         String keyword = keywords.join('@');
                         List<String> genre = [];
                         for (var i = 0; i < selectedMood.length; i++) {
@@ -349,8 +341,8 @@ class _MoodSelectState extends State<MoodSelect> {
                             detail: detail,
                             diaryImageUrl: diaryImageUrl,
                             genre: genre,
-                            // keyword: keyword,
                             prompt: prp,
+                            subtitles: subtitle,
                             summary: summary,
                             title: title);
                       },
