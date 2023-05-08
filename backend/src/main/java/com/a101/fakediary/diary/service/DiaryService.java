@@ -6,12 +6,11 @@ import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
 import com.a101.fakediary.chatgptdiary.api.ChatGptApi;
-import com.a101.fakediary.chatgptdiary.dto.result.ResultDto;
+import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.diary.dto.*;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
-import com.a101.fakediary.diaryimage.repository.DiaryImageRepository;
 import com.a101.fakediary.diaryimage.service.DiaryImageService;
 import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
@@ -38,8 +37,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -394,7 +391,7 @@ public class DiaryService {
     }
 
     @Transactional(readOnly = true)
-    public ResultDto getResultDto(List<Long> cardList) throws Exception {
+    public DiaryResultDto getResultDto(List<Long> cardList) throws Exception {
         List<String> characters = new ArrayList<>();
         List<String> places = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
@@ -413,5 +410,14 @@ public class DiaryService {
         }
 
         return chatGptApi.askGpt(characters, places, keywords);
+    }
+
+    @Transactional
+    public void createDiary(List<Long> cardList) throws Exception {
+        DiaryResultDto diaryResultDto = getResultDto(cardList);
+        String title = diaryResultDto.getTitle();
+        String summary = diaryResultDto.getSummary();
+        List<String> subtitles = diaryResultDto.getSubtitles();
+        List<List<String>> contents = diaryResultDto.getContents();
     }
 }

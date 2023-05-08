@@ -4,7 +4,7 @@ import com.a101.fakediary.chatgptdiary.dto.message.Message;
 import com.a101.fakediary.chatgptdiary.dto.request.ChatGptDiaryRequestDto;
 
 import com.a101.fakediary.chatgptdiary.dto.response.ChatGptDiaryResponseDto;
-import com.a101.fakediary.chatgptdiary.dto.result.ResultDto;
+import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.chatgptdiary.prompt.ChatGptPrompts;
 import com.a101.fakediary.chatgptdiary.config.OpenAIRestTemplateConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,7 +72,7 @@ public class ChatGptApi {
      * @param keywords : 키워드 리스트
      * @return : 생성된 이야기
      */
-    public ResultDto askGpt(List<String> characters, List<String> places, List<String> keywords) throws Exception {
+    public DiaryResultDto askGpt(List<String> characters, List<String> places, List<String> keywords) throws Exception {
         ChatGptDiaryRequestDto requestDto = ChatGptDiaryRequestDto.builder()
                 .model(MODEL)
                 .n(N)
@@ -95,10 +95,10 @@ public class ChatGptApi {
         log.info("diaryContent = " + diaryContent);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        ResultDto resultDto = objectMapper.readValue(diaryContent, ResultDto.class);
+        DiaryResultDto diaryResultDto = objectMapper.readValue(diaryContent, DiaryResultDto.class);
 
-        log.info("resultDto = " + resultDto);
+        log.info("resultDto = " + diaryResultDto);
 
-        return resultDto;
+        return diaryResultDto;
     }
 }

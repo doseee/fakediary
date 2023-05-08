@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ResultDto {
+public class DiaryResultDto {
     private String title;
     private String summary;
     private List<String> subtitles;
