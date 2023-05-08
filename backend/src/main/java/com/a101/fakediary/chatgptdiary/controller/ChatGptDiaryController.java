@@ -2,6 +2,7 @@ package com.a101.fakediary.chatgptdiary.controller;
 
 import com.a101.fakediary.chatgptdiary.api.ChatGptApi;
 import com.a101.fakediary.chatgptdiary.dto.response.ChatGptDiaryResponseDto;
+import com.a101.fakediary.chatgptdiary.dto.result.ResultDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,14 @@ public class ChatGptDiaryController {
         List<String> places = (List<String>)requestBody.get("places");
         List<String> keywords = (List<String>)requestBody.get("keywords");
 
-        ChatGptDiaryResponseDto responseDto = chatGptApi.askGpt(characters, places, keywords);
-        log.info("content = " + responseDto.getChoices().get(0).getMessage().getContent());
+        try {
+            ResultDto resultDto = chatGptApi.askGpt(characters, places, keywords);
+//        log.info("content = " + responseDto.getChoices().get(0).getMessage().getContent());
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+            return new ResponseEntity<>(resultDto, HttpStatus.OK);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("에러 발생");
+        }
     }
 }
