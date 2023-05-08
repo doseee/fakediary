@@ -1,6 +1,6 @@
-package com.a101.fakediary.gpt.dto.response;
+package com.a101.fakediary.gpt3.dto.response;
 
-import com.a101.fakediary.gpt.dto.Choice;
+import com.a101.fakediary.gpt3.dto.Choice;
 import lombok.*;
 
 import java.time.LocalDate;

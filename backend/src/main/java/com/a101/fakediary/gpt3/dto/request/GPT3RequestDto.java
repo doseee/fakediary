@@ -1,4 +1,4 @@
-package com.a101.fakediary.gpt.dto.request;
+package com.a101.fakediary.gpt3.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

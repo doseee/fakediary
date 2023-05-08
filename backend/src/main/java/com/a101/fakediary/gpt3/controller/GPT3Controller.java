@@ -1,8 +1,8 @@
-package com.a101.fakediary.gpt.controller;
+package com.a101.fakediary.gpt3.controller;
 
-import com.a101.fakediary.gpt.dto.request.QuestionRequestDto;
-import com.a101.fakediary.gpt.dto.response.GPTResponseDto;
-import com.a101.fakediary.gpt.service.GPTService;
+import com.a101.fakediary.gpt3.dto.request.QuestionRequestDto;
+import com.a101.fakediary.gpt3.dto.response.GPTResponseDto;
+import com.a101.fakediary.gpt3.service.GPTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
