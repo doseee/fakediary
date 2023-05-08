@@ -28,4 +28,9 @@ public class DiaryImageService {
             diaryImageRepository.save(diaryImage);
         }
     }
+
+    @Transactional(readOnly = true)
+    public String[] readDiaryImages(Long diaryId){
+        return diaryImageRepository.findByDiaryImageUrl(diaryId);
+    }
 }
