@@ -33,6 +33,11 @@ public class DiaryController {
         }
     }
 
+    @PostMapping("/cards")
+    public ResponseEntity<?> saveDiaryWithCardList(@RequestBody List<Long> cardIdList) {
+        return null;
+    }
+
     @ApiOperation(value = "일기 상세 조회")
     @GetMapping("/detail/{diaryId}")
     public ResponseEntity<?> detailDiary(@PathVariable Long diaryId) {
@@ -80,6 +85,21 @@ public class DiaryController {
     public ResponseEntity<?> deleteDiary(@PathVariable Long diaryId) {
         try {
             diaryService.deleteDiary(diaryId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * for developing : 모든 일기 랜덤 교환 사용 내역 초기화
+     * @return
+     */
+    @PutMapping("/reset")
+    public ResponseEntity<?> setAllDiariesRandomExchangedUnused() {
+        try {
+            diaryService.setAllDiariesRandomExchangedUnused();
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
