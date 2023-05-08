@@ -16,173 +16,205 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
         body: Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage('assets/img/background.png'),
-        ),
-      ),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children :[
-            Stack(
-        alignment: Alignment.center,
-        children: [
-          Image(
-            image: AssetImage('assets/gif-file/moon_real.gif'),
-            // backgroundimage AssetImage('assets/gif-file/moon.gif'),
-          ),
-          Transform(
-              transform: Matrix4.identity()
-                ..translate(
-                    radius * cos(radians(-75)), radius * sin(radians(-75))),
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CardCreate()),
-                    );
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Lottie.asset('assets/lottie/menu_grinstar.json',
-                            width: 40),
-                        Text(
-                          '카드 만들기',
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )
-                      ]))),
-          Transform(
-              transform: Matrix4.identity()
-                ..translate(
-                    radius * cos(radians(-45)), radius * sin(radians(-45))),
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DiaryCreateCards(),
-                      ),
-                    );
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Lottie.asset('assets/lottie/menu_grinstar.json',
-                            width: 40),
-                        Text(
-                          '일기 쓰기',
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )
-                      ]))),
-          Transform(
-            transform: Matrix4.identity()
-              ..translate(
-                  radius * cos(radians(-15)), radius * sin(radians(-15))),
-            child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CardList(),
-                    ),
-                  );
-                },
-                child: Row(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage('assets/img/background.png'),
+              ),
+            ),
+            child: Transform.translate(
+                offset: Offset(-150, 0),
+                child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Lottie.asset('assets/lottie/menu_grinstar.json',
-                          width: 40),
-                      Text(
-                        '카드 보관함',
-                        style: TextStyle(fontSize: 15, color: Colors.white),
-                      )
-                    ])),
-          ),
-          Transform(
-              transform: Matrix4.identity()
-                ..translate(
-                    radius * cos(radians(15)), radius * sin(radians(15))),
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DiaryListScreen(),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Image(
+                            image: AssetImage('assets/gif-file/moon_real.gif'),
+
+                          )
+                          // backgroundimage AssetImage('assets/gif-file/moon.gif'),
+                          ,
+                          Transform(
+                              transform: Matrix4.identity()
+                                ..translate(radius * cos(radians(-75)) -
+                                    radius * sin(radians(-75))),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CardCreate()),
+                                    );
+                                  },
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset(
+                                            'assets/lottie/menu_grinstar.json',
+                                            width: 40),
+                                        Text(
+                                          '카드 만들기',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        )
+                                      ]))),
+                          Transform(
+                              transform: Matrix4.identity()
+                                ..translate(radius * cos(radians(-45)),
+                                    radius * sin(radians(-45))),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DiaryCreateCards(),
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset(
+                                            'assets/lottie/menu_grinstar.json',
+                                            width: 40),
+                                        Text(
+                                          '일기 쓰기',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        )
+                                      ]))),
+                          Transform(
+                            transform: Matrix4.identity()
+                              ..translate(radius * cos(radians(-15)),
+                                  radius * sin(radians(-15))),
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CardList(),
+                                    ),
+                                  );
+                                },
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Lottie.asset(
+                                          'assets/lottie/menu_grinstar.json',
+                                          width: 40),
+                                      Text(
+                                        '카드 보관함',
+                                        style: TextStyle(
+                                            fontSize: 15, color: Colors.white),
+                                      )
+                                    ])),
+                          ),
+                          Transform(
+                              transform: Matrix4.identity()
+                                ..translate(radius * cos(radians(15)),
+                                    radius * sin(radians(15))),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DiaryListScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset(
+                                            'assets/lottie/menu_grinstar.json',
+                                            width: 40),
+                                        Text(
+                                          '일기장',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        )
+                                      ]))),
+                          Transform(
+                              transform: Matrix4.identity()
+                                ..translate(radius * cos(radians(45)),
+                                    radius * sin(radians(45))),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => FriendScreen(
+                                          diaryId: -100,
+                                          exchangeSituation: 0,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset(
+                                            'assets/lottie/menu_grinstar.json',
+                                            width: 40),
+                                        Text(
+                                          '친구',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                        )
+                                      ]))),
+                          Transform(
+                              transform: Matrix4.identity()
+                                ..translate(radius * cos(radians(75)),
+                                    radius * sin(radians(75))),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ModifyScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Lottie.asset(
+                                        'assets/lottie/menu_grinstar.json',
+                                        width: 40),
+                                    Text(
+                                      '마이페이지',
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ],
                       ),
-                    );
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Lottie.asset('assets/lottie/menu_grinstar.json',
-                            width: 40),
-                        Text(
-                          '일기장',
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )
-                      ]))),
-          Transform(
-              transform: Matrix4.identity()
-                ..translate(
-                    radius * cos(radians(45)), radius * sin(radians(45))),
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FriendScreen(
-                          diaryId: -100,
-                          exchangeSituation: 0,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Lottie.asset('assets/lottie/menu_grinstar.json',
-                            width: 40),
-                        Text(
-                          '친구',
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )
-                      ]))),
-          Transform(
-              transform: Matrix4.identity()
-                ..translate(
-                    radius * cos(radians(75)), radius * sin(radians(75))),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ModifyScreen(),
-                    ),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Lottie.asset('assets/lottie/menu_grinstar.json', width: 40),
-                    Text(
-                      '마이페이지',
-                      style: TextStyle(fontSize: 15, color: Colors.white),
-                    ),
-                  ],
-                ),
-              )),
-        ],
-      ),]
-    )));
+                    ]))));
   }
 //
 // class MenuBtn extends StatelessWidget {
