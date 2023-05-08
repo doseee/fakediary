@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
@@ -14,6 +15,18 @@ class _RegistScreenState extends State<RegistScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
+  late String? token;
+
+  getToken() async {
+    FirebaseMessaging fcm = FirebaseMessaging.instance;
+    token = await fcm.getToken() ?? '';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getToken();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,6 +186,7 @@ class _RegistScreenState extends State<RegistScreen> {
                           _emailController.text,
                           _nicknameController.text,
                           _passwordController.text,
+                          token ?? '',
                         );
                         if (!mounted) return;
                         if (result) {
