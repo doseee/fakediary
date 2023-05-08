@@ -8,6 +8,7 @@ import com.a101.fakediary.diary.dto.*;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
+import com.a101.fakediary.diaryimage.repository.DiaryImageRepository;
 import com.a101.fakediary.diaryimage.service.DiaryImageService;
 import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
@@ -94,14 +95,27 @@ public class DiaryService {
             for (String s : genre)
                 eGenres[i++] = EGenre.valueOf(s);
             tmp.setGenre(eGenres);
+            tmp.setDiaryImageUrl(diaryImageService.readDiaryImages(value.getDiaryId()));
             list.add(tmp);
         }
         return list;
     }
 
+    private DiaryResponseDto changeResponse(Diary diary) {
+        DiaryResponseDto tmp = new DiaryResponseDto(diary);
+        List<String> genre = genreService.searchGenre(tmp.getDiaryId());
+        EGenre[] eGenres = new EGenre[genre.size()];
+        int i = 0;
+        for (String s : genre)
+            eGenres[i++] = EGenre.valueOf(s);
+        tmp.setGenre(eGenres);
+        tmp.setDiaryImageUrl(diaryImageService.readDiaryImages(diary.getDiaryId()));
+        return tmp;
+    }
+
     @Transactional
     public Diary createDiary(DiaryRequestDto dto) throws Exception {
-        //dto 키워드 채우기
+        //dto 키워드+ 채우기
         StringBuilder keywords = new StringBuilder();
         StringBuilder names = new StringBuilder();
         StringBuilder places = new StringBuilder();
@@ -260,7 +274,7 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public DiaryResponseDto detailDiary(Long diaryId) {
-        return new DiaryResponseDto(diaryRepository.findByDiaryId(diaryId));
+        return changeResponse(diaryRepository.findByDiaryId(diaryId));
     }
 
     @Transactional(readOnly = true)
