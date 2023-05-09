@@ -12,7 +12,7 @@ import 'package:vector_math/vector_math.dart' show radians;
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final radius = 190;
+    final radius = 170;
 
     return Scaffold(
         body: Container(
@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             child: Transform.translate(
-                offset: Offset(-120, 0),
+                offset: Offset(-100, 0),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,42 +33,47 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Image(
                             image: AssetImage('assets/gif-file/moon_real.gif'),
+                            width: 320,
                           )
                           // backgroundimage AssetImage('assets/gif-file/moon.gif'),
                           ,
                           Transform(
                               transform: Matrix4.identity()
-                                ..translate((radius - 10) * cos(radians(-90)),
-                                    (radius - 10) * sin(radians(-90))),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CardCreate(),
-                                      ),
-                                    );
-                                  },
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Lottie.asset(
-                                            'assets/lottie/menu_grinstar.json',
-                                            width: 40),
-                                        Text(
-                                          '카드 만들기',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white),
-                                        )
-                                      ]))),
+                                ..translate((radius - 100) * cos(radians(-75)),
+                                    (radius) * sin(radians(-75))),
+                              child: Container(
+                                height: 700,
+                                width: 700,
+                                child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CardCreate(),
+                                        ),
+                                      );
+                                    },
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Lottie.asset(
+                                              'assets/lottie/menu_grinstar.json',
+                                              width: 30),
+                                          Text(
+                                            '카드 만들기',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.white),
+                                          )
+                                        ])),
+                              )),
                           Transform(
                               transform: Matrix4.identity()
-                                ..translate(radius * cos(radians(-60)),
-                                    radius * sin(radians(-60))),
+                                ..translate((radius) * cos(radians(-45)),
+                                    (radius) * sin(radians(-45))),
                               child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -87,7 +92,7 @@ class HomeScreen extends StatelessWidget {
                                       children: [
                                         Lottie.asset(
                                             'assets/lottie/menu_grinstar.json',
-                                            width: 40),
+                                            width: 30),
                                         Text(
                                           '일기 쓰기',
                                           style: TextStyle(
@@ -97,8 +102,8 @@ class HomeScreen extends StatelessWidget {
                                       ]))),
                           Transform(
                             transform: Matrix4.identity()
-                              ..translate(radius * cos(radians(-30)),
-                                  radius * sin(radians(-30))),
+                              ..translate(radius * cos(radians(-15)),
+                                  radius * sin(radians(-15))),
                             child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -115,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                                     children: [
                                       Lottie.asset(
                                           'assets/lottie/menu_grinstar.json',
-                                          width: 40),
+                                          width: 30),
                                       Text(
                                         '내 카드',
                                         style: TextStyle(
@@ -125,8 +130,8 @@ class HomeScreen extends StatelessWidget {
                           ),
                           Transform(
                               transform: Matrix4.identity()
-                                ..translate(radius * cos(radians(0)),
-                                    radius * sin(radians(0))),
+                                ..translate(radius * cos(radians(15)),
+                                    radius * sin(radians(15))),
                               child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -144,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                                       children: [
                                         Lottie.asset(
                                             'assets/lottie/menu_grinstar.json',
-                                            width: 40),
+                                            width: 30),
                                         Text(
                                           '일기장',
                                           style: TextStyle(
@@ -154,8 +159,8 @@ class HomeScreen extends StatelessWidget {
                                       ]))),
                           Transform(
                               transform: Matrix4.identity()
-                                ..translate(radius * cos(radians(30)),
-                                    radius * sin(radians(30))),
+                                ..translate((radius) * cos(radians(45)),
+                                    (radius) * sin(radians(45))),
                               child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -176,39 +181,7 @@ class HomeScreen extends StatelessWidget {
                                       children: [
                                         Lottie.asset(
                                             'assets/lottie/menu_grinstar.json',
-                                            width: 40),
-                                        Text(
-                                          '우편함',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white),
-                                        )
-                                      ]))),
-                          Transform(
-                              transform: Matrix4.identity()
-                                ..translate(radius * cos(radians(60)),
-                                    radius * sin(radians(60))),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => FriendScreen(
-                                          diaryId: -100,
-                                          exchangeSituation: 0,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Lottie.asset(
-                                            'assets/lottie/menu_grinstar.json',
-                                            width: 40),
+                                            width: 30),
                                         Text(
                                           '친구',
                                           style: TextStyle(
@@ -218,8 +191,8 @@ class HomeScreen extends StatelessWidget {
                                       ]))),
                           Transform(
                               transform: Matrix4.identity()
-                                ..translate((radius - 10) * cos(radians(90)),
-                                    (radius - 10) * sin(radians(90))),
+                                ..translate((radius - 100) * cos(radians(75)),
+                                    (radius) * sin(radians(75))),
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -235,7 +208,7 @@ class HomeScreen extends StatelessWidget {
                                   children: [
                                     Lottie.asset(
                                         'assets/lottie/menu_grinstar.json',
-                                        width: 40),
+                                        width: 30),
                                     Text(
                                       '마이페이지',
                                       style: TextStyle(
