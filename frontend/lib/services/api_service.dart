@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/model/SearchFriendModel.dart';
@@ -19,9 +20,11 @@ class ApiService {
   static Future<bool> login(String email, String password) async {
     print('loginstart');
     final url = Uri.parse('$baseUrl/member/login');
+    final token = FirebaseMessaging.instance.getToken();
     final memberLoginRequestDto = {
       'email': email,
       'password': password,
+      'firebaseUid': await token ?? '',
     };
     final response = await http.post(
       url,
