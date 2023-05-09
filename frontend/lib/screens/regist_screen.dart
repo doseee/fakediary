@@ -1,7 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
+import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistScreen extends StatefulWidget {
   const RegistScreen({super.key});
@@ -20,6 +22,7 @@ class _RegistScreenState extends State<RegistScreen> {
   getToken() async {
     FirebaseMessaging fcm = FirebaseMessaging.instance;
     token = await fcm.getToken() ?? '';
+    print(token);
   }
 
   @override
@@ -189,13 +192,24 @@ class _RegistScreenState extends State<RegistScreen> {
                           token ?? '',
                         );
                         if (!mounted) return;
+                        final pref = await SharedPreferences.getInstance();
+                        final isFirstLaunch =
+                            pref.getBool('isFirstLaunch') ?? true;
+                        if (isFirstLaunch) {
+                          pref.setBool('isFirstLaunch', false);
+                        }
                         if (result) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(),
-                            ),
-                          );
+                          if (isFirstLaunch) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TutorialScreen()));
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                          }
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Center(child: Text('login success!')),
