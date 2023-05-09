@@ -182,7 +182,7 @@ public class DiaryService {
                 .build();
 
         Map<String, Object> map = new HashMap<>();
-        //중요한것은 prompt, steps, sampler_index
+        //중요한것은 prompt, steps, sampler_index, override_settings(체크포인트바꾸는것)
 //        map.put("prompt", translate(dto.getTitle()));
         map.put("steps", 20);
         map.put("sampler_index", "Euler a");
