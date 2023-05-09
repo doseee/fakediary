@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 
 
 import '../model/CardModel.dart';
-import '../model/CardUrlListVerModel.dart';
+// import '../model/CardUrlListVerModel.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/line_widget.dart';
 
