@@ -44,7 +44,7 @@ public class Diary extends BaseEntity {
     private String prompt;
 
     @Column(nullable = false, length = 400)
-    @Size(max = 10, message = "Title은 띄어쓰기 포함 10글자 이내여야합니다.")
+    @Size(max = 50, message = "Title은 띄어쓰기 포함 50글자 이내여야합니다.")
     private String title;
 
     @Column(length = 400)
