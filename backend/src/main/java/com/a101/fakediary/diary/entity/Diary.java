@@ -59,4 +59,8 @@ public class Diary extends BaseEntity {
     @Column(nullable = false)
     @ColumnDefault("false")
     private boolean isExchanged;
+
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private boolean isDeleted;
 }

@@ -80,7 +80,19 @@ public class DiaryController {
         }
     }
 
-    @ApiOperation(value = "일기 삭제")
+    @ApiOperation(value = "일기 삭제(status상 삭제)")
+    @PatchMapping("/{diaryId}")
+        public ResponseEntity<?> deleteStatusDiary(@PathVariable Long diaryId){
+            try{
+                diaryService.deleteStatusDiary(diaryId);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e){
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+        }
+
+    @ApiOperation(value = "일기 삭제(DB에서 삭제. 진짜 DB에서 삭제되니 status삭제로 사용 권장)")
     @DeleteMapping("/delete/{diaryId}")
     public ResponseEntity<?> deleteDiary(@PathVariable Long diaryId) {
         try {
