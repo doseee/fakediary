@@ -584,7 +584,7 @@ class ApiService {
     Map<String, dynamic> body = {
       'model': 'gpt-4',
       'messages': messages,
-      'max_tokens': 2500,
+      'max_tokens': 500,
       'temperature':
           0.5, // Adjust to control the randomness of the generated response
     };
@@ -605,7 +605,7 @@ class ApiService {
       if (!answer.endsWith('}')) {
         print('중단됨');
         messages = await askGpt4(messages,
-            "Answer me from the cut off part. Don't repeat similar content, and finish the answer as quickly as possible in the specified json format.");
+            "끊어진 부분부터 이어서 답변해줘. 비슷한 내용을 반복하지 말고 되도록 지정한 json 형식대로 답변을 빨리 마무리해줘.");
       }
       return messages;
     } else {
@@ -903,8 +903,7 @@ class ApiService {
     }
   }
 
-  Future<List<SearchFriendModel>> getSearchFriends(
-      String nickname) async {
+  Future<List<SearchFriendModel>> getSearchFriends(String nickname) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
@@ -926,22 +925,19 @@ class ApiService {
   }
 
   static Future<bool> AddFriend(int receiverId) async {
-
-    SharedPreferences prefs =await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
-    final AddFriendDto = {
-      "receiverId": receiverId,
-      "senderId": memberId
-    };
+    final AddFriendDto = {"receiverId": receiverId, "senderId": memberId};
 
-    final response = await http.post(Uri.parse('$baseUrl/friendrequest/request'),
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: json.encode(AddFriendDto));
+    final response =
+        await http.post(Uri.parse('$baseUrl/friendrequest/request'),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: json.encode(AddFriendDto));
 
-    if( response.statusCode == 200 ) {
+    if (response.statusCode == 200) {
       print('success');
       return true;
     } else {
@@ -949,5 +945,4 @@ class ApiService {
       return false;
     }
   }
-
 }
