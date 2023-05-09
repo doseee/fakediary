@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/model/CardUrlListVerModel.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/model/SearchFriendModel.dart';
 import 'package:geolocator/geolocator.dart';
@@ -360,6 +361,19 @@ class ApiService {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
       List<CardModel> cards =
           jsonResponse.map((dynamic item) => CardModel.fromJson(item)).toList();
+
+      return cards;
+    } else {
+      throw Exception('카드 리스트를 불러오는 데 실패했습니다');
+    }
+  }
+
+  static Future<List<CardUrlListVerModel>> getCardsbyDiaryId(int diaryId) async {
+    final response = await http.get(Uri.parse('$baseUrl/cardDiaryMapping/card/$diaryId'));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<CardUrlListVerModel> cards =
+      jsonResponse.map((dynamic item) => CardUrlListVerModel.fromJson(item)).toList();
 
       return cards;
     } else {
@@ -947,6 +961,22 @@ class ApiService {
     } else {
       print('fail');
       return false;
+    }
+  }
+
+  static Future<CardModel> findCard(int cardId) async {
+    print('here?');
+    print('cardId: $cardId');
+    final response = await http.get(Uri.parse('$baseUrl/card/pick/$cardId'));
+    print('here??');
+    print(response.bodyBytes);
+    if (response.statusCode == 200) {
+      CardModel card =
+      CardModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      print('cardinfo: ${card.toString()}');
+      return card;
+    } else {
+    throw Exception('카드 정보를 불러오는 데 실패했습니다');
     }
   }
 

@@ -36,7 +36,7 @@ public class MemberService {
     }
 
     //로그인
-    @Transactional(readOnly = true)
+    @Transactional
     public MemberLoginResponseDto signInMember(MemberLoginRequestDto memberloginRequestDto) {
         Optional<Member> memberOptional = memberRepository.findByEmail(memberloginRequestDto.getEmail());
         if (memberOptional.isEmpty()) {
@@ -47,6 +47,8 @@ public class MemberService {
         if (!encodePassword.equals(member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+
+        member.setFirebaseUid(memberloginRequestDto.getFirebaseUid()); //로그인시 firebaseuid update
 
         MemberLoginResponseDto memberLoginResponseDto = MemberLoginResponseDto.builder()
                 .memberId(member.getMemberId())

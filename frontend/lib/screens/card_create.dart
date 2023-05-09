@@ -161,6 +161,9 @@ class _CardCreateState extends State<CardCreate> {
                 ),
               ),
               child: Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                ),
                 backgroundColor: Colors.transparent,
                 body: Padding(
                   padding: EdgeInsets.symmetric(

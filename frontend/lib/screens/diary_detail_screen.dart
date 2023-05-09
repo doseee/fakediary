@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:frontend/widgets/ChangeButton.dart';
+import 'package:frontend/widgets/change_button.dart';
 import 'package:frontend/widgets/compass_divider.dart';
 import 'package:frontend/widgets/dashed_line.dart';
 import 'package:frontend/widgets/diary_detail_card_list.dart';
@@ -36,6 +36,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   late int slideNum = 0; ///모바일 화면을 일정한 크기의 slide로 나누었을 때 몇번째 슬라이드인지 인덱스 번호
   late Future<DiaryModel> diary; ///API로 받아온 다이어리 모델
   late List<String> details; ///다이어리 모델 중 디테일 리스트
+  late Future<List<CardUrlListVerModel>> cards;
 
   late bool _isTransparent = false; /// SliverAppBar 투명도 변경하는 변수
   late bool _isExpanded = true; /// 구분선 확장 상태 관리하는 변수
@@ -70,6 +71,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
     _scrollController.addListener((changeSelector)); /// scroll 상태에 따라 slide 변경
 
     getDiaryModel(); /// 일기를 받아오는 API 호출
+    cards = ApiService.getCardsbyDiaryId(widget.diaryId);
   }
 
   /// scroll 상태에 따라 slide 변경하는 함수
@@ -147,7 +149,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
       return Container();
     }
 
-    return DiaryDetailCardList(colors: colors,); /// 카드가 있을 경우 나열하는 위젯
+    return DiaryDetailCardList(cards: cards,); /// 카드가 있을 경우 나열하는 위젯
   }
 
 
