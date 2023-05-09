@@ -6,7 +6,7 @@ import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import '../model/DiaryModel.dart';
-import '../widgets/ChangeButton.dart';
+import '../widgets/change_button.dart';
 import '../widgets/appbar.dart';
 
 
@@ -198,6 +198,8 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                                                           context: context,
                                                           builder: (context) {
                                                             return InfoModal(
+                                                                padding: 20,
+                                                              color: true,
                                                                 widget: Text(
                                                                   '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다',
                                                                   style: TextStyle(

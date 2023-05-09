@@ -70,7 +70,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     content: Center(child: Text('친구요청 완료!')),
                   ),
                 )
-              : Container();
+              :  ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(child: Text('이미 친구 요청 했짜나 ㅠ')),
+            ),
+          );
         },
         child: Center(
           child: Container(

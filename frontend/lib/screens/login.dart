@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
+import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/api_service.dart';
 
@@ -83,20 +85,43 @@ class _LoginState extends State<Login> {
             final bool result = await ApiService.login(
                 _emailController.text, _passwordController.text);
             if (!mounted) return;
+            final pref = await SharedPreferences.getInstance();
+            final isFirstLaunch = pref.getBool('isFirstLaunch') ?? true;
+            if (isFirstLaunch) {
+              pref.setBool('isFirstLaunch', false);
+            }
             if (result) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()));
+              if (isFirstLaunch) {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TutorialScreen()));
+              } else {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
+              }
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Center(child: Text('login success!')),
                 ),
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Center(child: Text('login failed.')),
+              ScaffoldMessenger.of(context).showMaterialBanner(
+                MaterialBanner(
+                  backgroundColor: Colors.grey.shade800,
+                  content: Text('입력를 확인해주세요.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context)
+                            .hideCurrentMaterialBanner();
+                      },
+                      child: Text('닫기'),
+                    ),
+                  ],
                 ),
               );
+              Future.delayed(Duration(seconds: 3), () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              });
             }
           }
         },

@@ -1,7 +1,6 @@
 package com.a101.fakediary.genre.service;
 
 import com.a101.fakediary.diary.repository.DiaryRepository;
-import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.entity.Genre;
 import com.a101.fakediary.genre.entity.GenrePK;
@@ -36,7 +35,7 @@ public class GenreService {
 
     private Genre toEntity(GenreDto dto) {
         return Genre.builder()
-                .id(new GenrePK(diaryRepository.findByDiaryId(dto.getDiaryId()), dto.getGenre()))
+                .id(new GenrePK(diaryRepository.findById(dto.getDiaryId()).orElseThrow(), dto.getGenre()))
                 .build();
     }
 }

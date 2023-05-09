@@ -55,6 +55,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_svg: ^2.0.5
   flutter_animate: ^4.1.1+1
+  image_gallery_saver: ^1.7.1
 
 dev_dependencies:
   flutter_test:

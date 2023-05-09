@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/model/CardUrlListVerModel.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/model/SearchFriendModel.dart';
 import 'package:geolocator/geolocator.dart';
@@ -19,10 +21,13 @@ class ApiService {
   static Future<bool> login(String email, String password) async {
     print('loginstart');
     final url = Uri.parse('$baseUrl/member/login');
+    final token = FirebaseMessaging.instance.getToken();
     final memberLoginRequestDto = {
       'email': email,
       'password': password,
+      'firebaseUid': await token ?? '',
     };
+    print(memberLoginRequestDto);
     final response = await http.post(
       url,
       headers: {
@@ -57,8 +62,9 @@ class ApiService {
   }
 
   static Future<bool> signup(
-      String email, String nickname, String password, String token) async {
+      String email, String nickname, String password) async {
     final url = Uri.parse('$baseUrl/member/signup');
+    final token = await FirebaseMessaging.instance.getToken();
     final memberSaveRequestDto = {
       'email': email,
       'nickname': nickname,
@@ -367,6 +373,22 @@ class ApiService {
     }
   }
 
+  static Future<List<CardUrlListVerModel>> getCardsbyDiaryId(
+      int diaryId) async {
+    final response =
+        await http.get(Uri.parse('$baseUrl/cardDiaryMapping/card/$diaryId'));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<CardUrlListVerModel> cards = jsonResponse
+          .map((dynamic item) => CardUrlListVerModel.fromJson(item))
+          .toList();
+
+      return cards;
+    } else {
+      throw Exception('카드 리스트를 불러오는 데 실패했습니다');
+    }
+  }
+
   static bool isValidJson(String str) {
     int openBrackets = 0;
     int closeBrackets = 0;
@@ -559,7 +581,7 @@ class ApiService {
       messages.add({
         'role': 'system',
         'content':
-            '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 10자 이내로 title에, 한줄 요약은 summary에, 소제목은 subtitles에, 내용은 contents에 넣어줘. 이야기를 한 장 당 2000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 각 장의 제목이 되는 subtitles도 contents와 같이 문자열 배열로 만들어줘.'
+            '재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 summary에, 소제목은 subtitles에, 내용은 contents에 넣어줘. 이야기를 한 장 당 2000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 각 장의 제목이 되는 subtitles도 contents와 같이 문자열 배열로 만들어줘.'
       });
     }
     // if (messages.isEmpty) {
@@ -903,8 +925,7 @@ class ApiService {
     }
   }
 
-  Future<List<SearchFriendModel>> getSearchFriends(
-      String nickname) async {
+  Future<List<SearchFriendModel>> getSearchFriends(String nickname) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
@@ -926,22 +947,19 @@ class ApiService {
   }
 
   static Future<bool> AddFriend(int receiverId) async {
-
-    SharedPreferences prefs =await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
-    final AddFriendDto = {
-      "receiverId": receiverId,
-      "senderId": memberId
-    };
+    final AddFriendDto = {"receiverId": receiverId, "senderId": memberId};
 
-    final response = await http.post(Uri.parse('$baseUrl/friendrequest/request'),
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: json.encode(AddFriendDto));
+    final response =
+        await http.post(Uri.parse('$baseUrl/friendrequest/request'),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: json.encode(AddFriendDto));
 
-    if( response.statusCode == 200 ) {
+    if (response.statusCode == 200) {
       print('success');
       return true;
     } else {
@@ -950,4 +968,32 @@ class ApiService {
     }
   }
 
+  static Future<bool> deleteDiary(int diaryId) async {
+    final url = Uri.parse('$baseUrl/diary/$diaryId');
+    final response = await http.patch(url);
+
+    if (response.statusCode == 200) {
+      print('success');
+      return true;
+    } else {
+      print('fail');
+      return false;
+    }
+  }
+
+  static Future<CardModel> findCard(int cardId) async {
+    print('here?');
+    print('cardId: $cardId');
+    final response = await http.get(Uri.parse('$baseUrl/card/pick/$cardId'));
+    print('here??');
+    print(response.bodyBytes);
+    if (response.statusCode == 200) {
+      CardModel card =
+          CardModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      print('cardinfo: ${card.toString()}');
+      return card;
+    } else {
+      throw Exception('카드 정보를 불러오는 데 실패했습니다');
+    }
+  }
 }

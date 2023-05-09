@@ -40,8 +40,8 @@ public class StableDiffusionApi {
     private final AmazonS3 s3client;
     private static final Logger logger = LoggerFactory.getLogger(StableDiffusionApi.class);
 
-    public StableDiffusionApi(@Value("$${cloud.aws.credentials.access-key}")String S3_ACCESS_KEY,
-                              @Value("$${cloud.aws.credentials.secret-key}")String S3_SECRET_KEY,
+    public StableDiffusionApi(@Value("${cloud.aws.credentials.access-key}")String S3_ACCESS_KEY,
+                              @Value("${cloud.aws.credentials.secret-key}")String S3_SECRET_KEY,
                               @Value("${cloud.aws.s3.bucket}")String S3_BUCKET,
                               @Value("${fake-diary.stable-diffusion.base-url}")String STABLE_DIFFUSION_URL,
                               @Value("${fake-diary.stable-diffusion.max-memory-size}")int MAX_BYTE_SIZE,
@@ -51,6 +51,12 @@ public class StableDiffusionApi {
         this.S3_BUCKET = S3_BUCKET;
         this.STABLE_DIFFUSION_URL = STABLE_DIFFUSION_URL;
         this.MAX_BYTE_SIZE = MAX_BYTE_SIZE;
+
+        log.info("S3_ACCESS_KEY = " + this.S3_ACCESS_KEY);
+        log.info("S3_SECRET_KEY = " + this.S3_SECRET_KEY);
+        log.info("S3_BUCKET = " + this.S3_BUCKET);
+        log.info("STABLE_DIFFUSION_URL = " + this.STABLE_DIFFUSION_URL);
+        log.info("MAX_BYTE_SIZE = " + this.MAX_BYTE_SIZE);
 
         this.exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(MAX_BYTE_SIZE))
@@ -105,7 +111,7 @@ public class StableDiffusionApi {
         map.put("save_images", false);
         map.put("alwayson_scripts", new HashMap<>());
 
-        this.credentials = new BasicAWSCredentials(S3_ACCESS_KEY, S3_SECRET_KEY);
+        this.credentials = new BasicAWSCredentials(this.S3_ACCESS_KEY, this.S3_SECRET_KEY);
         this.s3client = new AmazonS3Client(credentials);
     }
 
