@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/model/CardUrlListVerModel.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/model/SearchFriendModel.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,11 +20,9 @@ class ApiService {
   static Future<bool> login(String email, String password) async {
     print('loginstart');
     final url = Uri.parse('$baseUrl/member/login');
-    final token = FirebaseMessaging.instance.getToken();
     final memberLoginRequestDto = {
       'email': email,
       'password': password,
-      'firebaseUid': await token ?? '',
     };
     final response = await http.post(
       url,
@@ -370,6 +368,19 @@ class ApiService {
     }
   }
 
+  static Future<List<CardUrlListVerModel>> getCardsbyDiaryId(int diaryId) async {
+    final response = await http.get(Uri.parse('$baseUrl/cardDiaryMapping/card/$diaryId'));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<CardUrlListVerModel> cards =
+      jsonResponse.map((dynamic item) => CardUrlListVerModel.fromJson(item)).toList();
+
+      return cards;
+    } else {
+      throw Exception('카드 리스트를 불러오는 데 실패했습니다');
+    }
+  }
+
   static bool isValidJson(String str) {
     int openBrackets = 0;
     int closeBrackets = 0;
@@ -587,7 +598,7 @@ class ApiService {
     Map<String, dynamic> body = {
       'model': 'gpt-4',
       'messages': messages,
-      'max_tokens': 500,
+      'max_tokens': 2500,
       'temperature':
           0.5, // Adjust to control the randomness of the generated response
     };
@@ -608,7 +619,7 @@ class ApiService {
       if (!answer.endsWith('}')) {
         print('중단됨');
         messages = await askGpt4(messages,
-            "끊어진 부분부터 이어서 답변해줘. 비슷한 내용을 반복하지 말고 되도록 지정한 json 형식대로 답변을 빨리 마무리해줘.");
+            "Answer me from the cut off part. Don't repeat similar content, and finish the answer as quickly as possible in the specified json format.");
       }
       return messages;
     } else {
@@ -906,7 +917,8 @@ class ApiService {
     }
   }
 
-  Future<List<SearchFriendModel>> getSearchFriends(String nickname) async {
+  Future<List<SearchFriendModel>> getSearchFriends(
+      String nickname) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
@@ -928,19 +940,22 @@ class ApiService {
   }
 
   static Future<bool> AddFriend(int receiverId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    SharedPreferences prefs =await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
-    final AddFriendDto = {"receiverId": receiverId, "senderId": memberId};
+    final AddFriendDto = {
+      "receiverId": receiverId,
+      "senderId": memberId
+    };
 
-    final response =
-        await http.post(Uri.parse('$baseUrl/friendrequest/request'),
-            headers: {
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: json.encode(AddFriendDto));
+    final response = await http.post(Uri.parse('$baseUrl/friendrequest/request'),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: json.encode(AddFriendDto));
 
-    if (response.statusCode == 200) {
+    if( response.statusCode == 200 ) {
       print('success');
       return true;
     } else {
@@ -948,4 +963,21 @@ class ApiService {
       return false;
     }
   }
+
+  static Future<CardModel> findCard(int cardId) async {
+    print('here?');
+    print('cardId: $cardId');
+    final response = await http.get(Uri.parse('$baseUrl/card/pick/$cardId'));
+    print('here??');
+    print(response.bodyBytes);
+    if (response.statusCode == 200) {
+      CardModel card =
+      CardModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      print('cardinfo: ${card.toString()}');
+      return card;
+    } else {
+    throw Exception('카드 정보를 불러오는 데 실패했습니다');
+    }
+  }
+
 }
