@@ -26,5 +26,6 @@ public class CardMadeDiaryResponseDto {
     private String keyword;
 
     private LocalDateTime createdAt;
+    private boolean isDeleted;
 
 }

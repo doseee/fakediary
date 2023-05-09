@@ -2,6 +2,7 @@ package com.a101.fakediary.exchangediary.service;
 
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryRepository;
+import com.a101.fakediary.diary.service.DiaryService;
 import com.a101.fakediary.enums.EExchangeType;
 import com.a101.fakediary.exchangediary.dto.ExchangedRequestDiaryDto;
 import com.a101.fakediary.exchangediary.dto.request.ExchangedDiarySaveRequestDto;
@@ -23,6 +24,7 @@ public class ExchangedDiaryService {
     private final ExchangedDiaryRepository exchangedDiaryRepository;
     private final MemberRepository memberRepository;
     private final DiaryRepository diaryRepository;
+    private final DiaryService diaryService;
 
     @Transactional
     public ExchangedDiaryResponseDto saveExchangeDiary(ExchangedDiarySaveRequestDto exchangedDiarySaveRequestDto) throws Exception {
@@ -60,16 +62,16 @@ public class ExchangedDiaryService {
     }
 
     @Transactional
-    public void saveExchangeDiary(ExchangedRequestDiaryDto request) {
+    public void saveExchangeDiary(ExchangedRequestDiaryDto request) throws Exception {
         exchangedDiaryRepository.save(requestEntity(request));
     }
 
-    private ExchangedDiary requestEntity(ExchangedRequestDiaryDto request) {
+    private ExchangedDiary requestEntity(ExchangedRequestDiaryDto request) throws Exception {
         return ExchangedDiary.builder()
                 .sender(memberRepository.findByMemberId(request.getSenderId()))
-                .senderDiary(diaryRepository.findByDiaryId(request.getSendDiaryId()))
+                .senderDiary(diaryService.findNotDeletedDiaryById(request.getSendDiaryId()))
                 .receiver(memberRepository.findByMemberId(request.getReceiveOwnerId()))
-                .receiverDiary(diaryRepository.findByDiaryId(request.getReceiveDiaryId()))
+                .receiverDiary(diaryService.findNotDeletedDiaryById(request.getReceiveDiaryId()))
                 .exchangeType(request.getExchangeType())
                 .build();
     }

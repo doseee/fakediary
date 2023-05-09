@@ -14,12 +14,9 @@ import java.util.Optional;
 
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
-    Diary findByDiaryId(Long diaryId);
 
-    @Query("select d " +
-            "from Diary d " +
-            "where d.member.memberId =:memberId")
-    List<Diary> allDiary(Long memberId);
+    //MemberId,기준으로 모든 삭제되지 않은 다이어리를 찾아서 DiaryId기준 내림차순으로 반환
+    List<Diary> findByMember_MemberIdAndIsDeletedFalseOrderByDiaryIdDesc(Long memberId);
 
     @Modifying
     @Transactional

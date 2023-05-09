@@ -4,19 +4,21 @@ import 'package:flutter/material.dart';
 class InfoModal extends StatelessWidget {
 
   final double? height;
+  final double padding;
   final Widget widget;
+  final bool color;
 
-  const InfoModal({Key? key, required this.widget, this.height}) : super(key: key);
+  const InfoModal({Key? key, required this.widget, this.height, required this.color, required this.padding}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Opacity(opacity: 1,
     child: Dialog(
-      backgroundColor: Color(0xff0f2027),
+      backgroundColor: color ? Color(0xff0f2027) : Colors.transparent,
       child: SizedBox(
         height: height,
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(padding),
               child: Center(
                 child: widget,
               )
