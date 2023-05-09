@@ -23,13 +23,11 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             child: Transform.translate(
-                offset: Offset(-150, 0),
+                offset: Offset(-120, 0),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                          child: Lottie.asset('assets/lottie/alarm.json')),
                       Stack(
                         alignment: Alignment.center,
                         children: [
@@ -40,8 +38,8 @@ class HomeScreen extends StatelessWidget {
                           ,
                           Transform(
                               transform: Matrix4.identity()
-                                ..translate((radius - 20) * cos(radians(-90)),
-                                    (radius - 20) * sin(radians(-90))),
+                                ..translate((radius - 10) * cos(radians(-90)),
+                                    (radius - 10) * sin(radians(-90))),
                               child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -156,8 +154,8 @@ class HomeScreen extends StatelessWidget {
                                       ]))),
                           Transform(
                               transform: Matrix4.identity()
-                                ..translate(radius * cos(radians(45)),
-                                    radius * sin(radians(45))),
+                                ..translate(radius * cos(radians(30)),
+                                    radius * sin(radians(30))),
                               child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -188,8 +186,8 @@ class HomeScreen extends StatelessWidget {
                                       ]))),
                           Transform(
                               transform: Matrix4.identity()
-                                ..translate(radius * cos(radians(45)),
-                                    radius * sin(radians(45))),
+                                ..translate(radius * cos(radians(60)),
+                                    radius * sin(radians(60))),
                               child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -220,8 +218,8 @@ class HomeScreen extends StatelessWidget {
                                       ]))),
                           Transform(
                               transform: Matrix4.identity()
-                                ..translate((radius - 20) * cos(radians(75)),
-                                    (radius - 20) * sin(radians(75))),
+                                ..translate((radius - 10) * cos(radians(90)),
+                                    (radius - 10) * sin(radians(90))),
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
