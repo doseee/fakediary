@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/model/CardUrlListVerModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/change_button.dart';
@@ -11,7 +12,7 @@ import 'package:flutter/foundation.dart';
 
 
 import '../model/CardModel.dart';
-import '../model/CardUrlListVerModel.dart';
+// import '../model/CardUrlListVerModel.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/line_widget.dart';
 
