@@ -65,17 +65,18 @@ class _ModifyScreenState extends State<ModifyScreen> {
           ),
         ),
         child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
           backgroundColor: Colors.transparent,
           body: Form(
             key: _formKey,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 75),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    height: 75,
-                  ),
                   Image(
                     image: AssetImage('assets/img/silver_moon.png'),
                   ),
@@ -234,9 +235,6 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           color: Colors.grey,
                         )),
                   ),
-                  SizedBox(
-                    height: 50,
-                  ),
                   GestureDetector(
                     onTap: () {
                       ApiService.modifyUser(nicknameController.text, hour,
@@ -281,9 +279,6 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 100,
                   ),
                 ],
               ),

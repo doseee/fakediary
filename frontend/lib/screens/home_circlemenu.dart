@@ -10,9 +10,11 @@ import 'dart:math';
 import 'package:vector_math/vector_math.dart' show radians;
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final radius = 190;
+    const radius = 190;
     var scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Container(
@@ -23,17 +25,17 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        key: scaffoldKey,
+          backgroundColor: Colors.transparent,
+          key: scaffoldKey,
           drawer: Drawer(
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
                 DrawerHeader(
-                  child: Text('Header'),
                   decoration: BoxDecoration(
                     color: Colors.blue,
                   ),
+                  child: Text('Header'),
                 ),
                 ListTile(
                   title: Text('Title'),
@@ -52,7 +54,8 @@ class HomeScreen extends StatelessWidget {
                           alignment: Alignment.center,
                           children: [
                             Image(
-                              image: AssetImage('assets/gif-file/moon_real.gif'),
+                              image:
+                                  AssetImage('assets/gif-file/moon_real.gif'),
                             )
                             // backgroundimage AssetImage('assets/gif-file/moon.gif'),
                             ,
@@ -129,7 +132,8 @@ class HomeScreen extends StatelessWidget {
                                     );
                                   },
                                   child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
@@ -139,7 +143,8 @@ class HomeScreen extends StatelessWidget {
                                         Text(
                                           '내 카드',
                                           style: TextStyle(
-                                              fontSize: 15, color: Colors.white),
+                                              fontSize: 15,
+                                              color: Colors.white),
                                         )
                                       ])),
                             ),
@@ -152,7 +157,8 @@ class HomeScreen extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => DiaryListScreen(),
+                                          builder: (context) =>
+                                              DiaryListScreen(),
                                         ),
                                       );
                                     },
@@ -245,7 +251,8 @@ class HomeScreen extends StatelessWidget {
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Lottie.asset(
                                           'assets/lottie/menu_grinstar.json',

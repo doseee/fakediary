@@ -18,14 +18,12 @@ AppBar StandAppBar(BuildContext context) {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MenuScreen()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MenuScreen()));
                   },
                   child: Image(
                     image: AssetImage(
-                      'assets/img/icon_menu_page.png',
+                      'assets/img/home_icon.png',
                     ),
                     width: 45,
                   ),
