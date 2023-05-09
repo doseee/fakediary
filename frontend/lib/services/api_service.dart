@@ -967,6 +967,19 @@ class ApiService {
     }
   }
 
+  static Future<bool> deleteDiary(int diaryId) async {
+    final url = Uri.parse('$baseUrl/diary/$diaryId');
+    final response = await http.patch(url);
+
+    if (response.statusCode == 200) {
+      print('success');
+      return true;
+    } else {
+      print('fail');
+      return false;
+    }
+  }
+
   static Future<CardModel> findCard(int cardId) async {
     print('here?');
     print('cardId: $cardId');

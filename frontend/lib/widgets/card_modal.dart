@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
 
 import '../model/CardModel.dart';
@@ -17,7 +18,10 @@ class CardModal extends StatelessWidget {
 
   Widget Character() {
     if (card.baseName == '') {
-      return Container();
+      return Flexible(
+        flex: 1,
+        child: Container(),
+      );
     } else {
       return Flexible(
           flex: 1,
@@ -37,20 +41,31 @@ class CardModal extends StatelessWidget {
 
   Widget Place() {
     if (card.basePlace == '') {
-      return Container();
+      return Flexible(
+        flex: 1,
+        child: Container(),
+      );
     } else {
       return Flexible(
           flex: 1,
-          child: Center(
-              child: Row(
-                children: [
-                  Text(
-                    '장소 : ',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(card.basePlace, style: TextStyle(color: Colors.white)),
-                ],
-              )));
+          child: Column(
+            // mainAxisSize: MainAxisSize.max,
+            // mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '장소 :',
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Expanded(
+                child:
+                    Text(card.basePlace, style: TextStyle(color: Colors.white)),
+              )
+            ],
+          ));
     }
   }
 
@@ -63,30 +78,30 @@ class CardModal extends StatelessWidget {
           flex: 1,
           child: Center(
               child: Column(
-                children: [
-                  Flexible(
-                      flex: 1,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                            decoration: BtnThemeGradientLine(),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
-                              child: Text(
-                                '키워드',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )),
-                      )),
-                  Flexible(
-                      flex: 1,
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child:
+            children: [
+              Flexible(
+                  flex: 1,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                        decoration: BtnThemeGradientLine(),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
+                          child: Text(
+                            '키워드',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )),
+                  )),
+              Flexible(
+                  flex: 1,
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child:
                         Text(keywords, style: TextStyle(color: Colors.white)),
-                      ))
-                ],
-              )));
+                  ))
+            ],
+          )));
     }
   }
 
@@ -102,7 +117,7 @@ class CardModal extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             title:
-            Text(cardTitle, style: TextStyle(fontWeight: FontWeight.w600)),
+                Text(cardTitle, style: TextStyle(fontWeight: FontWeight.w600)),
           ),
           body: Padding(
               padding: EdgeInsets.fromLTRB(40, 20, 40, 20),
@@ -132,17 +147,45 @@ class CardModal extends StatelessWidget {
                         children: [
                           Flexible(
                               flex: 1,
-                              child: Container(
-                                width: 200,
-                                height: 240,
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(25)),
-                                  border: Border.all(
-                                      color: Colors.white60, width: 4),
-                                  image: DecorationImage(
-                                      image: NetworkImage(card.cardImageUrl),
-                                      fit: BoxFit.cover),
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return InfoModal(
+                                            padding: 0,
+                                          color: false,
+                                          height: MediaQuery.of(context).size.height/1.5,
+                                          widget:
+                                            GestureDetector(
+                                              onTap: (){
+                                                Navigator.pop(context);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(card.cardImageUrl),
+                                                      fit: BoxFit.cover),
+                                                ),
+                                              ),
+                                            )
+                                        );
+                                      });
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  height:
+                                      (MediaQuery.of(context).size.width / 3) *
+                                          1.35,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25)),
+                                    border: Border.all(
+                                        color: Colors.white60, width: 4),
+                                    image: DecorationImage(
+                                        image: NetworkImage(card.cardImageUrl),
+                                        fit: BoxFit.cover),
+                                  ),
                                 ),
                               )),
                           SizedBox(
@@ -156,6 +199,8 @@ class CardModal extends StatelessWidget {
                                 child: Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Character(),
                                         Place(),
@@ -190,10 +235,10 @@ class CardModal extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(25)),
                             child: Center(
                                 child: Text(
-                                  '일기생성',
-                                  style:
+                              '일기생성',
+                              style:
                                   TextStyle(color: Colors.white, fontSize: 14),
-                                )),
+                            )),
                           ),
                         )),
                   )
