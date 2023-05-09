@@ -104,11 +104,24 @@ class _LoginState extends State<Login> {
                 ),
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Center(child: Text('login failed.')),
+              ScaffoldMessenger.of(context).showMaterialBanner(
+                MaterialBanner(
+                  backgroundColor: Colors.grey.shade800,
+                  content: Text('입력를 확인해주세요.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context)
+                            .hideCurrentMaterialBanner();
+                      },
+                      child: Text('닫기'),
+                    ),
+                  ],
                 ),
               );
+              Future.delayed(Duration(seconds: 3), () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              });
             }
           }
         },

@@ -10,9 +10,12 @@ import 'dart:math';
 import 'package:vector_math/vector_math.dart' show radians;
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final radius = 190;
+    const radius = 190;
+    final layerLink = LayerLink();
 
     return Scaffold(
         body: Container(
