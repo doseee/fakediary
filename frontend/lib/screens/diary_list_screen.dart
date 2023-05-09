@@ -4,7 +4,7 @@ import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import '../model/DiaryModel.dart';
-import '../widgets/ChangeButton.dart';
+import '../widgets/change_button.dart';
 import '../widgets/appbar.dart';
 
 class DiaryListScreen extends StatefulWidget {
