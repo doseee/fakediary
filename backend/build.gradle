@@ -28,6 +28,10 @@ configurations {
 
 repositories {
 	mavenCentral()
+	google()
+	maven {
+		url "https://firebase.google.com/maven/public"
+	}
 }
 
 dependencies {
@@ -79,6 +83,9 @@ dependencies {
 	//querydsl
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+	// https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
+	implementation 'com.google.firebase:firebase-admin:9.1.1'
 }
 
 tasks.named('test') {
