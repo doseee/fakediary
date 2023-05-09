@@ -36,7 +36,7 @@ public class DiaryController {
 //        }
 //    }
 
-    @PostMapping("/diary-information")
+    @PostMapping("/create")
     public ResponseEntity<?> saveDiaryWithDiaryInformation(@RequestBody DiaryInformation information) {
         log.info("saveDiaryWithDiaryInformation");
         log.info("memberId = " + information.getMemberId());
