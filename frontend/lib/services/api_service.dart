@@ -61,8 +61,9 @@ class ApiService {
   }
 
   static Future<bool> signup(
-      String email, String nickname, String password, String token) async {
+      String email, String nickname, String password) async {
     final url = Uri.parse('$baseUrl/member/signup');
+    final token = await FirebaseMessaging.instance.getToken();
     final memberSaveRequestDto = {
       'email': email,
       'nickname': nickname,

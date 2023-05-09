@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
@@ -17,18 +16,10 @@ class _RegistScreenState extends State<RegistScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
-  late String? token;
-
-  getToken() async {
-    FirebaseMessaging fcm = FirebaseMessaging.instance;
-    token = await fcm.getToken() ?? '';
-    print(token);
-  }
 
   @override
   void initState() {
     super.initState();
-    getToken();
   }
 
   @override
@@ -189,7 +180,6 @@ class _RegistScreenState extends State<RegistScreen> {
                           _emailController.text,
                           _nicknameController.text,
                           _passwordController.text,
-                          token ?? '',
                         );
                         if (!mounted) return;
                         final pref = await SharedPreferences.getInstance();
