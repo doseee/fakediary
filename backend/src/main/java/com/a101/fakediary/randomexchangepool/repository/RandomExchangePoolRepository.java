@@ -20,4 +20,6 @@ public interface RandomExchangePoolRepository extends JpaRepository<RandomExchan
 //    @Query("SELECT r FROM RandomExchangePool r WHERE FUNCTION('DATE', r.createdAt) = CURRENT_DATE ORDER BY RAND()")
     @Query("SELECT r FROM RandomExchangePool r WHERE DATE(r.randomDate) - 0 = DATE(now()) - 0 ORDER BY RAND()")
     List<RandomExchangePool> findAllCreatedToday();
+
+    RandomExchangePool findByDiary_DiaryIdAndUpdatedAtNotNull(Long diaryId);
 }
