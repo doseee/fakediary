@@ -198,6 +198,8 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                                                           context: context,
                                                           builder: (context) {
                                                             return InfoModal(
+                                                                padding: 20,
+                                                              color: true,
                                                                 widget: Text(
                                                                   '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다',
                                                                   style: TextStyle(
