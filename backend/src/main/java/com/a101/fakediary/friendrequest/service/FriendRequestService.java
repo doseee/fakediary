@@ -23,7 +23,11 @@ public class FriendRequestService {
 
     @Transactional
     public void requestFriend(FriendRequestDto request) {
-        friendRequestRepository.save(requestEntity(request));
+        FriendRequest friend = friendRequestRepository.checkDuplicate(request.getSenderId(), request.getReceiverId());
+        if (friend == null)
+            friendRequestRepository.save(requestEntity(request));
+        else
+            throw new IllegalArgumentException("이미 친구 추가 요청을 했습니다.");
     }
 
     @Transactional
