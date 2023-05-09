@@ -243,7 +243,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                 },
                 // showModalBottomSheet(
                 //   context: context,
-                //   builder: (context) => CardModal(
+                //   builder: (context) => .dart(
                 //       cardIndex: index, cardTitle: titleCheck(snapshot, index)),
                 // );
 
@@ -301,7 +301,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                 // onTap: () {
                 //   showModalBottomSheet(
                 //     context: context,
-                //     builder: (context) => CardModal(
+                //     builder: (context) => .dart(
                 //         cardIndex: index, cardTitle: titleCheck(snapshot, index)),
                 //   );
                 // },
