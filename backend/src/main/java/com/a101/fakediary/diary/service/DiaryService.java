@@ -6,7 +6,9 @@ import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
 import com.a101.fakediary.chatgptdiary.api.ChatGptApi;
+import com.a101.fakediary.chatgptdiary.dto.message.Message;
 import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
+import com.a101.fakediary.chatgptdiary.prompt.ChatGptPrompts;
 import com.a101.fakediary.diary.dto.*;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
@@ -15,7 +17,11 @@ import com.a101.fakediary.diaryimage.service.DiaryImageService;
 import com.a101.fakediary.enums.EGenre;
 import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.service.GenreService;
+import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
+import com.a101.fakediary.papago.service.PapagoTranslator;
+import com.a101.fakediary.stablediffusion.dto.StableDiffusion200ResponseDto;
+import com.a101.fakediary.stablediffusion.dto.StableDiffusion422ResponseDto;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -45,7 +51,6 @@ import java.util.regex.Pattern;
 @Transactional
 @RequiredArgsConstructor
 public class DiaryService {
-
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
     private final GenreService genreService;
@@ -57,6 +62,8 @@ public class DiaryService {
     private final PapagoTranslator papagoTranslator;
     private final ChatGptApi chatGptApi;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
+
+    private final static String DELIMITER = "@";
 
     //aws credentials key
     @Value("${cloud.aws.credentials.access-key}")
@@ -117,7 +124,7 @@ public class DiaryService {
         StringBuilder keywords = new StringBuilder();
         StringBuilder names = new StringBuilder();
         StringBuilder places = new StringBuilder();
-        final String DELIMITER = "@";//구분문자
+//        final String DELIMITER = "@";//구분문자
 
         List<Long> cardIds = dto.getCardIds();
         for (Long id : cardIds) {
@@ -414,16 +421,112 @@ public class DiaryService {
         logger.info("characters = " + characters);
         logger.info("places = " + places);
         logger.info("keywords = " + keywords);
+        String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords);
 
-        return chatGptApi.askGpt(characters, places, keywords);
+        List<Message> messageList = chatGptApi.askGpt35(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
+        StringBuilder diaryContent = new StringBuilder();
+        for(Message message : messageList) {
+            String role = message.getRole();
+            String content = message.getContent();;
+
+            if(role.equals("assistant")) {
+                diaryContent.append(content);
+            }
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        DiaryResultDto diaryResultDto = objectMapper.readValue(diaryContent.toString(), DiaryResultDto.class);
+        diaryResultDto.setPrompt(prompt);
+
+        return diaryResultDto;
     }
 
     @Transactional
-    public void createDiary(List<Long> cardList) throws Exception {
-        DiaryResultDto diaryResultDto = getResultDto(cardList);
+    public void createDiary(Long memberId, List<Long> cardIdList, List<String> genreList) throws Exception {
+        DiaryResultDto diaryResultDto = getResultDto(cardIdList);
         String title = diaryResultDto.getTitle();
         String summary = diaryResultDto.getSummary();
-        List<String> subtitles = diaryResultDto.getSubtitles();
+        List<String> subtitleList = diaryResultDto.getSubtitles();
         List<List<String>> contents = diaryResultDto.getContents();
+        String prompt = diaryResultDto.getPrompt();
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
+
+        Map<String, String> map = getDiaryKeywords(cardIdList);
+        String keywords = map.getOrDefault("keywords", "");
+        String characters = map.getOrDefault("characters", "");
+        String places = map.getOrDefault("places", "");
+
+        StringBuilder sb = new StringBuilder();
+
+        for(List<String> content : contents) {
+            for(String text : content)
+                sb.append(text).append(" ");
+        }
+        String detail = sb.toString().trim();
+
+        sb = new StringBuilder();
+
+        for(String subtitle : subtitleList) {
+            sb.append(subtitle).append(DELIMITER);
+        }
+
+        if (0 < sb.length() && sb.toString().endsWith(DELIMITER))
+            sb.setLength(places.length() - 1);
+
+        String subtitles = sb.toString();
+
+        Diary diary = Diary.builder()
+                .member(member)
+                .characters(characters)
+                .places(places)
+                .keyword(keywords)
+                .prompt(prompt)
+                .title(title)
+                .subtitles(subtitles)
+                .detail(detail)
+                .summary(summary)
+                .build();
+
+        Long diaryId = diaryRepository.save(diary).getDiaryId();
+
+        for (String genre : genreList) {
+            GenreDto gen = new GenreDto(diary.getDiaryId(), genre);
+            genreService.saveGenre(gen); //장르 저장
+        }
+
+        // 카드&일기 매핑테이블 생성
+        cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIdList);
+    }
+
+    private Map<String, String> getDiaryKeywords(List<Long> cardIdList) {
+        StringBuilder keywords = new StringBuilder();
+        StringBuilder characters = new StringBuilder();
+        StringBuilder places = new StringBuilder();
+        Map<String, String> map = new HashMap<>();
+
+        for (Long id : cardIdList) {
+            Card card = cardRepository.findById(id).orElseThrow();
+            //빈것보냈을때 null로저장되는지 ""로저장되는지 확인필요 값이 존재하면 이어줌
+            if (card.getKeyword() != null && !card.getKeyword().equals(""))
+                keywords.append(card.getKeyword()).append(DELIMITER); //키워드@키워드@키워드@ 식으로 제작
+            if (card.getBaseName() != null && !card.getBaseName().equals(""))
+                characters.append(card.getBaseName()).append(DELIMITER);
+            if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
+                places.append(card.getBasePlace()).append(DELIMITER);
+        }
+
+        //마지막 골뱅이 제거
+        if (0 < keywords.length() && keywords.toString().endsWith(DELIMITER))
+            keywords.setLength(keywords.length() - 1);
+        if (0 < characters.length() && characters.toString().endsWith(DELIMITER))
+            characters.setLength(characters.length() - 1);
+        if (0 < places.length() && places.toString().endsWith(DELIMITER))
+            places.setLength(places.length() - 1);
+
+        map.put("keywords", keywords.toString());
+        map.put("characters", characters.toString());
+        map.put("places", places.toString());
+
+        return map;
     }
 }

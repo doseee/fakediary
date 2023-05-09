@@ -4,9 +4,7 @@ import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
-import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.service.DiaryService;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @ApiOperation(value = "DiaryController")
@@ -34,10 +33,17 @@ public class DiaryController {
         }
     }
 
-    @PostMapping("/cardIdList")
-    public ResponseEntity<?> saveDiaryWithCardList(@RequestBody List<Long> cardIdList) {
+    @PostMapping("/diary-information")
+    public ResponseEntity<?> saveDiaryWithDiaryInformation(@RequestBody Map<String, Object> information) {
         try {
+            Long memberId = (Long)information.get("memberId");
+            List<Long> cardIdList = (List<Long>)information.get("cardIdList");
+            List<String> genreList = (List<String>)information.get("genreList");
+
             DiaryResultDto diaryResultDto = diaryService.getResultDto(cardIdList);
+
+            diaryService.createDiary(memberId, cardIdList, genreList);
+
             return new ResponseEntity<>(diaryResultDto, HttpStatus.OK);
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
