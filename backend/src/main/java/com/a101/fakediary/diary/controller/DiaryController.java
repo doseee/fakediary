@@ -4,9 +4,11 @@ import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
+import com.a101.fakediary.diary.dto.request.DiaryInformation;
 import com.a101.fakediary.diary.service.DiaryService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,34 +20,45 @@ import java.util.Map;
 @ApiOperation(value = "DiaryController")
 @RequestMapping("/diary")
 @RequiredArgsConstructor
+@Slf4j
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters, diaryImageUrl \"\"으로 넣어주시면 됩니다. subtitles는 소제목1@소제목2@소제목3 이런식으로 넣어주면 됩니다, title은 띄어쓰기 포함 10글자 이하여야만합니다.")
-    @PostMapping
-    public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
-        try {
-            DiaryResponseDto diaryResponseDto = diaryService.createDiary(dto);
-            return ResponseEntity.ok().body(diaryResponseDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+//    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters, diaryImageUrl \"\"으로 넣어주시면 됩니다. subtitles는 소제목1@소제목2@소제목3 이런식으로 넣어주면 됩니다, title은 띄어쓰기 포함 10글자 이하여야만합니다.")
+//    @PostMapping
+//    public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
+//        try {
+//            DiaryResponseDto diaryResponseDto = diaryService.createDiary(dto);
+//            return ResponseEntity.ok().body(diaryResponseDto);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 
     @PostMapping("/diary-information")
-    public ResponseEntity<?> saveDiaryWithDiaryInformation(@RequestBody Map<String, Object> information) {
+    public ResponseEntity<?> saveDiaryWithDiaryInformation(@RequestBody DiaryInformation information) {
+        log.info("saveDiaryWithDiaryInformation");
+        log.info("memberId = " + information.getMemberId());
+        log.info("cardIdList = " + information.getCardIdList());
+        log.info("genreList = " + information.getGenreList());
+
         try {
-            Long memberId = (Long)information.get("memberId");
-            List<Long> cardIdList = (List<Long>)information.get("cardIdList");
-            List<String> genreList = (List<String>)information.get("genreList");
+            Long memberId = information.getMemberId();
+            List<Long> cardIdList = information.getCardIdList();
+            List<String> genreList = information.getGenreList();
 
-            DiaryResultDto diaryResultDto = diaryService.getResultDto(cardIdList);
+            log.info("memberId = " + memberId);
+            log.info("cardIdList = " + cardIdList);
+            log.info("genreList = " + genreList);
 
-            diaryService.createDiary(memberId, cardIdList, genreList);
+//            DiaryResultDto diaryResultDto = diaryService.getResultDto(cardIdList);
 
-            return new ResponseEntity<>(diaryResultDto, HttpStatus.OK);
+            DiaryResponseDto diaryResponseDto = diaryService.createDiary(memberId, cardIdList, genreList);
+
+            return new ResponseEntity<>(diaryResponseDto, HttpStatus.OK);
         } catch(Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

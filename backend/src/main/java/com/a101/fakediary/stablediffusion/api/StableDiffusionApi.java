@@ -109,7 +109,7 @@ public class StableDiffusionApi {
         this.s3client = new AmazonS3Client(credentials);
     }
 
-    public void imageFunc(String title, List<String> subtitles) throws Exception {
+    public Map<String, Object> imageFunc(String title, List<String> subtitles) throws Exception {
         //subtitles 파싱해서 리스트로 들고있기
         //리스트에 제목, subtitle을 순서대로 영어로 넣는다. 각각 썸네일, 삽화들 만들용도
         List<String> diaryImagePrompt = new ArrayList<>();
@@ -149,8 +149,6 @@ public class StableDiffusionApi {
                 stableDiffusionResultUrl = s3client.getUrl(S3_BUCKET, uniqueKey).toString();
 
                 dtoImageUrl.add(stableDiffusionResultUrl);
-
-
             } else if (response.statusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) { //422응답
                 String responseBody = response.bodyToMono(String.class).block();
                 StableDiffusion422ResponseDto response422Dto = objectMapper.readValue(responseBody, StableDiffusion422ResponseDto.class);
@@ -161,6 +159,12 @@ public class StableDiffusionApi {
                 throw new Exception("Stable Diffusion Exception");
             }
         }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("stableDiffusionUrl", dtoImageUrl);
+        map.put("diaryImagePrompt", diaryImagePrompt);
+
+        return map;
     }
 
 }
