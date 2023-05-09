@@ -116,6 +116,8 @@ class _FriendScreenState extends State<FriendScreen> {
                                     context: context,
                                     builder: (context) {
                                       return InfoModal(
+                                          padding: 20,
+                                        color: true,
                                           widget: Text(
                                             '✉ 랜덤 일기는 랜덤 친구와 일기를 교환할 수 있는 기능으로, 하루에 한 번만 보낼 수 있습니다.',
                                             style: TextStyle(
@@ -159,6 +161,8 @@ class _FriendScreenState extends State<FriendScreen> {
                                 context: context,
                                 builder: (context) {
                                   return InfoModal(
+                                    padding: 20,
+                                    color: true,
                                     widget: Text(
                                       '오늘은 이미 교환일기를 보냈습니다',
                                       style: TextStyle(color: Colors.white60),
@@ -171,6 +175,8 @@ class _FriendScreenState extends State<FriendScreen> {
                                 context: context,
                                 builder: (context) {
                                   return InfoModal(
+                                    padding: 20,
+                                    color: true,
                                     widget: ChangeModal(widget.diaryId),
                                     height: 180,
                                   );
@@ -222,7 +228,8 @@ class _FriendScreenState extends State<FriendScreen> {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return InfoModal(
+                        return InfoModal(padding: 20,
+                          color: true,
                           widget: ChangeModal(widget.diaryId),
                           height: 180,
                         );

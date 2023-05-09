@@ -13,9 +13,12 @@ import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
 import com.a101.fakediary.diaryimage.service.DiaryImageService;
 import com.a101.fakediary.enums.EGenre;
+import com.a101.fakediary.enums.ERequestStatus;
+import com.a101.fakediary.friendexchangerequest.repository.FriendExchangeRequestRepository;
 import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.repository.MemberRepository;
+import com.a101.fakediary.randomexchangepool.repository.RandomExchangePoolRepository;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -49,13 +52,14 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
     private final GenreService genreService;
-    private final DiaryRepository diaryImageRepository;
     private final CardDiaryMappingService cardDiaryMappingService;
     private final CardRepository cardRepository;
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
     private final PapagoTranslator papagoTranslator;
     private final ChatGptApi chatGptApi;
+    private final FriendExchangeRequestRepository friendExchangeRequestRepository;
+    private final RandomExchangePoolRepository randomExchangePoolRepository;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     //aws credentials key
@@ -83,7 +87,7 @@ public class DiaryService {
                 .build();
     }
 
-    private List<DiaryResponseDto> changeResponse(List<Diary> diary) {
+    public List<DiaryResponseDto> changeResponse(List<Diary> diary) {
         List<DiaryResponseDto> list = new ArrayList<>();
         for (Diary value : diary) {
             DiaryResponseDto tmp = new DiaryResponseDto(value);
@@ -308,14 +312,24 @@ public class DiaryService {
         return returnDto;
     }
 
+    //삭제되지 않은 다이어리 단일 조회
+    @Transactional(readOnly = true)
+    public Diary findNotDeletedDiaryById(Long diaryId) throws Exception {
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new Exception("다이어리Id가 존재하지 않습니다."));
+        if(diary.isDeleted()){
+            throw new Exception("삭제된 다이어리입니다.");
+        }
+        return diary;
+    }
+
     @Transactional(readOnly = true)
     public DiaryResponseDto detailDiary(Long diaryId) {
-        return changeResponse(diaryRepository.findByDiaryId(diaryId));
+        return changeResponse(diaryRepository.findById(diaryId).get());
     }
 
     @Transactional(readOnly = true)
     public List<DiaryResponseDto> allDiary(Long memberId) {
-        List<Diary> diary = diaryRepository.allDiary(memberId);
+        List<Diary> diary = diaryRepository.findByMember_MemberIdAndIsDeletedFalseOrderByDiaryIdDesc(memberId);
         return changeResponse(diary);
     }
 
@@ -331,18 +345,38 @@ public class DiaryService {
     }
 
     @Transactional
+    public void deleteStatusDiary(Long diaryId) throws Exception {
+        Diary diary =  diaryRepository.findById(diaryId).orElseThrow();
+
+        if(diary.isDeleted()){
+            throw new Exception("이미 삭제 상태로 변경된 일기입니다.");
+        }
+        //이 diaryId가 friendExchangeRequest에 존재하고, status가 WAITING이면(친구와 교환중인상태) 들어가있으면 삭제불가
+        if(friendExchangeRequestRepository.findBySenderDiary_DiaryIdAndStatus(diaryId, ERequestStatus.WAITING) != null){
+            throw new Exception("친구와 교환 대기중인 일기는 삭제가 불가능합니다.");
+        }
+        //diaryId가 randomExchangePool테이블의 sender_id가 존재하고 updated_at이 null이 아니라면(매칭중인상태) 삭제 불가
+        if(randomExchangePoolRepository.findByDiary_DiaryIdAndUpdatedAtNotNull(diaryId) != null){
+            throw new Exception("랜덤 교환중인 일기는 삭제가 불가능합니다.");
+        }
+        diary.setDeleted(true);
+    }
+
+    @Transactional
     public void deleteDiary(Long diaryId) {
         genreService.deleteGenre(diaryId);
         diaryRepository.deleteDiary(diaryId);
     }
 
-    //카드Id리스트로부터 만들어진 다이어리 리스트 반환
+    //카드Id리스트로부터 만들어진 일기 리스트 반환
     @Transactional(readOnly = true)
-    public List<CardMadeDiaryResponseDto> findDiaryListFromCardList(List<Long> diaryIdList) {
+    public List<CardMadeDiaryResponseDto> findDiaryListFromCardList(List<Long> diaryIdList) throws Exception {
         List<CardMadeDiaryResponseDto> returnList = new ArrayList<>();
         for (Long diaryId : diaryIdList) {
-            Diary diary = diaryRepository.findByDiaryId(diaryId);
-            List<String> diaryImageUrls = diaryImageRepository.findDiaryImageUrlByDiaryId(diaryId);
+            Diary diary = diaryRepository.findById(diaryId).orElseThrow();
+            if(diary.isDeleted())
+                continue;
+            List<String> diaryImageUrls = diaryRepository.findDiaryImageUrlByDiaryId(diaryId);
             String diaryThumbnail = diaryImageUrls.stream().findFirst().orElse("이미지가 없습니다.");//썸네일
             CardMadeDiaryResponseDto dto = new CardMadeDiaryResponseDto().builder()
                     .diaryId(diary.getDiaryId())
@@ -354,6 +388,7 @@ public class DiaryService {
                     .places(diary.getPlaces())
                     .keyword(diary.getKeyword())
                     .createdAt(diary.getCreatedAt())
+                    .isDeleted(diary.isDeleted())
                     .build();
             returnList.add(dto);
         }
