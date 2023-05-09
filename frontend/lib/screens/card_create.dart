@@ -5,7 +5,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/card_result.dart';
-import 'package:frontend/screens/old_menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -163,6 +162,7 @@ class _CardCreateState extends State<CardCreate> {
               child: Scaffold(
                 appBar: AppBar(
                   backgroundColor: Colors.transparent,
+                  elevation: 0,
                 ),
                 backgroundColor: Colors.transparent,
                 body: Padding(
@@ -174,34 +174,34 @@ class _CardCreateState extends State<CardCreate> {
                     key: _formKey,
                     child: ListView(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MenuScreen()));
-                                  },
-                                  child: Image(
-                                    image: AssetImage(
-                                      'assets/img/icon_menu_page.png',
-                                    ),
-                                    width: 45,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   children: [
+                        //     Column(
+                        //       mainAxisAlignment: MainAxisAlignment.end,
+                        //       children: [
+                        //         GestureDetector(
+                        //           onTap: () {
+                        //             Navigator.push(
+                        //                 context,
+                        //                 MaterialPageRoute(
+                        //                     builder: (context) =>
+                        //                         MenuScreen()));
+                        //           },
+                        //           child: Image(
+                        //             image: AssetImage(
+                        //               'assets/img/icon_menu_page.png',
+                        //             ),
+                        //             width: 45,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ],
+                        // ),
+                        // SizedBox(
+                        //   height: 30,
+                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [

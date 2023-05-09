@@ -110,7 +110,7 @@ class _CardResultState extends State<CardResult>
                               '오늘의 기억 조각 완성 !',
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 27,
+                                  fontSize: 23,
                                   fontWeight: FontWeight.w500),
                             ),
                           )),
