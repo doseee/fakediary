@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/model/CardUrlListVerModel.dart';
 import 'package:frontend/model/FriendModel.dart';
@@ -20,9 +21,11 @@ class ApiService {
   static Future<bool> login(String email, String password) async {
     print('loginstart');
     final url = Uri.parse('$baseUrl/member/login');
+    final token = FirebaseMessaging.instance.getToken();
     final memberLoginRequestDto = {
       'email': email,
       'password': password,
+      'firebaseUid': await token ?? '',
     };
     final response = await http.post(
       url,
@@ -368,12 +371,15 @@ class ApiService {
     }
   }
 
-  static Future<List<CardUrlListVerModel>> getCardsbyDiaryId(int diaryId) async {
-    final response = await http.get(Uri.parse('$baseUrl/cardDiaryMapping/card/$diaryId'));
+  static Future<List<CardUrlListVerModel>> getCardsbyDiaryId(
+      int diaryId) async {
+    final response =
+        await http.get(Uri.parse('$baseUrl/cardDiaryMapping/card/$diaryId'));
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-      List<CardUrlListVerModel> cards =
-      jsonResponse.map((dynamic item) => CardUrlListVerModel.fromJson(item)).toList();
+      List<CardUrlListVerModel> cards = jsonResponse
+          .map((dynamic item) => CardUrlListVerModel.fromJson(item))
+          .toList();
 
       return cards;
     } else {
@@ -917,8 +923,7 @@ class ApiService {
     }
   }
 
-  Future<List<SearchFriendModel>> getSearchFriends(
-      String nickname) async {
+  Future<List<SearchFriendModel>> getSearchFriends(String nickname) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
@@ -940,22 +945,19 @@ class ApiService {
   }
 
   static Future<bool> AddFriend(int receiverId) async {
-
-    SharedPreferences prefs =await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
 
-    final AddFriendDto = {
-      "receiverId": receiverId,
-      "senderId": memberId
-    };
+    final AddFriendDto = {"receiverId": receiverId, "senderId": memberId};
 
-    final response = await http.post(Uri.parse('$baseUrl/friendrequest/request'),
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: json.encode(AddFriendDto));
+    final response =
+        await http.post(Uri.parse('$baseUrl/friendrequest/request'),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: json.encode(AddFriendDto));
 
-    if( response.statusCode == 200 ) {
+    if (response.statusCode == 200) {
       print('success');
       return true;
     } else {
@@ -972,12 +974,11 @@ class ApiService {
     print(response.bodyBytes);
     if (response.statusCode == 200) {
       CardModel card =
-      CardModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+          CardModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       print('cardinfo: ${card.toString()}');
       return card;
     } else {
-    throw Exception('카드 정보를 불러오는 데 실패했습니다');
+      throw Exception('카드 정보를 불러오는 데 실패했습니다');
     }
   }
-
 }
