@@ -17,7 +17,7 @@ class CardModal extends StatelessWidget {
 
   Widget Character() {
     if (card.baseName == '') {
-      return Container();
+      return Flexible(flex: 1, child: Container(),);
     } else {
       return Flexible(
           flex: 1,
@@ -37,20 +37,23 @@ class CardModal extends StatelessWidget {
 
   Widget Place() {
     if (card.basePlace == '') {
-      return Container();
+      return Flexible(flex: 1, child: Container(),);
     } else {
       return Flexible(
           flex: 1,
-          child: Center(
-              child: Row(
+          child: Column(
+            // mainAxisSize: MainAxisSize.max,
+            // mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '장소 : ',
+                    '장소 :',
                     style: TextStyle(color: Colors.white),
                   ),
-                  Text(card.basePlace, style: TextStyle(color: Colors.white)),
+                  SizedBox(height: 5,),
+                  Expanded(child: Text(card.basePlace, style: TextStyle(color: Colors.white)),)
                 ],
-              )));
+              ));
     }
   }
 
@@ -133,8 +136,8 @@ class CardModal extends StatelessWidget {
                           Flexible(
                               flex: 1,
                               child: Container(
-                                width: 200,
-                                height: 240,
+                                width: MediaQuery.of(context).size.width/3,
+                                height:  (MediaQuery.of(context).size.width/3)*1.35,
                                 decoration: BoxDecoration(
                                   borderRadius:
                                   BorderRadius.all(Radius.circular(25)),
@@ -156,6 +159,7 @@ class CardModal extends StatelessWidget {
                                 child: Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Character(),
                                         Place(),
