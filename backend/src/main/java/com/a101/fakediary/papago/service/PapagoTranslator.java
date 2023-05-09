@@ -1,6 +1,7 @@
-package com.a101.fakediary.diary.service;
+package com.a101.fakediary.papago.service;
 
 import org.apache.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -12,11 +13,12 @@ import reactor.core.publisher.Mono;
 @Component
 public class PapagoTranslator {
   private final WebClient webClient;
-  private final String papagoUrl = "https://openapi.naver.com/v1/papago/n2mt";
+  private final String PAPAGO_URL;
 
-  public PapagoTranslator() {
+  public PapagoTranslator(@Value("${fake-diary.papago.base-url}")String PAPAGO_URL) {
+    this.PAPAGO_URL = PAPAGO_URL;
     this.webClient = WebClient.builder()
-        .baseUrl(papagoUrl)
+        .baseUrl(this.PAPAGO_URL)
         .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
         .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
         .defaultHeader("X-Naver-Client-Id", "akrwocKbrRSeXp1WeVxt")

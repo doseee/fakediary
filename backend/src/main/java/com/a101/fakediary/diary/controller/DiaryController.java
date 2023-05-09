@@ -1,41 +1,66 @@
 package com.a101.fakediary.diary.controller;
 
+import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
-import com.a101.fakediary.diary.entity.Diary;
+import com.a101.fakediary.diary.dto.request.DiaryInformation;
 import com.a101.fakediary.diary.service.DiaryService;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @ApiOperation(value = "DiaryController")
 @RequestMapping("/diary")
 @RequiredArgsConstructor
+@Slf4j
 public class DiaryController {
     private final DiaryService diaryService;
 
-    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters, diaryImageUrl \"\"으로 넣어주시면 됩니다. subtitles는 소제목1@소제목2@소제목3 이런식으로 넣어주면 됩니다, title은 띄어쓰기 포함 10글자 이하여야만합니다.")
-    @PostMapping
-    public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
+//    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters, diaryImageUrl \"\"으로 넣어주시면 됩니다. subtitles는 소제목1@소제목2@소제목3 이런식으로 넣어주면 됩니다, title은 띄어쓰기 포함 10글자 이하여야만합니다.")
+//    @PostMapping
+//    public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
+//        try {
+//            DiaryResponseDto diaryResponseDto = diaryService.createDiary(dto);
+//            return ResponseEntity.ok().body(diaryResponseDto);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
+
+    @PostMapping("/diary-information")
+    public ResponseEntity<?> saveDiaryWithDiaryInformation(@RequestBody DiaryInformation information) {
+        log.info("saveDiaryWithDiaryInformation");
+        log.info("memberId = " + information.getMemberId());
+        log.info("cardIdList = " + information.getCardIdList());
+        log.info("genreList = " + information.getGenreList());
+
         try {
-            DiaryResponseDto diaryResponseDto = diaryService.createDiary(dto);
-            return ResponseEntity.ok().body(diaryResponseDto);
-        } catch (Exception e) {
+            Long memberId = information.getMemberId();
+            List<Long> cardIdList = information.getCardIdList();
+            List<String> genreList = information.getGenreList();
+
+            log.info("memberId = " + memberId);
+            log.info("cardIdList = " + cardIdList);
+            log.info("genreList = " + genreList);
+
+//            DiaryResultDto diaryResultDto = diaryService.getResultDto(cardIdList);
+
+            DiaryResponseDto diaryResponseDto = diaryService.createDiary(memberId, cardIdList, genreList);
+
+            return new ResponseEntity<>(diaryResponseDto, HttpStatus.OK);
+        } catch(Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    @PostMapping("/cards")
-    public ResponseEntity<?> saveDiaryWithCardList(@RequestBody List<Long> cardIdList) {
-        return null;
     }
 
     @ApiOperation(value = "일기 상세 조회")

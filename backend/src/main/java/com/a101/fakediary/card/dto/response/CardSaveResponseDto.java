@@ -25,21 +25,6 @@ public class CardSaveResponseDto {
     private String cardImageUrl;            //  S3에 저장된 카드 이미지 URL
     private LocalDateTime createdAt;        // 카드 생성 날짜
 
-//    public CardSaveResponseDto(Card card) {
-//        this.cardId = card.getCardId();
-//        this.memberId = card.getMember().getMemberId();
-//        this.nickName = card.getMember().getNickname();
-//        this.baseName = card.getBaseName();
-//        this.basePlace = card.getBasePlace();
-//
-////        StringTokenizer tokens = new StringTokenizer(card.getKeyword(), "@");
-////        while(tokens.hasMoreTokens()) {
-////            this.keywords.add(tokens.nextToken());
-////        }
-//
-//        this.cardImageUrl = card.getCardImageUrl();
-//    }
-
     public static CardSaveResponseDto getCardSaveResponseDto(Card card) {
         List<String> keywords = new ArrayList<>();
         Member member = card.getMember();
