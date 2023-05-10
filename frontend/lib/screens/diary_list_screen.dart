@@ -44,11 +44,11 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   }
 
   onSelect(
-      int diaryId,
-      String title,
-      String summary,
-      String imageUrl,
-      ) {
+    int diaryId,
+    String title,
+    String summary,
+    String imageUrl,
+  ) {
     setState(() {
       this.diaryId = diaryId;
       this.title = title;
@@ -127,34 +127,38 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BtnThemeGradientLine(),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 25, left: 25),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    //Todo; [수정필요] 일기 디테일 페이지로 이동
-                                    builder: (context) =>
-                                        DiaryDetailCoverScreen(
-                                          diaryId: diaryId,
-                                          exchangeSituation: exchangeSituation,
-                                          imageUrl: imageUrl,
-                                        ),
-                                  ));
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                elevation: 0.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                )),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                //Todo; [수정필요] 일기 디테일 페이지로 이동
+                                builder: (context) => DiaryDetailCoverScreen(
+                                  diaryId: diaryId,
+                                  exchangeSituation: exchangeSituation,
+                                  imageUrl: imageUrl,
+                                ),
+                              ));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            maximumSize: Size(250, 50),
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            elevation: 0.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            )),
+                        child: SizedBox(
+                          width: 250,
+                          height: 50,
+                          child: Center(
                             child: Text(
                               '상세보기',
                               style:
-                              TextStyle(color: Colors.white, fontSize: 14),
-                            )),
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -214,7 +218,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                             '내가 만든 일기를 확인해보세요',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 16),
+                                                fontSize: 15),
                                           ),
                                         )),
                                     Flexible(
@@ -236,15 +240,15 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                                           context: context,
                                                           builder: (context) {
                                                             return InfoModal(
-                                                              padding: 20,
-                                                              color: true,
+                                                                padding: 20,
+                                                                color: true,
                                                                 widget: Text(
                                                                   '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다',
                                                                   style: TextStyle(
                                                                       color: Colors
                                                                           .white,
                                                                       fontSize:
-                                                                      14),
+                                                                          14),
                                                                 ),
                                                                 height: 100);
                                                           });
@@ -304,8 +308,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     },
                   ),
                 )
-              // child: Container(),
-            )
+                // child: Container(),
+                )
           ],
         ),
       ),
@@ -316,7 +320,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
     print('imgUrl: ${snapshot[0].diaryImageUrl[0]}');
     return GridView.count(
       crossAxisCount: 2,
-      childAspectRatio: 0.9,
+      childAspectRatio: 0.8,
       mainAxisSpacing: 10.0,
       padding: EdgeInsets.all(10.0),
       children: List.generate(snapshot.length, (index) {
@@ -343,23 +347,26 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                           height: 140,
                           decoration: BoxDecoration(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(10)),
+                                  BorderRadius.all(Radius.circular(10)),
                               border:
-                              Border.all(color: Colors.white60, width: 4),
+                                  Border.all(color: Colors.white60, width: 4),
                               // Todo; 나중에 커버 이미지 url로 변경
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
                                       snapshot[index].diaryImageUrl[0]))
-                            // color: Colors.white,
-                          ),
+                              // color: Colors.white,
+                              ),
                         ),
                         Padding(
                           padding: EdgeInsets.all(10),
                           child: Text(
-                            snapshot[index].title,
+                            snapshot[index].title.length > 17
+                                ? (snapshot[index].title.substring(0, 17) +
+                                    '...')
+                                : snapshot[index].title,
                             style:
-                            TextStyle(color: Colors.white60, fontSize: 16),
+                                TextStyle(color: Colors.white60, fontSize: 16),
                           ),
                         ),
                       ],

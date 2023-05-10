@@ -461,6 +461,8 @@ public class DiaryService {
             }
         }
 
+        logger.info("diaryContent = " + diaryContent);
+
         ObjectMapper objectMapper = new ObjectMapper();
         DiaryResultDto diaryResultDto = objectMapper.readValue(diaryContent.toString(), DiaryResultDto.class);
         diaryResultDto.setPrompt(prompt);
