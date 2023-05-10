@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/widgets/theme.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistScreen extends StatefulWidget {
@@ -30,16 +32,6 @@ class _RegistScreenState extends State<RegistScreen> {
       },
       child: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff0F2027),
-              Color(0xff203A43),
-              Color(0xff2C5364),
-            ],
-            stops: [0, 0.4, 1.0],
-          ),
           image: DecorationImage(
             image: AssetImage('assets/img/background_1_littledark.png'),
             fit: BoxFit.cover,
@@ -54,26 +46,17 @@ class _RegistScreenState extends State<RegistScreen> {
           body: SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height - 80.0,
+                minHeight: MediaQuery.of(context).size.height - 150.0,
               ),
               child: Form(
                 key: _formKey,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80),
+                  padding: EdgeInsets.only(right: 70,left: 70),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        '이메일',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
+                      Lottie.asset('assets/lottie/stars.json'),
                       TextFormField(
                         controller: _emailController,
                         style: TextStyle(
@@ -85,33 +68,25 @@ class _RegistScreenState extends State<RegistScreen> {
                               color: Colors.white,
                             )),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                              color: Colors.white,
-                            )),
+                              borderSide: BorderSide(color: Colors.greenAccent),
+                            ),
+                            labelText: 'Email',
+                            labelStyle: TextStyle(color: Colors.grey),
                             hintText: '이메일을 입력하세요.',
                             hintStyle: TextStyle(
                               color: Colors.grey,
                             )),
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
-                            return '무언가 입력하세요.';
+                            return '이메일이 공백입니다';
                           }
                           return null;
                         },
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
-                      const Text(
-                        '비밀번호',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
+
                       TextFormField(
                         controller: _passwordController,
                         obscureText: true,
@@ -124,32 +99,23 @@ class _RegistScreenState extends State<RegistScreen> {
                               color: Colors.white,
                             )),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                              color: Colors.white,
-                            )),
+                              borderSide: BorderSide(color: Colors.greenAccent),
+                            ),
+                            labelText: 'Password',
+                            labelStyle: TextStyle(color: Colors.grey),
                             hintText: '비밀번호를 입력하세요.',
                             hintStyle: TextStyle(
                               color: Colors.grey,
                             )),
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
-                            return '무언가 입력하세요.';
+                            return '비밀번호가 공백입니다.';
                           }
                           return null;
                         },
                       ),
                       SizedBox(
-                        height: 30,
-                      ),
-                      const Text(
-                        '닉네임',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
+                        height: 20,
                       ),
                       TextFormField(
                         controller: _nicknameController,
@@ -162,22 +128,23 @@ class _RegistScreenState extends State<RegistScreen> {
                               color: Colors.white,
                             )),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                              color: Colors.white,
-                            )),
+                              borderSide: BorderSide(color: Colors.greenAccent),
+                            ),
+                            labelText: 'Nickname',
+                            labelStyle: TextStyle(color: Colors.grey),
                             hintText: '닉네임을 입력하세요.',
                             hintStyle: TextStyle(
                               color: Colors.grey,
                             )),
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
-                            return '무언가 입력하세요.';
+                            return '닉네임이 공백입니다.';
                           }
                           return null;
                         },
                       ),
                       SizedBox(
-                        height: 75,
+                        height: 40,
                       ),
                       GestureDetector(
                         onTap: () async {
@@ -226,13 +193,14 @@ class _RegistScreenState extends State<RegistScreen> {
                           }
                         },
                         child: Container(
-                          width: 275,
+                          width: 250,
                           height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.white,
-                          ),
-                          child: Center(child: Text('회원가입')),
+                          decoration: BtnThemeGradient(),
+                          child: Center(
+                              child: Text(
+                            '회원가입',
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          )),
                         ),
                       )
                     ],
