@@ -33,7 +33,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
             _cards.indexWhere((card) => card.cardId == widget.cardIdFromList);
         if (index != -1) {
           setState(() {
-            selectedCards.insert(0, cards);
+            // selectedCards.insert(0, cards);
           });
         } else {
           print("Selected card not found");
