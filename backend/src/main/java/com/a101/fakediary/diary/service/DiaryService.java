@@ -46,7 +46,7 @@ public class DiaryService {
     private final CardRepository cardRepository;
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
-//    private final PapagoTranslator papagoTranslator;
+    //    private final PapagoTranslator papagoTranslator;
     private final ChatGptApi chatGptApi;
     private final StableDiffusionApi stableDiffusionApi;
     private final FriendExchangeRequestRepository friendExchangeRequestRepository;
@@ -310,7 +310,7 @@ public class DiaryService {
     @Transactional(readOnly = true)
     public Diary findNotDeletedDiaryById(Long diaryId) throws Exception {
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new Exception("다이어리Id가 존재하지 않습니다."));
-        if(diary.isDeleted()){
+        if (diary.isDeleted()) {
             throw new Exception("삭제된 다이어리입니다.");
         }
         return diary;
@@ -340,17 +340,17 @@ public class DiaryService {
 
     @Transactional
     public void deleteStatusDiary(Long diaryId) throws Exception {
-        Diary diary =  diaryRepository.findById(diaryId).orElseThrow();
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow();
 
-        if(diary.isDeleted()){
+        if (diary.isDeleted()) {
             throw new Exception("이미 삭제 상태로 변경된 일기입니다.");
         }
         //이 diaryId가 friendExchangeRequest에 존재하고, status가 WAITING이면(친구와 교환중인상태) 들어가있으면 삭제불가
-        if(friendExchangeRequestRepository.findBySenderDiary_DiaryIdAndStatus(diaryId, ERequestStatus.WAITING) != null){
+        if (friendExchangeRequestRepository.findBySenderDiary_DiaryIdAndStatus(diaryId, ERequestStatus.WAITING) != null) {
             throw new Exception("친구와 교환 대기중인 일기는 삭제가 불가능합니다.");
         }
         //diaryId가 randomExchangePool테이블의 sender_id가 존재하고 updated_at이 null이 아니라면(매칭중인상태) 삭제 불가
-        if(randomExchangePoolRepository.findByDiary_DiaryIdAndUpdatedAtNotNull(diaryId) != null){
+        if (randomExchangePoolRepository.findByDiary_DiaryIdAndUpdatedAtNotNull(diaryId) != null) {
             throw new Exception("랜덤 교환중인 일기는 삭제가 불가능합니다.");
         }
         diary.setDeleted(true);
@@ -368,7 +368,7 @@ public class DiaryService {
         List<CardMadeDiaryResponseDto> returnList = new ArrayList<>();
         for (Long diaryId : diaryIdList) {
             Diary diary = diaryRepository.findById(diaryId).orElseThrow();
-            if(diary.isDeleted())
+            if (diary.isDeleted())
                 continue;
             List<String> diaryImageUrls = diaryRepository.findDiaryImageUrlByDiaryId(diaryId);
             String diaryThumbnail = diaryImageUrls.stream().findFirst().orElse("이미지가 없습니다.");//썸네일
@@ -431,7 +431,7 @@ public class DiaryService {
         Set<String> placesSet = new HashSet<>();
         Set<String> keywordsSet = new HashSet<>();  //  중복 키워드를 제거하기 위한 과정
 
-        for(Long cardPk : cardList) {
+        for (Long cardPk : cardList) {
             Card card = cardRepository.findById(cardPk).orElseThrow(() -> new Exception("cardList에 저장된 카드 PK와 일치하는 카드가 없음"));
             CardSaveResponseDto dto = CardSaveResponseDto.getCardSaveResponseDto(card);
 
@@ -439,17 +439,17 @@ public class DiaryService {
             String basePlace = dto.getBasePlace();
             List<String> keywordList = dto.getKeywords();
 
-            if(baseName != null && !baseName.equals("") && !charactersSet.contains(baseName)) { //  카드에 등장인물이 존재하고 중복되지 않을 경우
+            if (baseName != null && !baseName.equals("") && !charactersSet.contains(baseName)) { //  카드에 등장인물이 존재하고 중복되지 않을 경우
                 characters.add(baseName);
                 charactersSet.add(baseName);
             }
-            if(basePlace != null && !basePlace.equals("") && !placesSet.contains(basePlace)) {    //  카드에 장소가 존재하고 장소가 중복되지 않을 경우
+            if (basePlace != null && !basePlace.equals("") && !placesSet.contains(basePlace)) {    //  카드에 장소가 존재하고 장소가 중복되지 않을 경우
                 places.add(basePlace);
                 placesSet.add(basePlace);
             }
-            if(dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드 리스트가 존재하는 경우
-                for(String keyword : keywordList) {
-                    if(!keywordsSet.contains(keyword)) {    //  키워드가 중복되지 않을 경우
+            if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드 리스트가 존재하는 경우
+                for (String keyword : keywordList) {
+                    if (!keywordsSet.contains(keyword)) {    //  키워드가 중복되지 않을 경우
                         keywords.add(keyword);
                         keywordsSet.add(keyword);
                     }
@@ -462,13 +462,14 @@ public class DiaryService {
         logger.info("keywords = " + keywords);
         String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords);
 
-        List<Message> messageList = chatGptApi.askGpt35(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
-        StringBuilder diaryContent = new StringBuilder();
-        for(Message message : messageList) {
-            String role = message.getRole();
-            String content = message.getContent();;
 
-            if(role.equals("assistant")) {
+        List<Message> messageList = chatGptApi.askGpt4(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
+        StringBuilder diaryContent = new StringBuilder();
+        for (Message message : messageList) {
+            String role = message.getRole();
+            String content = message.getContent();
+
+            if (role.equals("assistant")) {
                 diaryContent.append(content);
             }
         }
@@ -488,9 +489,11 @@ public class DiaryService {
         String title = diaryResultDto.getTitle();
         String summary = diaryResultDto.getSummary();
         List<String> subtitleList = diaryResultDto.getSubtitles();
-        List<List<String>> contents = diaryResultDto.getContents();
+        List<String> contents = diaryResultDto.getContents();
         String prompt = diaryResultDto.getPrompt();
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
+
+        logger.info("subtitleList = " + subtitleList);
 
         Map<String, String> map = getDiaryItems(cardIdList);
         String keywords = map.getOrDefault("keywords", "");
@@ -499,22 +502,24 @@ public class DiaryService {
 
         StringBuilder sb = new StringBuilder();
 
-        for(List<String> content : contents) {
-            for(String text : content)
-                sb.append(text).append(" ");
-        }
+        for (String content : contents)
+            sb.append(content).append(DELIMITER);
+        if (sb.charAt(sb.length() - 1) == '@')
+            sb.deleteCharAt(sb.lastIndexOf("@"));
         String detail = sb.toString().trim();
+
 
         sb = new StringBuilder();
 
-        for(String subtitle : subtitleList) {
+        for (String subtitle : subtitleList) {
             sb.append(subtitle).append(DELIMITER);
         }
 
         if (0 < sb.length() && sb.toString().endsWith(DELIMITER))
-            sb.setLength(places.length() - 1);
+            sb.setLength(sb.length() - 1);
 
         String subtitles = sb.toString();
+        logger.info("subtitles = " + subtitles);
 
         Diary diary = Diary.builder()
                 .member(member)
@@ -539,9 +544,9 @@ public class DiaryService {
         cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIdList);
 
         Map<String, Object> stableDiffusionMap = stableDiffusionApi.getStableDiffusionUrlsAndPrompt(title, subtitleList);
-        List<String> stableDiffusionUrls = (List<String>)stableDiffusionMap.get("stableDiffusionUrl");
+        List<String> stableDiffusionUrls = (List<String>) stableDiffusionMap.get("stableDiffusionUrl");
         logger.info("stableDiffusionUrls = " + stableDiffusionUrls);
-        List<String> diaryImagePrompt = (List<String>)stableDiffusionMap.get("diaryImagePrompt");
+        List<String> diaryImagePrompt = (List<String>) stableDiffusionMap.get("diaryImagePrompt");
         logger.info("diaryImagePrompt = " + diaryImagePrompt);
         diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
 
@@ -557,7 +562,6 @@ public class DiaryService {
     }
 
     /**
-     * 
      * @param cardIdList : 일기에 사용될 카드 PK 리스트
      * @return : 카드들에서 중복 없이 등장인물 문자열, 장소 문자열, 키워드 문자열을 만듬
      */
@@ -576,10 +580,10 @@ public class DiaryService {
 
             if (card.getKeyword() != null && !card.getKeyword().equals("")) {
                 StringTokenizer keywordTokens = new StringTokenizer(card.getKeyword(), DELIMITER);
-                while(keywordTokens.hasMoreTokens()) {
+                while (keywordTokens.hasMoreTokens()) {
                     String keyword = keywordTokens.nextToken();
 
-                    if(!keywordsMap.contains(keyword)) {
+                    if (!keywordsMap.contains(keyword)) {
                         keywords.append(keyword).append(DELIMITER);
                         keywordsMap.add(keyword);
                     }
@@ -588,10 +592,10 @@ public class DiaryService {
 
             if (card.getBaseName() != null && !card.getBaseName().equals("")) {
                 StringTokenizer baseNameTokens = new StringTokenizer(card.getBaseName(), DELIMITER);
-                while(baseNameTokens.hasMoreTokens()) {
+                while (baseNameTokens.hasMoreTokens()) {
                     String baseName = baseNameTokens.nextToken();
 
-                    if(!charactersMap.contains(baseName)) {
+                    if (!charactersMap.contains(baseName)) {
                         characters.append(baseName).append(DELIMITER);
                         charactersMap.add(baseName);
                     }
@@ -600,10 +604,10 @@ public class DiaryService {
 
             if (card.getBasePlace() != null && !card.getBasePlace().equals("")) {
                 StringTokenizer basePlacesTokens = new StringTokenizer(card.getBasePlace(), DELIMITER);
-                while(basePlacesTokens.hasMoreTokens()) {
+                while (basePlacesTokens.hasMoreTokens()) {
                     String basePlace = basePlacesTokens.nextToken();
 
-                    if(!placesMap.contains(basePlace)) {
+                    if (!placesMap.contains(basePlace)) {
                         places.append(basePlace).append(DELIMITER);
                         placesMap.add(basePlace);
                     }

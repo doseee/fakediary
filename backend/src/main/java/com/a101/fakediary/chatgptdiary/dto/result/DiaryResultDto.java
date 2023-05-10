@@ -14,6 +14,6 @@ public class DiaryResultDto {
     private String title;
     private String summary;
     private List<String> subtitles;
-    private List<List<String>> contents;
+    private List<String> contents;
     private String prompt;
 }
