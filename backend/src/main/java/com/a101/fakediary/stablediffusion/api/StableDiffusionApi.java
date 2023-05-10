@@ -109,7 +109,7 @@ public class StableDiffusionApi {
         this.s3client = new AmazonS3Client(credentials);
     }
 
-    public Map<String, Object> imageFunc(String title, List<String> subtitles) throws Exception {
+    public Map<String, Object> getStableDiffusionUrlsAndPrompt(String title, List<String> subtitles) throws Exception {
         //subtitles 파싱해서 리스트로 들고있기
         //리스트에 제목, subtitle을 순서대로 영어로 넣는다. 각각 썸네일, 삽화들 만들용도
         List<String> diaryImagePrompt = new ArrayList<>();

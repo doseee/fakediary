@@ -13,8 +13,6 @@ public class ChatGptPrompts {
     private final static String USER_CONNECTION = "이고, ";
     private final static String USER_END = "이야.";
     private final static String USER_CONTINUE = "끊어진 부분부터 이어서 답변해줘. 비슷한 내용을 반복하지 말고 되도록 지정한 json 형식대로 답변을 빨리 마무리해줘.";
-//    private final static String USER_CONTINUE_EN = "Answer me from the cut off part. Don't repeat similar content, and finish the answer as quickly as possible in the specified json format.";
-//    private final static String USER_CONTINUE_END = "야.";
 
     public static String generateSystemPrompt() {
         return SYSTEM_CONTENT;
@@ -70,5 +68,4 @@ public class ChatGptPrompts {
     public static String generateUserContinuePrompt() {
         return USER_CONTINUE;
     }
-
 }

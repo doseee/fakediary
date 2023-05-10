@@ -524,7 +524,7 @@ public class DiaryService {
         // 카드&일기 매핑테이블 생성
         cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIdList);
 
-        Map<String, Object> stableDiffusionMap = stableDiffusionApi.imageFunc(title, subtitleList);
+        Map<String, Object> stableDiffusionMap = stableDiffusionApi.getStableDiffusionUrlsAndPrompt(title, subtitleList);
         List<String> stableDiffusionUrls = (List<String>)stableDiffusionMap.get("stableDiffusionUrl");
         logger.info("stableDiffusionUrls = " + stableDiffusionUrls);
         List<String> diaryImagePrompt = (List<String>)stableDiffusionMap.get("diaryImagePrompt");
