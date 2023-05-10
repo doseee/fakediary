@@ -8,25 +8,16 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @Slf4j
-public class OpenAIRestTemplateConfig {
+public class ChatGptApiConfig {
     private static String OPEN_AI_API_KEY_35;
     private static String OPEN_AI_API_KEY_40;
 
-    public OpenAIRestTemplateConfig(@Value("${fake-diary.chat-gpt.api-key-3-5}") String OPEN_AI_API_KEY_35, @Value("${fake-diary.chat-gpt.api-key-4-0}") String OPEN_AI_API_KEY_40) {
-        OpenAIRestTemplateConfig.OPEN_AI_API_KEY_35 = OPEN_AI_API_KEY_35;
-        OpenAIRestTemplateConfig.OPEN_AI_API_KEY_40 = OPEN_AI_API_KEY_40;
+    public ChatGptApiConfig(@Value("${fake-diary.chat-gpt.api-key-3-5}") String OPEN_AI_API_KEY_35, @Value("${fake-diary.chat-gpt.api-key-4-0}") String OPEN_AI_API_KEY_40) {
+        ChatGptApiConfig.OPEN_AI_API_KEY_35 = OPEN_AI_API_KEY_35;
+        ChatGptApiConfig.OPEN_AI_API_KEY_40 = OPEN_AI_API_KEY_40;
     }
-
-    //    public OpenAIRestTemplateConfig(@Value("${fake-diary.chat-gpt.api-key-3-5}") String openAiApiKey1) {
-//        openAiApiKey = openAiApiKey1;
-//    }
-//    @Bean
-//    @Qualifier("openaiRestTemplate")
-    public static RestTemplate openAiRestTemplate35() {
+    public static RestTemplate chatGpt35RestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-
-        log.info("OPEN_AI_API_KEY_35 = " + OPEN_AI_API_KEY_35);
-        log.info("OPEN_AI_API_KEY_40 = " + OPEN_AI_API_KEY_40);
 
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         restTemplate.getInterceptors().add((request, body, execution) -> {
@@ -37,11 +28,8 @@ public class OpenAIRestTemplateConfig {
         return restTemplate;
     }
 
-    public static RestTemplate openAiRestTemplate40() {
+    public static RestTemplate chatGpt40RestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-
-        log.info("OPEN_AI_API_KEY_35 = " + OPEN_AI_API_KEY_35);
-        log.info("OPEN_AI_API_KEY_40 = " + OPEN_AI_API_KEY_40);
 
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         restTemplate.getInterceptors().add((request, body, execution) -> {
