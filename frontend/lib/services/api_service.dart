@@ -970,7 +970,7 @@ class ApiService {
 
   static Future<bool> deleteDiary(int diaryId) async {
     final url = Uri.parse('$baseUrl/diary/$diaryId');
-    final response = await http.patch(url);
+    final response = await http.delete(url);
 
     if (response.statusCode == 200) {
       print('success');
