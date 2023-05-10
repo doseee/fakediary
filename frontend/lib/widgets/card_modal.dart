@@ -220,7 +220,7 @@ class CardModal extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DiaryCreateCards(
-                                    cardIdFromList: card.cardId),
+                                    cardFromList: card),
 
                               ));
                           print(card.cardId);
