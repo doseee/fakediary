@@ -106,7 +106,7 @@ public class DiaryController {
     }
 
     @ApiOperation(value = "일기 삭제(status상 삭제)")
-    @PatchMapping("/{diaryId}")
+    @DeleteMapping("/{diaryId}")
         public ResponseEntity<?> deleteStatusDiary(@PathVariable Long diaryId){
             try{
                 diaryService.deleteStatusDiary(diaryId);

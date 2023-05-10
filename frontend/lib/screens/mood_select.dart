@@ -318,8 +318,8 @@ class _MoodSelectState extends State<MoodSelect> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Center(
-                                child: Text('다이어리 생성 중입니다. 완료 시 알림이 나타납니다.')),
-                          ),
+                              child: Text('다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!'),
+                            )),
                         );
                         messages = await ApiService.askGpt4(messages, prp);
                         String jsonResp = '';

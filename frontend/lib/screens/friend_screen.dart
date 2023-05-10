@@ -71,9 +71,14 @@ class _FriendScreenState extends State<FriendScreen> {
                   if (!mounted) return;
                   if (result) {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DiaryListScreen()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DiaryListScreen()));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Center(child: Text('교환 일기신청을 완료했습니다!')),
+                      ),
+                    );
                   } else {
                     print('전송 실패');
                   }
@@ -117,7 +122,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                     builder: (context) {
                                       return InfoModal(
                                           padding: 20,
-                                        color: true,
+                                          color: true,
                                           widget: Text(
                                             '✉ 랜덤 일기는 랜덤 친구와 일기를 교환할 수 있는 기능으로, 하루에 한 번만 보낼 수 있습니다.',
                                             style: TextStyle(
@@ -228,7 +233,8 @@ class _FriendScreenState extends State<FriendScreen> {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return InfoModal(padding: 20,
+                        return InfoModal(
+                          padding: 20,
                           color: true,
                           widget: ChangeModal(widget.diaryId),
                           height: 180,
@@ -303,8 +309,10 @@ class _FriendScreenState extends State<FriendScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SearchScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchScreen()));
                     },
                     child: Image(
                       image: AssetImage(
