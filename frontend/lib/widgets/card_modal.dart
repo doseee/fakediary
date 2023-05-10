@@ -1,9 +1,9 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 
 import '../model/CardModel.dart';
 import '../screens/diary_create_cards.dart';
@@ -153,22 +153,25 @@ class CardModal extends StatelessWidget {
                                       context: context,
                                       builder: (context) {
                                         return InfoModal(
-                                            padding: 0,
+                                          padding: 0,
                                           color: false,
-                                          height: MediaQuery.of(context).size.height/1.5,
-                                          widget:
-                                            GestureDetector(
-                                              onTap: (){
-                                                Navigator.pop(context);
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                      image: NetworkImage(card.cardImageUrl),
-                                                      fit: BoxFit.cover),
-                                                ),
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              1.5,
+                                          widget: GestureDetector(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        card.cardImageUrl),
+                                                    fit: BoxFit.cover),
                                               ),
-                                            )
+                                            ),
+                                          ),
                                         );
                                       });
                                 },
@@ -214,35 +217,72 @@ class CardModal extends StatelessWidget {
                   ),
                   Flexible(
                     flex: 2,
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DiaryCreateCards(
-                                    cardIdFromList: card.cardId),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              var status = await Permission.photos.status;
+                              if (!status.isGranted) {
+                                print('hi');
+                                await Permission.photos.request();
+                                print('hhi');
+                              }
 
-                              ));
-                          print(card.cardId);
-                        },
-                        child: Center(
-                          child: Container(
-                            width: 400,
-                            height: 50,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: [
-                                  Color(0xff79F1A4),
-                                  Color(0xff0E5CAD),
-                                ]),
-                                borderRadius: BorderRadius.circular(25)),
-                            child: Center(
-                                child: Text(
-                              '일기생성',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
-                            )),
+                              var response =
+                                  await http.get(Uri.parse(card.cardImageUrl));
+                              final result = await ImageGallerySaver.saveImage(
+                                  response.bodyBytes);
+                              print(result);
+                            },
+                            child: Container(
+                              width: 130,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [
+                                    Color(0xff79F1A4),
+                                    Color(0xff0E5CAD),
+                                  ]),
+                                  borderRadius: BorderRadius.circular(25)),
+                              child: Center(
+                                  child: Text(
+                                '사진저장',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14),
+                              )),
+                            ),
                           ),
-                        )),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DiaryCreateCards(
+                                        cardIdFromList: card.cardId),
+                                  ));
+                              print(card.cardId);
+                            },
+                            child: Container(
+                              width: 130,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [
+                                    Color(0xff79F1A4),
+                                    Color(0xff0E5CAD),
+                                  ]),
+                                  borderRadius: BorderRadius.circular(25)),
+                              child: Center(
+                                  child: Text(
+                                '일기생성',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14),
+                              )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   )
                 ],
               )),
