@@ -373,6 +373,18 @@ class ApiService {
     }
   }
 
+  static Future<CardModel> getCardById(int id) async {
+    final url = Uri.parse('$baseUrl/card/pick/$id');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      final card = CardModel.fromJson(jsonResponse);
+      return card;
+    } else {
+      throw Exception('카드를 불러오는 데 실패했습니다');
+    }
+  }
+
   static Future<List<CardUrlListVerModel>> getCardsbyDiaryId(
       int diaryId) async {
     final response =
