@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:lottie/lottie.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/card_modal.dart';
 import '../widgets/theme.dart';
@@ -37,19 +38,16 @@ class _CardListState extends State<CardList> {
           child: Column(
             children: [
               Flexible(
-                flex: 5,
+                flex: 4,
                 child: Scaffold(
                     backgroundColor: Colors.transparent,
                     body: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image(
-                            image:
-                                AssetImage('assets/img/cardlist_topcards.png'),
-                            width: 80,
-                            height: 80,
-                          ),
+                      Center(
+                      child: Lottie.asset('assets/lottie/2-tarot.json',height: 80),
+                    ),
                           SizedBox(
                             height: 15,
                           ),
