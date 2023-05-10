@@ -6,13 +6,15 @@ import java.util.List;
 
 @Slf4j
 public class ChatGptPrompts {
-//    private final static String SYSTEM_CONTENT = "재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 desc에, 내용은 contents에 넣어줘. 이야기를 한 장 당 1000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 최대한 길게 부탁해.";
-    private final static String SYSTEM_CONTENT = "재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 summary에, 소제목은 subtitles에, 내용은 contents에 넣어줘. 이야기를 한 장 당 2000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 각 장의 제목이 되는 subtitles도 contents와 같이 문자열 배열로 만들어줘.";
+    private final static String SYSTEM_CONTENT = "재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 summary에, 소제목은 subtitles에, 내용은 contents에 넣어줘. 이야기를 한 장 당 5000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 각 장의 제목이 되는 subtitles도 contents와 같이 문자열 배열로 만들어줘.";
     private final static String USER_CHARACTERS = "주인공은 ";
     private final static String USER_PLACES = "장소는 ";
     private final static String USER_KEYWORDS = "키워드는 ";
     private final static String USER_CONNECTION = "이고, ";
     private final static String USER_END = "이야.";
+    private final static String USER_CONTINUE = "끊어진 부분부터 이어서 답변해줘. 비슷한 내용을 반복하지 말고 되도록 지정한 json 형식대로 답변을 빨리 마무리해줘.";
+//    private final static String USER_CONTINUE_EN = "Answer me from the cut off part. Don't repeat similar content, and finish the answer as quickly as possible in the specified json format.";
+//    private final static String USER_CONTINUE_END = "야.";
 
     public static String generateSystemPrompt() {
         return SYSTEM_CONTENT;
@@ -64,4 +66,9 @@ public class ChatGptPrompts {
         log.info("생성된 프롬프트 = " + contents);
         return contents.toString();
     }
+
+    public static String generateUserContinuePrompt() {
+        return USER_CONTINUE;
+    }
+
 }

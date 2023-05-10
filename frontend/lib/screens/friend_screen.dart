@@ -70,9 +70,14 @@ class _FriendScreenState extends State<FriendScreen> {
                   if (!mounted) return;
                   if (result) {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DiaryListScreen()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DiaryListScreen()));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Center(child: Text('교환 일기신청을 완료했습니다!')),
+                      ),
+                    );
                   } else {
                     print('전송 실패');
                   }

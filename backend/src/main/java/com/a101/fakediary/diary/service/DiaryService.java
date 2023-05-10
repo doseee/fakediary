@@ -6,8 +6,12 @@ import com.a101.fakediary.card.entity.Card;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
 import com.a101.fakediary.chatgptdiary.api.ChatGptApi;
+import com.a101.fakediary.chatgptdiary.dto.message.Message;
 import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
-import com.a101.fakediary.diary.dto.*;
+import com.a101.fakediary.chatgptdiary.prompt.ChatGptPrompts;
+import com.a101.fakediary.diary.dto.DiaryFilterDto;
+import com.a101.fakediary.diary.dto.DiaryRequestDto;
+import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
@@ -17,38 +21,28 @@ import com.a101.fakediary.enums.ERequestStatus;
 import com.a101.fakediary.friendexchangerequest.repository.FriendExchangeRequestRepository;
 import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.service.GenreService;
+import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.a101.fakediary.randomexchangepool.repository.RandomExchangePoolRepository;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.a101.fakediary.stablediffusion.api.StableDiffusionApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.ClientResponse;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class DiaryService {
-
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
     private final GenreService genreService;
@@ -56,11 +50,14 @@ public class DiaryService {
     private final CardRepository cardRepository;
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
-    private final PapagoTranslator papagoTranslator;
+    //    private final PapagoTranslator papagoTranslator;
     private final ChatGptApi chatGptApi;
+    private final StableDiffusionApi stableDiffusionApi;
     private final FriendExchangeRequestRepository friendExchangeRequestRepository;
     private final RandomExchangePoolRepository randomExchangePoolRepository;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
+
+    private final static String DELIMITER = "@";
 
     //aws credentials key
     @Value("${cloud.aws.credentials.access-key}")
@@ -115,208 +112,209 @@ public class DiaryService {
         return tmp;
     }
 
-    @Transactional
-    public DiaryResponseDto createDiary(DiaryRequestDto dto) throws Exception {
-        //dto 키워드 채우기
-        StringBuilder keywords = new StringBuilder();
-        StringBuilder names = new StringBuilder();
-        StringBuilder places = new StringBuilder();
-        final String DELIMITER = "@";//구분문자
+//    @Transactional
+//    public DiaryResponseDto createDiary(DiaryRequestDto dto) throws Exception {
+//        //dto 키워드 채우기
+//        StringBuilder keywords = new StringBuilder();
+//        StringBuilder names = new StringBuilder();
+//        StringBuilder places = new StringBuilder();
+//        final String DELIMITER = "@";//구분문자
+//
+//        List<Long> cardIds = dto.getCardIds();
+//        for (Long id : cardIds) {
+//            Card card = cardRepository.findById(id).orElseThrow();
+//            //빈것보냈을때 null로저장되는지 ""로저장되는지 확인필요 값이 존재하면 이어줌
+//            if (card.getKeyword() != null && !card.getKeyword().equals(""))
+//                keywords.append(card.getKeyword()).append(DELIMITER); //키워드@키워드@키워드@ 식으로 제작
+//            if (card.getBaseName() != null && !card.getBaseName().equals(""))
+//                names.append(card.getBaseName()).append(DELIMITER);
+//            if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
+//                places.append(card.getBasePlace()).append(DELIMITER);
+//        }
+//
+//        //마지막 골뱅이 제거
+//        if (0 < keywords.length() && keywords.toString().endsWith(DELIMITER)) {
+//            keywords.setLength(keywords.length() - 1);
+//        }
+//        if (0 < names.length() && names.toString().endsWith(DELIMITER)) {
+//            names.setLength(names.length() - 1);
+//        }
+//        if (0 < places.length() && places.toString().endsWith(DELIMITER)) {
+//            places.setLength(places.length() - 1);
+//        }
+//
+//
+//        dto.setKeyword(keywords.toString());
+//        dto.setCharacters(names.toString());
+//        dto.setPlaces(places.toString());
+//        //dto 키워드 채우기 end
+//
+//        //GPT API날려서 dto에 GPT관련 내용채우기
+//
+//        if (dto.getCharacters().equals("") && dto.getPlaces().equals("") && dto.getKeyword().equals(""))
+//            throw new Exception("주인공,장소, 키워드 모두 존재하지 않음");
+//
+//        //일기 생성
+//        Diary diary = diaryRepository.save(toEntity(dto));
+//
+////        검증 로직 일기생성전 처리하게 변경 문제없을시 아래코드삭제
+////        if(diary.getCharacters().equals("") && diary.getPlaces().equals("") && diary.getKeyword().equals(""))
+////            throw new Exception("주인공, 장소, 키워드 모두 존재하지 않음");
+//
+//        //장르 테이블 생성
+//        List<String> genreList = dto.getGenre();
+//
+//        for (String genre : genreList) {
+//            GenreDto gen = new GenreDto(diary.getDiaryId(), genre);
+//            genreService.saveGenre(gen); //장르 저장
+//        }
+//
+//        // 카드&일기 매핑테이블 생성
+//        cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIds);
+//
+//        //stable diffusion 활용하여 썸네일 생성
+//        //webClient 최대 버퍼 크기 128MB로 설정
+//        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
+//                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1024 * 128))
+//                .build();
+//
+//        WebClient webClient = WebClient.builder()
+//                .exchangeStrategies(exchangeStrategies)
+//                .build();
+//
+//        Map<String, Object> map = new HashMap<>();
+//        //중요한것은 prompt, steps, sampler_index, override_settings(체크포인트바꾸는것)
+////        map.put("prompt", translate(dto.getTitle()));
+//        map.put("steps", 20);
+//        map.put("sampler_index", "Euler a");
+//        map.put("enable_hr", false);
+//        map.put("denoising_strength", 0);
+//        map.put("firstphase_width", 0);
+//        map.put("firstphase_height", 0);
+//        map.put("hr_scale", 2);
+//        map.put("hr_upscaler", "");
+//        map.put("hr_second_pass_steps", 0);
+//        map.put("hr_resize_x", 0);
+//        map.put("hr_resize_y", 0);
+//        map.put("styles", new ArrayList<>());
+//        map.put("seed", -1);
+//        map.put("subseed", -1);
+//        map.put("subseed_strength", 0);
+//        map.put("seed_resize_from_h", -1);
+//        map.put("seed_resize_from_w", -1);
+//        map.put("sampler_name", "");
+//        map.put("batch_size", 1);
+//        map.put("n_iter", 1);
+//        map.put("cfg_scale", 7);
+//        map.put("width", 512);
+//        map.put("height", 512);
+//        map.put("restore_faces", false);
+//        map.put("tiling", false);
+//        map.put("do_not_save_samples", false);
+//        map.put("do_not_save_grid", false);
+//        map.put("negative_prompt", "");
+//        map.put("eta", 0);
+//        map.put("s_churn", 0);
+//        map.put("s_tmax", 0);
+//        map.put("s_tmin", 0);
+//        map.put("s_noise", 1);
+//        map.put("override_settings", new HashMap<>());
+//        map.put("override_settings_restore_afterwards", true);
+//        map.put("script_args", new ArrayList<>());
+//        map.put("script_name", "");
+//        map.put("send_images", true);
+//        map.put("save_images", false);
+//        map.put("alwayson_scripts", new HashMap<>());
+//
+//
+//        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+//        AmazonS3 s3client = new AmazonS3Client(credentials);
+//
+////        안씀
+////        String key = "image-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".png";
+//
+//
+//        //StableDiffusion 이미지 만들기 썸네일, 삽화
+//        // stable diffusion 서버 url 매일 달라짐 수동으로 수정 필요
+//        // 230508
+//        String STABLE_DIFFUSION_URL = "https://f44ca12b95ab.ngrok.app";
+//
+//        //subtitles 파싱해서 리스트로 들고있기
+//        //리스트에 제목, subtitle을 순서대로 영어로 넣는다. 각각 썸네일, 삽화들 만들용도
+//        List<String> diaryImagePrompt = new ArrayList<>();
+//        diaryImagePrompt.add(translate(dto.getTitle()));
+//        String[] subtitles = dto.getSubtitles().split(DELIMITER);
+//        for (String subtitle : subtitles) {
+//            diaryImagePrompt.add(translate(subtitle));
+//        }
+//
+//        List<String> dtoImageUrl = new ArrayList<>(); // 다이어리 이미지 url들 저장할것
+//        // Title, subtitle들 번역해서 프롬프트로 넣고 stablediffusion 이미지 생성
+//        //아래작업은 비동기로하면 좋을것같은데.. 리팩토링시 봐야할듯
+//        for (int i=0; i< diaryImagePrompt.size(); i++) {
+//            String translatedPrompt = diaryImagePrompt.get(i);
+//            map.put("prompt", translatedPrompt);
+//
+//            ClientResponse response = webClient.post()
+//                    .uri(STABLE_DIFFUSION_URL + "/sdapi/v1/txt2img")
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .bodyValue(map)
+//                    .exchange()
+//                    .block();
+//
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String stableDiffusionResultUrl;
+//            if (response.statusCode().equals(HttpStatus.OK)) {//200응답
+//                String responseBody = response.bodyToMono(String.class).block();
+//                StableDiffusion200ResponseDto response200Dto = objectMapper.readValue(responseBody, StableDiffusion200ResponseDto.class);
+//                String imageData = response200Dto.getImages().get(0);
+//                byte[] decodedImg = Base64.getDecoder().decode(imageData.getBytes("UTF-8"));
+//                Path destinationFile = Paths.get("image.png");
+//                Files.write(destinationFile, decodedImg);
+//
+//                // S3에 업로드
+//                String uniqueKey = UUID.randomUUID().toString();
+//                s3client.putObject(bucket, uniqueKey, destinationFile.toFile());
+//
+//                // 이미지 url얻고
+//                stableDiffusionResultUrl = s3client.getUrl(bucket, uniqueKey).toString();
+//
+//                dtoImageUrl.add(stableDiffusionResultUrl);
+//
+//
+//            } else if (response.statusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) { //422응답
+//                String responseBody = response.bodyToMono(String.class).block();
+//                StableDiffusion422ResponseDto response422Dto = objectMapper.readValue(responseBody, StableDiffusion422ResponseDto.class);
+//
+//                logger.error("StableDiffusion API returned 422: " + response422Dto);
+//
+//            } else {
+//                throw new Exception("Stable Diffusion Exception");
+//            }
+//        }
+//        dto.setDiaryImageUrl(dtoImageUrl);
+//        //일기&이미지파일 테이블 에 등록
+//        diaryImageService.createDiaryImages(diary.getDiaryId(), dto.getDiaryImageUrl(), diaryImagePrompt);
+//        //-- end stable diffusion 활용하여 썸네일 생성 end--
+//
+//
+//        //장르 추가
+//        DiaryResponseDto returnDto = new DiaryResponseDto(diary);
+//        List<String> genres = genreService.searchGenre(diary.getDiaryId());
+//        EGenre[] genreArray = genres.stream()
+//                .map(EGenre::valueOf)
+//                .toArray(EGenre[]::new);
+//        returnDto.setGenre(genreArray);
+//
+//        return returnDto;
+//    }
 
-        List<Long> cardIds = dto.getCardIds();
-        for (Long id : cardIds) {
-            Card card = cardRepository.findById(id).orElseThrow();
-            //빈것보냈을때 null로저장되는지 ""로저장되는지 확인필요 값이 존재하면 이어줌
-            if (card.getKeyword() != null && !card.getKeyword().equals(""))
-                keywords.append(card.getKeyword()).append(DELIMITER); //키워드@키워드@키워드@ 식으로 제작
-            if (card.getBaseName() != null && !card.getBaseName().equals(""))
-                names.append(card.getBaseName()).append(DELIMITER);
-            if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
-                places.append(card.getBasePlace()).append(DELIMITER);
-        }
-
-        //마지막 골뱅이 제거
-        if (0 < keywords.length() && keywords.toString().endsWith(DELIMITER)) {
-            keywords.setLength(keywords.length() - 1);
-        }
-        if (0 < names.length() && names.toString().endsWith(DELIMITER)) {
-            names.setLength(names.length() - 1);
-        }
-        if (0 < places.length() && places.toString().endsWith(DELIMITER)) {
-            places.setLength(places.length() - 1);
-        }
-
-
-        dto.setKeyword(keywords.toString());
-        dto.setCharacters(names.toString());
-        dto.setPlaces(places.toString());
-        //dto 키워드 채우기 end
-
-        //GPT API날려서 dto에 GPT관련 내용채우기
-
-        if (dto.getCharacters().equals("") && dto.getPlaces().equals("") && dto.getKeyword().equals(""))
-            throw new Exception("주인공,장소, 키워드 모두 존재하지 않음");
-
-        //일기 생성
-        Diary diary = diaryRepository.save(toEntity(dto));
-
-//        검증 로직 일기생성전 처리하게 변경 문제없을시 아래코드삭제
-//        if(diary.getCharacters().equals("") && diary.getPlaces().equals("") && diary.getKeyword().equals(""))
-//            throw new Exception("주인공, 장소, 키워드 모두 존재하지 않음");
-
-        //장르 테이블 생성
-        List<String> genreList = dto.getGenre();
-
-        for (String genre : genreList) {
-            GenreDto gen = new GenreDto(diary.getDiaryId(), genre);
-            genreService.saveGenre(gen); //장르 저장
-        }
-
-        // 카드&일기 매핑테이블 생성
-        cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIds);
-
-        //stable diffusion 활용하여 썸네일 생성
-        //webClient 최대 버퍼 크기 128MB로 설정
-        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(1024 * 1024 * 128))
-                .build();
-
-        WebClient webClient = WebClient.builder()
-                .exchangeStrategies(exchangeStrategies)
-                .build();
-
-        Map<String, Object> map = new HashMap<>();
-        //중요한것은 prompt, steps, sampler_index, override_settings(체크포인트바꾸는것)
-//        map.put("prompt", translate(dto.getTitle()));
-        map.put("steps", 20);
-        map.put("sampler_index", "Euler a");
-        map.put("enable_hr", false);
-        map.put("denoising_strength", 0);
-        map.put("firstphase_width", 0);
-        map.put("firstphase_height", 0);
-        map.put("hr_scale", 2);
-        map.put("hr_upscaler", "");
-        map.put("hr_second_pass_steps", 0);
-        map.put("hr_resize_x", 0);
-        map.put("hr_resize_y", 0);
-        map.put("styles", new ArrayList<>());
-        map.put("seed", -1);
-        map.put("subseed", -1);
-        map.put("subseed_strength", 0);
-        map.put("seed_resize_from_h", -1);
-        map.put("seed_resize_from_w", -1);
-        map.put("sampler_name", "");
-        map.put("batch_size", 1);
-        map.put("n_iter", 1);
-        map.put("cfg_scale", 7);
-        map.put("width", 512);
-        map.put("height", 512);
-        map.put("restore_faces", false);
-        map.put("tiling", false);
-        map.put("do_not_save_samples", false);
-        map.put("do_not_save_grid", false);
-        map.put("negative_prompt", "");
-        map.put("eta", 0);
-        map.put("s_churn", 0);
-        map.put("s_tmax", 0);
-        map.put("s_tmin", 0);
-        map.put("s_noise", 1);
-        map.put("override_settings", new HashMap<>());
-        map.put("override_settings_restore_afterwards", true);
-        map.put("script_args", new ArrayList<>());
-        map.put("script_name", "");
-        map.put("send_images", true);
-        map.put("save_images", false);
-        map.put("alwayson_scripts", new HashMap<>());
-
-
-        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-        AmazonS3 s3client = new AmazonS3Client(credentials);
-
-//        안씀
-//        String key = "image-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")) + ".png";
-
-
-        //StableDiffusion 이미지 만들기 썸네일, 삽화
-        // stable diffusion 서버 url 매일 달라짐 수동으로 수정 필요
-        // 230508
-        String STABLE_DIFFUSION_URL = "https://f44ca12b95ab.ngrok.app";
-
-        //subtitles 파싱해서 리스트로 들고있기
-        //리스트에 제목, subtitle을 순서대로 영어로 넣는다. 각각 썸네일, 삽화들 만들용도
-        List<String> diaryImagePrompt = new ArrayList<>();
-        diaryImagePrompt.add(translate(dto.getTitle()));
-        String[] subtitles = dto.getSubtitles().split(DELIMITER);
-        for (String subtitle : subtitles) {
-            diaryImagePrompt.add(translate(subtitle));
-        }
-
-        List<String> dtoImageUrl = new ArrayList<>(); // 다이어리 이미지 url들 저장할것
-        // Title, subtitle들 번역해서 프롬프트로 넣고 stablediffusion 이미지 생성
-        //아래작업은 비동기로하면 좋을것같은데.. 리팩토링시 봐야할듯
-        for (int i=0; i< diaryImagePrompt.size(); i++) {
-            String translatedPrompt = diaryImagePrompt.get(i);
-            map.put("prompt", translatedPrompt);
-
-            ClientResponse response = webClient.post()
-                    .uri(STABLE_DIFFUSION_URL + "/sdapi/v1/txt2img")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(map)
-                    .exchange()
-                    .block();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String stableDiffusionResultUrl;
-            if (response.statusCode().equals(HttpStatus.OK)) {//200응답
-                String responseBody = response.bodyToMono(String.class).block();
-                StableDiffusion200ResponseDto response200Dto = objectMapper.readValue(responseBody, StableDiffusion200ResponseDto.class);
-                String imageData = response200Dto.getImages().get(0);
-                byte[] decodedImg = Base64.getDecoder().decode(imageData.getBytes("UTF-8"));
-                Path destinationFile = Paths.get("image.png");
-                Files.write(destinationFile, decodedImg);
-
-                // S3에 업로드
-                String uniqueKey = UUID.randomUUID().toString();
-                s3client.putObject(bucket, uniqueKey, destinationFile.toFile());
-
-                // 이미지 url얻고
-                stableDiffusionResultUrl = s3client.getUrl(bucket, uniqueKey).toString();
-
-                dtoImageUrl.add(stableDiffusionResultUrl);
-
-
-            } else if (response.statusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) { //422응답
-                String responseBody = response.bodyToMono(String.class).block();
-                StableDiffusion422ResponseDto response422Dto = objectMapper.readValue(responseBody, StableDiffusion422ResponseDto.class);
-
-                logger.error("StableDiffusion API returned 422: " + response422Dto);
-
-            } else {
-                throw new Exception("Stable Diffusion Exception");
-            }
-        }
-        dto.setDiaryImageUrl(dtoImageUrl);
-        //일기&이미지파일 테이블 에 등록
-        diaryImageService.createDiaryImages(diary.getDiaryId(), dto.getDiaryImageUrl(), diaryImagePrompt);
-        //-- end stable diffusion 활용하여 썸네일 생성 end--
-
-
-        //장르 추가
-        DiaryResponseDto returnDto = new DiaryResponseDto(diary);
-        List<String> genres = genreService.searchGenre(diary.getDiaryId());
-        EGenre[] genreArray = genres.stream()
-                .map(EGenre::valueOf)
-                .toArray(EGenre[]::new);
-        returnDto.setGenre(genreArray);
-
-        return returnDto;
-    }
 
     //삭제되지 않은 다이어리 단일 조회
     @Transactional(readOnly = true)
     public Diary findNotDeletedDiaryById(Long diaryId) throws Exception {
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new Exception("다이어리Id가 존재하지 않습니다."));
-        if(diary.isDeleted()){
+        if (diary.isDeleted()) {
             throw new Exception("삭제된 다이어리입니다.");
         }
         return diary;
@@ -346,17 +344,17 @@ public class DiaryService {
 
     @Transactional
     public void deleteStatusDiary(Long diaryId) throws Exception {
-        Diary diary =  diaryRepository.findById(diaryId).orElseThrow();
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow();
 
-        if(diary.isDeleted()){
+        if (diary.isDeleted()) {
             throw new Exception("이미 삭제 상태로 변경된 일기입니다.");
         }
         //이 diaryId가 friendExchangeRequest에 존재하고, status가 WAITING이면(친구와 교환중인상태) 들어가있으면 삭제불가
-        if(friendExchangeRequestRepository.findBySenderDiary_DiaryIdAndStatus(diaryId, ERequestStatus.WAITING) != null){
+        if (friendExchangeRequestRepository.findBySenderDiary_DiaryIdAndStatus(diaryId, ERequestStatus.WAITING) != null) {
             throw new Exception("친구와 교환 대기중인 일기는 삭제가 불가능합니다.");
         }
         //diaryId가 randomExchangePool테이블의 sender_id가 존재하고 updated_at이 null이 아니라면(매칭중인상태) 삭제 불가
-        if(randomExchangePoolRepository.findByDiary_DiaryIdAndUpdatedAtNotNull(diaryId) != null){
+        if (randomExchangePoolRepository.findByDiary_DiaryIdAndUpdatedAtNotNull(diaryId) != null) {
             throw new Exception("랜덤 교환중인 일기는 삭제가 불가능합니다.");
         }
         diary.setDeleted(true);
@@ -374,7 +372,7 @@ public class DiaryService {
         List<CardMadeDiaryResponseDto> returnList = new ArrayList<>();
         for (Long diaryId : diaryIdList) {
             Diary diary = diaryRepository.findById(diaryId).orElseThrow();
-            if(diary.isDeleted())
+            if (diary.isDeleted())
                 continue;
             List<String> diaryImageUrls = diaryRepository.findDiaryImageUrlByDiaryId(diaryId);
             String diaryThumbnail = diaryImageUrls.stream().findFirst().orElse("이미지가 없습니다.");//썸네일
@@ -413,19 +411,19 @@ public class DiaryService {
             diary.setExchanged(false);
     }
 
-    @Async
-    public String translate(String text) { //메소드 불러서 바꾸고 싶은 내용 text에 넣으면 한 -> 영 바꿔서 return
-        String translatedText = papagoTranslator.translate(text).block();
-        Pattern pattern = Pattern.compile("\"translatedText\":\"([^\"]*)\"");
-        Matcher matcher = pattern.matcher(translatedText);
-        if (matcher.find()) {
-            String trans = matcher.group(1);
-            logger.info("번역할 언어 : {}", text);
-            logger.info("번역된 언어 : {}", trans);
-            return trans;
-        }
-        return null;
-    }
+//    @Async
+//    public String translate(String text) { //메소드 불러서 바꾸고 싶은 내용 text에 넣으면 한 -> 영 바꿔서 return
+//        String translatedText = papagoTranslator.translate(text).block();
+//        Pattern pattern = Pattern.compile("\"translatedText\":\"([^\"]*)\"");
+//        Matcher matcher = pattern.matcher(translatedText);
+//        if (matcher.find()) {
+//            String trans = matcher.group(1);
+//            logger.info("번역할 언어 : {}", text);
+//            logger.info("번역된 언어 : {}", trans);
+//            return trans;
+//        }
+//        return null;
+//    }
 
     @Transactional(readOnly = true)
     public DiaryResultDto getResultDto(List<Long> cardList) throws Exception {
@@ -433,28 +431,216 @@ public class DiaryService {
         List<String> places = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
 
-        for(Long cardPk : cardList) {
+        for (Long cardPk : cardList) {
             Card card = cardRepository.findById(cardPk).orElseThrow(() -> new Exception("cardList에 저장된 카드 PK와 일치하는 카드가 없음"));
             CardSaveResponseDto dto = CardSaveResponseDto.getCardSaveResponseDto(card);
-            
-            if(dto.getBaseName() != null && !dto.getBaseName().equals(""))  //  카드에 등장인물이 존재할 경우
+
+            if (dto.getBaseName() != null && !dto.getBaseName().equals(""))  //  카드에 등장인물이 존재할 경우
                 characters.add(dto.getBaseName());
-            if(dto.getBasePlace() != null && !dto.getBasePlace().equals(""))    //  카드에 장소가 존재할 경우
+            if (dto.getBasePlace() != null && !dto.getBasePlace().equals(""))    //  카드에 장소가 존재할 경우
                 places.add(dto.getBasePlace());
-            if(dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드가 존재하는 경우
+            if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드가 존재하는 경우
                 keywords.addAll(dto.getKeywords());
             }
         }
 
-        return chatGptApi.askGpt(characters, places, keywords);
+        logger.info("characters = " + characters);
+        logger.info("places = " + places);
+        logger.info("keywords = " + keywords);
+        String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords);
+
+        List<Message> messageList = chatGptApi.askGpt35(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
+        StringBuilder diaryContent = new StringBuilder();
+        for (Message message : messageList) {
+            String role = message.getRole();
+            String content = message.getContent();
+            ;
+
+            if (role.equals("assistant")) {
+                diaryContent.append(content);
+            }
+        }
+
+        logger.info("diaryContent = " + diaryContent);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        DiaryResultDto diaryResultDto = objectMapper.readValue(diaryContent.toString(), DiaryResultDto.class);
+        diaryResultDto.setPrompt(prompt);
+
+        return diaryResultDto;
     }
 
     @Transactional
-    public void createDiary(List<Long> cardList) throws Exception {
-        DiaryResultDto diaryResultDto = getResultDto(cardList);
+    public DiaryResponseDto createDiary(Long memberId, List<Long> cardIdList, List<String> genreList) throws Exception {
+        DiaryResultDto diaryResultDto = getResultDto(cardIdList);
         String title = diaryResultDto.getTitle();
         String summary = diaryResultDto.getSummary();
-        List<String> subtitles = diaryResultDto.getSubtitles();
+        List<String> subtitleList = diaryResultDto.getSubtitles();
         List<List<String>> contents = diaryResultDto.getContents();
+        String prompt = diaryResultDto.getPrompt();
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
+
+        Map<String, String> map = getDiaryItems(cardIdList);
+        String keywords = map.getOrDefault("keywords", "");
+        String characters = map.getOrDefault("characters", "");
+        String places = map.getOrDefault("places", "");
+
+        StringBuilder sb = new StringBuilder();
+
+        for (List<String> content : contents) {
+            for (String text : content)
+                sb.append(text).append(" ");
+        }
+        String detail = sb.toString().trim();
+
+        sb = new StringBuilder();
+
+        for (String subtitle : subtitleList) {
+            sb.append(subtitle).append(DELIMITER);
+        }
+
+        if (0 < sb.length() && sb.toString().endsWith(DELIMITER))
+            sb.setLength(sb.length() - 1);
+
+//          sb.setLength(places.length() - 1);이렇게되어있길래 에러나서 places sb로 고침
+
+        String subtitles = sb.toString();
+
+        Diary diary = Diary.builder()
+                .member(member)
+                .characters(characters)
+                .places(places)
+                .keyword(keywords)
+                .prompt(prompt)
+                .title(title)
+                .subtitles(subtitles)
+                .detail(detail)
+                .summary(summary)
+                .build();
+
+        Long diaryId = diaryRepository.save(diary).getDiaryId();
+
+        for (String genre : genreList) {
+            GenreDto gen = new GenreDto(diary.getDiaryId(), genre);
+            genreService.saveGenre(gen); //장르 저장
+        }
+
+        // 카드&일기 매핑테이블 생성
+        cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIdList);
+
+        Map<String, Object> stableDiffusionMap = stableDiffusionApi.imageFunc(title, subtitleList);
+        List<String> stableDiffusionUrls = (List<String>) stableDiffusionMap.get("stableDiffusionUrl");
+        logger.info("stableDiffusionUrls = " + stableDiffusionUrls);
+        List<String> diaryImagePrompt = (List<String>) stableDiffusionMap.get("diaryImagePrompt");
+        logger.info("diaryImagePrompt = " + diaryImagePrompt);
+        diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
+
+        DiaryResponseDto returnDto = new DiaryResponseDto(diary);
+        List<String> genres = genreService.searchGenre(diary.getDiaryId());
+        EGenre[] genreArray = genres.stream()
+                .map(EGenre::valueOf)
+                .toArray(EGenre[]::new);
+        returnDto.setGenre(genreArray);
+        returnDto.setDiaryImageUrl(stableDiffusionUrls.toArray(new String[stableDiffusionUrls.size()]));
+
+        return returnDto;
+    }
+
+    private Map<String, String> getDiaryItems(List<Long> cardIdList) {
+        StringBuilder keywords = new StringBuilder();
+        StringBuilder characters = new StringBuilder();
+        StringBuilder places = new StringBuilder();
+        Map<String, String> map = new HashMap<>();
+
+        for (Long id : cardIdList) {
+            Card card = cardRepository.findById(id).orElseThrow();
+            //빈것보냈을때 null로저장되는지 ""로저장되는지 확인필요 값이 존재하면 이어줌
+            if (card.getKeyword() != null && !card.getKeyword().equals(""))
+                keywords.append(card.getKeyword()).append(DELIMITER); //키워드@키워드@키워드@ 식으로 제작
+            if (card.getBaseName() != null && !card.getBaseName().equals(""))
+                characters.append(card.getBaseName()).append(DELIMITER);
+            if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
+                places.append(card.getBasePlace()).append(DELIMITER);
+        }
+
+        //마지막 골뱅이 제거
+        if (0 < keywords.length() && keywords.toString().endsWith(DELIMITER))
+            keywords.setLength(keywords.length() - 1);
+        if (0 < characters.length() && characters.toString().endsWith(DELIMITER))
+            characters.setLength(characters.length() - 1);
+        if (0 < places.length() && places.toString().endsWith(DELIMITER))
+            places.setLength(places.length() - 1);
+
+        map.put("keywords", keywords.toString());
+        map.put("characters", characters.toString());
+        map.put("places", places.toString());
+
+        return map;
+    }
+
+    //유저가 정해둔 시간에 맞춰 일기 자동생성하기
+    @Scheduled(cron = "0 0/30 * * * ?", zone = "Asia/Seoul") // 현재 30분 기준으로 생성중
+    public void createAutoDiary() throws Exception {
+        LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
+        logger.info("카드자동생성 시간이 되어 자동생성로직을 시작합니다. 현재 시간은 " + now + " 입니다.");
+
+        // member autodiary시간이 설정되어있는 멤버만 검색
+        List<Member> members = memberRepository.findByAutoDiaryTimeNotNull();
+        for (Member member : members) {
+            // auto_diary_time과 일치하는지 확인
+            if (isTimeMatch(member.getAutoDiaryTime(), now)) {
+                try {///try catch사용해서 중간에 일기만들기실패해도 다른유저 생성에 이상없도록.
+                    //현재는 유저 한명씩 제작하고있는데 쓰레드를 나눠서 작업을 시켜야할지.. 기능개선때 생각
+                    // 일치하면 24시간기준으로 카드를 가져와서 일기 만드는 작업 실행
+                    //멤버의 24시간기준 List<Long>cardIdList가져오기
+                    List<Long> cardIdList = findCardIdsWithin24Hours(member.getMemberId());
+
+                    //만약 24시간기준 찍은게 0개라면 일기 만들지않음
+                    if (cardIdList.isEmpty()) {
+                        continue;
+                    }
+
+                    //장르 랜덤으로 1개 ~ 2개 결정하기 List<String> genreList
+                    Set<String> genreSet = new HashSet<>();
+                    Random random = new Random();
+                    EGenre[] genres = EGenre.values();
+                    int count = random.nextInt(2) + 1; // 1 또는 2
+                    while (genreSet.size() < count) {
+                        int index = random.nextInt(genres.length);
+                        genreSet.add(genres[index].name());
+                    }
+                    List<String> genreList = new ArrayList<>(genreSet);
+
+                    logger.info(member.getMemberId() + "번 MemberId의 일기 자동생성을 시작하겠습니다.");
+
+                    createDiary(member.getMemberId(), cardIdList, genreList);
+                    //자동생성 알람로직 여기다가 작성예정 by 은녕
+
+                    logger.info(member.getMemberId() + "번 MemberId의일기 자동 생성이 성공하였습니다.");
+                } catch (Exception e) {
+                    logger.error(member.getMemberId() + " 번 MemberId의일기 자동 생성 과정중 에러 발생", e);
+                }
+            }
+        }
+        logger.info(now + " 시간대의 카드 지동생성 로직을 종료합니다.");
+    }
+
+    //현재시간과 설정해둔 시간이 일치하는 유저라면 true
+    private boolean isTimeMatch(LocalTime autoDiaryTime, LocalTime localTime) {
+        return localTime.getHour() == autoDiaryTime.getHour() && localTime.getMinute() == autoDiaryTime.getMinute();
+    }
+
+    //유저가 보유한 카드중 24시간 이내로 만들어진 카드들 반환 (10개넘을시 랜덤으로 10개고름)
+    private List<Long> findCardIdsWithin24Hours(Long memberId) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime yesterday = now.minusDays(1);
+        List<Card> cards = cardRepository.findAllByMember_MemberIdAndCreatedAtBetween(memberId, yesterday, now);
+        Collections.shuffle(cards);
+        List<Long> cardIds = new ArrayList<>();
+        for (int i = 0; i < Math.min(cards.size(), 10); i++) {
+            cardIds.add(cards.get(i).getCardId());
+        }
+        cardIds.sort(Comparator.naturalOrder());//오름차순 정렬
+        return cardIds;
     }
 }

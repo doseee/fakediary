@@ -19,27 +19,31 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
   late Future<List<CardModel>> cards;
   late Future<int> lengthOfCards;
   late List<CardModel> selectedCards = [];
-  late List<CardModel> _cards;
 
   @override
   void initState() {
     super.initState();
     cards = ApiService().getCardList();
-    ApiService().getCardList().then((cards) {
-      setState(() {
-        _cards = cards;
-        // 선택한 카드의 인덱스를 찾습니다.
-        int index =
-            _cards.indexWhere((card) => card.cardId == widget.cardIdFromList);
-        if (index != -1) {
-          setState(() {
-            selectedCards.insert(0, cards[index]);
-          });
-        } else {
-          print("Selected card not found");
-        }
-      });
-    });
+    print(cards);
+    // for (int i=0 ; i<cards.length ; i++) {
+    //   if(cards[i] == widget.cardIdFromList) {
+    //
+    //   }
+    // }
+    // int index = cards.(widget.cardIdFromList);
+
+    // ApiService().getCardList().then((card) {
+    //   setState(() {
+    //     _card = card;
+    //     // 선택한 카드의 인덱스를 찾습니다.
+    //     int index =
+    //         _card.indexWhere((card) => card.cardId == widget.cardIdFromList);
+    //     print(index);
+    //     setState(() {
+    //       selectedCards.add(cards[index]);
+    //     });
+    //   });
+    // });
   }
 
   late int memberId;
@@ -79,7 +83,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                             },
                             child: Image(
                               image: AssetImage(
-                                'assets/img/home_icon.png',
+                                'assets/img/icon_menu_page.png',
                               ),
                               width: 45,
                             ),

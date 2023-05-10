@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -6,7 +7,6 @@ import 'package:frontend/widgets/info_modal.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/change_button.dart';
 import '../widgets/appbar.dart';
-import 'home_circlemenu.dart';
 
 class DiaryListScreen extends StatefulWidget {
   final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
@@ -177,126 +177,144 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return HomeScreen();
-        }));
-        return false;
-      },
-      child: Container(
-        decoration: BgThemeIncludeImage(),
-        // BoxDecoration(
-        //   color: Colors.white60,
-        // ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: StandAppBar(context),
-          body: Column(
-            children: [
-              Flexible(
-                  flex: 3,
-                  child: Column(
-                    children: [
-                      Flexible(
-                          flex: 6,
-                          child: Center(
-                            child: Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                child: DiaryDetail()),
-                          )),
-                      Flexible(
-                        flex: 2,
-                        child: Container(
-                          child: Column(
-                            children: [
-                              Flexible(
-                                  flex: 1,
-                                  child: Row(
-                                    children: [
-                                      Flexible(
-                                        flex: 1,
-                                        child: Container(),
-                                      ),
-                                      Flexible(
-                                          flex: 4,
-                                          child: Center(
-                                            child: Text(
-                                              '내가 만든 일기를 확인해보세요',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15),
+    return Container(
+      decoration: BgThemeIncludeImage(),
+      // BoxDecoration(
+      //   color: Colors.white60,
+      // ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: StandAppBar(context),
+        body: Column(
+          children: [
+            Flexible(
+                flex: 3,
+                child: Column(
+                  children: [
+                    Flexible(
+                        flex: 6,
+                        child: Center(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              child: DiaryDetail()),
+                        )),
+                    Flexible(
+                      flex: 2,
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Flexible(
+                                flex: 1,
+                                child: Row(
+                                  children: [
+                                    Flexible(
+                                      flex: 1,
+                                      child: Container(),
+                                    ),
+                                    Flexible(
+                                        flex: 4,
+                                        child: Center(
+                                          child: Text(
+                                            '내가 만든 일기를 확인해보세요',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15),
+                                          ),
+                                        )),
+                                    Flexible(
+                                        flex: 2,
+                                        child: Row(
+                                          children: [
+                                            Flexible(
+                                              flex: 1,
+                                              child: Container(),
                                             ),
-                                          )),
-                                      Flexible(
-                                          flex: 2,
-                                          child: Row(
-                                            children: [
-                                              Flexible(
-                                                flex: 1,
-                                                child: Container(),
+                                            Flexible(
+                                              flex: 11,
+                                              child: Container(
+                                                child: IconButton(
+                                                    icon: Icon(Icons.info,
+                                                        color: Colors.white),
+                                                    onPressed: () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return InfoModal(
+                                                                padding: 20,
+                                                                color: true,
+                                                                widget: Text(
+                                                                  '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          14),
+                                                                ),
+                                                                height: 100);
+                                                          });
+                                                    }),
                                               ),
-                                              Flexible(
-                                                flex: 11,
-                                                child: Container(
-                                                  child: IconButton(
-                                                      icon: Icon(Icons.info,
-                                                          color: Colors.white),
-                                                      onPressed: () {
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return InfoModal(
-                                                                  padding: 20,
-                                                                  color: true,
-                                                                  widget: Text(
-                                                                    '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize:
-                                                                            14),
-                                                                  ),
-                                                                  height: 100);
-                                                            });
-                                                      }),
-                                                ),
-                                              ),
-                                              Flexible(
-                                                flex: 1,
-                                                child: Container(),
-                                              )
-                                            ],
-                                          )),
-                                    ],
-                                  )),
-                            ],
-                          ),
+                                            ),
+                                            Flexible(
+                                              flex: 1,
+                                              child: Container(),
+                                            )
+                                          ],
+                                        )),
+                                  ],
+                                )),
+                          ],
                         ),
                       ),
-                    ],
-                  )),
-              Flexible(
-                  flex: 3,
-                  child: Container(
-                    // decoration: BgThemeIncludeImage(),
-                    child: FutureBuilder<List<DiaryModel>>(
-                      future: diaries,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          print('data: ${snapshot.data}');
-                          return buildList(snapshot.data);
-                        } else if (snapshot.hasError) {
-                          return Text("error : ${snapshot.error}");
-                        }
-                        return CircularProgressIndicator();
-                      },
                     ),
-                  )
-                  // child: Container(),
-                  )
-            ],
-          ),
+                  ],
+                )),
+            Flexible(
+                flex: 3,
+                child: Container(
+                  // decoration: BgThemeIncludeImage(),
+                  child: FutureBuilder<List<DiaryModel>>(
+                    future: diaries,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        print('data: ${snapshot.data?.length}');
+                        if (snapshot.data?.isEmpty ?? true) {
+                          return Container(
+                              child: Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            DiaryCreateCards()));
+                              },
+                              child: Container(
+                                width: 250,
+                                height: 50,
+                                decoration: BtnThemeGradient(),
+                                child: Center(
+                                  child: Text(
+                                    '일기 만들러 가기',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ));
+                        }
+                        return buildList(snapshot.data);
+                      } else if (snapshot.hasError) {
+                        return Text("error : ${snapshot.error}");
+                      }
+                      return CircularProgressIndicator();
+                    },
+                  ),
+                )
+                // child: Container(),
+                )
+          ],
         ),
       ),
     );
