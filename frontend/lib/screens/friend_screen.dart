@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
-import 'package:frontend/screens/friend_add.dart';
 import 'package:frontend/screens/friend_searchnew.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
@@ -117,7 +116,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                     builder: (context) {
                                       return InfoModal(
                                           padding: 20,
-                                        color: true,
+                                          color: true,
                                           widget: Text(
                                             '✉ 랜덤 일기는 랜덤 친구와 일기를 교환할 수 있는 기능으로, 하루에 한 번만 보낼 수 있습니다.',
                                             style: TextStyle(
@@ -228,7 +227,8 @@ class _FriendScreenState extends State<FriendScreen> {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return InfoModal(padding: 20,
+                        return InfoModal(
+                          padding: 20,
                           color: true,
                           widget: ChangeModal(widget.diaryId),
                           height: 180,
@@ -293,7 +293,7 @@ class _FriendScreenState extends State<FriendScreen> {
                     },
                     child: Image(
                       image: AssetImage(
-                        'assets/img/icon_menu_page.png',
+                        'assets/img/home_icon.png',
                       ),
                       width: 45,
                     ),
@@ -303,8 +303,10 @@ class _FriendScreenState extends State<FriendScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SearchScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchScreen()));
                     },
                     child: Image(
                       image: AssetImage(
