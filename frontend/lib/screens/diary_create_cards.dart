@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/old_menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/mood_select.dart';
-
 import '../widgets/theme.dart';
 
 class DiaryCreateCards extends StatefulWidget {
@@ -136,60 +136,91 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                           future: cards,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              return buildList(snapshot.data);
+                              if(snapshot.data?.length == 0) {
+                                return GestureDetector(
+                                  onTap: (){
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => CardCreate())
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 250,
+                                    height: 50,
+                                    decoration: BtnThemeGradient(),
+                                    child: Center(
+                                      child: Text('카드 만들러 가기', style: TextStyle(color: Colors.white, fontSize: 16),),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              return Column(
+                                children: [
+                                  Flexible(flex: 3, child: buildList(snapshot.data),),
+                                  Flexible(flex: 1, child: ButtonCheck(),)
+                                ],
+                              );
                             } else if (snapshot.hasError) {
                               return Text("${snapshot.error}에러!!");
                             }
                             return CircularProgressIndicator();
                           })),
-                  Flexible(
-                      flex: 1,
-                      child: GestureDetector(
-                        // NEXT 버튼을 누르면 장르선택 페이지로 간다.
-                        onTap: () {
-                          // navigate to the desired class
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    MoodSelect(selectedCards: selectedCards)),
-                          );
-                        },
-                        child: Container(
-                          // NEXT 버튼
-                            width: 268,
-                            height: 61,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  const Color(0xff263344),
-                                  const Color(0xff1B2532).withOpacity(0.53),
-                                  const Color(0xff1C2A3D).withOpacity(0.5),
-                                  const Color(0xff1E2E42).withOpacity(0.46),
-                                  const Color(0xff364B66).withOpacity(0.33),
-                                  const Color(0xff2471D6).withOpacity(0),
-                                ],
-                                stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color(0xff000000).withOpacity(0.25),
-                                  offset: const Offset(0, 4),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'NEXT',
-                                style: TextStyle(color: Colors.white, fontSize: 15),
-                              ),
-                            )),
-                      ))
                 ])))));
+  }
+
+  Widget ButtonCheck(){
+    if(selectedCards.isEmpty){
+      return Center(
+        child: Text('카드를 하나 이상 선택해주세요', style: TextStyle(color: Colors.white60),),
+      );
+    }
+
+    return GestureDetector(
+      // NEXT 버튼을 누르면 장르선택 페이지로 간다.
+      onTap: () {
+        // navigate to the desired class
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MoodSelect(selectedCards: selectedCards)),
+        );
+      },
+      child: Container(
+        // NEXT 버튼
+          width: 268,
+          height: 61,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color(0xff263344),
+                const Color(0xff1B2532).withOpacity(0.53),
+                const Color(0xff1C2A3D).withOpacity(0.5),
+                const Color(0xff1E2E42).withOpacity(0.46),
+                const Color(0xff364B66).withOpacity(0.33),
+                const Color(0xff2471D6).withOpacity(0),
+              ],
+              stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xff000000).withOpacity(0.25),
+                offset: const Offset(0, 4),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+          child: const Center(
+            child: Text(
+              'NEXT',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+          )),
+    );
   }
 
   String titleCheck(snapshot, index) {
