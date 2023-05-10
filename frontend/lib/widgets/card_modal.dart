@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
+import 'package:gallery_saver/gallery_saver.dart';
 
 import '../model/CardModel.dart';
 import '../screens/diary_create_cards.dart';
@@ -223,18 +221,21 @@ class CardModal extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              var status = await Permission.photos.status;
-                              if (!status.isGranted) {
-                                print('hi');
-                                await Permission.photos.request();
-                                print('hhi');
+                              var file = card.cardImageUrl;
+                              final result = await GallerySaver.saveImage(file);
+                              if (result != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Center(child: Text('사진 저장 성공!')),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Center(child: Text('권한을 허용해주세요.')),
+                                  ),
+                                );
                               }
-
-                              var response =
-                                  await http.get(Uri.parse(card.cardImageUrl));
-                              final result = await ImageGallerySaver.saveImage(
-                                  response.bodyBytes);
-                              print(result);
                             },
                             child: Container(
                               width: 130,
