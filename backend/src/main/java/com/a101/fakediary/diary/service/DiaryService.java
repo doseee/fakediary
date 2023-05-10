@@ -30,13 +30,14 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.*;
 
 @Service
 @Transactional
@@ -49,7 +50,7 @@ public class DiaryService {
     private final CardRepository cardRepository;
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
-//    private final PapagoTranslator papagoTranslator;
+    //    private final PapagoTranslator papagoTranslator;
     private final ChatGptApi chatGptApi;
     private final StableDiffusionApi stableDiffusionApi;
     private final FriendExchangeRequestRepository friendExchangeRequestRepository;
@@ -313,7 +314,7 @@ public class DiaryService {
     @Transactional(readOnly = true)
     public Diary findNotDeletedDiaryById(Long diaryId) throws Exception {
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new Exception("다이어리Id가 존재하지 않습니다."));
-        if(diary.isDeleted()){
+        if (diary.isDeleted()) {
             throw new Exception("삭제된 다이어리입니다.");
         }
         return diary;
@@ -343,17 +344,17 @@ public class DiaryService {
 
     @Transactional
     public void deleteStatusDiary(Long diaryId) throws Exception {
-        Diary diary =  diaryRepository.findById(diaryId).orElseThrow();
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow();
 
-        if(diary.isDeleted()){
+        if (diary.isDeleted()) {
             throw new Exception("이미 삭제 상태로 변경된 일기입니다.");
         }
         //이 diaryId가 friendExchangeRequest에 존재하고, status가 WAITING이면(친구와 교환중인상태) 들어가있으면 삭제불가
-        if(friendExchangeRequestRepository.findBySenderDiary_DiaryIdAndStatus(diaryId, ERequestStatus.WAITING) != null){
+        if (friendExchangeRequestRepository.findBySenderDiary_DiaryIdAndStatus(diaryId, ERequestStatus.WAITING) != null) {
             throw new Exception("친구와 교환 대기중인 일기는 삭제가 불가능합니다.");
         }
         //diaryId가 randomExchangePool테이블의 sender_id가 존재하고 updated_at이 null이 아니라면(매칭중인상태) 삭제 불가
-        if(randomExchangePoolRepository.findByDiary_DiaryIdAndUpdatedAtNotNull(diaryId) != null){
+        if (randomExchangePoolRepository.findByDiary_DiaryIdAndUpdatedAtNotNull(diaryId) != null) {
             throw new Exception("랜덤 교환중인 일기는 삭제가 불가능합니다.");
         }
         diary.setDeleted(true);
@@ -371,7 +372,7 @@ public class DiaryService {
         List<CardMadeDiaryResponseDto> returnList = new ArrayList<>();
         for (Long diaryId : diaryIdList) {
             Diary diary = diaryRepository.findById(diaryId).orElseThrow();
-            if(diary.isDeleted())
+            if (diary.isDeleted())
                 continue;
             List<String> diaryImageUrls = diaryRepository.findDiaryImageUrlByDiaryId(diaryId);
             String diaryThumbnail = diaryImageUrls.stream().findFirst().orElse("이미지가 없습니다.");//썸네일
@@ -430,15 +431,15 @@ public class DiaryService {
         List<String> places = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
 
-        for(Long cardPk : cardList) {
+        for (Long cardPk : cardList) {
             Card card = cardRepository.findById(cardPk).orElseThrow(() -> new Exception("cardList에 저장된 카드 PK와 일치하는 카드가 없음"));
             CardSaveResponseDto dto = CardSaveResponseDto.getCardSaveResponseDto(card);
-            
-            if(dto.getBaseName() != null && !dto.getBaseName().equals(""))  //  카드에 등장인물이 존재할 경우
+
+            if (dto.getBaseName() != null && !dto.getBaseName().equals(""))  //  카드에 등장인물이 존재할 경우
                 characters.add(dto.getBaseName());
-            if(dto.getBasePlace() != null && !dto.getBasePlace().equals(""))    //  카드에 장소가 존재할 경우
+            if (dto.getBasePlace() != null && !dto.getBasePlace().equals(""))    //  카드에 장소가 존재할 경우
                 places.add(dto.getBasePlace());
-            if(dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드가 존재하는 경우
+            if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드가 존재하는 경우
                 keywords.addAll(dto.getKeywords());
             }
         }
@@ -450,11 +451,12 @@ public class DiaryService {
 
         List<Message> messageList = chatGptApi.askGpt35(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
         StringBuilder diaryContent = new StringBuilder();
-        for(Message message : messageList) {
+        for (Message message : messageList) {
             String role = message.getRole();
-            String content = message.getContent();;
+            String content = message.getContent();
+            ;
 
-            if(role.equals("assistant")) {
+            if (role.equals("assistant")) {
                 diaryContent.append(content);
             }
         }
@@ -485,20 +487,22 @@ public class DiaryService {
 
         StringBuilder sb = new StringBuilder();
 
-        for(List<String> content : contents) {
-            for(String text : content)
+        for (List<String> content : contents) {
+            for (String text : content)
                 sb.append(text).append(" ");
         }
         String detail = sb.toString().trim();
 
         sb = new StringBuilder();
 
-        for(String subtitle : subtitleList) {
+        for (String subtitle : subtitleList) {
             sb.append(subtitle).append(DELIMITER);
         }
 
         if (0 < sb.length() && sb.toString().endsWith(DELIMITER))
-            sb.setLength(places.length() - 1);
+            sb.setLength(sb.length() - 1);
+
+//          sb.setLength(places.length() - 1);이렇게되어있길래 에러나서 places sb로 고침
 
         String subtitles = sb.toString();
 
@@ -525,9 +529,9 @@ public class DiaryService {
         cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIdList);
 
         Map<String, Object> stableDiffusionMap = stableDiffusionApi.imageFunc(title, subtitleList);
-        List<String> stableDiffusionUrls = (List<String>)stableDiffusionMap.get("stableDiffusionUrl");
+        List<String> stableDiffusionUrls = (List<String>) stableDiffusionMap.get("stableDiffusionUrl");
         logger.info("stableDiffusionUrls = " + stableDiffusionUrls);
-        List<String> diaryImagePrompt = (List<String>)stableDiffusionMap.get("diaryImagePrompt");
+        List<String> diaryImagePrompt = (List<String>) stableDiffusionMap.get("diaryImagePrompt");
         logger.info("diaryImagePrompt = " + diaryImagePrompt);
         diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
 
@@ -572,5 +576,71 @@ public class DiaryService {
         map.put("places", places.toString());
 
         return map;
+    }
+
+    //유저가 정해둔 시간에 맞춰 일기 자동생성하기
+    @Scheduled(cron = "0 0/30 * * * ?", zone = "Asia/Seoul") // 현재 30분 기준으로 생성중
+    public void createAutoDiary() throws Exception {
+        LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
+        logger.info("카드자동생성 시간이 되어 자동생성로직을 시작합니다. 현재 시간은 " + now + " 입니다.");
+
+        // member autodiary시간이 설정되어있는 멤버만 검색
+        List<Member> members = memberRepository.findByAutoDiaryTimeNotNull();
+        for (Member member : members) {
+            // auto_diary_time과 일치하는지 확인
+            if (isTimeMatch(member.getAutoDiaryTime(), now)) {
+                try {///try catch사용해서 중간에 일기만들기실패해도 다른유저 생성에 이상없도록.
+                    //현재는 유저 한명씩 제작하고있는데 쓰레드를 나눠서 작업을 시켜야할지.. 기능개선때 생각
+                    // 일치하면 24시간기준으로 카드를 가져와서 일기 만드는 작업 실행
+                    //멤버의 24시간기준 List<Long>cardIdList가져오기
+                    List<Long> cardIdList = findCardIdsWithin24Hours(member.getMemberId());
+
+                    //만약 24시간기준 찍은게 0개라면 일기 만들지않음
+                    if (cardIdList.isEmpty()) {
+                        continue;
+                    }
+
+                    //장르 랜덤으로 1개 ~ 2개 결정하기 List<String> genreList
+                    Set<String> genreSet = new HashSet<>();
+                    Random random = new Random();
+                    EGenre[] genres = EGenre.values();
+                    int count = random.nextInt(2) + 1; // 1 또는 2
+                    while (genreSet.size() < count) {
+                        int index = random.nextInt(genres.length);
+                        genreSet.add(genres[index].name());
+                    }
+                    List<String> genreList = new ArrayList<>(genreSet);
+
+                    logger.info(member.getMemberId() + "번 MemberId의 일기 자동생성을 시작하겠습니다.");
+
+                    createDiary(member.getMemberId(), cardIdList, genreList);
+                    //자동생성 알람로직 여기다가 작성예정 by 은녕
+
+                    logger.info(member.getMemberId() + "번 MemberId의일기 자동 생성이 성공하였습니다.");
+                } catch (Exception e) {
+                    logger.error(member.getMemberId() + " 번 MemberId의일기 자동 생성 과정중 에러 발생", e);
+                }
+            }
+        }
+        logger.info(now + " 시간대의 카드 지동생성 로직을 종료합니다.");
+    }
+
+    //현재시간과 설정해둔 시간이 일치하는 유저라면 true
+    private boolean isTimeMatch(LocalTime autoDiaryTime, LocalTime localTime) {
+        return localTime.getHour() == autoDiaryTime.getHour() && localTime.getMinute() == autoDiaryTime.getMinute();
+    }
+
+    //유저가 보유한 카드중 24시간 이내로 만들어진 카드들 반환 (10개넘을시 랜덤으로 10개고름)
+    private List<Long> findCardIdsWithin24Hours(Long memberId) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime yesterday = now.minusDays(1);
+        List<Card> cards = cardRepository.findAllByMember_MemberIdAndCreatedAtBetween(memberId, yesterday, now);
+        Collections.shuffle(cards);
+        List<Long> cardIds = new ArrayList<>();
+        for (int i = 0; i < Math.min(cards.size(), 10); i++) {
+            cardIds.add(cards.get(i).getCardId());
+        }
+        cardIds.sort(Comparator.naturalOrder());//오름차순 정렬
+        return cardIds;
     }
 }
