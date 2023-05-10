@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -272,7 +273,29 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     future: diaries,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        print('data: ${snapshot.data}');
+                        print('data: ${snapshot.data?.length}');
+                        if(snapshot.data?.length == 0){
+                          return Container(
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: (){
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => DiaryCreateCards())
+                                  );
+                                },
+                                child: Container(
+                                  width: 250,
+                                  height: 50,
+                                  decoration: BtnThemeGradient(),
+                                  child: Center(
+                                    child: Text('일기 만들러 가기', style: TextStyle(color: Colors.white, fontSize: 16),),
+                                  ),
+                                ),
+                              ),
+                            )
+                          );
+                        }
                         return buildList(snapshot.data);
                       } else if (snapshot.hasError) {
                         return Text("error : ${snapshot.error}");
