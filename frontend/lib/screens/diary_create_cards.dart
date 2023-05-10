@@ -24,7 +24,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
   void initState() {
     super.initState();
     cards = ApiService().getCardList();
-    print(cards);
+    getCardFromList();
     // for (int i=0 ; i<cards.length ; i++) {
     //   if(cards[i] == widget.cardIdFromList) {
     //
@@ -44,6 +44,13 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
     //     });
     //   });
     // });
+  }
+
+  getCardFromList() async {
+    CardModel cardFromList =
+        await ApiService.getCardById(widget.cardIdFromList!);
+    selectedCards.add(cardFromList);
+    setState(() {});
   }
 
   late int memberId;
@@ -229,10 +236,18 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
         return InkWell(
             onTap: () {
               setState(() {
-                if (selectedCards.contains(snapshot[index])) {
-                  selectedCards.remove(
-                      snapshot[index]); // remove selected card from the list
-                } else {
+                bool isExist = false;
+                CardModel? delCard;
+                for (CardModel card in selectedCards) {
+                  if (card.cardId == snapshot[index].cardId) {
+                    delCard = card;
+                    isExist = true;
+                  }
+                }
+                if (isExist) {
+                  selectedCards.remove(delCard);
+                }
+                if (!isExist) {
                   if (selectedCards.length < 10) {
                     selectedCards.insert(
                         0, snapshot[index]); // append selected card to the list
