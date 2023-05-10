@@ -146,6 +146,8 @@ public class ChatGptApi {
      * @return : gpt3.5가 만들어준 대답 프롬프트
      */
     public List<Message> askGpt35(List<Message> messages, String prompt) throws Exception {
+        log.info("askGpt(" + messages + ", " + prompt);
+
         if(messages.isEmpty()) {
             messages.add(new Message("system", ChatGptPrompts.generateSystemPrompt()));
         }

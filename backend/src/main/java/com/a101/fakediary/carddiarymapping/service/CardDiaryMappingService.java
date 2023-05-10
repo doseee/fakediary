@@ -7,8 +7,10 @@ import com.a101.fakediary.carddiarymapping.dto.ListofCardMadeDiaryResponseDto;
 import com.a101.fakediary.carddiarymapping.entity.CardDiaryMapping;
 import com.a101.fakediary.carddiarymapping.entity.CardDiaryMappingPK;
 import com.a101.fakediary.carddiarymapping.repository.CardDiaryMappingRepository;
+import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @Service
+@Slf4j
 public class CardDiaryMappingService {
 
     private final CardDiaryMappingRepository cardDiaryMappingRepository;
@@ -27,19 +30,21 @@ public class CardDiaryMappingService {
     private final DiaryRepository diaryRepository;
 
     @Transactional
-    public void createCardDiaryMappings(Long diaryId, List<Long> cardIds) {
+    public void createCardDiaryMappings(Long diaryId, List<Long> cardIds) throws Exception {
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new Exception("일기를 찾지 못함"));
+
         for (int i = 0; i < cardIds.size(); i++) {
             Card card = cardRepository.findById(cardIds.get(i)).orElseThrow();
 
             CardDiaryMappingPK pk = new CardDiaryMappingPK();
             pk.setCard(card);
-            pk.setDiary(diaryRepository.findById(diaryId).orElseThrow());
+            pk.setDiary(diary);
 
             CardDiaryMapping mapping = new CardDiaryMapping();
             mapping.setId(pk);
             mapping.setInputOrder(i + 1); //카드 고른 순서대로 1번부터 저장
 
-            cardDiaryMappingRepository.save(mapping);
+            CardDiaryMapping entity = cardDiaryMappingRepository.save(mapping);
         }
     }
 
