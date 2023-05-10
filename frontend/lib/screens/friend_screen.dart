@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
-import 'package:frontend/screens/friend_add.dart';
 import 'package:frontend/screens/friend_searchnew.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
@@ -299,7 +298,7 @@ class _FriendScreenState extends State<FriendScreen> {
                     },
                     child: Image(
                       image: AssetImage(
-                        'assets/img/icon_menu_page.png',
+                        'assets/img/home_icon.png',
                       ),
                       width: 45,
                     ),

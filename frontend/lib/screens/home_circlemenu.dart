@@ -78,20 +78,20 @@ class HomeScreen extends StatelessWidget {
                                   );
                                 },
                                 child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Lottie.asset(
-                                          'assets/lottie/menu_grinstar.json',
-                                          width: 40),
-                                      Text(
-                                        '카드 만들기',
-                                        style: TextStyle(
-                                            fontSize: 15, color: Colors.white),
-                                      )
-                                    ]),
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Lottie.asset(
+                                        'assets/lottie/menu_grinstar.json',
+                                        width: 40),
+                                    Text(
+                                      '카드 만들기',
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Transform(

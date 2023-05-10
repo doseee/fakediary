@@ -278,27 +278,31 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         print('data: ${snapshot.data?.length}');
-                        if(snapshot.data?.length == 0){
+                        if (snapshot.data?.isEmpty ?? true) {
                           return Container(
-                            child: Center(
-                              child: GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => DiaryCreateCards())
-                                  );
-                                },
-                                child: Container(
-                                  width: 250,
-                                  height: 50,
-                                  decoration: BtnThemeGradient(),
-                                  child: Center(
-                                    child: Text('일기 만들러 가기', style: TextStyle(color: Colors.white, fontSize: 16),),
+                              child: Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            DiaryCreateCards()));
+                              },
+                              child: Container(
+                                width: 250,
+                                height: 50,
+                                decoration: BtnThemeGradient(),
+                                child: Center(
+                                  child: Text(
+                                    '일기 만들러 가기',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
                                   ),
                                 ),
                               ),
-                            )
-                          );
+                            ),
+                          ));
                         }
                         return buildList(snapshot.data);
                       } else if (snapshot.hasError) {
