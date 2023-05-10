@@ -33,7 +33,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -431,16 +430,33 @@ public class DiaryService {
         List<String> places = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
 
+        Set<String> charactersSet = new HashSet<>();
+        Set<String> placesSet = new HashSet<>();
+        Set<String> keywordsSet = new HashSet<>();  //  중복 키워드를 제거하기 위한 과정
+
         for (Long cardPk : cardList) {
             Card card = cardRepository.findById(cardPk).orElseThrow(() -> new Exception("cardList에 저장된 카드 PK와 일치하는 카드가 없음"));
             CardSaveResponseDto dto = CardSaveResponseDto.getCardSaveResponseDto(card);
 
-            if (dto.getBaseName() != null && !dto.getBaseName().equals(""))  //  카드에 등장인물이 존재할 경우
-                characters.add(dto.getBaseName());
-            if (dto.getBasePlace() != null && !dto.getBasePlace().equals(""))    //  카드에 장소가 존재할 경우
-                places.add(dto.getBasePlace());
-            if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드가 존재하는 경우
-                keywords.addAll(dto.getKeywords());
+            String baseName = dto.getBaseName();
+            String basePlace = dto.getBasePlace();
+            List<String> keywordList = dto.getKeywords();
+
+            if (baseName != null && !baseName.equals("") && !charactersSet.contains(baseName)) { //  카드에 등장인물이 존재하고 중복되지 않을 경우
+                characters.add(baseName);
+                charactersSet.add(baseName);
+            }
+            if (basePlace != null && !basePlace.equals("") && !placesSet.contains(basePlace)) {    //  카드에 장소가 존재하고 장소가 중복되지 않을 경우
+                places.add(basePlace);
+                placesSet.add(basePlace);
+            }
+            if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {   //  카드에 키워드 리스트가 존재하는 경우
+                for (String keyword : keywordList) {
+                    if (!keywordsSet.contains(keyword)) {    //  키워드가 중복되지 않을 경우
+                        keywords.add(keyword);
+                        keywordsSet.add(keyword);
+                    }
+                }
             }
         }
 
@@ -449,12 +465,11 @@ public class DiaryService {
         logger.info("keywords = " + keywords);
         String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords);
 
-        List<Message> messageList = chatGptApi.askGpt35(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
+        List<Message> messageList = chatGptApi.askGpt4(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
         StringBuilder diaryContent = new StringBuilder();
         for (Message message : messageList) {
             String role = message.getRole();
             String content = message.getContent();
-            ;
 
             if (role.equals("assistant")) {
                 diaryContent.append(content);
@@ -476,9 +491,11 @@ public class DiaryService {
         String title = diaryResultDto.getTitle();
         String summary = diaryResultDto.getSummary();
         List<String> subtitleList = diaryResultDto.getSubtitles();
-        List<List<String>> contents = diaryResultDto.getContents();
+        List<String> contents = diaryResultDto.getContents();
         String prompt = diaryResultDto.getPrompt();
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
+
+        logger.info("subtitleList = " + subtitleList);
 
         Map<String, String> map = getDiaryItems(cardIdList);
         String keywords = map.getOrDefault("keywords", "");
@@ -487,10 +504,10 @@ public class DiaryService {
 
         StringBuilder sb = new StringBuilder();
 
-        for (List<String> content : contents) {
-            for (String text : content)
-                sb.append(text).append(" ");
-        }
+        for (String content : contents)
+            sb.append(content).append(DELIMITER);
+        if (sb.charAt(sb.length() - 1) == '@')
+            sb.deleteCharAt(sb.lastIndexOf("@"));
         String detail = sb.toString().trim();
 
         sb = new StringBuilder();
@@ -502,9 +519,8 @@ public class DiaryService {
         if (0 < sb.length() && sb.toString().endsWith(DELIMITER))
             sb.setLength(sb.length() - 1);
 
-//          sb.setLength(places.length() - 1);이렇게되어있길래 에러나서 places sb로 고침
-
         String subtitles = sb.toString();
+        logger.info("subtitles = " + subtitles);
 
         Diary diary = Diary.builder()
                 .member(member)
@@ -528,7 +544,7 @@ public class DiaryService {
         // 카드&일기 매핑테이블 생성
         cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIdList);
 
-        Map<String, Object> stableDiffusionMap = stableDiffusionApi.imageFunc(title, subtitleList);
+        Map<String, Object> stableDiffusionMap = stableDiffusionApi.getStableDiffusionUrlsAndPrompt(title, subtitleList);
         List<String> stableDiffusionUrls = (List<String>) stableDiffusionMap.get("stableDiffusionUrl");
         logger.info("stableDiffusionUrls = " + stableDiffusionUrls);
         List<String> diaryImagePrompt = (List<String>) stableDiffusionMap.get("diaryImagePrompt");
@@ -546,21 +562,66 @@ public class DiaryService {
         return returnDto;
     }
 
+    /**
+     * @param cardIdList : 일기에 사용될 카드 PK 리스트
+     * @return : 카드들에서 중복 없이 등장인물 문자열, 장소 문자열, 키워드 문자열을 만듬
+     */
     private Map<String, String> getDiaryItems(List<Long> cardIdList) {
         StringBuilder keywords = new StringBuilder();
         StringBuilder characters = new StringBuilder();
         StringBuilder places = new StringBuilder();
         Map<String, String> map = new HashMap<>();
 
+        Set<String> keywordsMap = new HashSet<>();
+        Set<String> charactersMap = new HashSet<>();
+        Set<String> placesMap = new HashSet<>();
+
         for (Long id : cardIdList) {
             Card card = cardRepository.findById(id).orElseThrow();
+
+            if (card.getKeyword() != null && !card.getKeyword().equals("")) {
+                StringTokenizer keywordTokens = new StringTokenizer(card.getKeyword(), DELIMITER);
+                while (keywordTokens.hasMoreTokens()) {
+                    String keyword = keywordTokens.nextToken();
+
+                    if (!keywordsMap.contains(keyword)) {
+                        keywords.append(keyword).append(DELIMITER);
+                        keywordsMap.add(keyword);
+                    }
+                }
+            }
+
+            if (card.getBaseName() != null && !card.getBaseName().equals("")) {
+                StringTokenizer baseNameTokens = new StringTokenizer(card.getBaseName(), DELIMITER);
+                while (baseNameTokens.hasMoreTokens()) {
+                    String baseName = baseNameTokens.nextToken();
+
+                    if (!charactersMap.contains(baseName)) {
+                        characters.append(baseName).append(DELIMITER);
+                        charactersMap.add(baseName);
+                    }
+                }
+            }
+
+            if (card.getBasePlace() != null && !card.getBasePlace().equals("")) {
+                StringTokenizer basePlacesTokens = new StringTokenizer(card.getBasePlace(), DELIMITER);
+                while (basePlacesTokens.hasMoreTokens()) {
+                    String basePlace = basePlacesTokens.nextToken();
+
+                    if (!placesMap.contains(basePlace)) {
+                        places.append(basePlace).append(DELIMITER);
+                        placesMap.add(basePlace);
+                    }
+                }
+            }
+
             //빈것보냈을때 null로저장되는지 ""로저장되는지 확인필요 값이 존재하면 이어줌
-            if (card.getKeyword() != null && !card.getKeyword().equals(""))
-                keywords.append(card.getKeyword()).append(DELIMITER); //키워드@키워드@키워드@ 식으로 제작
-            if (card.getBaseName() != null && !card.getBaseName().equals(""))
-                characters.append(card.getBaseName()).append(DELIMITER);
-            if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
-                places.append(card.getBasePlace()).append(DELIMITER);
+//            if (card.getKeyword() != null && !card.getKeyword().equals(""))
+//                keywords.append(card.getKeyword()).append(DELIMITER); //키워드@키워드@키워드@ 식으로 제작
+//            if (card.getBaseName() != null && !card.getBaseName().equals(""))
+//                characters.append(card.getBaseName()).append(DELIMITER);
+//            if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
+//                places.append(card.getBasePlace()).append(DELIMITER);
         }
 
         //마지막 골뱅이 제거

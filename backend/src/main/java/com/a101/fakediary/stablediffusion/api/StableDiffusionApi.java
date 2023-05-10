@@ -52,12 +52,6 @@ public class StableDiffusionApi {
         this.STABLE_DIFFUSION_URL = STABLE_DIFFUSION_URL;
         this.MAX_BYTE_SIZE = MAX_BYTE_SIZE;
 
-        log.info("S3_ACCESS_KEY = " + this.S3_ACCESS_KEY);
-        log.info("S3_SECRET_KEY = " + this.S3_SECRET_KEY);
-        log.info("S3_BUCKET = " + this.S3_BUCKET);
-        log.info("STABLE_DIFFUSION_URL = " + this.STABLE_DIFFUSION_URL);
-        log.info("MAX_BYTE_SIZE = " + this.MAX_BYTE_SIZE);
-
         this.exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(MAX_BYTE_SIZE))
                 .build();
@@ -115,7 +109,7 @@ public class StableDiffusionApi {
         this.s3client = new AmazonS3Client(credentials);
     }
 
-    public Map<String, Object> imageFunc(String title, List<String> subtitles) throws Exception {
+    public Map<String, Object> getStableDiffusionUrlsAndPrompt(String title, List<String> subtitles) throws Exception {
         //subtitles 파싱해서 리스트로 들고있기
         //리스트에 제목, subtitle을 순서대로 영어로 넣는다. 각각 썸네일, 삽화들 만들용도
         List<String> diaryImagePrompt = new ArrayList<>();
