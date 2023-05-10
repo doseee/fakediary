@@ -73,12 +73,12 @@ class _ModifyScreenState extends State<ModifyScreen> {
           body: Form(
             key: _formKey,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 75),
+              padding: const EdgeInsets.symmetric(horizontal: 60),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Image(
-                    image: AssetImage('assets/img/silver_moon.png'),
+                    image: AssetImage('assets/img/silver_moon.png'),height: 110,
                   ),
                   Row(
                     children: [
@@ -86,7 +86,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         '닉네임',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 15,
                         ),
                       ),
                     ],
@@ -109,7 +109,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         )),
                         hintText: '닉네임을 입력하세요.',
                         hintStyle: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.blue,
                         )),
                   ),
                   Row(
@@ -118,7 +118,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         '일기 자동생성시간',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 15,
                         ),
                       ),
                     ],
@@ -209,7 +209,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         '기본 주인공 이름',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 15,
                         ),
                       ),
                     ],
@@ -217,7 +217,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                   TextField(
                     controller: basenameController,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.blue[100],
                     ),
                     maxLength: 10,
                     decoration: const InputDecoration(
@@ -275,7 +275,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                       child: const Center(
                         child: Text(
                           '설정',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: TextStyle(color: Colors.white, fontSize: 17),
                         ),
                       ),
                     ),

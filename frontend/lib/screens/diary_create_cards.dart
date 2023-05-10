@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/old_menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
@@ -78,7 +79,8 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                             'CARDS  ',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 30,
+                              fontSize: 20
+                              ,
                             ),
                           ),
                           GestureDetector(
@@ -86,11 +88,11 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MenuScreen()));
+                                      builder: (context) => HomeScreen()));
                             },
                             child: Image(
                               image: AssetImage(
-                                'assets/img/icon_menu_page.png',
+                                'assets/img/home_icon.png',
                               ),
                               width: 45,
                             ),
@@ -120,7 +122,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(width: 1, color: Colors.white),
+                      top: BorderSide(width: 0.3, color: Colors.white),
                     ),
                   ),
                   child: Scaffold(
