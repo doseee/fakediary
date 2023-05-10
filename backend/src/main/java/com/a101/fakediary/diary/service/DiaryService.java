@@ -30,9 +30,12 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -462,7 +465,6 @@ public class DiaryService {
         logger.info("keywords = " + keywords);
         String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords);
 
-
         List<Message> messageList = chatGptApi.askGpt4(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
         StringBuilder diaryContent = new StringBuilder();
         for (Message message : messageList) {
@@ -507,7 +509,6 @@ public class DiaryService {
         if (sb.charAt(sb.length() - 1) == '@')
             sb.deleteCharAt(sb.lastIndexOf("@"));
         String detail = sb.toString().trim();
-
 
         sb = new StringBuilder();
 
@@ -636,5 +637,71 @@ public class DiaryService {
         map.put("places", places.toString());
 
         return map;
+    }
+
+    //유저가 정해둔 시간에 맞춰 일기 자동생성하기
+    @Scheduled(cron = "0 0/30 * * * ?", zone = "Asia/Seoul") // 현재 30분 기준으로 생성중
+    public void createAutoDiary() throws Exception {
+        LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
+        logger.info("카드자동생성 시간이 되어 자동생성로직을 시작합니다. 현재 시간은 " + now + " 입니다.");
+
+        // member autodiary시간이 설정되어있는 멤버만 검색
+        List<Member> members = memberRepository.findByAutoDiaryTimeNotNull();
+        for (Member member : members) {
+            // auto_diary_time과 일치하는지 확인
+            if (isTimeMatch(member.getAutoDiaryTime(), now)) {
+                try {///try catch사용해서 중간에 일기만들기실패해도 다른유저 생성에 이상없도록.
+                    //현재는 유저 한명씩 제작하고있는데 쓰레드를 나눠서 작업을 시켜야할지.. 기능개선때 생각
+                    // 일치하면 24시간기준으로 카드를 가져와서 일기 만드는 작업 실행
+                    //멤버의 24시간기준 List<Long>cardIdList가져오기
+                    List<Long> cardIdList = findCardIdsWithin24Hours(member.getMemberId());
+
+                    //만약 24시간기준 찍은게 0개라면 일기 만들지않음
+                    if (cardIdList.isEmpty()) {
+                        continue;
+                    }
+
+                    //장르 랜덤으로 1개 ~ 2개 결정하기 List<String> genreList
+                    Set<String> genreSet = new HashSet<>();
+                    Random random = new Random();
+                    EGenre[] genres = EGenre.values();
+                    int count = random.nextInt(2) + 1; // 1 또는 2
+                    while (genreSet.size() < count) {
+                        int index = random.nextInt(genres.length);
+                        genreSet.add(genres[index].name());
+                    }
+                    List<String> genreList = new ArrayList<>(genreSet);
+
+                    logger.info(member.getMemberId() + "번 MemberId의 일기 자동생성을 시작하겠습니다.");
+
+                    createDiary(member.getMemberId(), cardIdList, genreList);
+                    //자동생성 알람로직 여기다가 작성예정 by 은녕
+
+                    logger.info(member.getMemberId() + "번 MemberId의일기 자동 생성이 성공하였습니다.");
+                } catch (Exception e) {
+                    logger.error(member.getMemberId() + " 번 MemberId의일기 자동 생성 과정중 에러 발생", e);
+                }
+            }
+        }
+        logger.info(now + " 시간대의 카드 지동생성 로직을 종료합니다.");
+    }
+
+    //현재시간과 설정해둔 시간이 일치하는 유저라면 true
+    private boolean isTimeMatch(LocalTime autoDiaryTime, LocalTime localTime) {
+        return localTime.getHour() == autoDiaryTime.getHour() && localTime.getMinute() == autoDiaryTime.getMinute();
+    }
+
+    //유저가 보유한 카드중 24시간 이내로 만들어진 카드들 반환 (10개넘을시 랜덤으로 10개고름)
+    private List<Long> findCardIdsWithin24Hours(Long memberId) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime yesterday = now.minusDays(1);
+        List<Card> cards = cardRepository.findAllByMember_MemberIdAndCreatedAtBetween(memberId, yesterday, now);
+        Collections.shuffle(cards);
+        List<Long> cardIds = new ArrayList<>();
+        for (int i = 0; i < Math.min(cards.size(), 10); i++) {
+            cardIds.add(cards.get(i).getCardId());
+        }
+        cardIds.sort(Comparator.naturalOrder());//오름차순 정렬
+        return cardIds;
     }
 }
