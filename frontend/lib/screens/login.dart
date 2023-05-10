@@ -23,8 +23,7 @@ class _LoginState extends State<Login> {
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
-        border: UnderlineInputBorder(),
-        labelText: 'email',
+        labelText: 'Email',
         hintText: '이메일을 입력하세요',
         hintStyle: TextStyle(
           color: Colors.grey,
@@ -43,7 +42,7 @@ class _LoginState extends State<Login> {
         }
         return null;
       },
-      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+      style: TextStyle(color: Colors.white),
     );
   }
 
@@ -53,7 +52,7 @@ class _LoginState extends State<Login> {
       obscureText: true,
       decoration: InputDecoration(
         border: UnderlineInputBorder(),
-        labelText: 'password',
+        labelText: 'Password',
         labelStyle: TextStyle(color: Colors.grey),
         hintText: '비밀번호를 입력하세요',
         hintStyle: TextStyle(
@@ -72,7 +71,7 @@ class _LoginState extends State<Login> {
         }
         return null;
       },
-      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+      style: TextStyle(color: Colors.white),
     );
   }
 
@@ -137,8 +136,8 @@ class _LoginState extends State<Login> {
                 borderRadius: BorderRadius.circular(25)),
             child: Center(
                 child: Text(
-              'LOGIN',
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              '로그인',
+              style: TextStyle(color: Colors.white, fontSize: 15),
             )),
           ),
         ));
@@ -164,10 +163,11 @@ class _LoginState extends State<Login> {
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                 ),
+
                 body: Form(
                     key: _formKey,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 80),
+                      padding:EdgeInsets.only(top: 60,right: 70,left:70),
                       child: Column(children: [
                         Center(
                           child: Lottie.asset('assets/lottie/stars.json'),

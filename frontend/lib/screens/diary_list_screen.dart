@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/diary-list-filter.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/screens/diary_detail_cover_screen.dart';
+import 'package:frontend/screens/diary_list_filtered_screen.dart';
+import 'package:frontend/screens/friend_searchnew.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
+import 'package:lottie/lottie.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/change_button.dart';
 import '../widgets/appbar.dart';
@@ -59,10 +64,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
 
   Widget DiaryDetail() {
     if (diaryId == -1) {
-      return Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/img/diary_list.png'))),
+      return       Center(
+        child: Lottie.asset('assets/lottie/book.json'),
       );
     }
 
@@ -97,7 +100,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       title,
                       style: TextStyle(
                           color: Colors.white60,
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -152,10 +155,16 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                           width: 250,
                           height: 50,
                           child: Center(
-                            child: Text(
-                              '상세보기',
-                              style:
+                            child:  SizedBox(
+                              width: 250,
+                              height: 50,
+                              child: Center(
+                                child: Text(
+                                  '상세보기',
+                                  style:
                                   TextStyle(color: Colors.white, fontSize: 14),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -184,7 +193,64 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
       // ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: StandAppBar(context),
+        appBar: AppBar(
+          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(1.0),
+            child: Container(
+              color: Colors.white70,
+              height: 0.5,
+            ),
+          ),
+          title: Text('일기장'),
+          actions: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DiaryFilter()));
+                    },
+                    child: Container(
+                      width: 65,
+                      height: 42,
+                      decoration: BtnThemeGradientLine(),
+                      child: Center(
+                          child: Text(
+                            '필터',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          )),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
+                    },
+                    child: Image(
+                      image: AssetImage(
+                        'assets/img/home_icon.png',
+                      ),
+                      width: 45,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
         body: Column(
           children: [
             Flexible(
@@ -195,7 +261,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         flex: 6,
                         child: Center(
                           child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              padding: EdgeInsets.fromLTRB(20, 15, 20, 10),
                               child: DiaryDetail()),
                         )),
                     Flexible(
@@ -217,8 +283,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                           child: Text(
                                             '내가 만든 일기를 확인해보세요',
                                             style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15),
+                                                color: Colors.white70,
+                                                fontSize: 14),
                                           ),
                                         )),
                                     Flexible(
@@ -234,7 +300,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                               child: Container(
                                                 child: IconButton(
                                                     icon: Icon(Icons.info,
-                                                        color: Colors.white),
+                                                        color: Colors.white70),
                                                     onPressed: () {
                                                       showDialog(
                                                           context: context,
@@ -248,7 +314,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                                                       color: Colors
                                                                           .white,
                                                                       fontSize:
-                                                                          14),
+                                                                      14),
                                                                 ),
                                                                 height: 100);
                                                           });
@@ -281,28 +347,28 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         if (snapshot.data?.isEmpty ?? true) {
                           return Container(
                               child: Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            DiaryCreateCards()));
-                              },
-                              child: Container(
-                                width: 250,
-                                height: 50,
-                                decoration: BtnThemeGradient(),
-                                child: Center(
-                                  child: Text(
-                                    '일기 만들러 가기',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DiaryCreateCards()));
+                                  },
+                                  child: Container(
+                                    width: 250,
+                                    height: 50,
+                                    decoration: BtnThemeGradient(),
+                                    child: Center(
+                                      child: Text(
+                                        '일기 만들러 가기',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ));
+                              ));
                         }
                         return buildList(snapshot.data);
                       } else if (snapshot.hasError) {
@@ -312,14 +378,13 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     },
                   ),
                 )
-                // child: Container(),
-                )
+              // child: Container(),
+            )
           ],
         ),
       ),
     );
   }
-
   Widget buildList(snapshot) {
     print('imgUrl: ${snapshot[0].diaryImageUrl[0]}');
     return GridView.count(
@@ -370,7 +435,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                     '...')
                                 : snapshot[index].title,
                             style:
-                                TextStyle(color: Colors.white60, fontSize: 16),
+                                TextStyle(color: Colors.white60, fontSize: 11,fontWeight: FontWeight.w600),
                           ),
                         ),
                       ],

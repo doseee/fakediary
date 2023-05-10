@@ -79,8 +79,8 @@ class _LoginEntranceState extends State<LoginEntrance>
                                   decoration: BtnThemeGradient(),
                                   child: Center(
                                       child: Text(
-                                        'LOGIN',
-                                        style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800),
+                                        '로그인',
+                                        style: TextStyle(color: Colors.white, fontSize: 16,),
                                       )),
                                 ),
                               )),

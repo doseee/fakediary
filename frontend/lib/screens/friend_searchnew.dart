@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/model/SearchFriendModel.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -70,16 +72,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     content: Center(child: Text('친구요청 완료!')),
                   ),
                 )
-              :  ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Center(child: Text('이미 친구 요청 했짜나 ㅠ')),
-            ),
-          );
+              : ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Center(child: Text('이미 친구 요청 했짜나 ㅠ')),
+                  ),
+                );
         },
         child: Center(
           child: Container(
-            width: 90,
-            height: 40,
+            width: 80,
+            height: 35,
             decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
                   Color(0xff79F1A4),
@@ -112,21 +114,31 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         body: Column(
           children: [
-            SizedBox(height: 50),
+            SizedBox(height: 30),
+            Center(
+              child: Lottie.asset('assets/lottie/stars.json', height: 60),
+            ),
             Container(
               padding: EdgeInsets.all(8.0),
               child: TextField(
+                style: TextStyle(
+                  color: Colors.white,
+                ),
                 controller: _searchController,
+
                 decoration: InputDecoration(
                   hintText: '닉네임을 검색하세요',
+                  hintStyle: TextStyle(
+                    color: Colors.blue[100],
+                  ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Colors.transparent,
                   border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
+                    borderSide: BorderSide(color: Colors.white), // 테두리 색상 변경
                     borderRadius: BorderRadius.circular(50),
                   ),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.search, color: Colors.teal),
+                    icon: Icon(Icons.search, color: Colors.white),
                     onPressed: () {
                       _onSearch(_searchController.text);
                     },
@@ -140,7 +152,12 @@ class _SearchScreenState extends State<SearchScreen> {
               height: 300,
               padding: EdgeInsets.all(25.0),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30), color: Colors.white),
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(
+                  color: Colors.white,
+                  width: 0.2,
+                ),
+              ),
               child: Expanded(
                 child: _isLoading
                     ? Center(child: CircularProgressIndicator())
@@ -151,14 +168,16 @@ class _SearchScreenState extends State<SearchScreen> {
                               SearchFriendModel friend = _searchResults[index];
                               return Center(
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(width: 60),
-                                  Text(friend.nickname.toString() , style: TextStyle(fontSize: 20),),
+                                  Text(
+                                    friend.nickname.toString(),
+                                    style: TextStyle(fontSize: 17 , color: Colors.white),
+                                  ),
                                   Expanded(child: _buttonAdd(friend.memberId)),
                                   SizedBox(width: 8),
                                   // 각 위젯 사이에 간격을 주기 위해 SizedBox를 사용합니다.
-
                                 ],
                               ));
                             },
@@ -166,7 +185,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         : Center(
                             child: Text(
                             '해당 친구는 존재하지 않아요!',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle( color: Colors.blue[100],),
                           )),
               ),
             ),

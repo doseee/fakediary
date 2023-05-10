@@ -5,6 +5,7 @@ import 'package:frontend/screens/friend_searchnew.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'home_circlemenu.dart';
 
@@ -89,6 +90,33 @@ class _FriendScreenState extends State<FriendScreen> {
         )
       ],
     );
+  }
+
+  Widget GoSelectDiary() {
+    if (widget.exchangeSituation == 1) { return Container(); } else {
+      return Column(
+        children: [ GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DiaryListScreen()));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(17.0),
+            child: Text(
+              '일기 교환하러 가기   >',
+              style: TextStyle(
+                  color: Colors.blue[100],
+                  fontWeight: FontWeight.w600,
+                  fontSize: 17),
+            ),
+          ),
+        ),
+          Container(height: 0.3, color: Colors.white),
+        ],
+      );
+    }
   }
 
   Widget RandomDiary() {
@@ -262,24 +290,25 @@ class _FriendScreenState extends State<FriendScreen> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff0F2027), Color(0xff203A43), Color(0xff2C5364)],
-          stops: [0.2, 0.7, 1.0],
+        image: DecorationImage(
+          image: AssetImage('assets/img/background_pink_darken.png'),
+          fit: BoxFit.cover,
         ),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
+          toolbarHeight: MediaQuery
+              .of(context)
+              .size
+              .height * 0.1183,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(6.0),
             child: Container(
               color: Colors.white70,
-              height: 1.0,
+              height: 0.5,
             ),
           ),
           title: Text('FRIENDS'),
@@ -326,71 +355,82 @@ class _FriendScreenState extends State<FriendScreen> {
           ],
         ),
         body: Container(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                // Align(
-                //   alignment: Alignment.centerRight,
-                //   child: Text('이름을 누르면 친구와 교환한 일기를 볼 수 있습니다.', style: TextStyle(color: Colors.white70, fontSize: 12),),
-                // ),
-                RandomDiary(),
-                Expanded(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 10, right: 5),
-                  child: FutureBuilder<List<FriendModel>>(
-                      future: friends,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (snapshot.hasData) {
-                          return ListView.builder(
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                final friend = snapshot.data![index];
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 10, bottom: 5),
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
+          child: Column(
+            children: [
+              GoSelectDiary(),
+              Container(height: 0.3, color: Colors.white),
+              RandomDiary(),
+              Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10, right: 5),
+                    child: FutureBuilder<List<FriendModel>>(
+                        future: friends,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasData) {
+                            return ListView.builder(
+                                itemCount: snapshot.data!.length,
+                                itemBuilder: (context, index) {
+                                  final friend = snapshot.data![index];
+                                  return Padding(
+                                    padding:
+                                    const EdgeInsets.only(top: 10, bottom: 5),
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          leading: SvgPicture.asset(
+                                            'assets/svg/atronaut-svgrepo-com.svg',
+                                            semanticsLabel: 'user',
+                                            width: 50,
+                                            height: 50,
+                                          ),
+                                          title: Row(children: [
+                                            Flexible(
+                                                flex: 3,
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 200,
+                                                      child: Text(
+                                                        friend.nickname,
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .white70,
+                                                            fontWeight:
+                                                            FontWeight.w500,
+                                                            fontSize: 19),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                            ChangeCheck(friend),
+                                          ]),
+                                        ),
+                                        Container(
+                                          height: 0.1,
+                                          color: Colors.white,
+                                        ),
+                                      ],
                                     ),
-                                    title: Row(children: [
-                                      Flexible(
-                                          flex: 3,
-                                          child: SizedBox(
-                                            width: 200,
-                                            child: Text(
-                                              friend.nickname,
-                                              style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 24),
-                                            ),
-                                          )),
-                                      ChangeCheck(friend),
-                                    ]),
-                                  ),
-                                );
-                              });
-                        } else if (snapshot.hasError) {
-                          print('error : ${snapshot.error}');
-                        }
+                                  );
+                                });
+                          } else if (snapshot.hasError) {
+                            print('error : ${snapshot.error}');
+                          }
 
-                        return Center(
-                          child: Text(
-                            '새로운 친구를 만들어보세요!',
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        );
-                      }),
-                ))
-              ],
-            ),
+                          return Center(
+                            child: Text(
+                              '새로운 친구를 만들어보세요!',
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          );
+                        }),
+                  ))
+            ],
           ),
         ),
       ),
