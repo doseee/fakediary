@@ -609,7 +609,7 @@ public class DiaryService {
             diary.setExchanged(false);
     }
 
-    @Async
+//    @Async
 //    public String translate(String text) { //메소드 불러서 바꾸고 싶은 내용 text에 넣으면 한 -> 영 바꿔서 return
 //        String translatedText = papagoTranslator.translate(text).block();
 //        Pattern pattern = Pattern.compile("\"translatedText\":\"([^\"]*)\"");
@@ -657,6 +657,8 @@ public class DiaryService {
                 diaryContent.append(content);
             }
         }
+
+        logger.info("diaryContent = " + diaryContent);
 
         ObjectMapper objectMapper = new ObjectMapper();
         DiaryResultDto diaryResultDto = objectMapper.readValue(diaryContent.toString(), DiaryResultDto.class);
