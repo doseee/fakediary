@@ -26,8 +26,7 @@ public class PapagoApi {
         Matcher matcher = pattern.matcher(translatedText);
         if (matcher.find()) {
             String trans = matcher.group(1);
-            logger.info("번역할 언어 : {}", text);
-            logger.info("번역된 언어 : {}", trans);
+            logger.info("번역완료 : {} -> {}", text, trans);
             return trans;
         }
         return null;

@@ -39,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -252,7 +253,6 @@ public class DiaryService {
 //
 //        List<String> dtoImageUrl = new ArrayList<>(); // 다이어리 이미지 url들 저장할것
 //        // Title, subtitle들 번역해서 프롬프트로 넣고 stablediffusion 이미지 생성
-//        //아래작업은 비동기로하면 좋을것같은데.. 리팩토링시 봐야할듯
 //        for (int i=0; i< diaryImagePrompt.size(); i++) {
 //            String translatedPrompt = diaryImagePrompt.get(i);
 //            map.put("prompt", translatedPrompt);
@@ -463,9 +463,9 @@ public class DiaryService {
             }
         }
 
-        logger.info("characters = " + characters);
-        logger.info("places = " + places);
-        logger.info("keywords = " + keywords);
+        logger.info("characters = " + characters + ", places = " + places + ", keywords = " + keywords);
+//        logger.info("places = " + places);
+//        logger.info("keywords = " + keywords);
         String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords);
 
         List<Message> messageList = chatGptApi.askGpt4(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
@@ -490,6 +490,10 @@ public class DiaryService {
 
     @Transactional
     public DiaryResponseDto createDiary(Long memberId, List<Long> cardIdList, List<String> genreList) throws Exception {
+        logger.info(memberId + "번 MemberId의 일기 생성을 시작하겠습니다.");
+        // 메소드 시작시간
+        long startTime = System.nanoTime();
+
         DiaryResultDto diaryResultDto = getResultDto(cardIdList);
         String title = diaryResultDto.getTitle();
         String summary = diaryResultDto.getSummary();
@@ -562,6 +566,14 @@ public class DiaryService {
         returnDto.setGenre(genreArray);
         returnDto.setDiaryImageUrl(stableDiffusionUrls.toArray(new String[stableDiffusionUrls.size()]));
 
+        // 메소드 종료 시간
+        long endTime = System.nanoTime();
+
+        // 소요된 시간 (초 단위)
+        double elapsedTime = (endTime - startTime) / 1_000_000_000.0;
+
+        // 일기 생성에 소요된 시간을 로그로 출력
+        logger.info(memberId + "(" + member.getNickname() + ")" + "번 memberId의 " + diaryId + "번 diaryId 일기를 만드는데 소요된 시간 : {} 초", elapsedTime);
         return returnDto;
     }
 
@@ -644,28 +656,28 @@ public class DiaryService {
 
     @Async
     //유저가 정해둔 시간에 맞춰 일기 자동생성하기
-    @Scheduled(cron = "0 0/1 * * * ?", zone = "Asia/Seoul") // 현재 30분 기준으로 생성중
+    @Scheduled(cron = "0 0/30 * * * ?", zone = "Asia/Seoul") // 현재 30분 기준으로 생성중
     @Transactional(propagation = Propagation.NOT_SUPPORTED)//트랜잭셔널 해제해서 유저별로 바로바로 일기생성되도록함
     public void createAutoDiary() throws Exception {
         LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
-        logger.info("일기자동생성 시간이 되어 자동생성로직을 시작합니다. 현재 시간은 " + now + " 입니다.");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedTime = now.format(formatter);
+        logger.info("일기자동생성 시간이 되어 자동생성로직을 시작합니다. 현재 시간은 " + formattedTime + " 입니다.");
 
         // member autodiary시간이 auto_diary_time과 일치하는 멤버들 조회
         List<Member> members = memberRepository.findByAutoDiaryTimeHourAndMinute(now.getHour(), now.getMinute());
 
-        //모든멤버들 로그찍기
-        logger.info(now+ "시간에 일기를 자동생성할 memberId리스트입니다.");
         StringBuilder sb = new StringBuilder();
-        sb.append("(");
+        sb.append("[");
         for (int i = 0; i < members.size(); i++) {
             sb.append(members.get(i).getMemberId());
             if (i < members.size() - 1) {
                 sb.append(",");
             }
         }
-        sb.append(")");
+        sb.append("]");
         // memberId 문자열을 로거로 출력
-        logger.info(sb.toString());
+        logger.info(formattedTime + "시간에 일기를 자동생성할 memberId리스트입니다. " + sb.toString());
 
         for (Member member : members) {
             // auto_diary_time과 일치하는지 확인
@@ -691,7 +703,7 @@ public class DiaryService {
                 }
                 List<String> genreList = new ArrayList<>(genreSet);
 
-                logger.info(member.getMemberId() + "번 MemberId의 일기 자동생성을 시작하겠습니다.");
+//                logger.info(member.getMemberId() + "번 MemberId의 일기 자동생성을 시작하겠습니다.");
 
                 createDiary(member.getMemberId(), cardIdList, genreList);
                 //자동생성 알람로직 여기다가 작성예정 by 은녕
@@ -702,7 +714,7 @@ public class DiaryService {
             }
 
         }
-        logger.info(now + " 시간대의 카드 지동생성 로직을 종료합니다.");
+        logger.info(formattedTime + " 시간대의 카드 지동생성 로직을 종료합니다.");
     }
 
     //유저가 보유한 카드중 24시간 이내로 만들어진 카드들 반환 (10개넘을시 랜덤으로 10개고름)

@@ -123,10 +123,9 @@ public class StableDiffusionApi {
 
         List<String> dtoImageUrl = new ArrayList<>();   // 다이어리 이미지 url들 저장할것
         // Title, subtitle들 번역해서 프롬프트로 넣고 stablediffusion 이미지 생성
-        //아래작업은 비동기로하면 좋을것같은데.. 리팩토링시 봐야할듯
-        logger.info("diaryImagePrompt를 출력하겠습니다 : " + diaryImagePrompt);
+//        logger.info("diaryImagePrompt를 출력하겠습니다 : " + diaryImagePrompt);
         for(String translatePrompt : diaryImagePrompt) {
-            logger.info("translatePrompt를 출력하겠습니다 : " + translatePrompt);
+//            logger.info("translatePrompt를 출력하겠습니다 : " + translatePrompt);
             StableDiffusionMap.put("prompt", translatePrompt);
 
             ClientResponse response = webClient.post()
