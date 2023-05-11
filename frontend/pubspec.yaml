@@ -58,6 +58,7 @@ dependencies:
   vector_math: ^2.1.4
   gallery_saver: ^2.3.2
   another_flushbar: ^1.12.29
+  animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_test:
