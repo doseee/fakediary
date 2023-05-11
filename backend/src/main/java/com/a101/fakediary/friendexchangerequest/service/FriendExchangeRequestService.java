@@ -46,7 +46,7 @@ public class FriendExchangeRequestService {
     }
 
     @Transactional
-    public void manageFriendExchange(FriendExchangeManageDto manage) {
+    public void manageFriendExchange(FriendExchangeManageDto manage) throws Exception {
         //수락했으므로 상태 변경 및 일기 저장
         FriendExchangeRequest friend = friendExchangeRequestRepository.findByfriendExchangeRequestId(manage.getFriendExchangeRequestId());
         friend.setReceiverDiary(diaryRepository.findByDiaryId(manage.getReceiverDiaryId()));
