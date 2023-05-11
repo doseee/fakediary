@@ -52,6 +52,7 @@ class ApiService {
       await prefs.setInt('memberId', respJson['memberId']);
       await prefs.setString('nickname', respJson['nickname']);
       await prefs.setString('diaryBaseName', respJson['diaryBaseName'] ?? '');
+      await prefs.setBool('isLogged', true);
       print('end');
       return true;
     } else {

@@ -4,6 +4,7 @@ import 'package:gradient_borders/gradient_borders.dart';
 
 import '../model/CardModel.dart';
 import '../services/api_service.dart';
+import 'home_circlemenu.dart';
 
 class MoodSelect extends StatefulWidget {
   const MoodSelect({super.key, required this.selectedCards});
@@ -307,18 +308,18 @@ class _MoodSelectState extends State<MoodSelect> {
                         // }
                         // String prp = person + location + genre2 + keyword2;
                         // print(prp);
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (context) => HomeScreen(),
-                        //   ),
-                        // );
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   SnackBar(
-                        //       content: Center(
-                        //     child: Text(
-                        //         '다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!'),
-                        //   )),
-                        // );
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Center(
+                            child: Text(
+                                '다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!'),
+                          )),
+                        );
                         // messages = await ApiService.askGpt4(messages, prp);
                         // String jsonResp = '';
                         // for (var message in messages) {
