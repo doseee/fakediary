@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
@@ -74,11 +75,15 @@ class _FriendScreenState extends State<FriendScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => DiaryListScreen()));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Center(child: Text('교환 일기신청을 완료했습니다!')),
-                      ),
-                    );
+                    Flushbar(
+                      message: "교환 일기 신청을 완료했습니다!",
+                      duration: Duration(seconds: 3),
+                    ).show(context);
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Center(child: Text('교환 일기신청을 완료했습니다!')),
+                    //   ),
+                    // );
                   } else {
                     print('전송 실패');
                   }
@@ -93,26 +98,27 @@ class _FriendScreenState extends State<FriendScreen> {
   }
 
   Widget GoSelectDiary() {
-    if (widget.exchangeSituation == 1) { return Container(); } else {
+    if (widget.exchangeSituation == 1) {
+      return Container();
+    } else {
       return Column(
-        children: [ GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => DiaryListScreen()));
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(17.0),
-            child: Text(
-              '일기 교환하러 가기   >',
-              style: TextStyle(
-                  color: Colors.blue[100],
-                  fontWeight: FontWeight.w600,
-                  fontSize: 17),
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => DiaryListScreen()));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(17.0),
+              child: Text(
+                '일기 교환하러 가기   >',
+                style: TextStyle(
+                    color: Colors.blue[100],
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17),
+              ),
             ),
           ),
-        ),
           Container(height: 0.3, color: Colors.white),
         ],
       );
@@ -298,10 +304,7 @@ class _FriendScreenState extends State<FriendScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          toolbarHeight: MediaQuery
-              .of(context)
-              .size
-              .height * 0.1183,
+          toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           bottom: PreferredSize(
@@ -362,74 +365,72 @@ class _FriendScreenState extends State<FriendScreen> {
               RandomDiary(),
               Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 10, right: 5),
-                    child: FutureBuilder<List<FriendModel>>(
-                        future: friends,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (snapshot.hasData) {
-                            return ListView.builder(
-                                itemCount: snapshot.data!.length,
-                                itemBuilder: (context, index) {
-                                  final friend = snapshot.data![index];
-                                  return Padding(
-                                    padding:
+                padding: EdgeInsets.only(left: 10, right: 5),
+                child: FutureBuilder<List<FriendModel>>(
+                    future: friends,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasData) {
+                        return ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              final friend = snapshot.data![index];
+                              return Padding(
+                                padding:
                                     const EdgeInsets.only(top: 10, bottom: 5),
-                                    child: Column(
-                                      children: [
-                                        ListTile(
-                                          leading: SvgPicture.asset(
-                                            'assets/svg/atronaut-svgrepo-com.svg',
-                                            semanticsLabel: 'user',
-                                            width: 50,
-                                            height: 50,
-                                          ),
-                                          title: Row(children: [
-                                            Flexible(
-                                                flex: 3,
-                                                child: Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      width: 200,
-                                                      child: Text(
-                                                        friend.nickname,
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .white70,
-                                                            fontWeight:
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      leading: SvgPicture.asset(
+                                        'assets/svg/atronaut-svgrepo-com.svg',
+                                        semanticsLabel: 'user',
+                                        width: 50,
+                                        height: 50,
+                                      ),
+                                      title: Row(children: [
+                                        Flexible(
+                                            flex: 3,
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  width: 200,
+                                                  child: Text(
+                                                    friend.nickname,
+                                                    style: TextStyle(
+                                                        color: Colors.white70,
+                                                        fontWeight:
                                                             FontWeight.w500,
-                                                            fontSize: 19),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )),
-                                            ChangeCheck(friend),
-                                          ]),
-                                        ),
-                                        Container(
-                                          height: 0.1,
-                                          color: Colors.white,
-                                        ),
-                                      ],
+                                                        fontSize: 19),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                        ChangeCheck(friend),
+                                      ]),
                                     ),
-                                  );
-                                });
-                          } else if (snapshot.hasError) {
-                            print('error : ${snapshot.error}');
-                          }
+                                    Container(
+                                      height: 0.1,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            });
+                      } else if (snapshot.hasError) {
+                        print('error : ${snapshot.error}');
+                      }
 
-                          return Center(
-                            child: Text(
-                              '새로운 친구를 만들어보세요!',
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          );
-                        }),
-                  ))
+                      return Center(
+                        child: Text(
+                          '새로운 친구를 만들어보세요!',
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      );
+                    }),
+              ))
             ],
           ),
         ),

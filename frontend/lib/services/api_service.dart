@@ -52,6 +52,7 @@ class ApiService {
       await prefs.setInt('memberId', respJson['memberId']);
       await prefs.setString('nickname', respJson['nickname']);
       await prefs.setString('diaryBaseName', respJson['diaryBaseName'] ?? '');
+      await prefs.setBool('isLogged', true);
       print('end');
       return true;
     } else {
@@ -980,6 +981,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      print(jsonResponse);
       List<SearchFriendModel> searchedFriends = jsonResponse
               .map((dynamic item) => SearchFriendModel.fromJson(item))
               .toList() ??
