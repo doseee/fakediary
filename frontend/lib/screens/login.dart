@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
@@ -23,8 +24,7 @@ class _LoginState extends State<Login> {
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
-        border: UnderlineInputBorder(),
-        labelText: 'email',
+        labelText: 'Email',
         hintText: '이메일을 입력하세요',
         hintStyle: TextStyle(
           color: Colors.grey,
@@ -43,7 +43,7 @@ class _LoginState extends State<Login> {
         }
         return null;
       },
-      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+      style: TextStyle(color: Colors.white),
     );
   }
 
@@ -53,7 +53,7 @@ class _LoginState extends State<Login> {
       obscureText: true,
       decoration: InputDecoration(
         border: UnderlineInputBorder(),
-        labelText: 'password',
+        labelText: 'Password',
         labelStyle: TextStyle(color: Colors.grey),
         hintText: '비밀번호를 입력하세요',
         hintStyle: TextStyle(
@@ -72,7 +72,7 @@ class _LoginState extends State<Login> {
         }
         return null;
       },
-      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+      style: TextStyle(color: Colors.white),
     );
   }
 
@@ -98,11 +98,15 @@ class _LoginState extends State<Login> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));
               }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Center(child: Text('login success!')),
-                ),
-              );
+              Flushbar(
+                message: "로그인 성공!",
+                duration: Duration(seconds: 3),
+              ).show(context);
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Center(child: Text('login success!')),
+              //   ),
+              // );
             } else {
               ScaffoldMessenger.of(context).showMaterialBanner(
                 MaterialBanner(
@@ -137,8 +141,8 @@ class _LoginState extends State<Login> {
                 borderRadius: BorderRadius.circular(25)),
             child: Center(
                 child: Text(
-              'LOGIN',
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              '로그인',
+              style: TextStyle(color: Colors.white, fontSize: 15),
             )),
           ),
         ));
@@ -167,7 +171,7 @@ class _LoginState extends State<Login> {
                 body: Form(
                     key: _formKey,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 80),
+                      padding: EdgeInsets.only(top: 60, right: 70, left: 70),
                       child: Column(children: [
                         Center(
                           child: Lottie.asset('assets/lottie/stars.json'),

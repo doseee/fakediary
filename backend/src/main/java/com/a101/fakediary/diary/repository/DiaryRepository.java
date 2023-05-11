@@ -15,6 +15,8 @@ import java.util.Optional;
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
+    Diary findByDiaryId(Long diaryId);
+
     //MemberId,기준으로 모든 삭제되지 않은 다이어리를 찾아서 DiaryId기준 내림차순으로 반환
     List<Diary> findByMember_MemberIdAndIsDeletedFalseOrderByDiaryIdDesc(Long memberId);
 
