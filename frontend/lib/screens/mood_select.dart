@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
 import '../model/CardModel.dart';
@@ -236,144 +233,156 @@ class _MoodSelectState extends State<MoodSelect> {
                           );
                           return;
                         }
-                        List<Map<String, String>> messages = [];
-                        String person = '';
-                        List<String> baseNames = widget.selectedCards
-                            .map((card) => card.baseName.trim())
-                            .where((baseName) => baseName.isNotEmpty)
-                            .toSet()
-                            .toList();
-                        if (baseNames.isNotEmpty) {
-                          person = '등장인물은 ';
-                          for (int i = 0; i < baseNames.length; i++) {
-                            if (baseNames[i].trim() != '') {
-                              person += baseNames[i];
-                            }
-                            if (i < baseNames.length - 1) {
-                              person += ', ';
-                            } else {
-                              person += '이고 ';
-                            }
-                          }
-                        }
-                        String location = '';
-                        List<String> basePlaces = widget.selectedCards
-                            .map((card) => card.basePlace.trim())
-                            .where((basePlace) => basePlace.isNotEmpty)
-                            .toSet()
-                            .toList();
-                        if (basePlaces.isNotEmpty) {
-                          location = '장소는 ';
-                          for (int i = 0; i < basePlaces.length; i++) {
-                            if (basePlaces[i].trim() != '') {
-                              location += basePlaces[i];
-                            }
-                            if (i < basePlaces.length - 1) {
-                              location += ', ';
-                            } else {
-                              location += '이고 ';
-                            }
-                          }
-                        }
-                        String keyword2 = '';
-                        List<String> keywords = widget.selectedCards
-                            .expand((card) => card.keywords)
-                            .where((keyword) => keyword.isNotEmpty)
-                            .toSet()
-                            .toList();
-                        if (keywords.isNotEmpty) {
-                          keyword2 = '키워드는 ';
-                          for (int i = 0; i < keywords.length; i++) {
-                            if (keywords[i].trim() != '') {
-                              keyword2 += keywords[i];
-                            }
-                            if (i < keywords.length - 1) {
-                              keyword2 += ', ';
-                            } else {
-                              keyword2 += '.';
-                            }
-                          }
-                        }
-                        String genre2 = '장르는 ';
-                        for (int i = 0; i < selectedMood.length; i++) {
-                          if (selectedMood[i].trim() != '') {
-                            genre2 += dict[selectedMood[i]]!;
-                          }
-                          if (i < selectedMood.length - 1) {
-                            genre2 += ', ';
-                          } else {
-                            genre2 += '이고 ';
-                          }
-                        }
-                        if (keywords.isEmpty && genre2.endsWith('이고 ')) {
-                          genre2 = '${genre2.substring(0, genre2.length - 3)}.';
-                        }
-                        String prp = person + location + genre2 + keyword2;
-                        print(prp);
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
-                          ),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Center(
-                              child: Text('다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!'),
-                            )),
-                        );
-                        messages = await ApiService.askGpt4(messages, prp);
-                        String jsonResp = '';
-                        for (var message in messages) {
-                          if (message['role'] == 'assistant') {
-                            jsonResp = jsonResp + message['content']!;
-                          }
-                        }
-                        final decoded = json.decode(jsonResp);
-                        String title = decoded['title'];
-                        String summary = decoded['summary'];
-                        List<dynamic> contents = decoded['contents'];
-                        String detail = contents.join('@');
-                        List<dynamic> subtitles = decoded['subtitles'];
-                        String subtitle = subtitles.join('@');
+                        // List<Map<String, String>> messages = [];
+                        // String person = '';
+                        // List<String> baseNames = widget.selectedCards
+                        //     .map((card) => card.baseName.trim())
+                        //     .where((baseName) => baseName.isNotEmpty)
+                        //     .toSet()
+                        //     .toList();
+                        // if (baseNames.isNotEmpty) {
+                        //   person = '등장인물은 ';
+                        //   for (int i = 0; i < baseNames.length; i++) {
+                        //     if (baseNames[i].trim() != '') {
+                        //       person += baseNames[i];
+                        //     }
+                        //     if (i < baseNames.length - 1) {
+                        //       person += ', ';
+                        //     } else {
+                        //       person += '이고 ';
+                        //     }
+                        //   }
+                        // }
+                        // String location = '';
+                        // List<String> basePlaces = widget.selectedCards
+                        //     .map((card) => card.basePlace.trim())
+                        //     .where((basePlace) => basePlace.isNotEmpty)
+                        //     .toSet()
+                        //     .toList();
+                        // if (basePlaces.isNotEmpty) {
+                        //   location = '장소는 ';
+                        //   for (int i = 0; i < basePlaces.length; i++) {
+                        //     if (basePlaces[i].trim() != '') {
+                        //       location += basePlaces[i];
+                        //     }
+                        //     if (i < basePlaces.length - 1) {
+                        //       location += ', ';
+                        //     } else {
+                        //       location += '이고 ';
+                        //     }
+                        //   }
+                        // }
+                        // String keyword2 = '';
+                        // List<String> keywords = widget.selectedCards
+                        //     .expand((card) => card.keywords)
+                        //     .where((keyword) => keyword.isNotEmpty)
+                        //     .toSet()
+                        //     .toList();
+                        // if (keywords.isNotEmpty) {
+                        //   keyword2 = '키워드는 ';
+                        //   for (int i = 0; i < keywords.length; i++) {
+                        //     if (keywords[i].trim() != '') {
+                        //       keyword2 += keywords[i];
+                        //     }
+                        //     if (i < keywords.length - 1) {
+                        //       keyword2 += ', ';
+                        //     } else {
+                        //       keyword2 += '.';
+                        //     }
+                        //   }
+                        // }
+                        // String genre2 = '장르는 ';
+                        // for (int i = 0; i < selectedMood.length; i++) {
+                        //   if (selectedMood[i].trim() != '') {
+                        //     genre2 += dict[selectedMood[i]]!;
+                        //   }
+                        //   if (i < selectedMood.length - 1) {
+                        //     genre2 += ', ';
+                        //   } else {
+                        //     genre2 += '이고 ';
+                        //   }
+                        // }
+                        // if (keywords.isEmpty && genre2.endsWith('이고 ')) {
+                        //   genre2 = '${genre2.substring(0, genre2.length - 3)}.';
+                        // }
+                        // String prp = person + location + genre2 + keyword2;
+                        // print(prp);
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) => HomeScreen(),
+                        //   ),
+                        // );
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(
+                        //       content: Center(
+                        //     child: Text(
+                        //         '다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!'),
+                        //   )),
+                        // );
+                        // messages = await ApiService.askGpt4(messages, prp);
+                        // String jsonResp = '';
+                        // for (var message in messages) {
+                        //   if (message['role'] == 'assistant') {
+                        //     jsonResp = jsonResp + message['content']!;
+                        //   }
+                        // }
+                        // final decoded = json.decode(jsonResp);
+                        // String title = decoded['title'];
+                        // String summary = decoded['summary'];
+                        // List<dynamic> contents = decoded['contents'];
+                        // String detail = contents.join('@');
+                        // List<dynamic> subtitles = decoded['subtitles'];
+                        // String subtitle = subtitles.join('@');
                         List<int> cardIds = widget.selectedCards
                             .map((card) => card.cardId)
                             .toList();
-                        String coverImg =
-                            await ApiService.makeCoverImage(summary);
-                        List<String> diaryImageUrl = [];
-                        diaryImageUrl.add(coverImg);
-                        print(diaryImageUrl.length);
-                        diaryImageUrl = [];
-                        String keyword = keywords.join('@');
+                        // String coverImg =
+                        //     await ApiService.makeCoverImage(summary);
+                        // List<String> diaryImageUrl = [];
+                        // diaryImageUrl.add(coverImg);
+                        // print(diaryImageUrl.length);
+                        // diaryImageUrl = [];
+                        // String keyword = keywords.join('@');
                         List<String> genre = [];
                         for (var i = 0; i < selectedMood.length; i++) {
                           genre.add(selectedMood[i]);
                         }
 
-                        await ApiService.makeDiary(
-                            cardIds: cardIds,
-                            detail: detail,
-                            diaryImageUrl: diaryImageUrl,
-                            genre: genre,
-                            prompt: prp,
-                            subtitles: subtitle,
-                            summary: summary,
-                            title: title);
+                        // final result = await ApiService.makeDiary(
+                        //     cardIds: cardIds,
+                        //     detail: detail,
+                        //     diaryImageUrl: diaryImageUrl,
+                        //     genre: genre,
+                        //     prompt: prp,
+                        //     subtitles: subtitle,
+                        //     summary: summary,
+                        //     title: title);
 
-                        const AndroidNotificationDetails
-                            androidNotificationDetails =
-                            AndroidNotificationDetails(
-                                'your channel id', 'your channel name',
-                                channelDescription: 'your channel description',
-                                importance: Importance.max,
-                                priority: Priority.high,
-                                ticker: 'ticker');
-                        const NotificationDetails notificationDetails =
-                            NotificationDetails(
-                                android: androidNotificationDetails);
-                        await FlutterLocalNotificationsPlugin().show(0,
-                            '일기 생성 완료', '일기 생성이 완료되었습니다!', notificationDetails,
-                            payload: 'item x');
+                        final result = await ApiService.makeDiaryBackend(
+                          cardIdList: cardIds,
+                          genreList: genre,
+                        );
+
+                        if (result == true) {
+                          const AndroidNotificationDetails
+                              androidNotificationDetails =
+                              AndroidNotificationDetails(
+                                  'your channel id', 'your channel name',
+                                  channelDescription:
+                                      'your channel description',
+                                  importance: Importance.max,
+                                  priority: Priority.high,
+                                  ticker: 'ticker');
+                          const NotificationDetails notificationDetails =
+                              NotificationDetails(
+                                  android: androidNotificationDetails);
+                          await FlutterLocalNotificationsPlugin().show(
+                              0,
+                              '일기 생성 완료',
+                              '일기 생성이 완료되었습니다!',
+                              notificationDetails,
+                              payload: 'item x');
+                        }
                       },
                       child: Container(
                         width: 268,

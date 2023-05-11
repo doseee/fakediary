@@ -21,6 +21,10 @@ class _ModifyScreenState extends State<ModifyScreen> {
   int intHour = 0;
   int intMinute = 0;
   int intSecond = 0;
+  final hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  final minutes = [0, 30];
+
+  Duration duration = const Duration(hours: 1, minutes: 23);
 
   FixedExtentScrollController hourController = FixedExtentScrollController();
   FixedExtentScrollController minuteController = FixedExtentScrollController();
@@ -78,7 +82,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Image(
-                    image: AssetImage('assets/img/silver_moon.png'),height: 110,
+                    image: AssetImage('assets/img/silver_moon.png'),
+                    height: 110,
                   ),
                   Row(
                     children: [
@@ -125,6 +130,41 @@ class _ModifyScreenState extends State<ModifyScreen> {
                   ),
                   SizedBox(
                     height: 1,
+                  ),
+                  CupertinoPicker(
+                    magnification: 1.22,
+                    squeeze: 1.2,
+                    useMagnifier: true,
+                    itemExtent: 32.0,
+                    // This sets the initial item.
+                    scrollController: FixedExtentScrollController(
+                      initialItem: 1,
+                    ),
+                    // This is called when selected item is changed.
+                    onSelectedItemChanged: (int selectedItem) {
+                      // setState(() {
+                      //   _selectedFruit = selectedItem;
+                      // });
+                    },
+                    children: List<Widget>.generate(hours.length, (int index) {
+                      return Center(
+                          child: Text(
+                        hours[index].toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ));
+                    }),
+                  ),
+                  CupertinoTimerPicker(
+                    backgroundColor: Colors.red,
+                    mode: CupertinoTimerPickerMode.hm,
+                    initialTimerDuration: duration,
+                    // This is called when the user changes the timer's
+                    // duration.
+                    onTimerDurationChanged: (Duration newDuration) {
+                      setState(() => duration = newDuration);
+                    },
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
