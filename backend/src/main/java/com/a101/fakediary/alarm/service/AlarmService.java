@@ -1,6 +1,12 @@
 package com.a101.fakediary.alarm.service;
 
+import com.a101.fakediary.alarm.dto.AlarmListDto;
+import com.a101.fakediary.alarm.dto.AlarmRequestDto;
 import com.a101.fakediary.alarm.dto.AlarmResponseDto;
+import com.a101.fakediary.alarm.entity.Alarm;
+import com.a101.fakediary.alarm.repository.AlarmRepository;
+import com.a101.fakediary.enums.EAlarm;
+import com.a101.fakediary.friendrequest.entity.FriendRequest;
 import com.a101.fakediary.friendrequest.repository.FriendRequestRepository;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
@@ -11,6 +17,7 @@ import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,34 +30,53 @@ public class AlarmService {
     private final FirebaseMessaging firebaseMessaging;
     private final FriendRequestRepository friendRequestRepository;
     private final MemberRepository memberRepository;
+    private final AlarmRepository alarmRepository;
 
-    public List<AlarmResponseDto> listAlarm(Long memberId) {
-        return friendRequestRepository.listAlarm(memberId);
+    private Alarm requestEntity(AlarmRequestDto request) {
+        return Alarm.builder()
+                .memberId(memberRepository.findByMemberId(request.getMemberId()))
+                .requestId(request.getRequestId())
+                .title(request.getTitle())
+                .body(request.getBody())
+                .alarmType(EAlarm.valueOf(request.getAlarmType()))
+                .build();
     }
 
+    public void saveAlarm(AlarmRequestDto request) {
+        alarmRepository.save(requestEntity(request));
+    }
+
+    public List<AlarmListDto> listAlarm(Long memberId) {
+        List<Alarm> alarms = alarmRepository.listAlarm(memberId);
+        List<AlarmListDto> list = new ArrayList<>();
+
+        for (Alarm alarm : alarms)
+            list.add(new AlarmListDto(alarm.getAlarmId(), alarm.getMemberId().getMemberId(), alarm.getTitle(), alarm.getBody(), alarm.getAlarmType().toString(), alarm.getStatus()));
+
+        return list;
+    }
+
+    public void readAlarm(Long alarmId) {
+        Alarm alarm = alarmRepository.findByAlarmId(alarmId);
+        if (alarm.getAlarmType().equals("FRIEND")) return; //친구 일기 교환 요청일 때
+        if (alarm.getAlarmType().equals("REQUEST")) return; //친구 신청일 때
+        alarm.setStatus(1);
+    }
+
+
     public String sendNotificationByToken(AlarmResponseDto alarm) {
-        Member member = memberRepository.findByMemberId(alarm.getReceiverId());
-        Member friend = memberRepository.findByMemberId(alarm.getSenderId());
-
-        String title = "", body = "";
-        if (alarm.getStatus().equals("exchange")) {
-            title = member.getNickname() + "님, 친구가 일기를 교환하고 싶어해요!";
-            body = friend.getNickname() + "님이 교환을 신청했습니다.";
-        }
-        else {
-            title = member.getNickname() + "님, 친구 신청이 도착했어요!";
-            body = friend.getNickname() + "님이 교환을 신청했습니다.";
-        }
-
+        Member member = memberRepository.findByMemberId(alarm.getMemberId());
         Map<String, String> data = new HashMap<>();
-        data.put("FLUTTER_NOTIFICATION_CLICK", alarm.getStatus());
+        data.put("FLUTTER_NOTIFICATION_CLICK", "ALARM");
+        data.put("title", alarm.getTitle());
+        data.put("body", alarm.getBody());
         alarm.setData(data);
 
         if (member != null) {
             if (member.getFirebaseUid() != null) {
                 Notification notification = Notification.builder()
-                        .setTitle(title)
-                        .setBody(body)
+                        .setTitle(alarm.getTitle())
+                        .setBody(alarm.getBody())
                         // .setImage(requestDto.getImage())
                         .build();
 

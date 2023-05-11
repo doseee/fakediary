@@ -1,5 +1,6 @@
 package com.a101.fakediary.friendship.controller;
 
+import com.a101.fakediary.friendrequest.service.FriendRequestService;
 import com.a101.fakediary.friendship.dto.FriendshipDto;
 import com.a101.fakediary.friendship.dto.FriendshipResponseDto;
 import com.a101.fakediary.friendship.entity.Friendship;
@@ -21,11 +22,13 @@ import java.util.List;
 public class FriendshipController {
 
     private final FriendshipService friendshipService;
+    private final FriendRequestService friendRequestService;
 
     @ApiOperation(value = "친구 관계 저장")
     @PostMapping("/save")
     public ResponseEntity<?> saveFriend(@RequestBody FriendshipDto dto) {
         try {
+            friendRequestService.manageFriend(dto); //친구 관계 수정
             friendshipService.saveFriend(dto); //A,B 저장
             FriendshipDto tmp = new FriendshipDto(dto.getFriendId(), dto.getMemberId());
             friendshipService.saveFriend(tmp); //B,A 저장
