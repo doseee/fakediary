@@ -4,12 +4,11 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
+import 'package:frontend/screens/card_loading.dart';
 import 'package:frontend/screens/card_result.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'loading_screen.dart';
 
 class CardCreate extends StatefulWidget {
   const CardCreate({super.key});
@@ -142,7 +141,7 @@ class _CardCreateState extends State<CardCreate> {
   @override
   Widget build(BuildContext context) {
     return _isLoading
-        ? LoadingScreen()
+        ? CardLoading()
         : GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
@@ -333,7 +332,7 @@ class _CardCreateState extends State<CardCreate> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 60),
                                 child: TextFormField(
-                                  maxLength: 10,
+                                  maxLength: 20,
                                   controller: _locationController,
                                   style: TextStyle(
                                     color: Colors.white,
