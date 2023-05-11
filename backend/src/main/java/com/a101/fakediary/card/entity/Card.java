@@ -33,7 +33,7 @@ public class Card extends BaseEntity {
     @Column(length = 10)
     private String baseName;    //  주인공 이름
 
-    @Column(length = 10)
+    @Column(length = 20)
     private String basePlace;   //  장소 이름
 
     @Column(name = "keyword", length = 40)

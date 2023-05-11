@@ -7,6 +7,7 @@ import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 import 'home_circlemenu.dart';
 
@@ -137,18 +138,19 @@ class _FriendScreenState extends State<FriendScreen> {
                   flex: 4,
                   child: Row(
                     children: [
+                      Flexible(flex: 2,child: Lottie.asset('assets/lottie/1-alien.json',width: 100,height: 100)),
                       Flexible(
                         flex: 5,
                         child: Text(
-                          'RANDOM',
-                          style: TextStyle(fontSize: 24, color: Colors.white70),
+                          '  외계인',
+                          style: TextStyle(fontSize: 17, color: Colors.white70),
                         ),
                       ),
                       Flexible(
                         flex: 1,
                         child: Container(
                           child: IconButton(
-                              icon: Icon(Icons.info, color: Colors.white),
+                              icon: Icon(Icons.info, color: Colors.white60),
                               onPressed: () {
                                 showDialog(
                                     context: context,
@@ -314,7 +316,7 @@ class _FriendScreenState extends State<FriendScreen> {
               height: 0.5,
             ),
           ),
-          title: Text('FRIENDS'),
+          title: Text('친구 우주인'),
           actions: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 30),
@@ -365,72 +367,74 @@ class _FriendScreenState extends State<FriendScreen> {
               RandomDiary(),
               Expanded(
                   child: Padding(
-                padding: EdgeInsets.only(left: 10, right: 5),
-                child: FutureBuilder<List<FriendModel>>(
-                    future: friends,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasData) {
-                        return ListView.builder(
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              final friend = snapshot.data![index];
-                              return Padding(
-                                padding:
+                    padding: EdgeInsets.only(left: 10, right: 5),
+                    child: FutureBuilder<List<FriendModel>>(
+                        future: friends,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasData) {
+                            return ListView.builder(
+                                itemCount: snapshot.data!.length,
+                                itemBuilder: (context, index) {
+                                  final friend = snapshot.data![index];
+                                  return Padding(
+                                    padding:
                                     const EdgeInsets.only(top: 10, bottom: 5),
-                                child: Column(
-                                  children: [
-                                    ListTile(
-                                      leading: SvgPicture.asset(
-                                        'assets/svg/atronaut-svgrepo-com.svg',
-                                        semanticsLabel: 'user',
-                                        width: 50,
-                                        height: 50,
-                                      ),
-                                      title: Row(children: [
-                                        Flexible(
-                                            flex: 3,
-                                            child: Column(
-                                              children: [
-                                                SizedBox(
-                                                  width: 200,
-                                                  child: Text(
-                                                    friend.nickname,
-                                                    style: TextStyle(
-                                                        color: Colors.white70,
-                                                        fontWeight:
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          leading: SvgPicture.asset(
+                                            'assets/svg/atronaut-svgrepo-com.svg',
+                                            semanticsLabel: 'user',
+                                            width: 50,
+                                            height: 50,
+                                          ),
+                                          title: Row(children: [
+                                            Flexible(
+                                                flex: 3,
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 200,
+                                                      child: Text(
+                                                        friend.nickname,
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .white70,
+                                                            fontWeight:
                                                             FontWeight.w500,
-                                                        fontSize: 19),
-                                                  ),
-                                                ),
-                                              ],
-                                            )),
-                                        ChangeCheck(friend),
-                                      ]),
+                                                            fontSize: 15),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                            ChangeCheck(friend),
+                                          ]),
+                                        ),
+                                        Container(
+                                          height: 0.1,
+                                          color: Colors.white,
+                                        ),
+                                      ],
                                     ),
-                                    Container(
-                                      height: 0.1,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
-                      } else if (snapshot.hasError) {
-                        print('error : ${snapshot.error}');
-                      }
+                                  );
+                                });
+                          } else if (snapshot.hasError) {
+                            print('error : ${snapshot.error}');
+                          }
 
-                      return Center(
-                        child: Text(
-                          '새로운 친구를 만들어보세요!',
-                          style: TextStyle(color: Colors.white70),
-                        ),
-                      );
-                    }),
-              ))
+                          return Center(
+                            child: Text(
+                              '새로운 친구를 만들어보세요!',
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          );
+                        }),
+                  ))
             ],
           ),
         ),

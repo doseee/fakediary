@@ -18,10 +18,10 @@ class SearchFriendModel {
   late final String email;
   late final String password;
   late final String nickname;
-  late final void autoDiaryTime;
-  late final void diaryBaseName;
-  late final void firebaseUid;
-  late final void providerId;
+  late final Null autoDiaryTime;
+  late final Null diaryBaseName;
+  late final Null firebaseUid;
+  late final Null providerId;
   late final bool randomExchanged;
 
   SearchFriendModel.fromJson(Map<String, dynamic> json) {

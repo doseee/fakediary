@@ -453,7 +453,8 @@ Widget buildList(snapshot, setter) {
         child: Row(
           children: [
             Container(
-              child: Lottie.asset('assets/lottie/random.json', width: 60),
+
+              child: Lottie.asset('assets/lottie/1-alien.json',width: 50,height: 50),
             ),
             Text(
               '외계인',

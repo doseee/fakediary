@@ -8,6 +8,7 @@ import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/change_button.dart';
@@ -77,13 +78,21 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
               padding: EdgeInsets.only(left: 10, right: 5),
               child: Container(
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
+                    borderRadius:
+                    BorderRadius.only(bottomLeft: Radius.circular(30)),
+                    border: GradientBoxBorder(
+                      gradient: LinearGradient(colors: [
+                        Color(0xff79F1A4),
+                        Color(0xff0E5CAD),
+                      ]),
                     ),
-                    borderRadius: BorderRadius.circular(10)),
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(
+                            imageUrl)
+                ),
               ),
-            )),
+            )),),
         Flexible(
           flex: 1,
           child: Padding(
@@ -106,6 +115,7 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                   ),
                 ),
                 Flexible(
+
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.all(3.0),
@@ -416,15 +426,17 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                           height: 140,
                           decoration: BoxDecoration(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(10)),
-                              border:
-                              Border.all(color: Colors.white60, width: 4),
-                              // Todo; 나중에 커버 이미지 url로 변경
+                              BorderRadius.only(bottomLeft: Radius.circular(30)),
+                              border: GradientBoxBorder(
+                                gradient: LinearGradient(colors: [
+                                  Color(0xff79F1A4),
+                                  Color(0xff0E5CAD),
+                                ]),
+                              ),
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
                                       snapshot[index].diaryImageUrl[0]))
-                            // color: Colors.white,
                           ),
                         ),
                         Padding(

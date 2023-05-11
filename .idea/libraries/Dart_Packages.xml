@@ -9,6 +9,13 @@
             </list>
           </value>
         </entry>
+        <entry key="another_flushbar">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/another_flushbar-1.12.29/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="archive">
           <value>
             <list>
@@ -222,7 +229,7 @@
         <entry key="flutter">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../../src/flutter/packages/flutter/lib" />
+              <option value="$PROJECT_DIR$/../../flutter/flutter/packages/flutter/lib" />
             </list>
           </value>
         </entry>
@@ -299,14 +306,14 @@
         <entry key="flutter_test">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../../src/flutter/packages/flutter_test/lib" />
+              <option value="$PROJECT_DIR$/../../flutter/flutter/packages/flutter_test/lib" />
             </list>
           </value>
         </entry>
         <entry key="flutter_web_plugins">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../../src/flutter/packages/flutter_web_plugins/lib" />
+              <option value="$PROJECT_DIR$/../../flutter/flutter/packages/flutter_web_plugins/lib" />
             </list>
           </value>
         </entry>
@@ -635,7 +642,7 @@
         <entry key="sky_engine">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../../src/flutter/bin/cache/pkg/sky_engine/lib" />
+              <option value="$PROJECT_DIR$/../../flutter/flutter/bin/cache/pkg/sky_engine/lib" />
             </list>
           </value>
         </entry>
@@ -755,6 +762,7 @@
     </properties>
     <CLASSES>
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/_flutterfire_internals-1.2.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/another_flushbar-1.12.29/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/archive-3.3.7/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/args-2.4.1/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0/lib" />
@@ -857,10 +865,10 @@
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.0.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/xml-6.2.2/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/yaml-3.1.2/lib" />
-      <root url="file://$PROJECT_DIR$/../../src/flutter/bin/cache/pkg/sky_engine/lib" />
-      <root url="file://$PROJECT_DIR$/../../src/flutter/packages/flutter/lib" />
-      <root url="file://$PROJECT_DIR$/../../src/flutter/packages/flutter_test/lib" />
-      <root url="file://$PROJECT_DIR$/../../src/flutter/packages/flutter_web_plugins/lib" />
+      <root url="file://$PROJECT_DIR$/../../flutter/flutter/bin/cache/pkg/sky_engine/lib" />
+      <root url="file://$PROJECT_DIR$/../../flutter/flutter/packages/flutter/lib" />
+      <root url="file://$PROJECT_DIR$/../../flutter/flutter/packages/flutter_test/lib" />
+      <root url="file://$PROJECT_DIR$/../../flutter/flutter/packages/flutter_web_plugins/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
