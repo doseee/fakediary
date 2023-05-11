@@ -26,7 +26,7 @@ class SearchFriendModel {
 
   SearchFriendModel.fromJson(Map<String, dynamic> json){
     createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+    updatedAt = json['updatedAt']?? '';
     memberId = json['mem'
         'berId'];
     email = json['email'];

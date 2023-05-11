@@ -6,6 +6,7 @@ import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 import 'home_circlemenu.dart';
 
@@ -131,18 +132,20 @@ class _FriendScreenState extends State<FriendScreen> {
                   flex: 4,
                   child: Row(
                     children: [
+                      Flexible(flex: 2,child: Lottie.asset('assets/lottie/1-alien.json',width: 100,height: 100)),
                       Flexible(
                         flex: 5,
                         child: Text(
-                          'RANDOM',
-                          style: TextStyle(fontSize: 24, color: Colors.white70),
+                          '  외계인',
+                          style: TextStyle(fontSize: 17, color: Colors.white70),
                         ),
                       ),
+
                       Flexible(
                         flex: 1,
                         child: Container(
                           child: IconButton(
-                              icon: Icon(Icons.info, color: Colors.white),
+                              icon: Icon(Icons.info, color: Colors.white60),
                               onPressed: () {
                                 showDialog(
                                     context: context,
@@ -167,12 +170,13 @@ class _FriendScreenState extends State<FriendScreen> {
                 flex: 2,
                 child: Container(),
               ),
+
               Flexible(
                 flex: 3,
                 child: Center(
                   child: Container(
-                    width: 250,
-                    height: 50,
+                    width: 80,
+                    height: 40,
                     decoration: BtnThemeGradient(),
                     child: ElevatedButton(
                         onPressed: () async {
@@ -229,6 +233,7 @@ class _FriendScreenState extends State<FriendScreen> {
                   ),
                 ),
               ),
+
             ],
           ),
         ),
@@ -244,8 +249,8 @@ class _FriendScreenState extends State<FriendScreen> {
       return Flexible(
           flex: 2,
           child: Container(
-            width: 250,
-            height: 50,
+            width: 80,
+            height: 40,
             decoration: BtnThemeGradientLine(),
             child: ElevatedButton(
                 onPressed: () async {
@@ -311,7 +316,7 @@ class _FriendScreenState extends State<FriendScreen> {
               height: 0.5,
             ),
           ),
-          title: Text('FRIENDS'),
+          title: Text('친구 우주인'),
           actions: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 30),
@@ -402,7 +407,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                                                 .white70,
                                                             fontWeight:
                                                             FontWeight.w500,
-                                                            fontSize: 19),
+                                                            fontSize: 15),
                                                       ),
                                                     ),
                                                   ],
