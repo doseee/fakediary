@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
-import 'package:frontend/screens/old_menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/mood_select.dart';
@@ -25,7 +24,9 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
   void initState() {
     super.initState();
     cards = ApiService().getCardList();
-    getCardFromList();
+    if (widget.cardIdFromList != null) {
+      getCardFromList();
+    }
     // for (int i=0 ; i<cards.length ; i++) {
     //   if(cards[i] == widget.cardIdFromList) {
     //
@@ -79,8 +80,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                             'CARDS  ',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 20
-                              ,
+                              fontSize: 20,
                             ),
                           ),
                           GestureDetector(
