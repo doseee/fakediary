@@ -21,10 +21,6 @@ class _ModifyScreenState extends State<ModifyScreen> {
   int intHour = 0;
   int intMinute = 0;
   int intSecond = 0;
-  final hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  final minutes = [0, 30];
-
-  Duration duration = const Duration(hours: 1, minutes: 23);
 
   FixedExtentScrollController hourController = FixedExtentScrollController();
   FixedExtentScrollController minuteController = FixedExtentScrollController();
@@ -131,46 +127,11 @@ class _ModifyScreenState extends State<ModifyScreen> {
                   SizedBox(
                     height: 1,
                   ),
-                  CupertinoPicker(
-                    magnification: 1.22,
-                    squeeze: 1.2,
-                    useMagnifier: true,
-                    itemExtent: 32.0,
-                    // This sets the initial item.
-                    scrollController: FixedExtentScrollController(
-                      initialItem: 1,
-                    ),
-                    // This is called when selected item is changed.
-                    onSelectedItemChanged: (int selectedItem) {
-                      // setState(() {
-                      //   _selectedFruit = selectedItem;
-                      // });
-                    },
-                    children: List<Widget>.generate(hours.length, (int index) {
-                      return Center(
-                          child: Text(
-                        hours[index].toString(),
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ));
-                    }),
-                  ),
-                  CupertinoTimerPicker(
-                    backgroundColor: Colors.red,
-                    mode: CupertinoTimerPickerMode.hm,
-                    initialTimerDuration: duration,
-                    // This is called when the user changes the timer's
-                    // duration.
-                    onTimerDurationChanged: (Duration newDuration) {
-                      setState(() => duration = newDuration);
-                    },
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: 70,
+                        width: 80,
                         child: CupertinoPicker(
                           scrollController: hourController,
                           itemExtent: 32.0,
@@ -191,23 +152,29 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           }),
                         ),
                       ),
+                      Text(
+                        '시',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                       SizedBox(
-                        width: 70,
+                        width: 80,
                         child: CupertinoPicker(
                           scrollController: minuteController,
                           backgroundColor: Colors.transparent,
                           itemExtent: 32.0,
                           onSelectedItemChanged: (int index) {
                             setState(() {
-                              minute = index.toString().padLeft(2, '0');
+                              minute = (index * 30).toString().padLeft(2, '0');
                             });
                           },
-                          children: List<Widget>.generate(60, (
+                          children: List<Widget>.generate(2, (
                             int index,
                           ) {
                             return Center(
                               child: Text(
-                                index.toString(),
+                                (index * 30).toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -216,28 +183,34 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           }),
                         ),
                       ),
-                      SizedBox(
-                        width: 70,
-                        child: CupertinoPicker(
-                          scrollController: secondController,
-                          itemExtent: 32.0,
-                          onSelectedItemChanged: (int index) {
-                            setState(() {
-                              second = index.toString().padLeft(2, '0');
-                            });
-                          },
-                          children: List<Widget>.generate(60, (int index) {
-                            return Center(
-                              child: Text(
-                                index.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            );
-                          }),
+                      Text(
+                        '분',
+                        style: TextStyle(
+                          color: Colors.white,
                         ),
                       ),
+                      // SizedBox(
+                      //   width: 70,
+                      //   child: CupertinoPicker(
+                      //     scrollController: secondController,
+                      //     itemExtent: 32.0,
+                      //     onSelectedItemChanged: (int index) {
+                      //       setState(() {
+                      //         second = index.toString().padLeft(2, '0');
+                      //       });
+                      //     },
+                      //     children: List<Widget>.generate(60, (int index) {
+                      //       return Center(
+                      //         child: Text(
+                      //           index.toString(),
+                      //           style: TextStyle(
+                      //             color: Colors.white,
+                      //           ),
+                      //         ),
+                      //       );
+                      //     }),
+                      //   ),
+                      // ),
                     ],
                   ),
                   SizedBox(
