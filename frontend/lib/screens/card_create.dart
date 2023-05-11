@@ -1,14 +1,14 @@
 import 'dart:io';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
+import 'package:frontend/screens/card_loading.dart';
 import 'package:frontend/screens/card_result.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'loading_screen.dart';
 
 class CardCreate extends StatefulWidget {
   const CardCreate({super.key});
@@ -141,7 +141,7 @@ class _CardCreateState extends State<CardCreate> {
   @override
   Widget build(BuildContext context) {
     return _isLoading
-        ? LoadingScreen()
+        ? CardLoading()
         : GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
@@ -283,6 +283,7 @@ class _CardCreateState extends State<CardCreate> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 60),
                                 child: TextFormField(
+                                  maxLength: 10,
                                   controller: _personController,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -331,6 +332,7 @@ class _CardCreateState extends State<CardCreate> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 60),
                                 child: TextFormField(
+                                  maxLength: 200,
                                   controller: _locationController,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -483,12 +485,16 @@ class _CardCreateState extends State<CardCreate> {
                               setState(() {
                                 _isLoading = false;
                               });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Center(
-                                      child: Text('키워드를 한 개 이상 입력해주세요.')),
-                                ),
-                              );
+                              Flushbar(
+                                message: '키워드를 한 개 이상 입력해주세요.',
+                                duration: Duration(seconds: 2),
+                              ).show(context);
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(
+                              //     content: Center(
+                              //         child: Text('키워드를 한 개 이상 입력해주세요.')),
+                              //   ),
+                              // );
                               return;
                             }
 
@@ -496,11 +502,15 @@ class _CardCreateState extends State<CardCreate> {
                               setState(() {
                                 _isLoading = false;
                               });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Center(child: Text('사진을 선택해주세요.')),
-                                ),
-                              );
+                              Flushbar(
+                                message: '사진을 선택해주세요.',
+                                duration: Duration(seconds: 2),
+                              ).show(context);
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(
+                              //     content: Center(child: Text('사진을 선택해주세요.')),
+                              //   ),
+                              // );
                               return;
                             }
 
@@ -652,6 +662,7 @@ class InputKeyword extends StatelessWidget {
         SizedBox(
           width: 146,
           child: TextFormField(
+            maxLength: 10,
             controller: keywordController,
             style: TextStyle(
               color: Colors.white,

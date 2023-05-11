@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:frontend/firebase_options.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/splash.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -91,8 +92,12 @@ void main() async {
     },
     onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
   );
+  final pref = await SharedPreferences.getInstance();
+  bool? isLogged = pref.getBool('isLogged');
+  isLogged ??= false;
   runApp(MaterialApp(
     theme: ThemeData(fontFamily: 'Nanum_Square_Neo'),
+    // home: isLogged ? HomeScreen() : LoginEntrance(),
     home: LoginEntrance(),
   ));
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/CardModel.dart';
-import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:lottie/lottie.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -43,14 +42,15 @@ class _CardListState extends State<CardList> {
                     backgroundColor: Colors.transparent,
                     body: Center(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                      Center(
-                      child: Lottie.asset('assets/lottie/2-tarot.json',height: 80),
-                    ),
-                          SizedBox(
-                            height: 15,
+                          Center(
+                            child: Lottie.asset('assets/lottie/2-tarot.json',
+                                height: 80),
                           ),
+                          // SizedBox(
+                          //   height: 15,
+                          // ),
                           Text('내가 만든 카드를 확인해보세요',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
@@ -59,9 +59,9 @@ class _CardListState extends State<CardList> {
                           Text('카드를 누르면 해당 카드의 상세 정보를 확인할 수 있습니다',
                               style:
                                   TextStyle(fontSize: 10, color: Colors.white)),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          // SizedBox(
+                          //   height: 10,
+                          // ),
                           Image(
                             image: AssetImage('assets/img/line_top.png'),
                             width: 200,

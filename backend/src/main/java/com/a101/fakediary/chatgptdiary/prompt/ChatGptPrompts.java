@@ -32,7 +32,7 @@ public class ChatGptPrompts {
             //  마지막 쉼표(,)와 띄어쓰기( ) 제거
             contents.delete(contents.length() - 2, contents.length());  //    "주인공은 A, B, C"
         }
-        log.info("등장인물 프롬프트 = " + contents);
+//        log.info("등장인물 프롬프트 = " + contents);
 
         //  장소가 존재할 경우
         if(places != null && !places.isEmpty()) {
@@ -46,7 +46,7 @@ public class ChatGptPrompts {
             //  마지막 쉼표(,)와 띄어쓰기( ) 제거
             contents.delete(contents.length() - 2, contents.length());  //    "주인공은 A, B, C이고, 장소는 D, E, F"
         }
-        log.info("장소 프롬프트 = " + contents);
+//        log.info("장소 프롬프트 = " + contents);
 
         //  키워드가 존재할 경우
         if(keywords != null && !keywords.isEmpty()) {
@@ -60,7 +60,7 @@ public class ChatGptPrompts {
             //  마지막 쉼표(,)와 띄어쓰기( ) 제거
             contents.delete(contents.length() - 2, contents.length());  //  "주인공은 A, B, C이고, 장소는 D, E, F이고, 키워드는 X, Y, Z"
         }
-        log.info("키워드 프롬프트 = " + contents);
+//        log.info("키워드 프롬프트 = " + contents);
 
         contents.append(USER_END);  //  "주인공은 A, B, C이고, 장소는 D, E, F이고, 키워드는 X, Y, Z이야."
 

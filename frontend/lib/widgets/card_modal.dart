@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -224,17 +225,25 @@ class CardModal extends StatelessWidget {
                               var file = card.cardImageUrl;
                               final result = await GallerySaver.saveImage(file);
                               if (result != null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Center(child: Text('사진 저장 성공!')),
-                                  ),
-                                );
+                                Flushbar(
+                                  message: "사진 저장 성공!",
+                                  duration: Duration(seconds: 3),
+                                ).show(context);
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   SnackBar(
+                                //     content: Center(child: Text('사진 저장 성공!')),
+                                //   ),
+                                // );
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Center(child: Text('권한을 허용해주세요.')),
-                                  ),
-                                );
+                                Flushbar(
+                                  message: "권한을 허용해주세요.",
+                                  duration: Duration(seconds: 3),
+                                ).show(context);
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   SnackBar(
+                                //     content: Center(child: Text('권한을 허용해주세요.')),
+                                //   ),
+                                // );
                               }
                             },
                             child: Container(

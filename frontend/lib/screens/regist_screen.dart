@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
@@ -51,7 +52,7 @@ class _RegistScreenState extends State<RegistScreen> {
               child: Form(
                 key: _formKey,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 70,left: 70),
+                  padding: EdgeInsets.only(right: 70, left: 70),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +87,6 @@ class _RegistScreenState extends State<RegistScreen> {
                       SizedBox(
                         height: 20,
                       ),
-
                       TextFormField(
                         controller: _passwordController,
                         obscureText: true,
@@ -177,18 +177,30 @@ class _RegistScreenState extends State<RegistScreen> {
                                     MaterialPageRoute(
                                         builder: (context) => HomeScreen()));
                               }
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content:
-                                      Center(child: Text('login success!')),
-                                ),
-                              );
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(
+                              //     content:
+                              //         Center(child: Text('login success!')),
+                              //   ),
+                              // );
+                              Flushbar(
+                                message: "회원가입 성공!",
+                                duration: Duration(seconds: 3),
+                                backgroundColor: Colors.greenAccent,
+                                flushbarPosition: FlushbarPosition.TOP,
+                              ).show(context);
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('duplicate information.'),
-                                ),
-                              );
+                              Flushbar(
+                                message: "회원가입 실패!(이메일 또는 닉네임이 중복되었습니다.)",
+                                duration: Duration(seconds: 3),
+                                backgroundColor: Colors.redAccent,
+                                flushbarPosition: FlushbarPosition.TOP,
+                              ).show(context);
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   const SnackBar(
+                              //     content: Text('duplicate information.'),
+                              //   ),
+                              // );
                             }
                           }
                         },
