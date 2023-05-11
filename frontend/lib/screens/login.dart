@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
@@ -97,11 +98,15 @@ class _LoginState extends State<Login> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomeScreen()));
               }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Center(child: Text('login success!')),
-                ),
-              );
+              Flushbar(
+                message: "로그인 성공!",
+                duration: Duration(seconds: 3),
+              ).show(context);
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Center(child: Text('login success!')),
+              //   ),
+              // );
             } else {
               ScaffoldMessenger.of(context).showMaterialBanner(
                 MaterialBanner(
@@ -163,11 +168,10 @@ class _LoginState extends State<Login> {
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                 ),
-
                 body: Form(
                     key: _formKey,
                     child: Padding(
-                      padding:EdgeInsets.only(top: 60,right: 70,left:70),
+                      padding: EdgeInsets.only(top: 60, right: 70, left: 70),
                       child: Column(children: [
                         Center(
                           child: Lottie.asset('assets/lottie/stars.json'),

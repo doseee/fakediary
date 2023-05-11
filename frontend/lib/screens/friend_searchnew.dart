@@ -1,11 +1,8 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/SearchFriendModel.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 // import 'search_friend_model.dart'; // Replace this with the appropriate model file
 
@@ -17,6 +14,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,6 +26,8 @@ class MyApp extends StatelessWidget {
 }
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
@@ -50,8 +51,6 @@ class _SearchScreenState extends State<SearchScreen> {
     try {
       List<SearchFriendModel> results =
           await ApiService().getSearchFriends(searchText);
-      print(searchText);
-      print(results);
       setState(() {
         _searchResults = results;
         _isLoading = false;

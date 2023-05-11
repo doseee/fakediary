@@ -75,11 +75,15 @@ class _FriendScreenState extends State<FriendScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => DiaryListScreen()));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Center(child: Text('교환 일기신청을 완료했습니다!')),
-                      ),
-                    );
+                    Flushbar(
+                      message: "교환 일기 신청을 완료했습니다!",
+                      duration: Duration(seconds: 3),
+                    ).show(context);
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Center(child: Text('교환 일기신청을 완료했습니다!')),
+                    //   ),
+                    // );
                   } else {
                     print('전송 실패');
                   }
@@ -94,26 +98,27 @@ class _FriendScreenState extends State<FriendScreen> {
   }
 
   Widget GoSelectDiary() {
-    if (widget.exchangeSituation == 1) { return Container(); } else {
+    if (widget.exchangeSituation == 1) {
+      return Container();
+    } else {
       return Column(
-        children: [ GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => DiaryListScreen()));
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(17.0),
-            child: Text(
-              '일기 교환하러 가기   >',
-              style: TextStyle(
-                  color: Colors.blue[100],
-                  fontWeight: FontWeight.w600,
-                  fontSize: 17),
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => DiaryListScreen()));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(17.0),
+              child: Text(
+                '일기 교환하러 가기   >',
+                style: TextStyle(
+                    color: Colors.blue[100],
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17),
+              ),
             ),
           ),
-        ),
           Container(height: 0.3, color: Colors.white),
         ],
       );
@@ -140,7 +145,6 @@ class _FriendScreenState extends State<FriendScreen> {
                           style: TextStyle(fontSize: 17, color: Colors.white70),
                         ),
                       ),
-
                       Flexible(
                         flex: 1,
                         child: Container(
@@ -170,13 +174,12 @@ class _FriendScreenState extends State<FriendScreen> {
                 flex: 2,
                 child: Container(),
               ),
-
               Flexible(
                 flex: 3,
                 child: Center(
                   child: Container(
-                    width: 80,
-                    height: 40,
+                    width: 250,
+                    height: 50,
                     decoration: BtnThemeGradient(),
                     child: ElevatedButton(
                         onPressed: () async {
@@ -233,7 +236,6 @@ class _FriendScreenState extends State<FriendScreen> {
                   ),
                 ),
               ),
-
             ],
           ),
         ),
@@ -249,8 +251,8 @@ class _FriendScreenState extends State<FriendScreen> {
       return Flexible(
           flex: 2,
           child: Container(
-            width: 80,
-            height: 40,
+            width: 250,
+            height: 50,
             decoration: BtnThemeGradientLine(),
             child: ElevatedButton(
                 onPressed: () async {
@@ -303,10 +305,7 @@ class _FriendScreenState extends State<FriendScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          toolbarHeight: MediaQuery
-              .of(context)
-              .size
-              .height * 0.1183,
+          toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           bottom: PreferredSize(

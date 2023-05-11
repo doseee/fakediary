@@ -24,9 +24,9 @@ class SearchFriendModel {
   late final Null providerId;
   late final bool randomExchanged;
 
-  SearchFriendModel.fromJson(Map<String, dynamic> json){
+  SearchFriendModel.fromJson(Map<String, dynamic> json) {
     createdAt = json['createdAt'];
-    updatedAt = json['updatedAt']?? '';
+    updatedAt = json['updatedAt'] ?? '';
     memberId = json['mem'
         'berId'];
     email = json['email'];
@@ -40,18 +40,18 @@ class SearchFriendModel {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['createdAt'] = createdAt;
-    _data['updatedAt'] = updatedAt;
-    _data['memberId'] = memberId;
-    _data['email'] = email;
-    _data['password'] = password;
-    _data['nickname'] = nickname;
-    _data['autoDiaryTime'] = autoDiaryTime;
-    _data['diaryBaseName'] = diaryBaseName;
-    _data['firebaseUid'] = firebaseUid;
-    _data['providerId'] = providerId;
-    _data['randomExchanged'] = randomExchanged;
-    return _data;
+    final data = <String, dynamic>{};
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['memberId'] = memberId;
+    data['email'] = email;
+    data['password'] = password;
+    data['nickname'] = nickname;
+    // data['autoDiaryTime'] = autoDiaryTime;
+    // data['diaryBaseName'] = diaryBaseName;
+    // data['firebaseUid'] = firebaseUid;
+    // data['providerId'] = providerId;
+    data['randomExchanged'] = randomExchanged;
+    return data;
   }
 }
