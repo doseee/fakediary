@@ -33,10 +33,10 @@ public class Card extends BaseEntity {
     @Column(length = 10)
     private String baseName;    //  주인공 이름
 
-    @Column
+    @Column(length = 10)
     private String basePlace;   //  장소 이름
 
-    @Column(name = "keyword", length = 30)
+    @Column(name = "keyword", length = 40)
     private String keyword;
 
     @Column(name = "latitude", nullable = true, precision = 20, scale = 10)

@@ -284,6 +284,7 @@ class _CardCreateState extends State<CardCreate> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 60),
                                 child: TextFormField(
+                                  maxLength: 10,
                                   controller: _personController,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -332,6 +333,7 @@ class _CardCreateState extends State<CardCreate> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 60),
                                 child: TextFormField(
+                                  maxLength: 10,
                                   controller: _locationController,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -661,6 +663,7 @@ class InputKeyword extends StatelessWidget {
         SizedBox(
           width: 146,
           child: TextFormField(
+            maxLength: 10,
             controller: keywordController,
             style: TextStyle(
               color: Colors.white,
