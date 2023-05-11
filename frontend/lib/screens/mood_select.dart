@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gradient_borders/gradient_borders.dart';
@@ -226,12 +227,16 @@ class _MoodSelectState extends State<MoodSelect> {
                     GestureDetector(
                       onTap: () async {
                         if (selectedMood.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('장르를 선택해주세요'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
+                          Flushbar(
+                            message: '장르를 선택해주세요',
+                            duration: Duration(seconds: 3),
+                          ).show(context);
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Text('장르를 선택해주세요'),
+                          //     duration: Duration(seconds: 1),
+                          //   ),
+                          // );
                           return;
                         }
                         // List<Map<String, String>> messages = [];
@@ -313,13 +318,18 @@ class _MoodSelectState extends State<MoodSelect> {
                             builder: (context) => HomeScreen(),
                           ),
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Center(
-                            child: Text(
-                                '다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!'),
-                          )),
-                        );
+                        Flushbar(
+                          message:
+                              '다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!',
+                          duration: Duration(seconds: 3),
+                        ).show(context);
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(
+                        //       content: Center(
+                        //     child: Text(
+                        //         '다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!'),
+                        //   )),
+                        // );
                         // messages = await ApiService.askGpt4(messages, prp);
                         // String jsonResp = '';
                         // for (var message in messages) {

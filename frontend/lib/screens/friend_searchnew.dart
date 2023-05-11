@@ -1,11 +1,8 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/SearchFriendModel.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 // import 'search_friend_model.dart'; // Replace this with the appropriate model file
 
@@ -17,6 +14,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,6 +26,8 @@ class MyApp extends StatelessWidget {
 }
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
@@ -67,16 +68,24 @@ class _SearchScreenState extends State<SearchScreen> {
         onTap: () async {
           bool isSended = await ApiService.AddFriend(senderID);
           isSended
-              ? ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Center(child: Text('친구요청 완료!')),
-                  ),
-                )
-              : ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Center(child: Text('이미 친구 요청 했짜나 ㅠ')),
-                  ),
-                );
+              ? Flushbar(
+                  message: "친구요청 완료!",
+                  duration: Duration(seconds: 3),
+                ).show(context)
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //     SnackBar(
+              //       content: Center(child: Text('친구요청 완료!')),
+              //     ),
+              //   )
+              : Flushbar(
+                  message: "이미 친구 요청 했짜나 ㅠ",
+                  duration: Duration(seconds: 3),
+                ).show(context);
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //     SnackBar(
+          //       content: Center(child: Text('이미 친구 요청 했짜나 ㅠ')),
+          //     ),
+          //   );
         },
         child: Center(
           child: Container(
@@ -125,7 +134,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   color: Colors.white,
                 ),
                 controller: _searchController,
-
                 decoration: InputDecoration(
                   hintText: '닉네임을 검색하세요',
                   hintStyle: TextStyle(
@@ -173,7 +181,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   SizedBox(width: 60),
                                   Text(
                                     friend.nickname.toString(),
-                                    style: TextStyle(fontSize: 17 , color: Colors.white),
+                                    style: TextStyle(
+                                        fontSize: 17, color: Colors.white),
                                   ),
                                   Expanded(child: _buttonAdd(friend.memberId)),
                                   SizedBox(width: 8),
@@ -185,7 +194,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         : Center(
                             child: Text(
                             '해당 친구는 존재하지 않아요!',
-                            style: TextStyle( color: Colors.blue[100],),
+                            style: TextStyle(
+                              color: Colors.blue[100],
+                            ),
                           )),
               ),
             ),
