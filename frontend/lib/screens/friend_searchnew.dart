@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/model/SearchFriendModel.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:lottie/lottie.dart';

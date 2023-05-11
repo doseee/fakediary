@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';

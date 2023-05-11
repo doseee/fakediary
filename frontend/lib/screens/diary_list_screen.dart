@@ -8,6 +8,7 @@ import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/change_button.dart';
@@ -64,7 +65,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
 
   Widget DiaryDetail() {
     if (diaryId == -1) {
-      return       Center(
+      return Center(
         child: Lottie.asset('assets/lottie/book.json'),
       );
     }
@@ -77,11 +78,19 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
               padding: EdgeInsets.only(left: 10, right: 5),
               child: Container(
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius:
+                      BorderRadius.only(bottomLeft: Radius.circular(30)),
+                 border: GradientBoxBorder(
+                gradient: LinearGradient(colors: [
+                Color(0xff79F1A4),
+                  Color(0xff0E5CAD),
+                  ]),
+                     ),
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             )),
         Flexible(
@@ -155,14 +164,14 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                           width: 250,
                           height: 50,
                           child: Center(
-                            child:  SizedBox(
+                            child: SizedBox(
                               width: 250,
                               height: 50,
                               child: Center(
                                 child: Text(
                                   '상세보기',
-                                  style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
                                 ),
                               ),
                             ),
@@ -224,9 +233,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       decoration: BtnThemeGradientLine(),
                       child: Center(
                           child: Text(
-                            '필터',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          )),
+                        '필터',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      )),
                     ),
                   ),
                   SizedBox(
@@ -314,7 +323,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                                                       color: Colors
                                                                           .white,
                                                                       fontSize:
-                                                                      14),
+                                                                          14),
                                                                 ),
                                                                 height: 100);
                                                           });
@@ -347,28 +356,28 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         if (snapshot.data?.isEmpty ?? true) {
                           return Container(
                               child: Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                DiaryCreateCards()));
-                                  },
-                                  child: Container(
-                                    width: 250,
-                                    height: 50,
-                                    decoration: BtnThemeGradient(),
-                                    child: Center(
-                                      child: Text(
-                                        '일기 만들러 가기',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
-                                      ),
-                                    ),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            DiaryCreateCards()));
+                              },
+                              child: Container(
+                                width: 250,
+                                height: 50,
+                                decoration: BtnThemeGradient(),
+                                child: Center(
+                                  child: Text(
+                                    '일기 만들러 가기',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
                                   ),
                                 ),
-                              ));
+                              ),
+                            ),
+                          ));
                         }
                         return buildList(snapshot.data);
                       } else if (snapshot.hasError) {
@@ -378,13 +387,14 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     },
                   ),
                 )
-              // child: Container(),
-            )
+                // child: Container(),
+                )
           ],
         ),
       ),
     );
   }
+
   Widget buildList(snapshot) {
     print('imgUrl: ${snapshot[0].diaryImageUrl[0]}');
     return GridView.count(
@@ -416,16 +426,18 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                           height: 140,
                           decoration: BoxDecoration(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              border:
-                                  Border.all(color: Colors.white60, width: 4),
-                              // Todo; 나중에 커버 이미지 url로 변경
+                              BorderRadius.only(bottomLeft: Radius.circular(30)),
+                              border: GradientBoxBorder(
+                                gradient: LinearGradient(colors: [
+                                  Color(0xff79F1A4),
+                                  Color(0xff0E5CAD),
+                                ]),
+                              ),
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
                                       snapshot[index].diaryImageUrl[0]))
-                              // color: Colors.white,
-                              ),
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.all(10),
@@ -434,8 +446,10 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                 ? (snapshot[index].title.substring(0, 17) +
                                     '...')
                                 : snapshot[index].title,
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 11,fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                color: Colors.white60,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                       ],

@@ -132,6 +132,7 @@ class _CardListState extends State<CardList> {
                         cardTitle: titleCheck(snapshot, index),
                         card: snapshot[index]),
                   );
+
                 },
                 child: Card(
                   color: Colors.transparent,
