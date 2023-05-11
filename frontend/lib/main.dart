@@ -60,6 +60,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final FirebaseMessaging messaging = FirebaseMessaging.instance;
+  final token = await FirebaseMessaging.instance.getAPNSToken();
+  print(token);
+  // final token2 = await FirebaseMessaging.instance.getToken();
+  // print(token2);
+  print('토큰');
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     announcement: false,
