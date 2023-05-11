@@ -3,11 +3,13 @@ package com.a101.fakediary;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
+@EnableAsync
 @EnableScheduling // 스케쥴링 활성화
 @EnableJpaAuditing	//	JPA Auditing 활성화
 @SpringBootApplication

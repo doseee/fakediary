@@ -11,5 +11,4 @@ import lombok.*;
 public class FriendExchangeManageDto {
     private Long friendExchangeRequestId;
     private Long receiverDiaryId;
-    private ERequestStatus status;
 }
