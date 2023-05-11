@@ -50,7 +50,12 @@ class DiaryModel {
     genre = json['genre'] != null
         ? List.castFrom<dynamic, String>(json['genre'])
         : [];
-    diaryImageUrl = json['diaryImageUrl'].isEmpty ? ['https://i.pinimg.com/originals/0c/13/17/0c131751a945ab87dfcbc819a805b954.jpg'] : List<String>.from(json['diaryImageUrl'].map((dynamic x) => x as String));
+    diaryImageUrl = json['diaryImageUrl'].isEmpty
+        ? [
+            'https://i.pinimg.com/originals/0c/13/17/0c131751a945ab87dfcbc819a805b954.jpg'
+          ]
+        : List<String>.from(json['diaryImageUrl']
+            .map((dynamic x) => (x as String).replaceFirst('s', '')));
     exchanged = json['exchanged'];
   }
 

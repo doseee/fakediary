@@ -126,9 +126,10 @@ class _CarouselItemState extends State<CarouselItem> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             const SizedBox(
-              height: 85,
+              height: 10,
             ),
             const Image(
               image: AssetImage('assets/img/logo_small.png'),
@@ -164,15 +165,15 @@ class _CarouselItemState extends State<CarouselItem> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 70,
-            ),
+            // const SizedBox(
+            //   height: 70,
+            // ),
             const Image(
               image: AssetImage('assets/img/wing_divider.png'),
             ),
-            const SizedBox(
-              height: 30,
-            ),
+            // const SizedBox(
+            //   height: 30,
+            // ),
             SizedBox(
               height: widget.isEnd ? 87 : 120,
               child: Column(
@@ -202,10 +203,10 @@ class _CarouselItemState extends State<CarouselItem> {
                 ],
               ),
             ),
-            if (widget.isEnd)
-              const SizedBox(
-                height: 35,
-              ),
+            // if (widget.isEnd)
+            //   const SizedBox(
+            //     height: 35,
+            //   ),
             if (widget.isEnd)
               GestureDetector(
                 onTap: () {

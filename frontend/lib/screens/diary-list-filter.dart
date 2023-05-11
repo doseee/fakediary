@@ -1,6 +1,7 @@
 // import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/model/DiaryModel.dart';
 
 // import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -470,11 +471,12 @@ Widget buildList(snapshot, setter) {
         },
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
-              radius: 15.0,
-            ),
+          SvgPicture.asset(
+          'assets/svg/atronaut-svgrepo-com.svg',
+          semanticsLabel: 'user',
+          width: 50,
+          height: 50,
+        ),
             SizedBox(width: 5),
             Text(
               '나',
@@ -501,15 +503,16 @@ Widget buildList(snapshot, setter) {
                 setter(snapshot[index].nickname, snapshot[index].friendId);
               },
               child: Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
-                      radius: 15.0,
+                    SvgPicture.asset(
+                      'assets/svg/atronaut-svgrepo-com.svg',
+                      semanticsLabel: 'user',
+                      width: 40,
+                      height: 40,
                     ),
-                    SizedBox(width: 5),
+
                     Card(
                       color: Colors.transparent,
                       elevation: 0.0,

@@ -55,6 +55,10 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_svg: ^2.0.5
   flutter_animate: ^4.1.1+1
+  vector_math: ^2.1.4
+  gallery_saver: ^2.3.2
+  another_flushbar: ^1.12.29
+  animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +90,7 @@ flutter:
     - assets/lottie/
     - assets/img/
     - assets/gif-file/
+    - assets/svg/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

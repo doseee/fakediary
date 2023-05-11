@@ -1,16 +1,14 @@
 import 'dart:io';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
+import 'package:frontend/screens/card_loading.dart';
 import 'package:frontend/screens/card_result.dart';
-import 'package:frontend/screens/old_menu_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'loading_screen.dart';
 
 class CardCreate extends StatefulWidget {
   const CardCreate({super.key});
@@ -143,7 +141,7 @@ class _CardCreateState extends State<CardCreate> {
   @override
   Widget build(BuildContext context) {
     return _isLoading
-        ? LoadingScreen()
+        ? CardLoading()
         : GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
@@ -161,6 +159,10 @@ class _CardCreateState extends State<CardCreate> {
                 ),
               ),
               child: Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                ),
                 backgroundColor: Colors.transparent,
                 body: Padding(
                   padding: EdgeInsets.symmetric(
@@ -171,34 +173,34 @@ class _CardCreateState extends State<CardCreate> {
                     key: _formKey,
                     child: ListView(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MenuScreen()));
-                                  },
-                                  child: Image(
-                                    image: AssetImage(
-                                      'assets/img/icon_menu_page.png',
-                                    ),
-                                    width: 45,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   children: [
+                        //     Column(
+                        //       mainAxisAlignment: MainAxisAlignment.end,
+                        //       children: [
+                        //         GestureDetector(
+                        //           onTap: () {
+                        //             Navigator.push(
+                        //                 context,
+                        //                 MaterialPageRoute(
+                        //                     builder: (context) =>
+                        //                         MenuScreen()));
+                        //           },
+                        //           child: Image(
+                        //             image: AssetImage(
+                        //               'assets/img/icon_menu_page.png',
+                        //             ),
+                        //             width: 45,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ],
+                        // ),
+                        // SizedBox(
+                        //   height: 30,
+                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -281,6 +283,7 @@ class _CardCreateState extends State<CardCreate> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 60),
                                 child: TextFormField(
+                                  maxLength: 10,
                                   controller: _personController,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -329,6 +332,7 @@ class _CardCreateState extends State<CardCreate> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 60),
                                 child: TextFormField(
+                                  maxLength: 20,
                                   controller: _locationController,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -481,12 +485,16 @@ class _CardCreateState extends State<CardCreate> {
                               setState(() {
                                 _isLoading = false;
                               });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Center(
-                                      child: Text('키워드를 한 개 이상 입력해주세요.')),
-                                ),
-                              );
+                              Flushbar(
+                                message: '키워드를 한 개 이상 입력해주세요.',
+                                duration: Duration(seconds: 2),
+                              ).show(context);
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(
+                              //     content: Center(
+                              //         child: Text('키워드를 한 개 이상 입력해주세요.')),
+                              //   ),
+                              // );
                               return;
                             }
 
@@ -494,11 +502,15 @@ class _CardCreateState extends State<CardCreate> {
                               setState(() {
                                 _isLoading = false;
                               });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Center(child: Text('사진을 선택해주세요.')),
-                                ),
-                              );
+                              Flushbar(
+                                message: '사진을 선택해주세요.',
+                                duration: Duration(seconds: 2),
+                              ).show(context);
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(
+                              //     content: Center(child: Text('사진을 선택해주세요.')),
+                              //   ),
+                              // );
                               return;
                             }
 
@@ -525,24 +537,25 @@ class _CardCreateState extends State<CardCreate> {
                             //     .logEvent(name: 'card_create_complete');
                             // FirebaseAnalytics.instance.logEvent(name: 'aa');
                             // print('aa');
-                            const AndroidNotificationDetails
-                                androidNotificationDetails =
-                                AndroidNotificationDetails(
-                                    'your channel id', 'your channel name',
-                                    channelDescription:
-                                        'your channel description',
-                                    importance: Importance.max,
-                                    priority: Priority.high,
-                                    ticker: 'ticker');
-                            const NotificationDetails notificationDetails =
-                                NotificationDetails(
-                                    android: androidNotificationDetails);
-                            await FlutterLocalNotificationsPlugin().show(
-                                0,
-                                '카드 생성 완료',
-                                '카드 생성이 완료되었습니다!',
-                                notificationDetails,
-                                payload: 'item x');
+
+                            // const AndroidNotificationDetails
+                            //     androidNotificationDetails =
+                            //     AndroidNotificationDetails(
+                            //         'your channel id', 'your channel name',
+                            //         channelDescription:
+                            //             'your channel description',
+                            //         importance: Importance.max,
+                            //         priority: Priority.high,
+                            //         ticker: 'ticker');
+                            // const NotificationDetails notificationDetails =
+                            //     NotificationDetails(
+                            //         android: androidNotificationDetails);
+                            // await FlutterLocalNotificationsPlugin().show(
+                            //     0,
+                            //     '카드 생성 완료',
+                            //     '카드 생성이 완료되었습니다!',
+                            //     notificationDetails,
+                            //     payload: 'item x');
 
                             Navigator.push(
                                 context,
@@ -649,6 +662,7 @@ class InputKeyword extends StatelessWidget {
         SizedBox(
           width: 146,
           child: TextFormField(
+            maxLength: 10,
             controller: keywordController,
             style: TextStyle(
               color: Colors.white,

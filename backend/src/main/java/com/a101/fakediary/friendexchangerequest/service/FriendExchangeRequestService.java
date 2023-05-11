@@ -36,7 +36,6 @@ public class FriendExchangeRequestService {
     public void requestFriendExchange(FriendExchangeRequestDto request) {
         //친구 일기 교환 신청 저장
         FriendExchangeRequest exchange = friendExchangeRequestRepository.save(requestEntity(request));
-        System.out.println("sdssdds: " + exchange.getFriendExchangeRequestId());
 
         //친구 일기 교환 알림 저장, 푸시알림 발신
         Member member = memberRepository.findByMemberId(request.getSenderId());

@@ -1,4 +1,4 @@
-package com.a101.fakediary.diary.dto;
+package com.a101.fakediary.stablediffusion.dto;
 
 import lombok.*;
 

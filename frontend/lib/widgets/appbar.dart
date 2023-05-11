@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../screens/old_menu_screen.dart';
+import '../screens/home_circlemenu.dart';
 
 AppBar StandAppBar(BuildContext context) {
   return AppBar(
@@ -18,14 +18,12 @@ AppBar StandAppBar(BuildContext context) {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MenuScreen()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
                   },
                   child: Image(
                     image: AssetImage(
-                      'assets/img/icon_menu_page.png',
+                      'assets/img/home_icon.png',
                     ),
                     width: 45,
                   ),
