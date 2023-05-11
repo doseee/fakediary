@@ -47,6 +47,12 @@ Future<void> _backgroundMessageHandler(RemoteMessage message) async {
   if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
 }
 
+// void main() {
+//   runApp(MaterialApp(
+//     home: LoginEntrance(),
+//   ),);
+// }
+
 void main() async {
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(
@@ -76,8 +82,11 @@ void main() async {
   FirebaseInAppMessaging.instance.setMessagesSuppressed(false);
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('app_icon');
+  final DarwinInitializationSettings initializationSettingsDarwin =
+  DarwinInitializationSettings();
   final InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
   );
   await FlutterLocalNotificationsPlugin().initialize(
     initializationSettings,
