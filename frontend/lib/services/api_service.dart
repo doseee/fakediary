@@ -981,6 +981,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      print(jsonResponse);
       List<SearchFriendModel> searchedFriends = jsonResponse
               .map((dynamic item) => SearchFriendModel.fromJson(item))
               .toList() ??
