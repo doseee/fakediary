@@ -59,6 +59,7 @@ dependencies:
   gallery_saver: ^2.3.2
   animated_text_kit: ^4.2.2
   another_flushbar: ^1.12.29
+  firebase_crashlytics: ^3.3.0
 
 dev_dependencies:
   flutter_test:

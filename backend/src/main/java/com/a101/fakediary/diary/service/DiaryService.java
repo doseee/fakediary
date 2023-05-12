@@ -1,5 +1,8 @@
 package com.a101.fakediary.diary.service;
 
+import com.a101.fakediary.alarm.dto.AlarmRequestDto;
+import com.a101.fakediary.alarm.dto.AlarmResponseDto;
+import com.a101.fakediary.alarm.service.AlarmService;
 import com.a101.fakediary.card.dto.response.CardMadeDiaryResponseDto;
 import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.entity.Card;
@@ -59,6 +62,7 @@ public class DiaryService {
     private final StableDiffusionApi stableDiffusionApi;
     private final FriendExchangeRequestRepository friendExchangeRequestRepository;
     private final RandomExchangePoolRepository randomExchangePoolRepository;
+    private final AlarmService alarmService;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     private final static String DELIMITER = "@";
@@ -709,8 +713,12 @@ public class DiaryService {
 
 //                logger.info(member.getMemberId() + "번 MemberId의 일기 자동생성을 시작하겠습니다.");
 
-                createDiary(member.getMemberId(), cardIdList, genreList);
+                DiaryResponseDto diary = createDiary(member.getMemberId(), cardIdList, genreList);
                 //자동생성 알람로직 여기다가 작성예정 by 은녕
+                String title = "그대만의 하루일기 도착";
+                String body = "오늘의 가짜다이어리를 확인해보세요";
+                alarmService.saveAlarm(new AlarmRequestDto(member.getMemberId(), diary.getDiaryId(), title, body, "AUTOMATIC"));
+                alarmService.sendNotificationByToken(new AlarmResponseDto(member.getMemberId(), title, body));
 
                 logger.info(member.getMemberId() + "번 MemberId의일기 자동 생성이 성공하였습니다.");
             } catch (Exception e) {

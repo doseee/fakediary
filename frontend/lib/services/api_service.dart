@@ -11,6 +11,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/AlarmModel.dart';
 import '../model/CardModel.dart';
 import '../model/DiaryModel.dart';
 // import '../model/FriendModel.dart';
@@ -986,9 +987,9 @@ class ApiService {
               .map((dynamic item) => SearchFriendModel.fromJson(item))
               .toList() ??
           [];
-print( jsonResponse
-    .map((dynamic item) => SearchFriendModel.fromJson(item))
-    .toList());
+      print(jsonResponse
+          .map((dynamic item) => SearchFriendModel.fromJson(item))
+          .toList());
       return searchedFriends;
     } else if (response.statusCode == 204) {
       return [];
@@ -1012,7 +1013,6 @@ print( jsonResponse
     if (response.statusCode == 200) {
       return true;
     } else {
-
       return false;
     }
   }
@@ -1043,6 +1043,20 @@ print( jsonResponse
       return card;
     } else {
       throw Exception('카드 정보를 불러오는 데 실패했습니다');
+    }
+  }
+
+  static Future<AlarmModel> getAllAlarm() async {
+    final pref = await SharedPreferences.getInstance();
+    int? memberId = pref.getInt('memberId');
+    final url = Uri.parse('$baseUrl/alarm/$memberId');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      AlarmModel alarm =
+          AlarmModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      return alarm;
+    } else {
+      throw Exception('알람 정보를 불러오는 데 실패했습니다');
     }
   }
 }
