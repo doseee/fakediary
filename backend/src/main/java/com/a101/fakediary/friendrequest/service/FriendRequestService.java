@@ -54,6 +54,11 @@ public class FriendRequestService {
         alarm.setStatus(1);
     }
 
+    public FriendRequestDto searchRequest(Long friendRequestId) {
+        FriendRequest friend = friendRequestRepository.findByFriendRequestId(friendRequestId);
+        return new FriendRequestDto(friend.getSenderId().getMemberId(), friend.getReceiverId().getMemberId());
+    }
+
     private FriendRequest requestEntity(FriendRequestDto request) {
         return FriendRequest.builder()
                 .senderId(memberRepository.findByMemberId(request.getSenderId()))
