@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -428,7 +429,7 @@ public class DiaryService {
 //    }
 
     @Transactional(readOnly = true)
-    public DiaryResultDto getResultDto(List<Long> cardList) throws Exception {
+    public DiaryResultDto getResultDto(List<Long> cardList, List<String> genres) throws Exception {
         List<String> characters = new ArrayList<>();
         List<String> places = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
@@ -466,9 +467,11 @@ public class DiaryService {
         logger.info("characters = " + characters + ", places = " + places + ", keywords = " + keywords);
 //        logger.info("places = " + places);
 //        logger.info("keywords = " + keywords);
-        String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords);
+
+        String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords, genres);
 
         List<Message> messageList = chatGptApi.askGpt4(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
+
         StringBuilder diaryContent = new StringBuilder();
         for (Message message : messageList) {
             String role = message.getRole();
@@ -494,7 +497,8 @@ public class DiaryService {
         // 메소드 시작시간
         long startTime = System.nanoTime();
 
-        DiaryResultDto diaryResultDto = getResultDto(cardIdList);
+        DiaryResultDto diaryResultDto = getResultDto(cardIdList, genreList);
+
         String title = diaryResultDto.getTitle();
         String summary = diaryResultDto.getSummary();
         List<String> subtitleList = diaryResultDto.getSubtitles();

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 @Component
@@ -51,6 +53,8 @@ public class ChatGptApi {
      * @return : gpt4가 만들어준 대답 프롬프트
      */
     public List<Message> askGpt4(List<Message> messages, String prompt) throws Exception {
+        Instant start = Instant.now();
+
         if(messages.isEmpty()) {
             messages.add(new Message("system", ChatGptPrompts.generateSystemPrompt()));
         }
@@ -78,7 +82,10 @@ public class ChatGptApi {
         if(!answer.endsWith("}")) {
             messages = askGpt4(messages, ChatGptPrompts.generateUserContinuePrompt());
         }
-        
+
+        Instant end = Instant.now();
+        log.info("GPT4 키워드로 일기 내용 받아오는데 걸리는 소요 시간 : " + Duration.between(start, end).toMillis() + " ms");
+
         return messages;
     }
 
@@ -89,6 +96,7 @@ public class ChatGptApi {
      * @return : gpt3.5가 만들어준 대답 프롬프트
      */
     public List<Message> askGpt35(List<Message> messages, String prompt) throws Exception {
+        Instant start = Instant.now();
         log.info("askGpt(" + messages + ", " + prompt);
 
         if(messages.isEmpty()) {
@@ -118,6 +126,9 @@ public class ChatGptApi {
         if(!answer.endsWith("}")) {
             messages = askGpt4(messages, ChatGptPrompts.generateUserContinuePrompt());
         }
+
+        Instant end = Instant.now();
+        log.info("GPT3.5 키워드로 일기 내용 받아오는데 걸리는 소요 시간 : " + Duration.between(start, end).toMillis() + " ms");
 
         return messages;
     }
