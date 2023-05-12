@@ -33,16 +33,27 @@ public class DiaryQueryRepository {
                 g.and(eqGenre(filter.getGenre())).and(eqGenreId());
 
             BooleanBuilder i = new BooleanBuilder();
-            if (filter.getId() == -1)
-                i.and(eqExchange());
-            else
-                i.and(eqSenderId(filter.getId())).and(eqFriend());
+            if (filter.getId() == -1) //랜덤 교환한 유저의 일기
+                i.and(eqExchange().and(eqSendDiary()).and(eqReceiveId(filter.getMemberId())));
+            else if (filter.getId() == -2) //조회한 유저의 모든 일기(자신, 교환)
+                i.and(eqReceiveId(filter.getMemberId())).and(eqSendDiary()).or(eqMyMemberId(filter.getMemberId()));
+            else //특정 유저와 교환한 일기
+                i.and(eqSenderId(filter.getId())).and(eqFriend().and(eqSendDiary()).and(eqReceiveId(filter.getMemberId())));
 
-            return queryFactory
-                    .select(diary).distinct()
-                    .from(exchangedDiary, diary, genre)
-                    .where(g, i, eqDelete(), eqSendDiary(), eqReceiveId(filter.getMemberId()))
-                    .fetch();
+            if (filter.getGenre() == null) { //장르가 선택 안되었을 때
+                return queryFactory
+                        .select(diary).distinct()
+                        .from(exchangedDiary, diary) //조인 3번 하는거 막음
+                        .where(i, eqDelete())
+                        .fetch();
+            }
+            else {
+                return queryFactory
+                        .select(diary).distinct()
+                        .from(exchangedDiary, diary, genre)
+                        .where(g, i, eqDelete())
+                        .fetch();
+            }
         }
         else { //내 일기 조회할 때
             return queryFactory
@@ -53,7 +64,7 @@ public class DiaryQueryRepository {
         }
     }
 
-    private BooleanExpression eqFriend() {
+    private BooleanExpression eqFriend() { //e.exchageType == 'F'
         return exchangedDiary.exchangeType.eq(EExchangeType.F);
     }
 
@@ -75,10 +86,6 @@ public class DiaryQueryRepository {
         if (memberId == null)
             return null;
         return exchangedDiary.receiver.memberId.eq(memberId);
-    }
-
-    private BooleanExpression eqMemberSender() { // d.memberId = e.senderId
-        return diary.member.memberId.eq(exchangedDiary.sender.memberId);
     }
 
     private BooleanExpression eqExchange() { //e.exchagneType = 'R'
