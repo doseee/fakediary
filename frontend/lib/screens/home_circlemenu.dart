@@ -32,15 +32,40 @@ class HomeScreen extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
+                SizedBox(
+                  height: 100,
+                  child: DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '알림',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Icon(Icons.close)
+                        ],
+                      ),
+                    ),
                   ),
-                  child: Text('Header'),
                 ),
-                ListTile(
-                  title: Text('Title'),
-                )
+                Notification(),
+                Notification(),
+                Notification(),
               ],
             ),
           ),
@@ -278,4 +303,36 @@ class HomeScreen extends StatelessWidget {
 //   @override
 //   Widget Build(BuildContext context)
 // }
+}
+
+class Notification extends StatelessWidget {
+  const Notification({
+    super.key,
+    required this.title,
+  });
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 15),
+            ),
+            Icon(Icons.chevron_right)
+          ],
+        ),
+      ),
+    );
+  }
 }
