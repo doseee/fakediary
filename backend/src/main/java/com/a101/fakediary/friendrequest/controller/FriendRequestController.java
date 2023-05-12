@@ -30,4 +30,16 @@ public class FriendRequestController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @ApiOperation(value = "친구 신청 조회")
+    @GetMapping("/{friendRequestId}")
+    public ResponseEntity<?> searchFriend(@PathVariable("friendRequestId") Long friendRequestId) {
+        try {
+            FriendRequestDto dto = friendRequestService.searchRequest(friendRequestId);
+            return new ResponseEntity<FriendRequestDto>(dto, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

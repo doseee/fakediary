@@ -10,9 +10,8 @@ import java.util.List;
 
 @Repository
 public interface FriendRequestRepository extends JpaRepository<FriendRequest, Long> {
+    FriendRequest findByFriendRequestId(Long friendRequestId);
+
     @Query("select f from FriendRequest f where f.senderId.memberId =:senderId and f.receiverId.memberId =:receiverId")
     FriendRequest checkDuplicate(Long senderId, Long receiverId);
-
-    @Query(name="AlarmResponseQuery", nativeQuery = true)
-    List<AlarmResponseDto> listAlarm(Long memberId);
 }
