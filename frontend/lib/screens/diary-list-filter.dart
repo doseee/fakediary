@@ -21,7 +21,7 @@ class DiaryFilter extends StatefulWidget {
 }
 
  dynamic userId = '';
- String selectedWriter='' ;
+dynamic selectedWriter='' ;
  dynamic selectedMood=''  ;
 
 class _DiaryFilterState extends State<DiaryFilter> {
@@ -82,8 +82,9 @@ class _DiaryFilterState extends State<DiaryFilter> {
     super.initState();
     _loadId();
     friends = ApiService().getFriends();
-    print(friends);
+    print('initState : $friends');
     _loadNickname();
+    print('initState : $friendList');
   }
 
   Future<void> _loadId() async {
