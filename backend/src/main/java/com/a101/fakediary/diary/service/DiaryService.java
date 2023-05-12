@@ -8,6 +8,7 @@ import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
 import com.a101.fakediary.chatgptdiary.api.ChatGptApi;
 import com.a101.fakediary.chatgptdiary.dto.message.Message;
 import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
+import com.a101.fakediary.chatgptdiary.dto.result.TitleSubtitlesResultDto;
 import com.a101.fakediary.chatgptdiary.prompt.ChatGptPrompts;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
@@ -466,6 +467,8 @@ public class DiaryService {
 //        logger.info("keywords = " + keywords);
         String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords, genres);
 
+        TitleSubtitlesResultDto titleSubtitlesResultDto = chatGptApi.askGpt4TitleSubtitles(prompt);
+        logger.info("titleSubtitlesResultDto = " + titleSubtitlesResultDto);
         List<Message> messageList = chatGptApi.askGpt4(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
 
         StringBuilder diaryContent = new StringBuilder();
