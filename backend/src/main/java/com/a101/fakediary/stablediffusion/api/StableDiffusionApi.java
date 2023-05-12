@@ -97,7 +97,7 @@ public class StableDiffusionApi {
         StableDiffusionMap.put("tiling", false);
         StableDiffusionMap.put("do_not_save_samples", false);
         StableDiffusionMap.put("do_not_save_grid", false);
-        StableDiffusionMap.put("negative_prompt", "");
+        StableDiffusionMap.put("negative_prompt", "easynegative, paintings, sketches, (worst quality:2), (low quality:2), (normal quality:2), lowres, ((monochrome)), ((grayscale)), skin spots, acnes, age spots, extra fingers, fewer fingers, strange fingers, bad hand, ((((bad anatomy)))), bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, jpeg artifacts, signature, watermark, username, sunburn, ((simple background)), hermaphrodite, long neck, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, bad proportions, malformed limbs, extra limbs, cloned face, disfigured, gross proportions, (((missing arms))), (((missing legs))), (((extra arms))), (((extra legs))), (((extra breasts))), (((extra nipples))), plump, bad legs, error legs, bad feet, kid face,(identical twins),((misaligned nails)),((misaligned fingers)),((wrinkled knees )),(uneven skin tone), ((head wear)),((bruised knee)), ((nsfw))");
         StableDiffusionMap.put("eta", 0);
         StableDiffusionMap.put("s_churn", 0);
         StableDiffusionMap.put("s_tmax", 0);
