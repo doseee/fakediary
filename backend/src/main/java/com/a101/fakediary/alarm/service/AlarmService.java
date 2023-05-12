@@ -51,7 +51,7 @@ public class AlarmService {
         List<AlarmListDto> list = new ArrayList<>();
 
         for (Alarm alarm : alarms)
-            list.add(new AlarmListDto(alarm.getAlarmId(), alarm.getMemberId().getMemberId(), alarm.getTitle(), alarm.getBody(), alarm.getAlarmType().toString(), alarm.getStatus()));
+            list.add(new AlarmListDto(alarm.getAlarmId(), alarm.getRequestId(), alarm.getMemberId().getMemberId(), alarm.getTitle(), alarm.getBody(), alarm.getAlarmType().toString(), alarm.getStatus()));
 
         return list;
     }
