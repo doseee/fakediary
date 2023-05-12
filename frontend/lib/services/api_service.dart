@@ -947,10 +947,9 @@ class ApiService {
 
     final diaryFilterRequestDto = {
       "genre": genre,
-      "id": memberId,
-      "memberId": writer
+      "id": writer,
+      "memberId": memberId
     };
-    print(diaryFilterRequestDto);
     final response = await http.post(Uri.parse('$baseUrl/diary/filter'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -960,11 +959,10 @@ class ApiService {
     if (response.statusCode == 200) {
       print('success');
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-      List<DiaryModel> diaries = jsonResponse
+      List<DiaryModel> diaries =  jsonResponse
               .map((dynamic item) => DiaryModel.fromJson(item))
               .toList() ??
           [];
-      print('api: diaries.length}');
       return diaries;
     } else if (response.statusCode == 204) {
       return [];

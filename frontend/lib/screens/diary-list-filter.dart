@@ -20,9 +20,12 @@ class DiaryFilter extends StatefulWidget {
   State<DiaryFilter> createState() => _DiaryFilterState();
 }
 
- dynamic userId = '';
-dynamic selectedWriter='' ;
- dynamic selectedMood=''  ;
+dynamic userId;
+
+dynamic selectedWriter = -2;
+dynamic selectedMood;
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+late List<DiaryModel> filteredDiaries;
 
 class _DiaryFilterState extends State<DiaryFilter> {
   final dict = {
@@ -51,11 +54,10 @@ class _DiaryFilterState extends State<DiaryFilter> {
     'COMIC': false,
   };
 
-
   moodSetter(moodname) {
     if (activated[moodname] == true) {
       activated[moodname] = false;
-      selectedMood = '';
+      selectedMood = null;
     } else {
       activated.updateAll((key, value) => false);
       activated[moodname] = true;
@@ -67,19 +69,21 @@ class _DiaryFilterState extends State<DiaryFilter> {
 
   writerSetter(selectedId) {
     if (selectedWriter == selectedId) {
-      selectedWriter = '';
+      selectedWriter = -2;
     } else {
       selectedWriter = selectedId;
     }
     setState(() {});
-    print(selectedWriter);
+
   }
 
   late Future<List<FriendModel>> friends;
-  late List<FriendModel> friendList =[];
+  late List<FriendModel> friendList = [];
 
   void initState() {
     super.initState();
+    selectedWriter = -2;
+    selectedMood='';
     _loadId();
     friends = ApiService().getFriends();
     print('initState : $friends');
@@ -133,7 +137,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    if (selectedMood != null)
+                    if (selectedMood != '')
                       GradientButton(content: dict[selectedMood]!),
                     if (selectedWriter == userId)
                       Row(
@@ -153,7 +157,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
                           ),
                         ],
                       ),
-                    if (selectedWriter != -1 && selectedWriter != userId && selectedWriter != -2)
+                    if (selectedWriter > -1 && selectedWriter != userId)
                       Row(
                         children: [
                           SvgPicture.asset(
@@ -167,7 +171,8 @@ class _DiaryFilterState extends State<DiaryFilter> {
                           ),
                           Text(
                             friendList.firstWhere((friend) =>
-                                friend['friendId'] == selectedWriter)['nickname'],
+                                friend['friendId'] ==
+                                selectedWriter)['nickname'],
                             style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
                         ],
@@ -330,15 +335,17 @@ class _DiaryFilterState extends State<DiaryFilter> {
                           List<DiaryModel> filteredDiaries =
                               await ApiService.filterDiaries(
                                   selectedMood, selectedWriter);
-                          print(filteredDiaries);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DiaryFilteredScreen(
-                                diaries: filteredDiaries,
+                          var currentContext = context;
+                          await Future.delayed(Duration(seconds: 1), () {
+                            Navigator.push(
+                              currentContext,
+                              MaterialPageRoute(
+                                builder: (context) => DiaryFilteredScreen(
+                                  diaries: filteredDiaries,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          });
                         },
                         child: Container(
                             // 필터적용 버튼
@@ -375,39 +382,50 @@ class _DiaryFilterState extends State<DiaryFilter> {
                                     color: Colors.white, fontSize: 15),
                               ),
                             ))),
-                    Container(
-                        // 필터적용 버튼
-                        width: 268,
-                        height: 61,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              const Color(0xff263344),
-                              const Color(0xff1B2532).withOpacity(0.53),
-                              const Color(0xff1C2A3D).withOpacity(0.5),
-                              const Color(0xff1E2E42).withOpacity(0.46),
-                              const Color(0xff364B66).withOpacity(0.33),
-                              const Color(0xff2471D6).withOpacity(0),
-                            ],
-                            stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff000000).withOpacity(0.25),
-                              offset: const Offset(0, 4),
-                              blurRadius: 4,
+                    GestureDetector(
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DiaryListScreen()),
+                        );
+                      },
+                      child: Container(
+                          // 필터적용 버튼
+                          width: 268,
+                          height: 61,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                const Color(0xff263344),
+                                const Color(0xff1B2532).withOpacity(0.53),
+                                const Color(0xff1C2A3D).withOpacity(0.5),
+                                const Color(0xff1E2E42).withOpacity(0.46),
+                                const Color(0xff364B66).withOpacity(0.33),
+                                const Color(0xff2471D6).withOpacity(0),
+                              ],
+                              stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
                             ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '취소',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    const Color(0xff000000).withOpacity(0.25),
+                                offset: const Offset(0, 4),
+                                blurRadius: 4,
+                              ),
+                            ],
                           ),
-                        )),
+                          child: const Center(
+                            child: Text(
+                              '취소',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          )),
+                    ),
                     Image(
                       image: AssetImage('assets/img/small_moon.png'),
                     ),
