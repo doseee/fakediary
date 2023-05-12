@@ -11,6 +11,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/AlarmModel.dart';
 import '../model/CardModel.dart';
 import '../model/DiaryModel.dart';
 // import '../model/FriendModel.dart';
@@ -986,9 +987,9 @@ class ApiService {
               .map((dynamic item) => SearchFriendModel.fromJson(item))
               .toList() ??
           [];
-print( jsonResponse
-    .map((dynamic item) => SearchFriendModel.fromJson(item))
-    .toList());
+      print(jsonResponse
+          .map((dynamic item) => SearchFriendModel.fromJson(item))
+          .toList());
       return searchedFriends;
     } else if (response.statusCode == 204) {
       return [];
@@ -1012,7 +1013,6 @@ print( jsonResponse
     if (response.statusCode == 200) {
       return true;
     } else {
-
       return false;
     }
   }
@@ -1043,6 +1043,64 @@ print( jsonResponse
       return card;
     } else {
       throw Exception('카드 정보를 불러오는 데 실패했습니다');
+    }
+  }
+
+  static Future<List<AlarmModel>> getAllAlarm() async {
+    final pref = await SharedPreferences.getInstance();
+    int? memberId = pref.getInt('memberId');
+    final url = Uri.parse('$baseUrl/alarm/$memberId');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      List<AlarmModel> alarms = jsonResponse
+          .map((dynamic item) => AlarmModel.fromJson(item))
+          .toList();
+      return alarms;
+    } else {
+      throw Exception('알람 정보를 불러오는 데 실패했습니다');
+    }
+  }
+
+  static Future<bool> approveFriend(int friendId) async {
+    final url = Uri.parse('$baseUrl/friendship/save');
+    final pref = await SharedPreferences.getInstance();
+    int? memberId = pref.getInt('memberId');
+    final dto = {
+      "friendId": memberId,
+      "memberId": friendId,
+    };
+    print(dto);
+    final response = await http.post(url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(dto));
+    print(response.statusCode);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('success');
+      return true;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return false;
+    }
+  }
+
+  static Future<int> getSenderId(int friendRequestId) async {
+    print(friendRequestId);
+    final url = Uri.parse('$baseUrl/friendrequest/$friendRequestId');
+    final response = await http.get(url);
+    print('코드');
+    print(response.statusCode);
+    print('출력');
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      int senderId = jsonDecode(utf8.decode(response.bodyBytes))['senderId'];
+      print(senderId);
+      print('센더id');
+      return senderId;
+    } else {
+      throw Exception('친구 요청 승인에 실패했습니다');
     }
   }
 }
