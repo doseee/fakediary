@@ -38,7 +38,7 @@ public class FriendRequestService {
             String title = member.getNickname() + "님이 친구가 되고싶어 해요";
             String body = "친구 맺고 일기를 교환해볼까요?";
             alarmService.saveAlarm(new AlarmRequestDto(request.getReceiverId(), friendRequest.getFriendRequestId(), title, body, "REQUEST"));
-            alarmService.sendNotificationByToken(new AlarmResponseDto(request.getReceiverId(), title, body));
+            alarmService.sendNotificationByToken(new AlarmResponseDto(request.getReceiverId(),title, body));
         }
         else
             throw new IllegalArgumentException("이미 친구 추가 요청을 했습니다.");
