@@ -88,7 +88,7 @@ public class CardController {
      */
     @GetMapping("/pick/{cardId}")
     public ResponseEntity<?> findCard(@PathVariable(name = "cardId")Long cardId) {
-        log.info("findCard!!!!");
+//        log.info("findCard!!!!"); 너무 지저분하게 많이떠서 주석처리
         CardSaveResponseDto cardResponseDto = null;
 
         try {
