@@ -39,11 +39,11 @@ public class StableDiffusionApi {
     private final AmazonS3 s3client;
     private static final Logger logger = LoggerFactory.getLogger(StableDiffusionApi.class);
 
-    public StableDiffusionApi(@Value("${cloud.aws.credentials.access-key}")String S3_ACCESS_KEY,
-                              @Value("${cloud.aws.credentials.secret-key}")String S3_SECRET_KEY,
-                              @Value("${cloud.aws.s3.bucket}")String S3_BUCKET,
-                              @Value("${fake-diary.stable-diffusion.base-url}")String STABLE_DIFFUSION_URL,
-                              @Value("${fake-diary.stable-diffusion.max-memory-size}")int MAX_BYTE_SIZE,
+    public StableDiffusionApi(@Value("${cloud.aws.credentials.access-key}") String S3_ACCESS_KEY,
+                              @Value("${cloud.aws.credentials.secret-key}") String S3_SECRET_KEY,
+                              @Value("${cloud.aws.s3.bucket}") String S3_BUCKET,
+                              @Value("${fake-diary.stable-diffusion.base-url}") String STABLE_DIFFUSION_URL,
+                              @Value("${fake-diary.stable-diffusion.max-memory-size}") int MAX_BYTE_SIZE,
                               PapagoApi papagoApi) {
         this.S3_ACCESS_KEY = S3_ACCESS_KEY;
         this.S3_SECRET_KEY = S3_SECRET_KEY;
@@ -60,7 +60,6 @@ public class StableDiffusionApi {
                 .build();
 
         this.papagoApi = papagoApi;
-
 
 
         this.credentials = new BasicAWSCredentials(this.S3_ACCESS_KEY, this.S3_SECRET_KEY);
@@ -118,56 +117,73 @@ public class StableDiffusionApi {
         List<String> diaryImagePrompt = new ArrayList<>();
         diaryImagePrompt.add(papagoApi.translate(title));
 
-        for(String subtitle : subtitles)
+        for (String subtitle : subtitles)
             diaryImagePrompt.add(papagoApi.translate(subtitle));
 
         List<String> dtoImageUrl = new ArrayList<>();   // 다이어리 이미지 url들 저장할것
         // Title, subtitle들 번역해서 프롬프트로 넣고 stablediffusion 이미지 생성
 //        logger.info("diaryImagePrompt를 출력하겠습니다 : " + diaryImagePrompt);
-        for(String translatePrompt : diaryImagePrompt) {
+        for (String translatePrompt : diaryImagePrompt) {
 //            logger.info("translatePrompt를 출력하겠습니다 : " + translatePrompt);
             StableDiffusionMap.put("prompt", translatePrompt);
 
-            ClientResponse response = webClient.post()
-                    .uri(STABLE_DIFFUSION_URL + "/sdapi/v1/txt2img")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(StableDiffusionMap)
-                    .exchange()
-                    .block();
-
             ObjectMapper objectMapper = new ObjectMapper();
             String stableDiffusionResultUrl;
-            if (response.statusCode().equals(HttpStatus.OK)) {//200응답
-                String responseBody = response.bodyToMono(String.class).block();
-                StableDiffusion200ResponseDto response200Dto = objectMapper.readValue(responseBody, StableDiffusion200ResponseDto.class);
-                String imageData = response200Dto.getImages().get(0);
-                byte[] decodedImg = Base64.getDecoder().decode(imageData.getBytes("UTF-8"));
-                Path destinationFile = Paths.get("image.png");
-                Files.write(destinationFile, decodedImg);
 
-                // S3에 업로드
-                String uniqueKey = UUID.randomUUID().toString();
-                s3client.putObject(S3_BUCKET, uniqueKey, destinationFile.toFile());
+            //while문 만들어서 5번요청하기
+            int retryCount = 0;
+            while (retryCount < 5) {
+                ClientResponse response = webClient.post()
+                        .uri(STABLE_DIFFUSION_URL + "/sdapi/v1/txt2img")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(StableDiffusionMap)
+                        .exchange()
+                        .block();
+                if (response.statusCode().equals(HttpStatus.OK)) {//200응답
+                    String responseBody = response.bodyToMono(String.class).block();
+                    StableDiffusion200ResponseDto response200Dto = objectMapper.readValue(responseBody, StableDiffusion200ResponseDto.class);
+                    String imageData = response200Dto.getImages().get(0);
+                    byte[] decodedImg = Base64.getDecoder().decode(imageData.getBytes("UTF-8"));
+                    Path destinationFile = Paths.get("image.png");
+                    Files.write(destinationFile, decodedImg);
 
-                // 이미지 url얻고
-                stableDiffusionResultUrl = s3client.getUrl(S3_BUCKET, uniqueKey).toString();
+                    // S3에 업로드
+                    String uniqueKey = UUID.randomUUID().toString();
+                    s3client.putObject(S3_BUCKET, uniqueKey, destinationFile.toFile());
 
-                dtoImageUrl.add(stableDiffusionResultUrl);
-            } else if (response.statusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) { //422응답
-                String responseBody = response.bodyToMono(String.class).block();
-                StableDiffusion422ResponseDto response422Dto = objectMapper.readValue(responseBody, StableDiffusion422ResponseDto.class);
+                    // 이미지 url얻고
+                    stableDiffusionResultUrl = s3client.getUrl(S3_BUCKET, uniqueKey).toString();
 
-                logger.error("StableDiffusion API returned 422: " + response422Dto);
+                    dtoImageUrl.add(stableDiffusionResultUrl);
+                    break; //while break
+                } else if (response.statusCode().equals(HttpStatus.SERVICE_UNAVAILABLE)) { // 502응답일경우 다시시도
+                    if (4 == retryCount) {
+                        throw new Exception("Stable Diffusion 이미지 생성을 5회 시도하였으나 502 SERVICE_UNAVAILABLE 에러가 났습니다.");
+                    } else {
+                        logger.info("Stable Diffusion 이미지 생성중 502 SERVICE_UNAVAILABLE가 " + (retryCount + 1) + "회 발생하였습니다.");
+                        retryCount++;
+                        continue;
+                    }
+                } else if (response.statusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) { //422응답
+                    String responseBody = response.bodyToMono(String.class).block();
+                    StableDiffusion422ResponseDto response422Dto = objectMapper.readValue(responseBody, StableDiffusion422ResponseDto.class);
 
-            } else {
-                logger.error("Stable Diffusion Exception이 발생하였습니다. 에러발생한 map을 출력하겠습니다.");
-                for (Map.Entry<String, Object> entry : StableDiffusionMap.entrySet()) {
-                    logger.error(entry.getKey() + ": " + entry.getValue());
+                    logger.error("StableDiffusion 422에러가 발생했습니다: " + response422Dto);
+                    throw new Exception("Stable Diffusion 422 Exception");
+
+                } else {
+                    logger.error("응답받은 에러코드와 메세지입니다." + response.statusCode().toString() + " " + response.statusCode().getReasonPhrase());
+                    logger.error("Stable Diffusion 요청 Map은 다음과 같습니다.");
+                    for (Map.Entry<String, Object> entry : StableDiffusionMap.entrySet()) {
+                        logger.error(entry.getKey() + ": " + entry.getValue());
+                    }
+                    logger.error("Stable Diffusion Exception 관련 로그를 종료하겠습니다.");
+                    throw new Exception("Stable Diffusion Exception");
                 }
-                logger.error("Stable Diffusion Exception이 발생하였습니다. 에러발생한 map을 로그출력 끝");
-                throw new Exception("Stable Diffusion Exception");
             }
-        }
+
+
+        } //member for
 
         Map<String, Object> ImageMap = new HashMap<>();
         ImageMap.put("stableDiffusionUrl", dtoImageUrl);
