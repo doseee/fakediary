@@ -944,7 +944,9 @@ class ApiService {
     // 다이어리 필터 api
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
-
+    if (genre == '') {
+      genre = null;
+    }
     final diaryFilterRequestDto = {
       "genre": genre,
       "id": writer,
@@ -959,7 +961,7 @@ class ApiService {
     if (response.statusCode == 200) {
       print('success');
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-      List<DiaryModel> diaries =  jsonResponse
+      List<DiaryModel> diaries = jsonResponse
               .map((dynamic item) => DiaryModel.fromJson(item))
               .toList() ??
           [];
