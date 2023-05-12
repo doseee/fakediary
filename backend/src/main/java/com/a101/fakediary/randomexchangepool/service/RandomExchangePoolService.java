@@ -1,5 +1,8 @@
 package com.a101.fakediary.randomexchangepool.service;
 
+import com.a101.fakediary.alarm.dto.AlarmRequestDto;
+import com.a101.fakediary.alarm.dto.AlarmResponseDto;
+import com.a101.fakediary.alarm.service.AlarmService;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryRepository;
@@ -16,6 +19,8 @@ import com.a101.fakediary.randomexchangepool.entity.RandomExchangePool;
 import com.a101.fakediary.randomexchangepool.repository.RandomExchangePoolRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +40,10 @@ public class RandomExchangePoolService {
     private final DiaryRepository diaryRepository;
     private final DiaryService diaryService;
     private final ExchangedDiaryService exchangedDiaryService;
+    private final AlarmService alarmService;
+
+    private Member globalMember;
+    private Long globalId;
 
     @Transactional
     public RandomExchangePoolResponseDto registRandomExchange(RandomExchangePoolRegistDto randomExchangePoolRegistDto) throws Exception {
@@ -61,7 +70,10 @@ public class RandomExchangePoolService {
                 .randomDate(LocalDate.now())
                 .build();
 
-        randomExchangePoolRepository.save(randomExchangePool);
+        RandomExchangePool random = randomExchangePoolRepository.save(randomExchangePool);
+        globalMember = owner;
+        globalId = random.getRandomExchangePoolId();
+        sendRandomAlarm();
 
         return createRandomExchangePoolResponseDto(randomExchangePool);
     }
@@ -183,6 +195,15 @@ public class RandomExchangePoolService {
         randomExchangePool.setExchangedOwner(exchangedOwner);
 
         return createRandomExchangePoolResponseDto(randomExchangePool);
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 9 * * ?")
+    public void sendRandomAlarm() {
+        String title = "가짜 별에서 온 편지 도착";
+        String body = "외계인은 어떤 일기를 보냈을까요?";
+        alarmService.saveAlarm(new AlarmRequestDto(globalMember.getMemberId(), globalId, title, body, "RANDOM"));
+        alarmService.sendNotificationByToken(new AlarmResponseDto(globalMember.getMemberId(), title, body));
     }
 
     private RandomExchangePoolResponseDto createRandomExchangePoolResponseDto(RandomExchangePool randomExchangePool) {
