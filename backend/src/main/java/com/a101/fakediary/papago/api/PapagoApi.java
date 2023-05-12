@@ -19,15 +19,14 @@ public class PapagoApi {
     private final PapagoTranslator papagoTranslator;
     private static final Logger logger = LoggerFactory.getLogger(PapagoApi.class);
 
-    @Async
+//    @Async 자동생성 에러내던 주범 으아아악
     public String translate(String text) { //메소드 불러서 바꾸고 싶은 내용 text에 넣으면 한 -> 영 바꿔서 return
         String translatedText = papagoTranslator.translate(text).block();
         Pattern pattern = Pattern.compile("\"translatedText\":\"([^\"]*)\"");
         Matcher matcher = pattern.matcher(translatedText);
         if (matcher.find()) {
             String trans = matcher.group(1);
-            logger.info("번역할 언어 : {}", text);
-            logger.info("번역된 언어 : {}", trans);
+            logger.info("번역완료 : {} -> {}", text, trans);
             return trans;
         }
         return null;

@@ -52,6 +52,7 @@ class ApiService {
       await prefs.setInt('memberId', respJson['memberId']);
       await prefs.setString('nickname', respJson['nickname']);
       await prefs.setString('diaryBaseName', respJson['diaryBaseName'] ?? '');
+      await prefs.setBool('isLogged', true);
       print('end');
       return true;
     } else {
@@ -370,6 +371,18 @@ class ApiService {
       return cards;
     } else {
       throw Exception('카드 리스트를 불러오는 데 실패했습니다');
+    }
+  }
+
+  static Future<CardModel> getCardById(int id) async {
+    final url = Uri.parse('$baseUrl/card/pick/$id');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      final card = CardModel.fromJson(jsonResponse);
+      return card;
+    } else {
+      throw Exception('카드를 불러오는 데 실패했습니다');
     }
   }
 
@@ -702,7 +715,7 @@ class ApiService {
     }
   }
 
-  static Future<void> makeDiary({
+  static Future<bool> makeDiary({
     required List<int> cardIds,
     required String detail,
     required List<String> diaryImageUrl,
@@ -745,10 +758,44 @@ class ApiService {
     );
     if (response.statusCode == 200) {
       print('success');
+      return true;
     } else {
       print('fail');
       print(response.statusCode);
       print(response.body);
+      return false;
+    }
+  }
+
+  static Future<bool> makeDiaryBackend({
+    required List<int> cardIdList,
+    required List<String> genreList,
+  }) async {
+    print('일기 생성 중');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? memberId = prefs.getInt('memberId');
+
+    final url = Uri.parse('$baseUrl/diary/create');
+    final dto = {
+      "cardIdList": cardIdList,
+      'genreList': genreList,
+      'memberId': memberId,
+    };
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(dto),
+    );
+    if (response.statusCode == 200) {
+      print('success');
+      return true;
+    } else {
+      print('fail');
+      print(response.statusCode);
+      print(response.body);
+      return false;
     }
   }
 
@@ -916,7 +963,7 @@ class ApiService {
               .map((dynamic item) => DiaryModel.fromJson(item))
               .toList() ??
           [];
-      print('api: ${diaries.length}');
+      print('api: diaries.length}');
       return diaries;
     } else if (response.statusCode == 204) {
       return [];
@@ -934,22 +981,25 @@ class ApiService {
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      print(jsonResponse);
       List<SearchFriendModel> searchedFriends = jsonResponse
               .map((dynamic item) => SearchFriendModel.fromJson(item))
               .toList() ??
           [];
+print( jsonResponse
+    .map((dynamic item) => SearchFriendModel.fromJson(item))
+    .toList());
       return searchedFriends;
     } else if (response.statusCode == 204) {
       return [];
     } else {
-      throw Exception('일기 리스트 로딩에 실패했습니다');
+      throw Exception('친구추가목록 로딩에 실패했습니다');
     }
   }
 
   static Future<bool> AddFriend(int receiverId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
-
     final AddFriendDto = {"receiverId": receiverId, "senderId": memberId};
 
     final response =
@@ -960,10 +1010,9 @@ class ApiService {
             body: json.encode(AddFriendDto));
 
     if (response.statusCode == 200) {
-      print('success');
       return true;
     } else {
-      print('fail');
+
       return false;
     }
   }

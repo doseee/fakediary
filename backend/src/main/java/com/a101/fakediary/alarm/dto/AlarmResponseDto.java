@@ -2,10 +2,6 @@ package com.a101.fakediary.alarm.dto;
 
 import lombok.*;
 
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.SqlResultSetMapping;
 import java.util.Map;
 
 @Getter
@@ -14,14 +10,14 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlarmResponseDto {
-    private Long senderId;
-    private Long receiverId;
-    private String status;
+    private Long memberId;
+    private String title;
+    private String body;
     private Map<String, String> data;
 
-    public AlarmResponseDto(Long senderId, Long receiverId, String status) {
-        this.senderId = senderId;
-        this.receiverId = receiverId;
-        this.status = status;
+    public AlarmResponseDto(Long memberId, String title, String body) {
+        this.memberId = memberId;
+        this.title = title;
+        this.body = body;
     }
 }

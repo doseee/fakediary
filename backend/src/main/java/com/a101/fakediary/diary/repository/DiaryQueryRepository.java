@@ -34,27 +34,35 @@ public class DiaryQueryRepository {
 
             BooleanBuilder i = new BooleanBuilder();
             if (filter.getId() == -1)
-                i.and(eqExchange()).and(eqReceiveId(filter.getMemberId())).and(eqReceiveDiary());
+                i.and(eqExchange());
             else
-                i.and(eqSenderId(filter.getId())).and(eqMemberSender()).and(eqReceiveId(filter.getMemberId()));
+                i.and(eqSenderId(filter.getId())).and(eqFriend());
 
             return queryFactory
                     .select(diary).distinct()
                     .from(exchangedDiary, diary, genre)
-                    .where(g, i)
+                    .where(g, i, eqDelete(), eqSendDiary(), eqReceiveId(filter.getMemberId()))
                     .fetch();
         }
         else { //내 일기 조회할 때
             return queryFactory
                     .select(diary).distinct()
                     .from(diary, genre)
-                    .where(eqMyMemberId(filter.getMemberId()), eqGenreId(), eqGenre(filter.getGenre()))
+                    .where(eqMyMemberId(filter.getMemberId()), eqGenreId(), eqGenre(filter.getGenre()), eqDelete())
                     .fetch();
         }
     }
 
-    private BooleanExpression eqReceiveDiary() {
-        return diary.diaryId.eq(exchangedDiary.receiverDiary.diaryId);
+    private BooleanExpression eqFriend() {
+        return exchangedDiary.exchangeType.eq(EExchangeType.F);
+    }
+
+    private BooleanExpression eqDelete() {//d.isDeleted == false
+        return diary.isDeleted.eq(false);
+    }
+
+    private BooleanExpression eqSendDiary() { //d.diaryId =:e.receiveDiaryId
+        return diary.diaryId.eq(exchangedDiary.senderDiary.diaryId);
     }
 
     private BooleanExpression eqSenderId(Long id) { //e.senderId =:id

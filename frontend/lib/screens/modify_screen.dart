@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/home_circlemenu.dart';
-import 'package:frontend/services/api_service.dart';
+import 'package:frontend/screens/login_entrance.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ModifyScreen extends StatefulWidget {
@@ -73,12 +72,13 @@ class _ModifyScreenState extends State<ModifyScreen> {
           body: Form(
             key: _formKey,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 75),
+              padding: const EdgeInsets.symmetric(horizontal: 60),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Image(
                     image: AssetImage('assets/img/silver_moon.png'),
+                    height: 70,
                   ),
                   Row(
                     children: [
@@ -86,7 +86,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         '닉네임',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 15,
                         ),
                       ),
                     ],
@@ -109,7 +109,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         )),
                         hintText: '닉네임을 입력하세요.',
                         hintStyle: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.blue,
                         )),
                   ),
                   Row(
@@ -118,7 +118,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         '일기 자동생성시간',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 15,
                         ),
                       ),
                     ],
@@ -130,7 +130,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: 70,
+                        width: 80,
                         child: CupertinoPicker(
                           scrollController: hourController,
                           itemExtent: 32.0,
@@ -151,23 +151,29 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           }),
                         ),
                       ),
+                      Text(
+                        '시',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                       SizedBox(
-                        width: 70,
+                        width: 80,
                         child: CupertinoPicker(
                           scrollController: minuteController,
                           backgroundColor: Colors.transparent,
                           itemExtent: 32.0,
                           onSelectedItemChanged: (int index) {
                             setState(() {
-                              minute = index.toString().padLeft(2, '0');
+                              minute = (index * 30).toString().padLeft(2, '0');
                             });
                           },
-                          children: List<Widget>.generate(60, (
+                          children: List<Widget>.generate(2, (
                             int index,
                           ) {
                             return Center(
                               child: Text(
-                                index.toString(),
+                                (index * 30).toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -176,28 +182,34 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           }),
                         ),
                       ),
-                      SizedBox(
-                        width: 70,
-                        child: CupertinoPicker(
-                          scrollController: secondController,
-                          itemExtent: 32.0,
-                          onSelectedItemChanged: (int index) {
-                            setState(() {
-                              second = index.toString().padLeft(2, '0');
-                            });
-                          },
-                          children: List<Widget>.generate(60, (int index) {
-                            return Center(
-                              child: Text(
-                                index.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            );
-                          }),
+                      Text(
+                        '분',
+                        style: TextStyle(
+                          color: Colors.white,
                         ),
                       ),
+                      // SizedBox(
+                      //   width: 70,
+                      //   child: CupertinoPicker(
+                      //     scrollController: secondController,
+                      //     itemExtent: 32.0,
+                      //     onSelectedItemChanged: (int index) {
+                      //       setState(() {
+                      //         second = index.toString().padLeft(2, '0');
+                      //       });
+                      //     },
+                      //     children: List<Widget>.generate(60, (int index) {
+                      //       return Center(
+                      //         child: Text(
+                      //           index.toString(),
+                      //           style: TextStyle(
+                      //             color: Colors.white,
+                      //           ),
+                      //         ),
+                      //       );
+                      //     }),
+                      //   ),
+                      // ),
                     ],
                   ),
                   SizedBox(
@@ -209,7 +221,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         '기본 주인공 이름',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 15,
                         ),
                       ),
                     ],
@@ -217,7 +229,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                   TextField(
                     controller: basenameController,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.blue[100],
                     ),
                     maxLength: 10,
                     decoration: const InputDecoration(
@@ -235,50 +247,99 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           color: Colors.grey,
                         )),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      ApiService.modifyUser(nicknameController.text, hour,
-                          minute, second, basenameController.text);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
-                    },
-                    child: Container(
-                      width: 267,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            const Color(0xff263344),
-                            const Color(0xff1B2532).withOpacity(0.53),
-                            const Color(0xff1C2A3D).withOpacity(0.5),
-                            const Color(0xff1E2E42).withOpacity(0.46),
-                            const Color(0xff364B66).withOpacity(0.33),
-                            const Color(0xff2471D6).withOpacity(0),
-                          ],
-                          stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                        ),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xff000000).withOpacity(0.25),
-                            offset: const Offset(0, 4),
-                            blurRadius: 4,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          final pref = await SharedPreferences.getInstance();
+                        },
+                        child: Container(
+                          width: 110,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                const Color(0xff263344),
+                                const Color(0xff1B2532).withOpacity(0.53),
+                                const Color(0xff1C2A3D).withOpacity(0.5),
+                                const Color(0xff1E2E42).withOpacity(0.46),
+                                const Color(0xff364B66).withOpacity(0.33),
+                                const Color(0xff2471D6).withOpacity(0),
+                              ],
+                              stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+                            ),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    const Color(0xff000000).withOpacity(0.25),
+                                offset: const Offset(0, 4),
+                                blurRadius: 4,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text(
-                          '설정',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          child: const Center(
+                            child: Text(
+                              '설정',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 17),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      GestureDetector(
+                        onTap: () async {
+                          final pref = await SharedPreferences.getInstance();
+                          pref.setBool('isLogged', false);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginEntrance()));
+                        },
+                        child: Container(
+                          width: 110,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                const Color(0xff263344),
+                                const Color(0xff1B2532).withOpacity(0.53),
+                                const Color(0xff1C2A3D).withOpacity(0.5),
+                                const Color(0xff1E2E42).withOpacity(0.46),
+                                const Color(0xff364B66).withOpacity(0.33),
+                                const Color(0xff2471D6).withOpacity(0),
+                              ],
+                              stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+                            ),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    const Color(0xff000000).withOpacity(0.25),
+                                offset: const Offset(0, 4),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Text(
+                              '로그아웃',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 17),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

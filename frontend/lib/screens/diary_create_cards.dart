@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/old_menu_screen.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/mood_select.dart';
 
 import '../widgets/theme.dart';
+import 'card_create.dart';
 
 class DiaryCreateCards extends StatefulWidget {
   final int? cardIdFromList;
@@ -24,7 +25,9 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
   void initState() {
     super.initState();
     cards = ApiService().getCardList();
-    print(cards);
+    if (widget.cardIdFromList != null) {
+      getCardFromList();
+    }
     // for (int i=0 ; i<cards.length ; i++) {
     //   if(cards[i] == widget.cardIdFromList) {
     //
@@ -44,6 +47,13 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
     //     });
     //   });
     // });
+  }
+
+  getCardFromList() async {
+    CardModel cardFromList =
+        await ApiService.getCardById(widget.cardIdFromList!);
+    selectedCards.add(cardFromList);
+    setState(() {});
   }
 
   late int memberId;
@@ -71,7 +81,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                             'CARDS  ',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 30,
+                              fontSize: 20,
                             ),
                           ),
                           GestureDetector(
@@ -79,11 +89,11 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => MenuScreen()));
+                                      builder: (context) => HomeScreen()));
                             },
                             child: Image(
                               image: AssetImage(
-                                'assets/img/icon_menu_page.png',
+                                'assets/img/home_icon.png',
                               ),
                               width: 45,
                             ),
@@ -113,7 +123,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(width: 1, color: Colors.white),
+                      top: BorderSide(width: 0.3, color: Colors.white),
                     ),
                   ),
                   child: Scaffold(
@@ -140,61 +150,94 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                       future: cards,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          return buildList(snapshot.data);
+                          if(snapshot.data?.length == 0) {
+                            return GestureDetector(
+                              onTap: (){
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => CardCreate())
+                                );
+                              },
+                              child: Container(
+                                width: 250,
+                                height: 50,
+                                decoration: BtnThemeGradient(),
+                                child: Center(
+                                  child: Text('카드 만들러 가기', style: TextStyle(color: Colors.white, fontSize: 16),),
+                                ),
+                              ),
+                            );
+                          }
+
+                          return Column(
+                            children: [
+                              Flexible(flex: 3, child: buildList(snapshot.data),),
+                              Flexible(flex: 1, child: ButtonCheck(),)
+                            ],
+                          );
+
                         } else if (snapshot.hasError) {
                           return Text("${snapshot.error}에러!!");
                         }
                         return CircularProgressIndicator();
                       })),
-              Flexible(
-                  flex: 1,
-                  child: GestureDetector(
-                    // NEXT 버튼을 누르면 장르선택 페이지로 간다.
-                    onTap: () {
-                      // navigate to the desired class
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                MoodSelect(selectedCards: selectedCards)),
-                      );
-                    },
-                    child: Container(
-                        // NEXT 버튼
-                        width: 268,
-                        height: 61,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              const Color(0xff263344),
-                              const Color(0xff1B2532).withOpacity(0.53),
-                              const Color(0xff1C2A3D).withOpacity(0.5),
-                              const Color(0xff1E2E42).withOpacity(0.46),
-                              const Color(0xff364B66).withOpacity(0.33),
-                              const Color(0xff2471D6).withOpacity(0),
-                            ],
-                            stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff000000).withOpacity(0.25),
-                              offset: const Offset(0, 4),
-                              blurRadius: 4,
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'NEXT',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
-                          ),
-                        )),
-                  ))
             ])))));
   }
+
+  Widget ButtonCheck(){
+    if(selectedCards.isEmpty){
+      return Center(
+        child: Text('카드를 하나 이상 선택해주세요', style: TextStyle(color: Colors.white60),),
+      );
+    }
+
+    return GestureDetector(
+      // NEXT 버튼을 누르면 장르선택 페이지로 간다.
+      onTap: () {
+        // navigate to the desired class
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MoodSelect(selectedCards: selectedCards)),
+        );
+      },
+      child: Container(
+        // NEXT 버튼
+          width: 268,
+          height: 61,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color(0xff263344),
+                const Color(0xff1B2532).withOpacity(0.53),
+                const Color(0xff1C2A3D).withOpacity(0.5),
+                const Color(0xff1E2E42).withOpacity(0.46),
+                const Color(0xff364B66).withOpacity(0.33),
+                const Color(0xff2471D6).withOpacity(0),
+              ],
+              stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xff000000).withOpacity(0.25),
+                offset: const Offset(0, 4),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+          child: const Center(
+            child: Text(
+              'NEXT',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+          )),
+    );
+  }
+
 
   String titleCheck(snapshot, index) {
     // print('=== $index');
@@ -229,10 +272,18 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
         return InkWell(
             onTap: () {
               setState(() {
-                if (selectedCards.contains(snapshot[index])) {
-                  selectedCards.remove(
-                      snapshot[index]); // remove selected card from the list
-                } else {
+                bool isExist = false;
+                CardModel? delCard;
+                for (CardModel card in selectedCards) {
+                  if (card.cardId == snapshot[index].cardId) {
+                    delCard = card;
+                    isExist = true;
+                  }
+                }
+                if (isExist) {
+                  selectedCards.remove(delCard);
+                }
+                if (!isExist) {
                   if (selectedCards.length < 10) {
                     selectedCards.insert(
                         0, snapshot[index]); // append selected card to the list
