@@ -94,7 +94,7 @@ public class ChatGptApi {
 
         return dto;
     }
-
+    
     /**
      * 
      * @param messages : 전체 프롬프트 Message
