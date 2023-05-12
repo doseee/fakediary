@@ -963,7 +963,7 @@ class ApiService {
               .map((dynamic item) => DiaryModel.fromJson(item))
               .toList() ??
           [];
-      print('api: ${diaries.length}');
+      print('api: diaries.length}');
       return diaries;
     } else if (response.statusCode == 204) {
       return [];
@@ -986,18 +986,20 @@ class ApiService {
               .map((dynamic item) => SearchFriendModel.fromJson(item))
               .toList() ??
           [];
+print( jsonResponse
+    .map((dynamic item) => SearchFriendModel.fromJson(item))
+    .toList());
       return searchedFriends;
     } else if (response.statusCode == 204) {
       return [];
     } else {
-      throw Exception('일기 리스트 로딩에 실패했습니다');
+      throw Exception('친구추가목록 로딩에 실패했습니다');
     }
   }
 
   static Future<bool> AddFriend(int receiverId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
-
     final AddFriendDto = {"receiverId": receiverId, "senderId": memberId};
 
     final response =
@@ -1008,10 +1010,9 @@ class ApiService {
             body: json.encode(AddFriendDto));
 
     if (response.statusCode == 200) {
-      print('success');
       return true;
     } else {
-      print('fail');
+
       return false;
     }
   }
