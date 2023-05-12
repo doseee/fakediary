@@ -42,7 +42,7 @@ public class FriendExchangeRequestService {
         String title = member.getNickname() + "님이 교환할 일기를 가져왔어요";
         String body = "교환할 일기는 뭐가 좋을까~";
         alarmService.saveAlarm(new AlarmRequestDto(request.getReceiverId(), exchange.getFriendExchangeRequestId(), title, body, "FRIEND"));
-        alarmService.sendNotificationByToken(new AlarmResponseDto(request.getReceiverId(), title, body));
+        alarmService.sendNotificationByToken(new AlarmResponseDto(request.getReceiverId(),  title, body));
     }
 
     @Transactional
