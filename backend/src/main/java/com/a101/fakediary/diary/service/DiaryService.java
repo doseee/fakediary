@@ -260,7 +260,7 @@ public class DiaryService {
 
 //        TitleSubtitlesResultDto titleSubtitlesResultDto = chatGptApi.askGpt4TitleSubtitles(prompt);
 //        logger.info("titleSubtitlesResultDto = " + titleSubtitlesResultDto);
-        List<Message> messageList = chatGptApi.askGpt4(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
+        List<Message> messageList = chatGptApi.askGpt41(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
 
         StringBuilder diaryContent = new StringBuilder();
         for (Message message : messageList) {
@@ -662,7 +662,7 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public DiaryResultDto getResultDto2(String userPrompt) throws Exception {
-        List<Message> messageList = chatGptApi.askGpt4(new ArrayList<Message>(), userPrompt);  //  GPT4 사용 시 askGpt4로 변경
+        List<Message> messageList = chatGptApi.askGpt42(new ArrayList<Message>(), userPrompt);  //  GPT4 사용 시 askGpt4로 변경
 
         logger.info("messageList = " + messageList);
 

@@ -101,11 +101,11 @@ public class ChatGptApi {
      * @param prompt   : 이번 질의에서 추가될 프롬프트 문자열
      * @return : gpt4가 만들어준 대답 프롬프트
      */
-    public List<Message> askGpt4(List<Message> messages, String prompt) throws Exception {
+    public List<Message> askGpt41(List<Message> messages, String prompt) throws Exception {
         Instant start = Instant.now();
 
         if(messages.isEmpty()) {
-            messages.add(new Message("system", ChatGptPrompts.generateSystemPrompt()));
+            messages.add(new Message("system", ChatGptPrompts.generateSystemPrompt1()));
         }
 
         messages.add(new Message("user", prompt));
@@ -129,7 +129,7 @@ public class ChatGptApi {
         messages.add(new Message("assistant", answer));
         
         if(!answer.endsWith("}")) {
-            messages = askGpt4(messages, ChatGptPrompts.generateUserContinuePrompt());
+            messages = askGpt41(messages, ChatGptPrompts.generateUserContinuePrompt());
         }
 
         Instant end = Instant.now();
@@ -142,42 +142,41 @@ public class ChatGptApi {
      *
      * @param messages : 전체 프롬프트 Message
      * @param prompt   : 이번 질의에서 추가될 프롬프트 문자열
-     * @return : gpt3.5가 만들어준 대답 프롬프트
+     * @return : gpt4가 만들어준 대답 프롬프트
      */
-    public List<Message> askGpt35(List<Message> messages, String prompt) throws Exception {
+    public List<Message> askGpt42(List<Message> messages, String prompt) throws Exception {
         Instant start = Instant.now();
-        log.info("askGpt(" + messages + ", " + prompt);
 
         if(messages.isEmpty()) {
-            messages.add(new Message("system", ChatGptPrompts.generateSystemPrompt()));
+            messages.add(new Message("system", ChatGptPrompts.generateSystemPrompt2()));
         }
 
         messages.add(new Message("user", prompt));
 
         ChatGptDiaryRequestDto requestDto = ChatGptDiaryRequestDto.builder()
-                .model(MODEL_3_5)
+                .model(MODEL_4_0)
                 .n(N)
-                .maxTokens(MAX_TOKENS_3_5)
+                .maxTokens(MAX_TOKENS_4_0)
                 .temperature(TEMPERATURE)
                 .messages(messages)
                 .build();
 
-        ChatGptDiaryResponseDto responseDto = restTemplate35.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
+        ChatGptDiaryResponseDto responseDto = restTemplate40.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
 
         if(responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
             log.info("no response!!!");
-            throw new Exception("GPT3.5가 응답이 없음");
+            throw new Exception("GPT4가 응답이 없음");
         }
 
         String answer = responseDto.getChoices().get(0).getMessage().getContent().trim();
         messages.add(new Message("assistant", answer));
 
         if(!answer.endsWith("}")) {
-            messages = askGpt4(messages, ChatGptPrompts.generateUserContinuePrompt());
+            messages = askGpt42(messages, ChatGptPrompts.generateUserContinuePrompt());
         }
 
         Instant end = Instant.now();
-        log.info("GPT3.5 키워드로 일기 내용 받아오는데 걸리는 소요 시간 : " + Duration.between(start, end).toMillis() + " ms");
+        log.info("GPT4 키워드로 일기 내용 받아오는데 걸리는 소요 시간 : " + Duration.between(start, end).toMillis() + " ms");
 
         return messages;
     }
