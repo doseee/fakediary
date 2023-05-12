@@ -10,6 +10,7 @@ import com.a101.fakediary.chatgptdiary.dto.message.Message;
 import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.chatgptdiary.dto.result.TitleSubtitlesResultDto;
 import com.a101.fakediary.chatgptdiary.prompt.ChatGptPrompts;
+import com.a101.fakediary.diary.dto.DiaryItemsDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
@@ -427,7 +428,7 @@ public class DiaryService {
 //    }
 
     @Transactional(readOnly = true)
-    public DiaryResultDto getResultDto(List<Long> cardList, List<String> genres) throws Exception {
+    public DiaryItemsDto getItemInformations(List<Long> cardList, List<String> genreList) throws Exception {
         List<String> characters = new ArrayList<>();
         List<String> places = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
@@ -462,9 +463,21 @@ public class DiaryService {
             }
         }
 
-        logger.info("characters = " + characters + ", places = " + places + ", keywords = " + keywords);
-//        logger.info("places = " + places);
-//        logger.info("keywords = " + keywords);
+        return DiaryItemsDto.builder()
+                .characters(characters)
+                .places(places)
+                .keywords(keywords)
+                .genres(genreList)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public DiaryResultDto getResultDto(List<Long> cardList, List<String> genres) throws Exception {
+        DiaryItemsDto diaryItemsDto = getItemInformations(cardList, genres);
+        List<String> characters = diaryItemsDto.getCharacters();
+        List<String> places = diaryItemsDto.getPlaces();
+        List<String> keywords = diaryItemsDto.getKeywords();
+
         String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords, genres);
 
         TitleSubtitlesResultDto titleSubtitlesResultDto = chatGptApi.askGpt4TitleSubtitles(prompt);
@@ -631,14 +644,6 @@ public class DiaryService {
                     }
                 }
             }
-
-            //빈것보냈을때 null로저장되는지 ""로저장되는지 확인필요 값이 존재하면 이어줌
-//            if (card.getKeyword() != null && !card.getKeyword().equals(""))
-//                keywords.append(card.getKeyword()).append(DELIMITER); //키워드@키워드@키워드@ 식으로 제작
-//            if (card.getBaseName() != null && !card.getBaseName().equals(""))
-//                characters.append(card.getBaseName()).append(DELIMITER);
-//            if (card.getBasePlace() != null && !card.getBasePlace().equals(""))
-//                places.append(card.getBasePlace()).append(DELIMITER);
         }
 
         //마지막 골뱅이 제거
@@ -731,5 +736,18 @@ public class DiaryService {
         }
         cardIds.sort(Comparator.naturalOrder());//오름차순 정렬
         return cardIds;
+    }
+
+    @Transactional
+    public DiaryResponseDto createDiary2(Long memberId, List<Long> cardIdList, List<String> genreList) throws Exception {
+        DiaryItemsDto diaryItemsDto = getItemInformations(cardIdList, genreList);
+        List<String> characters = diaryItemsDto.getCharacters();
+        List<String> places = diaryItemsDto.getPlaces();
+        List<String> keywords = diaryItemsDto.getKeywords();
+
+//        String userPrompt = ChatGptPrompts.generateUserPrompt(cardIdList,)
+//        TitleSubtitlesResultDto titleSubtitlesResultDto = chatGptApi.askGpt4TitleSubtitles();
+
+        return null;
     }
 }

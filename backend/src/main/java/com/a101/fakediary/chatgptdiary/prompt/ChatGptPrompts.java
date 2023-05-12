@@ -10,7 +10,7 @@ import java.util.Map;
 public class ChatGptPrompts {
 //    private final static String SYSTEM_CONTENT = "재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 summary에, 소제목은 subtitles에, 내용은 contents에 넣어줘. 이야기를 한 장 당 5000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 각 장의 제목이 되는 subtitles도 contents와 같이 문자열 배열로 만들어줘. trailing comma가 없게 작성해줘.";
     private final static String SYSTEM_CONTENT_SUBTITLES = "등장인물, 장소, 키워드를 바탕으로 재미있는 이야기를 쓴다고 가정해보자. 이 때 이야기의 제목은 title에, 소제목은 subtitles에 넣어줘. 전체 이야기의 제목을 title에 넣어주고, 소제목을 subtitles에 넣어줘. 이야기를 한 장 당 2000자 정도의 3개의 장으로 구성할거야. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. subtitles은 문자열 배열로 만들어줘.";
-    private final static String SYSTEM_CONTENT = "재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 summary에, 소제목은 subtitles에, 내용은 contents에 넣어줘. 이야기를 한 장 당 2000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 각 장의 제목이 되는 subtitles도 contents와 같이 문자열 배열로 만들어줘.";
+    private final static String SYSTEM_CONTENT = "주어진 제목인 title과 소제목인 subtitles, 등장인물, 장소, 키워드로 재미있는 이야기를 써줘. 답변은 중괄호를 포함한 json 형식으로 json 외에 다른 문구는 덧붙이지 말아줘. 제목은 title에, 한줄 요약은 summary에, 소제목은 subtitles에, 내용은 contents에 넣어줘. 이야기를 한 장 당 2000자 정도의 3개의 장으로 구성해서 contents를 문자열 배열로 만들어줘. 각 장의 제목이 되는 subtitles도 contents와 같이 문자열 배열로 만들어줘.";
     private final static String USER_CHARACTERS = "주인공은 ";
     private final static String USER_PLACES = "장소는 ";
     private final static String USER_KEYWORDS = "키워드는 ";
