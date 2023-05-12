@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
+import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/modify_screen.dart';
@@ -13,6 +14,7 @@ import 'dart:math';
 import 'package:vector_math/vector_math_64.dart' as vector64;
 
 import '../model/AlarmModel.dart';
+import '../model/DiaryModel.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -375,10 +377,16 @@ class Notification extends StatelessWidget {
   final AlarmModel alarm;
   final Function getAlarmList;
 
+  getDiary(requestId) async {
+    final DiaryModel diary = await ApiService.getDiaryDetail(requestId);
+    return diary;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print(alarm.alarmType);
         if (alarm.alarmType == 'REQUEST') {
           showDialog(
               context: context,
@@ -389,15 +397,18 @@ class Notification extends StatelessWidget {
                 );
               });
         } else if (alarm.alarmType == 'AUTOMATIC') {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => FriendScreen(
-          //       diaryId: alarm.diaryId,
-          //       exchangeSituation: 0,
-          //     ),
-          //   ),
-          // );
+          getDiary(alarm.requestId).then((diary) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DiaryDetailCoverScreen(
+                  diaryId: alarm.requestId,
+                  exchangeSituation: 1,
+                  imageUrl: diary.diaryImageUrl[0],
+                ),
+              ),
+            );
+          });
         }
       },
       child: Container(
