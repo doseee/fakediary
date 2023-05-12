@@ -23,7 +23,7 @@ class DiaryFilter extends StatefulWidget {
 dynamic userId;
 
 dynamic selectedWriter = -2;
-dynamic selectedMood;
+dynamic selectedMood = '';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 late List<DiaryModel> filteredDiaries;
 
@@ -57,14 +57,14 @@ class _DiaryFilterState extends State<DiaryFilter> {
   moodSetter(moodname) {
     if (activated[moodname] == true) {
       activated[moodname] = false;
-      selectedMood = null;
+      selectedMood = '';
     } else {
       activated.updateAll((key, value) => false);
       activated[moodname] = true;
-      selectedMood = moodname;
+      selectedMood = dict[moodname]!;
     }
     setState(() {});
-    print(selectedMood);
+    print('나는야 $selectedMood');
   }
 
   writerSetter(selectedId) {
@@ -138,7 +138,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     if (selectedMood != '')
-                      GradientButton(content: dict[selectedMood]!),
+                      GradientButton(content:selectedMood),
                     if (selectedWriter == userId)
                       Row(
                         children: [
@@ -332,9 +332,12 @@ class _DiaryFilterState extends State<DiaryFilter> {
                   children: [
                     GestureDetector(
                         onTap: () async {
+                          if(selectedMood !='') {
+                            selectedMood  = dict.keys.firstWhere((k) => dict[k] == selectedMood);
+                          }
                           List<DiaryModel> filteredDiaries =
                               await ApiService.filterDiaries(
-                                  selectedMood, selectedWriter);
+                              selectedMood, selectedWriter);
                           var currentContext = context;
                           await Future.delayed(Duration(seconds: 1), () {
                             Navigator.push(
