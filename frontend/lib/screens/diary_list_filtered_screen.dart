@@ -49,11 +49,11 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
   }
 
   onSelect(
-      int diaryId,
-      String title,
-      String summary,
-      String imageUrl,
-      ) {
+    int diaryId,
+    String title,
+    String summary,
+    String imageUrl,
+  ) {
     setState(() {
       this.diaryId = diaryId;
       this.title = title;
@@ -62,10 +62,9 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
     });
   }
 
-
   Widget DiaryDetail() {
     if (diaryId == -1) {
-      return       Center(
+      return Center(
         child: Lottie.asset('assets/lottie/book.json'),
       );
     }
@@ -73,26 +72,27 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
     return Row(
       children: [
         Flexible(
-            flex: 1,
-            child: Padding(
-              padding: EdgeInsets.only(left: 10, right: 5),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius:
-                    BorderRadius.only(bottomLeft: Radius.circular(30)),
-                    border: GradientBoxBorder(
-                      gradient: LinearGradient(colors: [
-                        Color(0xff79F1A4),
-                        Color(0xff0E5CAD),
-                      ]),
-                    ),
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            imageUrl)
+          flex: 1,
+          child: Padding(
+            padding: EdgeInsets.only(left: 10, right: 5),
+            child: Container(
+              width: 110,
+              height: 200,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/img/book_cover.png')),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(5, 48, 0, 0),
+                child: Image(
+                  fit: BoxFit.contain,
+                  image: NetworkImage(imageUrl),
                 ),
               ),
-            )),),
+            ),
+          ),
+        ),
         Flexible(
           flex: 1,
           child: Padding(
@@ -115,7 +115,6 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                   ),
                 ),
                 Flexible(
-
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.all(3.0),
@@ -165,14 +164,14 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                           width: 250,
                           height: 50,
                           child: Center(
-                            child:  SizedBox(
+                            child: SizedBox(
                               width: 250,
                               height: 50,
                               child: Center(
                                 child: Text(
                                   '상세보기',
-                                  style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
                                 ),
                               ),
                             ),
@@ -395,12 +394,13 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
       ),
     );
   }
+
   Widget buildList(snapshot) {
     print('imgUrl: ${snapshot[0].diaryImageUrl[0]}');
     return GridView.count(
       crossAxisCount: 2,
-      childAspectRatio: 0.8,
-      mainAxisSpacing: 10.0,
+      childAspectRatio: 0.65,
+      mainAxisSpacing: 0.1,
       padding: EdgeInsets.all(10.0),
       children: List.generate(snapshot.length, (index) {
         print('pic : ${snapshot[index].diaryImageUrl[0]}');
@@ -422,21 +422,20 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                     child: Column(
                       children: <Widget>[
                         Container(
-                          width: 100,
-                          height: 140,
+                          width: 110,
+                          height: 200,
                           decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadius.only(bottomLeft: Radius.circular(30)),
-                              border: GradientBoxBorder(
-                                gradient: LinearGradient(colors: [
-                                  Color(0xff79F1A4),
-                                  Color(0xff0E5CAD),
-                                ]),
-                              ),
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                      snapshot[index].diaryImageUrl[0]))
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage('assets/img/book_cover.png')),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 48, 0, 0),
+                            child: Image(
+                              fit: BoxFit.contain,
+                              image: NetworkImage(
+                                  snapshot[index].diaryImageUrl[0]),
+                            ),
                           ),
                         ),
                         Padding(
@@ -444,10 +443,12 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                           child: Text(
                             snapshot[index].title.length > 17
                                 ? (snapshot[index].title.substring(0, 17) +
-                                '...')
+                                    '...')
                                 : snapshot[index].title,
-                            style:
-                            TextStyle(color: Colors.white60, fontSize: 11,fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                color: Colors.white60,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                       ],

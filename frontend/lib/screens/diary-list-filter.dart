@@ -57,7 +57,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
   moodSetter(moodname) {
     if (activated[moodname] == true) {
       activated[moodname] = false;
-      selectedMood = null;
+      selectedMood = '';
     } else {
       activated.updateAll((key, value) => false);
       activated[moodname] = true;
