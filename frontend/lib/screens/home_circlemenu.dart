@@ -8,6 +8,7 @@ import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/modify_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/friend_modal.dart';
+import 'package:frontend/widgets/receive_diary_modal.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:math';
 
@@ -388,6 +389,7 @@ class Notification extends StatelessWidget {
       onTap: () {
         print(alarm.alarmType);
         if (alarm.alarmType == 'REQUEST') {
+          // 수락 모달
           showDialog(
               context: context,
               builder: (context) {
@@ -397,6 +399,44 @@ class Notification extends StatelessWidget {
                 );
               });
         } else if (alarm.alarmType == 'AUTOMATIC') {
+          // 전달받은 일기 상세 페이지로
+          getDiary(alarm.requestId).then((diary) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DiaryDetailCoverScreen(
+                  diaryId: alarm.requestId,
+                  exchangeSituation: 1,
+                  imageUrl: diary.diaryImageUrl[0],
+                ),
+              ),
+            );
+          });
+        } else if (alarm.alarmType == 'FRIEND') {
+          // 수락 모달
+          showDialog(
+              context: context,
+              builder: (context) {
+                return ReceiveDiaryModal(
+                  requestId: alarm.requestId,
+                );
+              });
+        } else if (alarm.alarmType == 'RANDOM') {
+          // 전달받은 일기 상세 페이지로
+          getDiary(alarm.requestId).then((diary) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DiaryDetailCoverScreen(
+                  diaryId: alarm.requestId,
+                  exchangeSituation: 1,
+                  imageUrl: diary.diaryImageUrl[0],
+                ),
+              ),
+            );
+          });
+        } else if (alarm.alarmType == 'MANUAL') {
+          // 전달받은 일기 상세 페이지로
           getDiary(alarm.requestId).then((diary) {
             Navigator.push(
               context,
