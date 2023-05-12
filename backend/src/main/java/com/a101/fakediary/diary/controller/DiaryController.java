@@ -81,9 +81,9 @@ public class DiaryController {
 
 //            DiaryResultDto diaryResultDto = diaryService.getResultDto(cardIdList);
 
-            diaryService.createDiary2(memberId, cardIdList, genreList);
+            DiaryResponseDto diaryResponseDto = diaryService.createDiary2(memberId, cardIdList, genreList);
 
-            return new ResponseEntity<>("성공!!!!", HttpStatus.OK);
+            return new ResponseEntity<>(diaryResponseDto, HttpStatus.OK);
         } catch(Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

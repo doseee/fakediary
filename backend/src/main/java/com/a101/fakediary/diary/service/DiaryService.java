@@ -526,6 +526,10 @@ public class DiaryService {
      */
     @Transactional
     public DiaryResponseDto createDiary2(Long memberId, List<Long> cardIdList, List<String> genreList) throws Exception {
+        logger.info(memberId + "번 MemberId의 일기 생성을 시작하겠습니다.");
+        // 메소드 시작시간
+        long startTime = System.nanoTime();
+
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception(memberId + "에 해당하는 회원을 찾을 수 없습니다."));
 
         DiaryItemsDto diaryItemsDto = getItemInformations(cardIdList, genreList);
@@ -537,36 +541,123 @@ public class DiaryService {
         TitleSubtitlesResultDto titleSubtitlesResultDto = chatGptApi.askGpt4TitleSubtitles(userPrompt);
 
         String title = titleSubtitlesResultDto.getTitle();
-        List<String> subtitles = titleSubtitlesResultDto.getSubtitles();
+        List<String> subtitleList = titleSubtitlesResultDto.getSubtitles();
 
         logger.info("title = " + title);
-        logger.info("subtitles = " + subtitles);
+        logger.info("subtitles = " + subtitleList);
 
         //  TASK 1. characters, places, keywords, title, subtitles로 일기를 생성
-        userPrompt = ChatGptPrompts.generateUserPromptWithTitleSubtitles(characters, places, keywords, genreList, title, subtitles);    //  user-prompt 생성
+        logger.info("TASK 1 start");
+
+        userPrompt = ChatGptPrompts.generateUserPromptWithTitleSubtitles(characters, places, keywords, genreList, title, subtitleList);    //  user-prompt 생성
         DiaryResultDto diaryResultDto = getResultDto2(userPrompt);
         String diaryTitle = diaryResultDto.getTitle();
         List<String> diarySubtitles = diaryResultDto.getSubtitles();
         String diarySummary = diaryResultDto.getSummary();
+        List<String> diaryContents = diaryResultDto.getContents();
 
-        //  DB 저장을 위한 정보
-        Map<String, String> map = getDiaryItems(cardIdList);
-        String keywordsStr = map.getOrDefault("keywords", "");
-        String charactersStr = map.getOrDefault("characters", "");
-        String placesStr = map.getOrDefault("places", "");
+        logger.info("TASK 1 end");
         //  TASK 1 end
 
         //  TASK 2. 얻어낸 title과 subtitles로 표지 이미지 및 삽화를 생성
-        Map<String, Object> stableDiffusionMap = stableDiffusionApi.getStableDiffusionUrlsAndPrompt(title,subtitles);
+        logger.info("TASK 2 start");
+
+        Map<String, Object> stableDiffusionMap = stableDiffusionApi.getStableDiffusionUrlsAndPrompt(title,subtitleList);
         List<String> stableDiffusionUrls = (List<String>) stableDiffusionMap.get("stableDiffusionUrl");
         logger.info("stableDiffusionUrls = " + stableDiffusionUrls);
         List<String> diaryImagePrompt = (List<String>) stableDiffusionMap.get("diaryImagePrompt");
         logger.info("diaryImagePrompt = " + diaryImagePrompt);
+
+        logger.info("TASK 2 end");
         //  TASK 2 end
         
         //  TASK 3. TASK 1, 2에서 얻어낸 정보를 바탕으로 Database에 저장
+        //  DB 저장을 위한 정보
+        logger.info("TASK 3 start");
 
-        return null;
+        Map<String, String> map = getDiaryItems(cardIdList);
+        String keywordsStr = map.getOrDefault("keywords", "");
+        String charactersStr = map.getOrDefault("characters", "");
+        String placesStr = map.getOrDefault("places", "");
+
+        StringBuilder sb = new StringBuilder();
+
+        for (String content : diaryContents)
+            sb.append(content).append(DELIMITER);
+        if (sb.charAt(sb.length() - 1) == '@')
+            sb.deleteCharAt(sb.lastIndexOf("@"));
+        String detailStr = sb.toString().trim();
+
+        sb = new StringBuilder();
+
+        for (String subtitle : diarySubtitles) {
+            sb.append(subtitle).append(DELIMITER);
+        }
+
+        if (0 < sb.length() && sb.toString().endsWith(DELIMITER))
+            sb.setLength(sb.length() - 1);
+
+        String subtitlesStr = sb.toString();
+        logger.info("subtitlesStr = " + subtitlesStr);
+
+        Diary diary = Diary.builder()
+                .member(member)
+                .characters(charactersStr)
+                .places(placesStr)
+                .keyword(keywordsStr)
+                .prompt(userPrompt)
+                .title(title)
+                .subtitles(subtitlesStr)
+                .detail(detailStr)
+                .summary(diarySummary)
+                .build();
+
+        Long diaryId = diaryRepository.save(diary).getDiaryId();
+
+        logger.info("TASK 3 end");
+        //  TASK 3 end
+
+        //  TASK 4 장르 저장
+        logger.info("TASK 4 start");
+
+        for (String genre : genreList) {
+            GenreDto gen = new GenreDto(diary.getDiaryId(), genre);
+            genreService.saveGenre(gen); //장르 저장
+        }
+
+        logger.info("TASK 4 end");
+        //  TASK 4 end
+
+        //  TASK 5 카드 & 일기 매핑 테이블 생성
+        logger.info("TASK 5 start");
+
+        cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIdList);
+
+        logger.info("TASK 5 end");
+        //  TASK 5
+
+        //  TASK 6 삽화 저장
+        logger.info("TASK 5 start");
+
+        diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
+
+        logger.info("TASK 6 end");
+        //  TASK 5 end
+
+        DiaryResponseDto returnDto = new DiaryResponseDto(diary);
+        EGenre[] genreArr = genreList.stream().map(EGenre::valueOf).toArray(EGenre[]::new);
+        returnDto.setGenre(genreArr);
+        returnDto.setDiaryImageUrl(stableDiffusionUrls.toArray(new String[stableDiffusionUrls.size()]));
+
+        // 메소드 종료 시간
+        long endTime = System.nanoTime();
+
+        // 소요된 시간 (초 단위)
+        double elapsedTime = (endTime - startTime) / 1_000_000_000.0;
+
+        // 일기 생성에 소요된 시간을 로그로 출력
+        logger.info(memberId + "(" + member.getNickname() + ")" + "번 memberId의 " + diaryId + "번 diaryId 일기를 만드는데 소요된 시간 : {} 초", elapsedTime);
+        return returnDto;
     }
 
     @Transactional(readOnly = true)
