@@ -60,6 +60,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   another_flushbar: ^1.12.29
   firebase_crashlytics: ^3.3.0
+  audioplayers: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -92,6 +93,7 @@ flutter:
     - assets/img/
     - assets/gif-file/
     - assets/svg/
+    - assets/wav/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

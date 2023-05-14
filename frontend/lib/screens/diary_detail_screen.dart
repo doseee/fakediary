@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/CardUrlListVerModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
@@ -50,6 +51,10 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
       'http://fakediary.s3.amazonaws.com/image-20230506-215519.png';
 
   /// 구분선 확장 상태 관리하는 변수
+  final player = AudioPlayer();
+  bool isPlaying = false;
+
+  /// 오디오 플레이어
 
   final List<Color> colors = [
     Colors.red,
@@ -151,6 +156,25 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
       /// 처음과 마지막엔 subtitle 존재하지 않음
       return '';
     }
+  }
+
+  // 음악 플레이어
+  void playMusic() async {
+    await player.setSource(
+      AssetSource('wav/test_music.wav'),
+    );
+    await player.setReleaseMode(ReleaseMode.loop);
+    await player.resume();
+    isPlaying = true;
+    print('played');
+    setState(() {});
+  }
+
+  void stopMusic() async {
+    await player.stop();
+    isPlaying = false;
+    print('stopped');
+    setState(() {});
   }
 
   @override
@@ -362,7 +386,24 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
             elevation: 0,
 
             /// AppBar에 표시될 텍스트 : 다이어리 서브 타이틀 리스트
-            title: Text(title(diary.subtitles)),
+            title: Row(
+              children: [
+                Expanded(
+                  child: Text(title(diary.subtitles)),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    isPlaying ? stopMusic() : playMusic();
+                  },
+                  child: Image(
+                    image: isPlaying
+                        ? AssetImage('assets/img/music_off.png')
+                        : AssetImage('assets/img/music_icon.png'),
+                    width: 50,
+                  ),
+                ),
+              ],
+            ),
 
             /// 고정 여부
             pinned: true,

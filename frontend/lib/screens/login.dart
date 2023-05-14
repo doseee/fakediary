@@ -95,8 +95,12 @@ class _LoginState extends State<Login> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => TutorialScreen()));
               } else {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
+                      settings: RouteSettings(name: 'Login'),
+                    ));
               }
               Flushbar(
                       message: "로그인 성공!",

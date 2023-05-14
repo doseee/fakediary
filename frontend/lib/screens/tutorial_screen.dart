@@ -212,7 +212,10 @@ class _CarouselItemState extends State<CarouselItem> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
+                      settings: RouteSettings(name: 'Login'),
+                    ),
                   );
                 },
                 child: Container(
