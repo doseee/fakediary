@@ -1,7 +1,10 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/screens/login_entrance.dart';
+import 'package:frontend/widgets/theme.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/api_service.dart';
@@ -63,14 +66,63 @@ class _ModifyScreenState extends State<ModifyScreen> {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/img/background_pink_darken.png'),
+            image: AssetImage('assets/img/background_1_darken.png'),
             fit: BoxFit.cover,
           ),
         ),
         child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
             backgroundColor: Colors.transparent,
-            elevation: 0,
+            elevation: 0.0,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(6.0),
+              child: Container(
+                color: Colors.white70,
+              ),
+            ),
+            title: Row(
+              children: [
+                Text('마이페이지',
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
+              ],
+            ),
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        final pref = await SharedPreferences.getInstance();
+                        pref.setBool('isLogged', false);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginEntrance()));
+                      },
+                      child: Container(
+                        width: 90,
+                        height: 40,
+                        decoration: BtnThemeGradientLine(),
+                        child: const Center(
+                          child: Text(
+                            '로그아웃',
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
           backgroundColor: Colors.transparent,
           body: Form(
@@ -83,18 +135,28 @@ class _ModifyScreenState extends State<ModifyScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Image(
-                        image: AssetImage('assets/img/silver_moon.png'),
+                      SizedBox(
+                        height: 30,
+                      )
+                      ,
+                      SvgPicture.asset(
+                        'assets/svg/atronaut-svgrepo-com.svg',
+                        semanticsLabel: 'user',
+                        width: 70,
                         height: 70,
                       ),
+                      SizedBox(
+                        height: 30,
+                      )
+                      ,
                       Row(
                         children: [
                           Text(
                             '닉네임',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -122,11 +184,11 @@ class _ModifyScreenState extends State<ModifyScreen> {
                       Row(
                         children: [
                           Text(
-                            '일기 자동생성시간',
+                            '일기 자동 생성 시간',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -228,9 +290,9 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           Text(
                             '기본 주인공 이름',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -255,115 +317,72 @@ class _ModifyScreenState extends State<ModifyScreen> {
                               color: Colors.grey,
                             )),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final result = await ApiService.modifyUser(
-                                  nicknameController.text,
-                                  hour,
-                                  minute,
-                                  second,
-                                  basenameController.text);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeScreen()));
-                              if (result == true) {
-                                Flushbar(
-                                  message: '수정 성공!',
-                                  duration: Duration(seconds: 2),
-                                ).show(context);
-                              }
-                            },
-                            child: Container(
-                              width: 110,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    const Color(0xff263344),
-                                    const Color(0xff1B2532).withOpacity(0.53),
-                                    const Color(0xff1C2A3D).withOpacity(0.5),
-                                    const Color(0xff1E2E42).withOpacity(0.46),
-                                    const Color(0xff364B66).withOpacity(0.33),
-                                    const Color(0xff2471D6).withOpacity(0),
-                                  ],
-                                  stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                                ),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(30),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xff000000)
-                                        .withOpacity(0.25),
-                                    offset: const Offset(0, 4),
-                                    blurRadius: 4,
-                                  ),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () async {
+                            final result = await ApiService.modifyUser(
+                                nicknameController.text,
+                                hour,
+                                minute,
+                                second,
+                                basenameController.text);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                            if (result == true) {
+                              Flushbar(
+                                message: '수정 성공!',
+                                duration: Duration(seconds: 2),
+                              ).show(context);
+                            }
+                          },
+                          child: Container(
+                            width: 170,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  const Color(0xff263344),
+                                  const Color(0xff1B2532).withOpacity(0.53),
+                                  const Color(0xff1C2A3D).withOpacity(0.5),
+                                  const Color(0xff1E2E42).withOpacity(0.46),
+                                  const Color(0xff364B66).withOpacity(0.33),
+                                  const Color(0xff2471D6).withOpacity(0),
                                 ],
+                                stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
                               ),
-                              child: const Center(
-                                child: Text(
-                                  '설정',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 17),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color(0xff000000).withOpacity(0.25),
+                                  offset: const Offset(0, 4),
+                                  blurRadius: 4,
                                 ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Text(
+                                '저장하기',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17),
                               ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () async {
-                              final pref =
-                                  await SharedPreferences.getInstance();
-                              pref.setBool('isLogged', false);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginEntrance()));
-                            },
-                            child: Container(
-                              width: 110,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    const Color(0xff263344),
-                                    const Color(0xff1B2532).withOpacity(0.53),
-                                    const Color(0xff1C2A3D).withOpacity(0.5),
-                                    const Color(0xff1E2E42).withOpacity(0.46),
-                                    const Color(0xff364B66).withOpacity(0.33),
-                                    const Color(0xff2471D6).withOpacity(0),
-                                  ],
-                                  stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                                ),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(30),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xff000000)
-                                        .withOpacity(0.25),
-                                    offset: const Offset(0, 4),
-                                    blurRadius: 4,
-                                  ),
-                                ],
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  '로그아웃',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 17),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
+                      ),
+                      Transform.rotate(
+                        angle: 90 * 3.1415926535 / 180,
+                        child: Lottie.asset(
+                          'assets/lottie/star-twinkle.json',
+                          height: 120,
+                          width: 120,
+                        ),
                       ),
                     ],
                   ),

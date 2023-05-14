@@ -310,7 +310,7 @@ class _FriendScreenState extends State<FriendScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
+          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           bottom: PreferredSize(
@@ -320,10 +320,16 @@ class _FriendScreenState extends State<FriendScreen> {
               height: 0.5,
             ),
           ),
-          title: Text('친구 목록'),
+          title: Row(
+            children: [
+              Text('친구 목록',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+              Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
+            ],
+          ),
           actions: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
