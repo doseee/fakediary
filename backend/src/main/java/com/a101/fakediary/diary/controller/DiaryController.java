@@ -63,33 +63,6 @@ public class DiaryController {
         }
     }
 
-    @PostMapping("/create2")
-    public ResponseEntity<?> saveDiaryWithDiaryInformation2(@RequestBody DiaryInformation information) {
-        log.info("saveDiaryWithDiaryInformation");
-        log.info("memberId = " + information.getMemberId());
-        log.info("cardIdList = " + information.getCardIdList());
-        log.info("genreList = " + information.getGenreList());
-
-        try {
-            Long memberId = information.getMemberId();
-            List<Long> cardIdList = information.getCardIdList();
-            List<String> genreList = information.getGenreList();
-
-            log.info("memberId = " + memberId);
-            log.info("cardIdList = " + cardIdList);
-            log.info("genreList = " + genreList);
-
-//            DiaryResultDto diaryResultDto = diaryService.getResultDto(cardIdList);
-
-            DiaryResponseDto diaryResponseDto = diaryService.createDiary2(memberId, cardIdList, genreList);
-
-            return new ResponseEntity<>(diaryResponseDto, HttpStatus.OK);
-        } catch(Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @ApiOperation(value = "일기 상세 조회")
     @GetMapping("/detail/{diaryId}")
     public ResponseEntity<?> detailDiary(@PathVariable Long diaryId) {
