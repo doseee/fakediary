@@ -26,7 +26,7 @@ public class PapagoTranslator {
         .build();
   }
 
-  public Mono<String> translate(String text) {
+  public Mono<String> translateKorToEng(String text) {
     MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
     formData.add("source", "ko");
     formData.add("target", "en");
@@ -38,5 +38,19 @@ public class PapagoTranslator {
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
         .bodyToMono(String.class);
+  }
+
+  public Mono<String> translateEngToKor(String text) {
+    MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+    formData.add("source", "en");
+    formData.add("target", "ko");
+    formData.add("text", text);
+
+    return webClient.post()
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters.fromFormData(formData))
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(String.class);
   }
 }
