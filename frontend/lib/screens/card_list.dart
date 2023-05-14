@@ -104,7 +104,7 @@ class _CardListState extends State<CardList> {
     return GridView.count(
       crossAxisCount: 3,
       // 가로 방향으로 3개의 카드씩 표시
-      childAspectRatio: 0.7,
+      childAspectRatio: 0.66,
       // 카드의 가로 세로 비율 설정
       mainAxisSpacing: 10.0,
       // 카드들의 세로 간격 설정
@@ -132,7 +132,6 @@ class _CardListState extends State<CardList> {
                         cardTitle: titleCheck(snapshot, index),
                         card: snapshot[index]),
                   );
-
                 },
                 child: Card(
                   color: Colors.transparent,

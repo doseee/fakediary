@@ -150,20 +150,24 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                       future: cards,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          if(snapshot.data?.length == 0) {
+                          if (snapshot.data == null || snapshot.data!.isEmpty) {
                             return GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => CardCreate())
-                                );
+                                    MaterialPageRoute(
+                                        builder: (context) => CardCreate()));
                               },
                               child: Container(
                                 width: 250,
                                 height: 50,
                                 decoration: BtnThemeGradient(),
                                 child: Center(
-                                  child: Text('카드 만들러 가기', style: TextStyle(color: Colors.white, fontSize: 16),),
+                                  child: Text(
+                                    '카드 만들러 가기',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
                                 ),
                               ),
                             );
@@ -171,11 +175,16 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
 
                           return Column(
                             children: [
-                              Flexible(flex: 3, child: buildList(snapshot.data),),
-                              Flexible(flex: 1, child: ButtonCheck(),)
+                              Flexible(
+                                flex: 3,
+                                child: buildList(snapshot.data),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: ButtonCheck(),
+                              )
                             ],
                           );
-
                         } else if (snapshot.hasError) {
                           return Text("${snapshot.error}에러!!");
                         }
@@ -184,10 +193,13 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
             ])))));
   }
 
-  Widget ButtonCheck(){
-    if(selectedCards.isEmpty){
+  Widget ButtonCheck() {
+    if (selectedCards.isEmpty) {
       return Center(
-        child: Text('카드를 하나 이상 선택해주세요', style: TextStyle(color: Colors.white60),),
+        child: Text(
+          '카드를 하나 이상 선택해주세요',
+          style: TextStyle(color: Colors.white60),
+        ),
       );
     }
 
@@ -198,12 +210,11 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  MoodSelect(selectedCards: selectedCards)),
+              builder: (context) => MoodSelect(selectedCards: selectedCards)),
         );
       },
       child: Container(
-        // NEXT 버튼
+          // NEXT 버튼
           width: 268,
           height: 61,
           decoration: BoxDecoration(
@@ -238,19 +249,24 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
     );
   }
 
-
   String titleCheck(snapshot, index) {
-    // print('=== $index');
+    String title;
+
     if (snapshot[index].keywords.length != 0) {
-      // print('$index ?');
-      return snapshot[index].keywords[0];
+      title = snapshot[index].keywords[0];
     } else if (snapshot[index].baseName != '') {
-      // print('$index ??');
-      return snapshot[index].baseName;
+      title = snapshot[index].baseName;
     } else {
       print('sn: ${snapshot[index].basePlace}');
-      return snapshot[index].basePlace;
+      title = snapshot[index].basePlace;
     }
+
+    // 문자열이 10자 이상일 경우 잘라내고, "..."를 추가
+    if (title.length > 10) {
+      title = "${title.substring(0, 10)}...";
+    }
+
+    return title;
   }
 
   Widget buildList(snapshot) {
@@ -376,8 +392,9 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                             image: NetworkImage(
                                 selectedCards[index].cardImageUrl))),
                   ),
+                  SizedBox(height: 8),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(titleCheck(selectedCards, index),
                         style: TextStyle(
                             color: Colors.white,

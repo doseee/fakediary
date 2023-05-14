@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/diary_detail_animated_text.dart';
 import 'package:frontend/screens/diary_detail_screen.dart';
@@ -6,9 +5,13 @@ import 'package:frontend/screens/diary_detail_screen.dart';
 class DiaryDetailCoverScreen extends StatefulWidget {
   final int diaryId;
   final int exchangeSituation;
-  final String imageUrl;// 내 일기는 1 0r 2로 넘어오고 친구가 보낸 일기는 3으로 넘길 것
+  final String imageUrl; // 내 일기는 1 0r 2로 넘어오고 친구가 보낸 일기는 3으로 넘길 것
 
-  const DiaryDetailCoverScreen({Key? key, required this.diaryId, required this.exchangeSituation, required this.imageUrl})
+  const DiaryDetailCoverScreen(
+      {Key? key,
+      required this.diaryId,
+      required this.exchangeSituation,
+      required this.imageUrl})
       : super(key: key);
 
   @override
@@ -24,12 +27,13 @@ class _DiaryDetailCoverScreenState extends State<DiaryDetailCoverScreen>
   @override
   void initState() {
     super.initState();
+    print('exchangeSituation: ${widget.exchangeSituation}');
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     )..repeat(
         reverse:
-        true); // repeat the animation continuously, reversing at the end
+            true); // repeat the animation continuously, reversing at the end
     _iconAnimation = TweenSequence([
       TweenSequenceItem<Offset>(
         tween: Tween<Offset>(
@@ -61,22 +65,25 @@ class _DiaryDetailCoverScreenState extends State<DiaryDetailCoverScreen>
         onVerticalDragUpdate: (details) {
           setState(() {
             _showCover = false;
-          }
-          );
+          });
           _controller.forward();
           Navigator.of(context).push(
             PageRouteBuilder(
-              pageBuilder: (_, __, ___) => DiaryDetailScreen(diaryId: widget.diaryId, exchangeSituation: widget.exchangeSituation,),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              pageBuilder: (_, __, ___) => DiaryDetailScreen(
+                diaryId: widget.diaryId,
+                exchangeSituation: widget.exchangeSituation,
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return FadeTransition(
                   opacity: animation,
                   child: child,
                 );
               },
-              transitionDuration: const Duration(milliseconds: 750), // updated value
+              transitionDuration:
+                  const Duration(milliseconds: 750), // updated value
             ),
           );
-
         },
         child: Stack(
           children: [
@@ -86,7 +93,7 @@ class _DiaryDetailCoverScreenState extends State<DiaryDetailCoverScreen>
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage( widget.imageUrl ),
+                    image: NetworkImage(widget.imageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),

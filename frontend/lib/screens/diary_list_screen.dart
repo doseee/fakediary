@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/diary-list-filter.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/screens/diary_detail_cover_screen.dart';
-import 'package:frontend/screens/diary_list_filtered_screen.dart';
-import 'package:frontend/screens/friend_searchnew.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/change_button.dart';
-import '../widgets/appbar.dart';
 
 class DiaryListScreen extends StatefulWidget {
   final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
@@ -317,7 +313,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                                                 padding: 20,
                                                                 color: true,
                                                                 widget: Text(
-                                                                  '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다',
+                                                                  '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다.',
                                                                   style: TextStyle(
                                                                       color: Colors
                                                                           .white,

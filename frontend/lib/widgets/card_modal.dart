@@ -226,9 +226,10 @@ class CardModal extends StatelessWidget {
                               final result = await GallerySaver.saveImage(file);
                               if (result != null) {
                                 Flushbar(
-                                  message: "사진 저장 성공!",
-                                  duration: Duration(seconds: 3),
-                                ).show(context);
+                                        message: "사진 저장 성공!",
+                                        duration: Duration(seconds: 3),
+                                        flushbarPosition: FlushbarPosition.TOP)
+                                    .show(context);
                                 // ScaffoldMessenger.of(context).showSnackBar(
                                 //   SnackBar(
                                 //     content: Center(child: Text('사진 저장 성공!')),
@@ -236,9 +237,10 @@ class CardModal extends StatelessWidget {
                                 // );
                               } else {
                                 Flushbar(
-                                  message: "권한을 허용해주세요.",
-                                  duration: Duration(seconds: 3),
-                                ).show(context);
+                                        message: "권한을 허용해주세요.",
+                                        duration: Duration(seconds: 3),
+                                        flushbarPosition: FlushbarPosition.TOP)
+                                    .show(context);
                                 // ScaffoldMessenger.of(context).showSnackBar(
                                 //   SnackBar(
                                 //     content: Center(child: Text('권한을 허용해주세요.')),
