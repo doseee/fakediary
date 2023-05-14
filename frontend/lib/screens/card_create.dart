@@ -246,23 +246,57 @@ class _CardCreateState extends State<CardCreate> {
                             ),
                           ],
                         ),
-                        Transform.translate(
-                          offset: Offset(0, -50),
-                          child: imageLoading
-                              ? SpinKitFadingCircle(
-                                  color: Colors.black,
-                                  size: 70.0,
-                                )
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(25),
-                                  child: Image(
-                                    image: _currentImage ??
-                                        AssetImage(
-                                            'assets/img/card_example.jpg'),
-                                    width: 161,
-                                    height: 267,
+                        GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              imageLoading = true;
+                            });
+                            final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CameraExample()));
+                            if (result != null) {
+                              final captions =
+                                  await ApiService.getCaption(result);
+
+                              setState(() {
+                                _image = result;
+                                _currentImage = FileImage(result);
+                                keyword1 =
+                                    captions.isNotEmpty ? captions[0] : "";
+                                keyword1Modified = !captions.isNotEmpty;
+                                keyword2 =
+                                    captions.length > 1 ? captions[1] : "";
+                                keyword2Modified = !(captions.length > 1);
+                                keyword3 =
+                                    captions.length > 2 ? captions[2] : "";
+                                keyword3Modified = !(captions.length > 2);
+                                imageLoading = false;
+                              });
+                            } else {
+                              setState(() {
+                                imageLoading = false;
+                              });
+                            }
+                          },
+                          child: Transform(
+                            transform: Matrix4.translationValues(0, -45, 0),
+                            child: imageLoading
+                                ? SpinKitFadingCircle(
+                                    color: Colors.black,
+                                    size: 70.0,
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(25),
+                                    child: Image(
+                                      image: _currentImage ??
+                                          AssetImage(
+                                              'assets/img/image_plus.png'),
+                                      width: 160,
+                                      height: 266,
+                                    ),
                                   ),
-                                ),
+                          ),
                         ),
                         CheckRow(
                           text: '주인공',
@@ -624,77 +658,86 @@ class InputKeyword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        GestureDetector(
-          onTap: () {
-            converter();
-          },
-          child: Container(
-            width: 15,
-            height: 15,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: GradientBoxBorder(
-                  gradient: LinearGradient(stops: [
-                0,
-                1.0
-              ], colors: [
-                Color(0xff65D5A6),
-                Color(0xff1E72AC),
-              ])),
-              gradient: isSelected
-                  ? LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0, 1.0],
-                      colors: [
-                        Color(0xff65D5A6),
-                        Color(0xff1E72AC),
-                      ],
-                    )
-                  : null,
+    return SizedBox(
+      height: 43,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: GestureDetector(
+              onTap: () {
+                converter();
+              },
+              child: Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: GradientBoxBorder(
+                      gradient: LinearGradient(stops: [
+                    0,
+                    1.0
+                  ], colors: [
+                    Color(0xff65D5A6),
+                    Color(0xff1E72AC),
+                  ])),
+                  gradient: isSelected
+                      ? LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0, 1.0],
+                          colors: [
+                            Color(0xff65D5A6),
+                            Color(0xff1E72AC),
+                          ],
+                        )
+                      : null,
+                ),
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          width: 8,
-        ),
-        SizedBox(
-          width: 146,
-          child: TextFormField(
-            maxLength: 10,
-            controller: keywordController,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-            ),
-            decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                  color: Colors.white,
-                )),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                  color: Colors.white,
-                )),
-                hintText: '키워드를 입력하세요.',
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                )),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return '무언가 입력하세요.';
-              }
-              return null;
-            },
+          SizedBox(
+            width: 8,
           ),
-        ),
-        SizedBox(
-          width: 77,
-        )
-      ],
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              width: 146,
+              child: TextFormField(
+                maxLength: 10,
+                controller: keywordController,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+                decoration: const InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                      color: Colors.white,
+                    )),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                      color: Colors.white,
+                    )),
+                    hintText: '키워드를 입력하세요.',
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                    )),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return '무언가 입력하세요.';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 77,
+          )
+        ],
+      ),
     );
   }
 }
