@@ -11,9 +11,14 @@ import '../model/DiaryModel.dart';
 import '../widgets/change_button.dart';
 
 class DiaryListScreen extends StatefulWidget {
-  final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
+  // final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
+  final int? requestId; //답장 상황에서는 requestId가 존재한다고 가정
 
-  const DiaryListScreen({Key? key, this.recieverId}) : super(key: key);
+  const DiaryListScreen({
+    Key? key,
+    // this.recieverId,
+    this.requestId,
+  }) : super(key: key);
 
   @override
   State<DiaryListScreen> createState() => _DiaryListScreenState();
@@ -38,7 +43,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
     // diaries = Future.value(widget.diaries);
     // holeDiaries = ApiService().getDiaries();
     print(diaries);
-    if (widget.recieverId != null) {
+    if (widget.requestId != null) {
+      print('thisway');
       setState(() {
         exchangeSituation = 2;
       });
@@ -179,6 +185,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 ChangeButton(
                   exchangeSituation: exchangeSituation,
                   diaryId: diaryId,
+                  requestId: widget.requestId,
                 ),
               ],
             ),
