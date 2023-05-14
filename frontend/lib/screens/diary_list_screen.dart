@@ -205,10 +205,15 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
             preferredSize: Size.fromHeight(1.0),
             child: Container(
               color: Colors.white70,
-              height: 0.5,
             ),
           ),
-          title: Text('일기장'),
+          title: Row(
+            children: [
+              Text('일기장',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+              Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
+            ],
+          ),
           actions: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),

@@ -117,8 +117,22 @@ class _SearchScreenState extends State<SearchScreen> {
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
             backgroundColor: Colors.transparent,
-            title: Text('친구 검색'),
+            elevation: 0.0,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(6.0),
+              child: Container(
+                color: Colors.white70,
+              ),
+            ),
+            title: Row(
+              children: [
+                Text('친구 찾기' , style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
+                Lottie.asset('assets/lottie/menu_grinstar.json',
+                    width: 30),
+              ],
+            ),
           ),
           body: SingleChildScrollView(
               child: Column(
@@ -171,7 +185,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 child: Expanded(
                   child: _isLoading
-                      ? Center(child: CircularProgressIndicator())
+                      ? Center(
+                          child: CircularProgressIndicator())
                       : _searchResults.isNotEmpty
                           ? ListView.builder(
                               itemCount: _searchResults.length,
