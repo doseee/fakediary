@@ -7,7 +7,9 @@ import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/card_loading.dart';
 import 'package:frontend/screens/card_result.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/widgets/theme.dart';
 import 'package:gradient_borders/gradient_borders.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CardCreate extends StatefulWidget {
@@ -148,16 +150,9 @@ class _CardCreateState extends State<CardCreate> {
             },
             child: Container(
               decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0.4, 1.0],
-                  colors: [
-                    Color(0xff0A3442),
-                    Color(0xff4F4662),
-                  ],
-                ),
-              ),
+                  image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage('assets/img/background_1_darken.png'))),
               child: Scaffold(
                 appBar: AppBar(
                   backgroundColor: Colors.transparent,
@@ -166,103 +161,70 @@ class _CardCreateState extends State<CardCreate> {
                 backgroundColor: Colors.transparent,
                 body: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 20,
+                    horizontal: 10,
+                    vertical: 10,
                   ),
                   child: Form(
                     key: _formKey,
                     child: ListView(
                       children: [
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.end,
-                        //   children: [
-                        //     Column(
-                        //       mainAxisAlignment: MainAxisAlignment.end,
-                        //       children: [
-                        //         GestureDetector(
-                        //           onTap: () {
-                        //             Navigator.push(
-                        //                 context,
-                        //                 MaterialPageRoute(
-                        //                     builder: (context) =>
-                        //                         MenuScreen()));
-                        //           },
-                        //           child: Image(
-                        //             image: AssetImage(
-                        //               'assets/img/icon_menu_page.png',
-                        //             ),
-                        //             width: 45,
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ],
-                        // ),
-                        // SizedBox(
-                        //   height: 30,
-                        // ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                setState(() {
-                                  imageLoading = true;
-                                });
-                                final result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CameraExample()));
-                                if (result != null) {
-                                  final captions =
-                                      await ApiService.getCaption(result);
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 75),
+                          child: Container(
+                            width: 100,
+                            height: 336,
+                            decoration: BtnThemeGradientLine(),
+                            child: GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    imageLoading = true;
+                                  });
+                                  final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CameraExample()));
+                                  if (result != null) {
+                                    final captions =
+                                    await ApiService.getCaption(result);
 
-                                  setState(() {
-                                    _image = result;
-                                    _currentImage = FileImage(result);
-                                    keyword1 =
-                                        captions.isNotEmpty ? captions[0] : "";
-                                    keyword1Modified = !captions.isNotEmpty;
-                                    keyword2 =
-                                        captions.length > 1 ? captions[1] : "";
-                                    keyword2Modified = !(captions.length > 1);
-                                    keyword3 =
-                                        captions.length > 2 ? captions[2] : "";
-                                    keyword3Modified = !(captions.length > 2);
-                                    imageLoading = false;
-                                  });
-                                } else {
-                                  setState(() {
-                                    imageLoading = false;
-                                  });
-                                }
-                              },
-                              child: Image(
-                                image: AssetImage(
-                                  'assets/img/icon_cam.png',
-                                ),
-                                width: 45,
-                              ),
+                                    setState(() {
+                                      _image = result;
+                                      _currentImage = FileImage(result);
+                                      keyword1 =
+                                      captions.isNotEmpty ? captions[0] : "";
+                                      keyword1Modified = !captions.isNotEmpty;
+                                      keyword2 =
+                                      captions.length > 1 ? captions[1] : "";
+                                      keyword2Modified = !(captions.length > 1);
+                                      keyword3 =
+                                      captions.length > 2 ? captions[2] : "";
+                                      keyword3Modified = !(captions.length > 2);
+                                      imageLoading = false;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      imageLoading = false;
+                                    });
+                                  }
+                                },
+
+                              child: imageLoading
+                                  ? Lottie.asset( 'assets/lottie/loading_image.json',height: 70,width: 70)
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(25),
+                                      child: Image(
+                                        width: 189.6,
+                                        height: 336,
+                                        image: _currentImage ??
+                                            AssetImage('assets/img/camera_small (1).png'),
+                                      ),
+                                    ),
+
                             ),
-                          ],
+                          ),
                         ),
-                        Transform.translate(
-                          offset: Offset(0, -50),
-                          child: imageLoading
-                              ? SpinKitFadingCircle(
-                                  color: Colors.black,
-                                  size: 70.0,
-                                )
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(25),
-                                  child: Image(
-                                    image: _currentImage ??
-                                        AssetImage(
-                                            'assets/img/card_example.jpg'),
-                                    width: 161,
-                                    height: 267,
-                                  ),
-                                ),
+                        SizedBox(
+                          height: 30,
                         ),
                         CheckRow(
                           text: '주인공',
@@ -281,7 +243,7 @@ class _CardCreateState extends State<CardCreate> {
                               )
                             : Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 60),
+                                    const EdgeInsets.symmetric(horizontal: 55),
                                 child: TextFormField(
                                   maxLength: 10,
                                   controller: _personController,
@@ -304,7 +266,7 @@ class _CardCreateState extends State<CardCreate> {
                                       )),
                                   validator: (String? value) {
                                     if (value == null || value.isEmpty) {
-                                      return '무언가 입력하세요.';
+                                      return '공백을 채워주세요.';
                                     }
                                     return null;
                                   },
@@ -330,7 +292,7 @@ class _CardCreateState extends State<CardCreate> {
                               )
                             : Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 60),
+                                    const EdgeInsets.symmetric(horizontal: 55),
                                 child: TextFormField(
                                   maxLength: 200,
                                   controller: _locationController,
@@ -353,7 +315,7 @@ class _CardCreateState extends State<CardCreate> {
                                       )),
                                   validator: (String? value) {
                                     if (value == null || value.isEmpty) {
-                                      return '무언가 입력하세요.';
+                                      return '공백을 채워주세요.';
                                     }
                                     return null;
                                   },
@@ -362,39 +324,52 @@ class _CardCreateState extends State<CardCreate> {
                         SizedBox(
                           height: 30,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '추가설정',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
+                        Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '추가설정',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 195,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '키워드 오른쪽의 연필을 누르면 수동으로 입력할 수 있어요.',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 10.3,
+                              SizedBox(
+                                width: 195,
                               ),
-                            ),
-                            // SizedBox(
-                            //   width: 130,
-                            // ),
-                          ],
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    '사진을 분석해서 자동으로 키워드를 만들어보았어요!',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    '원하는 키워드가 있다면 수정해보세요',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                  // SizedBox(
+                                  //   width: 130,
+                                  // ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
+
                         SizedBox(
                           height: 15,
                         ),
@@ -446,7 +421,7 @@ class _CardCreateState extends State<CardCreate> {
                             converter: setKeyword3,
                           ),
                         SizedBox(
-                          height: 45,
+                          height: 30,
                         ),
                         GestureDetector(
                           onTap: () async {
@@ -486,9 +461,10 @@ class _CardCreateState extends State<CardCreate> {
                                 _isLoading = false;
                               });
                               Flushbar(
-                                message: '키워드를 한 개 이상 입력해주세요.',
-                                duration: Duration(seconds: 2),
-                              ).show(context);
+                                      message: '키워드를 한 개 이상 입력해주세요.',
+                                      duration: Duration(seconds: 3),
+                                      flushbarPosition: FlushbarPosition.TOP)
+                                  .show(context);
                               // ScaffoldMessenger.of(context).showSnackBar(
                               //   SnackBar(
                               //     content: Center(
@@ -503,9 +479,10 @@ class _CardCreateState extends State<CardCreate> {
                                 _isLoading = false;
                               });
                               Flushbar(
-                                message: '사진을 선택해주세요.',
-                                duration: Duration(seconds: 2),
-                              ).show(context);
+                                      message: '사진을 선택해주세요.',
+                                      duration: Duration(seconds: 3),
+                                      flushbarPosition: FlushbarPosition.TOP)
+                                  .show(context);
                               // ScaffoldMessenger.of(context).showSnackBar(
                               //   SnackBar(
                               //     content: Center(child: Text('사진을 선택해주세요.')),
@@ -532,67 +509,45 @@ class _CardCreateState extends State<CardCreate> {
                               _isLoading = false;
                             });
 
-                            // print('analytics 전송');
-                            // FirebaseAnalytics.instance
-                            //     .logEvent(name: 'card_create_complete');
-                            // FirebaseAnalytics.instance.logEvent(name: 'aa');
-                            // print('aa');
-
-                            // const AndroidNotificationDetails
-                            //     androidNotificationDetails =
-                            //     AndroidNotificationDetails(
-                            //         'your channel id', 'your channel name',
-                            //         channelDescription:
-                            //             'your channel description',
-                            //         importance: Importance.max,
-                            //         priority: Priority.high,
-                            //         ticker: 'ticker');
-                            // const NotificationDetails notificationDetails =
-                            //     NotificationDetails(
-                            //         android: androidNotificationDetails);
-                            // await FlutterLocalNotificationsPlugin().show(
-                            //     0,
-                            //     '카드 생성 완료',
-                            //     '카드 생성이 완료되었습니다!',
-                            //     notificationDetails,
-                            //     payload: 'item x');
-
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         CardResult(card: card)));
                           },
-                          child: Container(
-                            width: 268,
-                            height: 61,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xff263344),
-                                  Color(0xff1B2532).withOpacity(0.538),
-                                  Color(0xff1C2A3D).withOpacity(0.502),
-                                  Color(0xff1E2E42).withOpacity(0.46),
-                                  Color(0xff364B66).withOpacity(0.33),
-                                  Color(0xff2471D6).withOpacity(0),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                            child: Container(
+                              width: 200,
+                              height: 61,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xff263344),
+                                    Color(0xff1B2532).withOpacity(0.538),
+                                    Color(0xff1C2A3D).withOpacity(0.502),
+                                    Color(0xff1E2E42).withOpacity(0.46),
+                                    Color(0xff364B66).withOpacity(0.33),
+                                    Color(0xff2471D6).withOpacity(0),
+                                  ],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        const Color(0xff000000).withOpacity(0.25),
+                                    offset: const Offset(0, 4),
+                                    blurRadius: 4,
+                                  ),
                                 ],
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color:
-                                      const Color(0xff000000).withOpacity(0.25),
-                                  offset: const Offset(0, 4),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                '나만의 일상 카드 만들기',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
+                              child: Center(
+                                child: Text(
+                                  '나만의 일상 카드 만들기',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
                                 ),
                               ),
                             ),
@@ -630,8 +585,8 @@ class InputKeyword extends StatelessWidget {
             converter();
           },
           child: Container(
-            width: 15,
-            height: 15,
+            width: 25,
+            height: 25,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: GradientBoxBorder(
@@ -660,7 +615,7 @@ class InputKeyword extends StatelessWidget {
           width: 8,
         ),
         SizedBox(
-          width: 146,
+          width: 160,
           child: TextFormField(
             maxLength: 10,
             controller: keywordController,
@@ -683,7 +638,7 @@ class InputKeyword extends StatelessWidget {
                 )),
             validator: (String? value) {
               if (value == null || value.isEmpty) {
-                return '무언가 입력하세요.';
+                return '공백을 채워주세요.';
               }
               return null;
             },
@@ -722,7 +677,7 @@ class _KeywordState extends State<Keyword> {
       width: 300,
       alignment: Alignment.center,
       child: SizedBox(
-        width: 246,
+        width: 270,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -731,8 +686,8 @@ class _KeywordState extends State<Keyword> {
                 widget.converter();
               },
               child: Container(
-                width: 15,
-                height: 15,
+                width: 25,
+                height: 25,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: GradientBoxBorder(
@@ -764,17 +719,17 @@ class _KeywordState extends State<Keyword> {
               widget.keyword,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 15,
+                fontSize: 17,
               ),
             ),
             SizedBox(
-              width: 8,
+              width: 10,
             ),
             GestureDetector(
                 onTap: () {
                   widget.modifier();
                 },
-                child: Icon(Icons.edit, color: Colors.white, size: 16)),
+                child: Icon(Icons.edit, color: Colors.white, size: 25 )),
           ],
         ),
       ),
@@ -804,48 +759,52 @@ class CheckRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          width: 100,
+          width: 120,
           child: Row(
             children: [
               GestureDetector(
                 onTap: () {
                   converter();
                 },
-                child: Container(
-                  width: 15,
-                  height: 15,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: GradientBoxBorder(
-                        gradient: LinearGradient(stops: [
-                      0,
-                      1.0
-                    ], colors: [
-                      Color(0xff65D5A6),
-                      Color(0xff1E72AC),
-                    ])),
-                    gradient: isSelected
-                        ? LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            stops: [0, 1.0],
-                            colors: [
-                              Color(0xff65D5A6),
-                              Color(0xff1E72AC),
-                            ],
-                          )
-                        : null,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Text(
-                text,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: GradientBoxBorder(
+                            gradient: LinearGradient(stops: [
+                          0,
+                          1.0
+                        ], colors: [
+                          Color(0xff65D5A6),
+                          Color(0xff1E72AC),
+                        ])),
+                        gradient: isSelected
+                            ? LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: [0, 1.0],
+                                colors: [
+                                  Color(0xff65D5A6),
+                                  Color(0xff1E72AC),
+                                ],
+                              )
+                            : null,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      text,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -857,7 +816,7 @@ class CheckRow extends StatelessWidget {
           },
           child: Container(
             width: 146,
-            height: 23,
+            height: 40,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               gradient: LinearGradient(
@@ -883,7 +842,7 @@ class CheckRow extends StatelessWidget {
                 buttonText,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 10,
+                  fontSize: 13,
                 ),
               ),
             ),
