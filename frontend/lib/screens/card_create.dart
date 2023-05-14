@@ -261,7 +261,7 @@ class _CardCreateState extends State<CardCreate> {
                               child: imageLoading
                                   ? Lottie.asset( 'assets/lottie/loading_image.json',height: 70,width: 70)
                                   : ClipRRect(
-                                      borderRadius: BorderRadius.circular(25),
+                                      borderRadius: BorderRadius.circular(22),
                                       child: Image(
                                         width: 189.6,
                                         height: 336,
