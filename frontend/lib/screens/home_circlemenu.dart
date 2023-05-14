@@ -301,6 +301,7 @@ class HomeScreen extends StatelessWidget {
 // }
 }
 
+
 class AlarmDrawer extends StatefulWidget {
   const AlarmDrawer({
     super.key,
@@ -317,10 +318,12 @@ class _AlarmDrawerState extends State<AlarmDrawer> {
   void initState() {
     super.initState();
     getAlarmList();
+
   }
 
   getAlarmList() async {
     alarmList = await ApiService.getAllAlarm();
+
     setState(() {});
   }
 
