@@ -835,7 +835,7 @@ class ApiService {
     final url = Uri.parse('$baseUrl/friendexchange/manage');
     final manage = {
       'friendExchangeRequestId': requestId,
-      'receivderDiaryId': diaryId,
+      'receiverDiaryId': diaryId,
     };
 
     final response = await http.patch(

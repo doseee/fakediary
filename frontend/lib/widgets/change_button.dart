@@ -1,4 +1,6 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import '../screens/friend_screen.dart';
@@ -26,7 +28,7 @@ class ChangeButton extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(right: 25, left: 25),
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
                 if (exchangeSituation == 1) {
                   //내가 먼저 교환 보내는 상황
                   // 친구 선택
@@ -39,9 +41,21 @@ class ChangeButton extends StatelessWidget {
                       ));
                 } else if (exchangeSituation == 2) {
                   final result =
-                      ApiService.DiaryChangeApprove(diaryId, requestId!);
+                      await ApiService.DiaryChangeApprove(diaryId, requestId!);
                   print('result: $result');
-                  print('끗');
+                  if (result == true) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(),
+                      ),
+                    );
+                    Flushbar(
+                            message: '일기 교환이 완료되었습니다!',
+                            duration: Duration(seconds: 3),
+                            flushbarPosition: FlushbarPosition.TOP)
+                        .show(context);
+                  }
                 }
                 //todo; 답장으로 교환일기 보내는 상황
                 print('답장');
