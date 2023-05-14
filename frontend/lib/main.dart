@@ -47,6 +47,10 @@ Future<void> _backgroundMessageHandler(RemoteMessage message) async {
   // print('Message data: ${message.data}');
   // print((message.data['FLUTTER_NOTIFICATION_CLICK']));
   if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
+  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
+  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
+  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
+  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
 }
 
 void main() async {

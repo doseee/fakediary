@@ -318,7 +318,7 @@ class ApiService {
     }
   }
 
-  static Future<void> modifyUser(String newNickname, String hour, String minute,
+  static Future<bool> modifyUser(String newNickname, String hour, String minute,
       String second, String newDiaryBaseName) async {
     final prefs = await SharedPreferences.getInstance();
     final memberId = prefs.getInt('memberId');
@@ -352,10 +352,12 @@ class ApiService {
       prefs.setInt('second', second);
 
       print(response.body);
+      return true;
     } else {
       print('fail');
       print(response.statusCode);
       print(response.body);
+      return false;
     }
   }
 

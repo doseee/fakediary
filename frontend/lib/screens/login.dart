@@ -99,9 +99,10 @@ class _LoginState extends State<Login> {
                     MaterialPageRoute(builder: (context) => HomeScreen()));
               }
               Flushbar(
-                message: "로그인 성공!",
-                duration: Duration(seconds: 3),
-              ).show(context);
+                      message: "로그인 성공!",
+                      duration: Duration(seconds: 3),
+                      flushbarPosition: FlushbarPosition.TOP)
+                  .show(context);
               // ScaffoldMessenger.of(context).showSnackBar(
               //   SnackBar(
               //     content: Center(child: Text('login success!')),
