@@ -91,9 +91,10 @@ class ReceiveDiaryModal extends StatelessWidget {
                           ),
                         );
                         Flushbar(
-                          message: '교환할 일기를 선택해주세요.',
-                          duration: Duration(seconds: 2),
-                        ).show(context);
+                                message: '교환할 일기를 선택해주세요.',
+                                duration: Duration(seconds: 2),
+                                flushbarPosition: FlushbarPosition.TOP)
+                            .show(context);
                       },
                       child: Container(
                         width: 90,

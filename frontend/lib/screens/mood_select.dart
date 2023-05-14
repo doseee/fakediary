@@ -228,9 +228,10 @@ class _MoodSelectState extends State<MoodSelect> {
                       onTap: () async {
                         if (selectedMood.isEmpty) {
                           Flushbar(
-                            message: '장르를 선택해주세요',
-                            duration: Duration(seconds: 3),
-                          ).show(context);
+                                  message: '장르를 선택해주세요',
+                                  duration: Duration(seconds: 3),
+                                  flushbarPosition: FlushbarPosition.TOP)
+                              .show(context);
                           // ScaffoldMessenger.of(context).showSnackBar(
                           //   SnackBar(
                           //     content: Text('장르를 선택해주세요'),
@@ -319,10 +320,11 @@ class _MoodSelectState extends State<MoodSelect> {
                           ),
                         );
                         Flushbar(
-                          message:
-                              '다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!',
-                          duration: Duration(seconds: 3),
-                        ).show(context);
+                                message:
+                                    '다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!',
+                                duration: Duration(seconds: 3),
+                                flushbarPosition: FlushbarPosition.TOP)
+                            .show(context);
                         // ScaffoldMessenger.of(context).showSnackBar(
                         //   SnackBar(
                         //       content: Center(

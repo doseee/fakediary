@@ -36,6 +36,35 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           key: scaffoldKey,
           drawer: AlarmDrawer(),
+          appBar: AppBar(
+            leading: Container(),
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        if (scaffoldKey.currentState != null) {
+                          scaffoldKey.currentState!.openDrawer();
+                        }
+                      },
+                      child: Image(
+                        image: AssetImage(
+                          'assets/img/icon_alarm.png',
+                        ),
+                        width: 45,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
           body: FractionallySizedBox(
               widthFactor: 1.3,
               child: Transform(

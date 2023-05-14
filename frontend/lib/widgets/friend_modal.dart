@@ -89,9 +89,10 @@ class FriendModal extends StatelessWidget {
                         if (result == true) {
                           Navigator.pop(context);
                           Flushbar(
-                            message: '친구 요청을 수락했습니다.',
-                            duration: Duration(seconds: 2),
-                          ).show(context);
+                                  message: '친구 요청을 수락했습니다.',
+                                  duration: Duration(seconds: 2),
+                                  flushbarPosition: FlushbarPosition.TOP)
+                              .show(context);
                           getAlarmList();
                         }
                       },
