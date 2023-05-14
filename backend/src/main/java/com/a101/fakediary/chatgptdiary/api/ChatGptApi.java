@@ -4,6 +4,7 @@ import com.a101.fakediary.chatgptdiary.dto.message.Message;
 import com.a101.fakediary.chatgptdiary.dto.request.ChatGptDiaryRequestDto;
 
 import com.a101.fakediary.chatgptdiary.dto.response.ChatGptDiaryResponseDto;
+import com.a101.fakediary.chatgptdiary.prompt.ChatGptLoadingPrompts;
 import com.a101.fakediary.chatgptdiary.prompt.ChatGptPrompts;
 import com.a101.fakediary.chatgptdiary.config.ChatGptApiConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -85,6 +87,37 @@ public class ChatGptApi {
 
         Instant end = Instant.now();
         log.info("GPT4 키워드로 일기 내용 받아오는데 걸리는 소요 시간 : " + Duration.between(start, end).toMillis() + " ms");
+
+        return messages;
+    }
+
+    public List<Message> chatGpt35LoadingMessage(String genre) throws Exception {
+        String userPrompt = ChatGptLoadingPrompts.getUserPrompt(genre);
+        List<Message> messages = new ArrayList<>();
+
+        messages.add(new Message("system", ChatGptLoadingPrompts.getSystemPrompt()));
+        messages.add(new Message("user", userPrompt));
+
+        ChatGptDiaryRequestDto requestDto = ChatGptDiaryRequestDto.builder()
+                .model(MODEL_3_5)
+                .n(N)
+                .maxTokens(MAX_TOKENS_3_5)
+                .temperature(TEMPERATURE)
+                .messages(messages)
+                .build();
+
+        ChatGptDiaryResponseDto responseDto = restTemplate35.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
+
+        if(responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
+            log.info("no response!!!");
+            throw new Exception("GPT4가 응답이 없음");
+        }
+
+        String answer = responseDto.getChoices().get(0).getMessage().getContent().trim();
+        messages.add(new Message("assistant", answer));
+
+        log.info("answer = " + answer);
+        log.info("messages = " + messages);
 
         return messages;
     }
