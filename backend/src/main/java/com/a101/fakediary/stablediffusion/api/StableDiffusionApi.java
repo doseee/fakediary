@@ -118,10 +118,10 @@ public class StableDiffusionApi {
         //subtitles 파싱해서 리스트로 들고있기
         //리스트에 제목, subtitle을 순서대로 영어로 넣는다. 각각 썸네일, 삽화들 만들용도
         List<String> diaryImagePrompt = new ArrayList<>();
-        diaryImagePrompt.add(papagoApi.translate(title));
+        diaryImagePrompt.add(papagoApi.translateKorToEng(title));
 
         for (String subtitle : subtitles)
-            diaryImagePrompt.add(papagoApi.translate(subtitle));
+            diaryImagePrompt.add(papagoApi.translateKorToEng(subtitle));
 
         List<String> dtoImageUrl = new ArrayList<>();   // 다이어리 이미지 url들 저장할것
         // Title, subtitle들 번역해서 프롬프트로 넣고 stablediffusion 이미지 생성
