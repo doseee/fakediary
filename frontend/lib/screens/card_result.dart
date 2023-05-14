@@ -76,11 +76,15 @@ class _CardResultState extends State<CardResult>
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xff0A3442), Color(0xff4F4662)],
-          stops: [0.4, 1.0],
+        // gradient: LinearGradient(
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        //   colors: [Color(0xff142e34), Color(0xff4F4662)],
+        //   stops: [0.4, 1.0],
+        // ),
+        image: DecorationImage(
+          image: AssetImage('assets/img/background_pink_darken.png'),
+          fit: BoxFit.cover,
         ),
       ),
       child: Scaffold(
@@ -117,7 +121,7 @@ class _CardResultState extends State<CardResult>
                       Flexible(
                         flex: 1,
                         child: Text('카드를 터치해보세요',
-                            style: TextStyle(color: Colors.grey)),
+                            style: TextStyle(color: Colors.grey,fontSize: 16)),
                       )
                     ],
                   ),

@@ -7,6 +7,7 @@ import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/card_loading.dart';
 import 'package:frontend/screens/card_result.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:lottie/lottie.dart';
@@ -154,9 +155,18 @@ class _CardCreateState extends State<CardCreate> {
                       fit: BoxFit.fill,
                       image: AssetImage('assets/img/background_1_darken.png'))),
               child: Scaffold(
-                appBar: AppBar(
+                appBar:AppBar(
+                  toolbarHeight: MediaQuery.of(context).size.height * 0.09,
                   backgroundColor: Colors.transparent,
-                  elevation: 0,
+                  elevation: 0.0,
+                  bottom: PreferredSize(
+                    preferredSize: Size.fromHeight(6.0),
+                    child: Container(
+                      color: Colors.white70,
+                      height: 0.5,
+                    ),
+                  ),
+                  title: Text('카드 만들기'),
                 ),
                 backgroundColor: Colors.transparent,
                 body: Padding(
@@ -168,6 +178,46 @@ class _CardCreateState extends State<CardCreate> {
                     key: _formKey,
                     child: ListView(
                       children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            IconButton(
+                                icon: Icon(Icons.info, color: Colors.white70),
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return InfoModal(
+                                            padding: 20,
+                                            color: true,
+                                            widget: Column(
+                                              mainAxisAlignment: MainAxisAlignment
+                                                  .center,
+                                              children: [
+                                                Text(
+                                                  '사진과 키워드를 등록해보세요!',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  '멋진 카드를 만들어드릴게요',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14),
+                                                ),
+                                              ],
+                                            ),
+                                            height: 100);
+                                      });
+                                  FocusScope.of(context).unfocus();
+                                },)
+                          ],
+                        ),
+
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 75),
                           child: Container(
@@ -211,12 +261,12 @@ class _CardCreateState extends State<CardCreate> {
                               child: imageLoading
                                   ? Lottie.asset( 'assets/lottie/loading_image.json',height: 70,width: 70)
                                   : ClipRRect(
-                                      borderRadius: BorderRadius.circular(25),
+                                      borderRadius: BorderRadius.circular(22),
                                       child: Image(
                                         width: 189.6,
                                         height: 336,
                                         image: _currentImage ??
-                                            AssetImage('assets/img/camera_small (1).png'),
+                                            AssetImage('assets/img/image_put.png'),
                                       ),
                                     ),
 
@@ -237,10 +287,7 @@ class _CardCreateState extends State<CardCreate> {
                           height: 10,
                         ),
                         personLoading
-                            ? SpinKitFadingCircle(
-                                color: Colors.black,
-                                size: 70.0,
-                              )
+                            ? Lottie.asset( 'assets/lottie/loading_circle.json',height: 30,width: 30)
                             : Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 55),
@@ -286,10 +333,7 @@ class _CardCreateState extends State<CardCreate> {
                           height: 10,
                         ),
                         locationLoading
-                            ? SpinKitFadingCircle(
-                                color: Colors.black,
-                                size: 70.0,
-                              )
+                            ? Lottie.asset( 'assets/lottie/loading_circles.json',height: 90,width: 90)
                             : Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 55),
@@ -333,6 +377,7 @@ class _CardCreateState extends State<CardCreate> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
+                                  fontWeight: FontWeight.w700
                                 ),
                               ),
                               SizedBox(
@@ -719,7 +764,7 @@ class _KeywordState extends State<Keyword> {
               widget.keyword,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 17,
+                fontSize: 15,
               ),
             ),
             SizedBox(
@@ -802,6 +847,7 @@ class CheckRow extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
+                        fontWeight: FontWeight.w700
                       ),
                     ),
                   ],
