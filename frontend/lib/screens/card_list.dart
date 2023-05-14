@@ -29,7 +29,12 @@ class _CardListState extends State<CardList> {
   @override
   Widget build(BuildContext context) {
     return (Container(
-      decoration: BgThemeGradient(),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/img/background_pink_darken.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: StandAppBar(context),
@@ -46,7 +51,7 @@ class _CardListState extends State<CardList> {
                         children: [
                           Center(
                             child: Lottie.asset('assets/lottie/2-tarot.json',
-                                height: 80),
+                                height: 100),
                           ),
                           // SizedBox(
                           //   height: 15,
@@ -58,7 +63,7 @@ class _CardListState extends State<CardList> {
                                   color: Colors.white)),
                           Text('카드를 누르면 해당 카드의 상세 정보를 확인할 수 있습니다',
                               style:
-                                  TextStyle(fontSize: 10, color: Colors.white)),
+                                  TextStyle(fontSize: 11, color: Colors.white)),
                           // SizedBox(
                           //   height: 10,
                           // ),
@@ -104,7 +109,7 @@ class _CardListState extends State<CardList> {
     return GridView.count(
       crossAxisCount: 3,
       // 가로 방향으로 3개의 카드씩 표시
-      childAspectRatio: 0.7,
+      childAspectRatio: 0.66,
       // 카드의 가로 세로 비율 설정
       mainAxisSpacing: 10.0,
       // 카드들의 세로 간격 설정
@@ -132,7 +137,6 @@ class _CardListState extends State<CardList> {
                         cardTitle: titleCheck(snapshot, index),
                         card: snapshot[index]),
                   );
-
                 },
                 child: Card(
                   color: Colors.transparent,
@@ -143,8 +147,8 @@ class _CardListState extends State<CardList> {
                         width: 80,
                         height: 120,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            border: Border.all(color: Colors.white60, width: 4),
+                            borderRadius: BorderRadius.all(Radius.circular(13)),
+                            border: Border.all(color: Colors.white, width: 2),
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(

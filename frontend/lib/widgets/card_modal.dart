@@ -17,10 +17,19 @@ class CardModal extends StatelessWidget {
 
   Widget Character() {
     if (card.baseName == '') {
-      return Flexible(
-        flex: 1,
-        child: Container(),
-      );
+      return  Flexible(
+          flex: 1,
+          child: Center(
+            child: Row(
+              children: [
+                Text(
+                  '주인공 : ',
+                  style: TextStyle(color: Colors.white,fontSize: 13),
+                ),
+                Text('선택 안함', style: TextStyle(color: Colors.white54)),
+              ],
+            ),
+          ));
     } else {
       return Flexible(
           flex: 1,
@@ -29,7 +38,7 @@ class CardModal extends StatelessWidget {
               children: [
                 Text(
                   '주인공 : ',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.w700),
                 ),
                 Text(card.baseName, style: TextStyle(color: Colors.white)),
               ],
@@ -42,7 +51,24 @@ class CardModal extends StatelessWidget {
     if (card.basePlace == '') {
       return Flexible(
         flex: 1,
-        child: Container(),
+        child: Column(
+          // mainAxisSize: MainAxisSize.max,
+          // mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '장소 :',
+              style: TextStyle(color: Colors.white,fontSize: 13),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Expanded(
+              child:
+              Text('선택 안함', style: TextStyle(color: Colors.white54)),
+            )
+          ],
+        ),
       );
     } else {
       return Flexible(
@@ -54,14 +80,14 @@ class CardModal extends StatelessWidget {
             children: [
               Text(
                 '장소 :',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.w700),
               ),
               SizedBox(
                 height: 5,
               ),
               Expanded(
                 child:
-                    Text(card.basePlace, style: TextStyle(color: Colors.white)),
+                    Text(card.basePlace, style: TextStyle(color: Colors.white,fontSize: 13)),
               )
             ],
           ));
@@ -88,7 +114,7 @@ class CardModal extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
                           child: Text(
                             '키워드',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.white ,fontSize: 13,fontWeight: FontWeight.w700),
                           ),
                         )),
                   )),
@@ -119,28 +145,31 @@ class CardModal extends StatelessWidget {
                 Text(cardTitle, style: TextStyle(fontWeight: FontWeight.w600)),
           ),
           body: Padding(
-              padding: EdgeInsets.fromLTRB(40, 20, 40, 20),
+              padding: EdgeInsets.fromLTRB(25, 10, 25, 20),
               child: Column(
                 children: [
+
                   Flexible(
                     flex: 1,
                     child: Text(
                       '기억의 조각이 완성된 날',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white,fontSize: 13),
                     ),
                   ),
                   SizedBox(
-                    height: 5,
+                    height: 2,
                   ),
                   Flexible(
                     flex: 1,
                     child: Text(
                       card.createdAt.split('T')[0],
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white,fontSize: 16),
                     ),
                   ),
+                  SizedBox(height: 10),
+                  Text('카드를 터치해서 크게보세요' ,style:TextStyle(fontSize: 11,color: Colors.white54) ),
                   Flexible(
-                    flex: 11,
+                    flex: 10,
                     child: Center(
                       child: Row(
                         children: [
@@ -175,18 +204,19 @@ class CardModal extends StatelessWidget {
                                       });
                                 },
                                 child: Container(
-                                  width: MediaQuery.of(context).size.width / 3,
+                                  width: MediaQuery.of(context).size.width / 3.5,
                                   height:
-                                      (MediaQuery.of(context).size.width / 3) *
+                                      (MediaQuery.of(context).size.width / 3.0) *
                                           1.35,
                                   decoration: BoxDecoration(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(25)),
+                                  BorderRadius.all(Radius.circular(13)),
                                     border: Border.all(
-                                        color: Colors.white60, width: 4),
+                                        color: Colors.white, width: 2),
                                     image: DecorationImage(
+                                      fit: BoxFit.fill,
                                         image: NetworkImage(card.cardImageUrl),
-                                        fit: BoxFit.cover),
+                                        ),
                                   ),
                                 ),
                               )),
@@ -196,10 +226,10 @@ class CardModal extends StatelessWidget {
                           Flexible(
                               flex: 1,
                               child: SizedBox(
-                                width: 200,
+                                width: 300,
                                 height: 240,
                                 child: Padding(
-                                    padding: EdgeInsets.all(10),
+                                    padding: EdgeInsets.fromLTRB(10, 20, 0, 30),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -218,80 +248,89 @@ class CardModal extends StatelessWidget {
                     flex: 2,
                     child: Center(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: () async {
-                              var file = card.cardImageUrl;
-                              final result = await GallerySaver.saveImage(file);
-                              if (result != null) {
-                                Flushbar(
-                                        message: "사진 저장 성공!",
-                                        duration: Duration(seconds: 3),
-                                        flushbarPosition: FlushbarPosition.TOP)
-                                    .show(context);
-                                // ScaffoldMessenger.of(context).showSnackBar(
-                                //   SnackBar(
-                                //     content: Center(child: Text('사진 저장 성공!')),
-                                //   ),
-                                // );
-                              } else {
-                                Flushbar(
-                                        message: "권한을 허용해주세요.",
-                                        duration: Duration(seconds: 3),
-                                        flushbarPosition: FlushbarPosition.TOP)
-                                    .show(context);
-                                // ScaffoldMessenger.of(context).showSnackBar(
-                                //   SnackBar(
-                                //     content: Center(child: Text('권한을 허용해주세요.')),
-                                //   ),
-                                // );
-                              }
-                            },
-                            child: Container(
-                              width: 130,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(colors: [
-                                    Color(0xff79F1A4),
-                                    Color(0xff0E5CAD),
-                                  ]),
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: Center(
-                                  child: Text(
-                                '사진저장',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14),
-                              )),
-                            ),
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  var file = card.cardImageUrl;
+                                  final result = await GallerySaver.saveImage(file);
+                                  if (result != null) {
+                                    Flushbar(
+                                            message: "사진 저장 성공!",
+                                            duration: Duration(seconds: 3),
+                                            flushbarPosition: FlushbarPosition.TOP)
+                                        .show(context);
+                                    // ScaffoldMessenger.of(context).showSnackBar(
+                                    //   SnackBar(
+                                    //     content: Center(child: Text('사진 저장 성공!')),
+                                    //   ),
+                                    // );
+                                  } else {
+                                    Flushbar(
+                                            message: "권한을 허용해주세요.",
+                                            duration: Duration(seconds: 3),
+                                            flushbarPosition: FlushbarPosition.TOP)
+                                        .show(context);
+                                    // ScaffoldMessenger.of(context).showSnackBar(
+                                    //   SnackBar(
+                                    //     content: Center(child: Text('권한을 허용해주세요.')),
+                                    //   ),
+                                    // );
+                                  }
+                                },
+                                child: Container(
+                                  width: 100,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(colors: [
+                                        Color(0xff79F1A4),
+                                        Color(0xff0E5CAD),
+                                      ]),
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: Center(
+                                      child: Text(
+                                    '사진저장',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  )),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              )
+                              ,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DiaryCreateCards(
+                                            cardIdFromList: card.cardId),
+                                      ));
+                                  print(card.cardId);
+                                },
+                                child: Container(
+                                  width: 100,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(colors: [
+                                        Color(0xff79F1A4),
+                                        Color(0xff0E5CAD),
+                                      ]),
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: Center(
+                                      child: Text(
+                                        '일기생성',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 14),
+                                      )),
+                                ),
+                              ),
+                            ],
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DiaryCreateCards(
-                                        cardIdFromList: card.cardId),
-                                  ));
-                              print(card.cardId);
-                            },
-                            child: Container(
-                              width: 130,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(colors: [
-                                    Color(0xff79F1A4),
-                                    Color(0xff0E5CAD),
-                                  ]),
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: Center(
-                                  child: Text(
-                                '일기생성',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14),
-                              )),
-                            ),
-                          ),
+
                         ],
                       ),
                     ),
