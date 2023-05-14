@@ -2,6 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gradient_borders/gradient_borders.dart';
+import 'package:lottie/lottie.dart';
 
 import '../model/CardModel.dart';
 import '../services/api_service.dart';
@@ -70,21 +71,55 @@ class _MoodSelectState extends State<MoodSelect> {
       },
       child: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff0F2027),
-              Color(0xff203A43),
-              Color(0xff2C5364),
-            ],
-            stops: [0, 0.4, 1.0],
-          ),
-        ),
+            image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage('assets/img/background_1_darken.png'))),
         child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
             backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
+            elevation: 0.0,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(6.0),
+              child: Container(
+                color: Colors.white70,
+              ),
+            ),
+            title: Row(
+              children: [
+                Text('장르 선택',
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
+              ],
+            ),
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()));
+                      },
+                      child: Image(
+                        image: AssetImage(
+                          'assets/img/home_icon.png',
+                        ),
+                        width: 45,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
           backgroundColor: Colors.transparent,
           body: Column(
@@ -119,13 +154,6 @@ class _MoodSelectState extends State<MoodSelect> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            'STORY MOOD',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
-                          ),
                           SizedBox(
                             height: 5,
                           ),
@@ -133,7 +161,7 @@ class _MoodSelectState extends State<MoodSelect> {
                             '작성된 일기의 장르를 골라주세요 (최대 2개)',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 10,
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -320,9 +348,10 @@ class _MoodSelectState extends State<MoodSelect> {
                           ),
                         );
                         Flushbar(
+
                                 message:
-                                    '다이어리 생성 중입니다. \n완료까지 평균 3분카레입니다~ \n완료되면 푸시알림 드릴게요!',
-                                duration: Duration(seconds: 3),
+                                    ' 다이어리 제작은 평균 3분 정도 소요됩니다. \n\n 완성되면 푸시알림을 드릴게요!',
+                                duration: Duration(seconds: 5),
                                 flushbarPosition: FlushbarPosition.TOP)
                             .show(context);
                         // ScaffoldMessenger.of(context).showSnackBar(
@@ -425,7 +454,7 @@ class _MoodSelectState extends State<MoodSelect> {
                         ),
                         child: const Center(
                           child: Text(
-                            'MAKE YOUR OWN DIARY',
+                            '나만의 가짜일기 만들기',
                             style: TextStyle(color: Colors.white, fontSize: 15),
                           ),
                         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/CardModel.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:lottie/lottie.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -37,7 +38,51 @@ class _CardListState extends State<CardList> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: StandAppBar(context),
+        appBar: AppBar(
+          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(6.0),
+            child: Container(
+              color: Colors.white70,
+            ),
+          ),
+          title: Row(
+            children: [
+              Text('내 카드' , style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
+              Lottie.asset('assets/lottie/menu_grinstar.json',
+                  width: 30),
+            ],
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
+                    },
+                    child: Image(
+                      image: AssetImage(
+                        'assets/img/home_icon.png',
+                      ),
+                      width: 45,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
         body: Center(
           child: Column(
             children: [
@@ -63,7 +108,7 @@ class _CardListState extends State<CardList> {
                                   color: Colors.white)),
                           Text('카드를 누르면 해당 카드의 상세 정보를 확인할 수 있습니다',
                               style:
-                                  TextStyle(fontSize: 11, color: Colors.white)),
+                                  TextStyle(fontSize: 11, color: Colors.white54)),
                           // SizedBox(
                           //   height: 10,
                           // ),

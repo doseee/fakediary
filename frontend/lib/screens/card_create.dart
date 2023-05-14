@@ -155,7 +155,7 @@ class _CardCreateState extends State<CardCreate> {
                       fit: BoxFit.fill,
                       image: AssetImage('assets/img/background_1_darken.png'))),
               child: Scaffold(
-                appBar:AppBar(
+                appBar: AppBar(
                   toolbarHeight: MediaQuery.of(context).size.height * 0.09,
                   backgroundColor: Colors.transparent,
                   elevation: 0.0,
@@ -163,10 +163,15 @@ class _CardCreateState extends State<CardCreate> {
                     preferredSize: Size.fromHeight(6.0),
                     child: Container(
                       color: Colors.white70,
-                      height: 0.5,
                     ),
                   ),
-                  title: Text('카드 만들기'),
+                  title: Row(
+                    children: [
+                      Text('카드 만들기', style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
+                      Lottie.asset('assets/lottie/menu_grinstar.json',
+                          width: 30),
+                    ],
+                  ),
                 ),
                 backgroundColor: Colors.transparent,
                 body: Padding(
@@ -178,46 +183,53 @@ class _CardCreateState extends State<CardCreate> {
                     key: _formKey,
                     child: ListView(
                       children: [
+
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             IconButton(
-                                icon: Icon(Icons.info, color: Colors.white70),
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return InfoModal(
-                                            padding: 20,
-                                            color: true,
-                                            widget: Column(
-                                              mainAxisAlignment: MainAxisAlignment
-                                                  .center,
-                                              children: [
-                                                Text(
-                                                  '사진과 키워드를 등록해보세요!',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 14),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  '멋진 카드를 만들어드릴게요',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 14),
-                                                ),
-                                              ],
-                                            ),
-                                            height: 100);
-                                      });
-                                  FocusScope.of(context).unfocus();
-                                },)
+                              icon: Icon(Icons.info, color: Colors.white70),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return InfoModal(
+                                          padding: 20,
+                                          color: true,
+                                          widget: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '사진과 키워드를 등록해보세요!',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                '멋진 카드를 만들어드릴게요',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
+                                          height: 100);
+                                    });
+                                FocusScope.of(context).unfocus();
+                              },
+                            )
                           ],
                         ),
-
+                        // Center(
+                        //     child: Text(
+                        //       '여기를 터치해서 사진을 등록하세요',
+                        //       style: TextStyle(fontSize: 13, color: Colors.white54),
+                        //     )),
+                        //
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 75),
                           child: Container(
@@ -225,51 +237,51 @@ class _CardCreateState extends State<CardCreate> {
                             height: 336,
                             decoration: BtnThemeGradientLine(),
                             child: GestureDetector(
-                                onTap: () async {
+                              onTap: () async {
+                                setState(() {
+                                  imageLoading = true;
+                                });
+                                final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CameraExample()));
+                                if (result != null) {
+                                  final captions =
+                                      await ApiService.getCaption(result);
+
                                   setState(() {
-                                    imageLoading = true;
+                                    _image = result;
+                                    _currentImage = FileImage(result);
+                                    keyword1 =
+                                        captions.isNotEmpty ? captions[0] : "";
+                                    keyword1Modified = !captions.isNotEmpty;
+                                    keyword2 =
+                                        captions.length > 1 ? captions[1] : "";
+                                    keyword2Modified = !(captions.length > 1);
+                                    keyword3 =
+                                        captions.length > 2 ? captions[2] : "";
+                                    keyword3Modified = !(captions.length > 2);
+                                    imageLoading = false;
                                   });
-                                  final result = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CameraExample()));
-                                  if (result != null) {
-                                    final captions =
-                                    await ApiService.getCaption(result);
-
-                                    setState(() {
-                                      _image = result;
-                                      _currentImage = FileImage(result);
-                                      keyword1 =
-                                      captions.isNotEmpty ? captions[0] : "";
-                                      keyword1Modified = !captions.isNotEmpty;
-                                      keyword2 =
-                                      captions.length > 1 ? captions[1] : "";
-                                      keyword2Modified = !(captions.length > 1);
-                                      keyword3 =
-                                      captions.length > 2 ? captions[2] : "";
-                                      keyword3Modified = !(captions.length > 2);
-                                      imageLoading = false;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      imageLoading = false;
-                                    });
-                                  }
-                                },
-
+                                } else {
+                                  setState(() {
+                                    imageLoading = false;
+                                  });
+                                }
+                              },
                               child: imageLoading
-                                  ? Lottie.asset( 'assets/lottie/loading_image.json',height: 70,width: 70)
+                                  ? Lottie.asset('assets/lottie/loading_image.json',
+                                      height: 70, width: 70)
                                   : ClipRRect(
                                       borderRadius: BorderRadius.circular(22),
                                       child: Image(
                                         width: 189.6,
                                         height: 336,
                                         image: _currentImage ??
-                                            AssetImage('assets/img/image_put.png'),
+                                            AssetImage(
+                                                'assets/img/image_plus.png'),
                                       ),
                                     ),
-
                             ),
                           ),
                         ),
@@ -287,7 +299,7 @@ class _CardCreateState extends State<CardCreate> {
                           height: 10,
                         ),
                         personLoading
-                            ? Lottie.asset( 'assets/lottie/loading_circle.json',height: 30,width: 30)
+                            ? CircularProgressIndicator()
                             : Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 55),
@@ -333,7 +345,7 @@ class _CardCreateState extends State<CardCreate> {
                           height: 10,
                         ),
                         locationLoading
-                            ? Lottie.asset( 'assets/lottie/loading_circles.json',height: 90,width: 90)
+                            ? CircularProgressIndicator()
                             : Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 55),
@@ -375,10 +387,9 @@ class _CardCreateState extends State<CardCreate> {
                               Text(
                                 '추가설정',
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700
-                                ),
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700),
                               ),
                               SizedBox(
                                 width: 195,
@@ -414,7 +425,6 @@ class _CardCreateState extends State<CardCreate> {
                             ],
                           ),
                         ),
-
                         SizedBox(
                           height: 15,
                         ),
@@ -561,7 +571,8 @@ class _CardCreateState extends State<CardCreate> {
                                         CardResult(card: card)));
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 30.0),
                             child: Container(
                               width: 200,
                               height: 61,
@@ -579,8 +590,8 @@ class _CardCreateState extends State<CardCreate> {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color:
-                                        const Color(0xff000000).withOpacity(0.25),
+                                    color: const Color(0xff000000)
+                                        .withOpacity(0.25),
                                     offset: const Offset(0, 4),
                                     blurRadius: 4,
                                   ),
@@ -774,7 +785,7 @@ class _KeywordState extends State<Keyword> {
                 onTap: () {
                   widget.modifier();
                 },
-                child: Icon(Icons.edit, color: Colors.white, size: 25 )),
+                child: Icon(Icons.edit, color: Colors.white, size: 25)),
           ],
         ),
       ),
@@ -845,10 +856,9 @@ class CheckRow extends StatelessWidget {
                     Text(
                       text,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700
-                      ),
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
