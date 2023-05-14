@@ -946,13 +946,14 @@ class ApiService {
     // 다이어리 필터 api
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
-
+    if (genre == '') {
+      genre = null;
+    }
     final diaryFilterRequestDto = {
       "genre": genre,
-      "id": memberId,
-      "memberId": writer
+      "id": writer,
+      "memberId": memberId
     };
-    print(diaryFilterRequestDto);
     final response = await http.post(Uri.parse('$baseUrl/diary/filter'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -966,7 +967,6 @@ class ApiService {
               .map((dynamic item) => DiaryModel.fromJson(item))
               .toList() ??
           [];
-      print('api: diaries.length}');
       return diaries;
     } else if (response.statusCode == 204) {
       return [];

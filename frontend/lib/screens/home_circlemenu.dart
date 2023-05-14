@@ -82,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             Image(
                               image:
-                                  AssetImage('assets/gif-file/moon_real.gif'),
+                                  AssetImage('assets/gif-file/moon_brighter_faster.gif'),
                             ),
                             Transform(
                               transform: Matrix4.identity()

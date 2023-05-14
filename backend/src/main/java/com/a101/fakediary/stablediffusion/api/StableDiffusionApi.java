@@ -22,6 +22,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 @Component
@@ -67,6 +69,7 @@ public class StableDiffusionApi {
     }
 
     public Map<String, Object> getStableDiffusionUrlsAndPrompt(String title, List<String> subtitles) throws Exception {
+        Instant start = Instant.now();
         Map<String, Object> StableDiffusionMap = new HashMap<>();
         //중요한것은 prompt, steps, sampler_index
         StableDiffusionMap.put("prompt", "");
@@ -188,6 +191,9 @@ public class StableDiffusionApi {
         Map<String, Object> ImageMap = new HashMap<>();
         ImageMap.put("stableDiffusionUrl", dtoImageUrl);
         ImageMap.put("diaryImagePrompt", diaryImagePrompt);
+
+        Instant end = Instant.now();
+        log.info("삽화 생성하는데 소요된 시간 : " + Duration.between(start, end).toMillis() + " ms");
 
         return ImageMap;
     }

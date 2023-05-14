@@ -20,12 +20,14 @@ class DiaryFilter extends StatefulWidget {
   State<DiaryFilter> createState() => _DiaryFilterState();
 }
 
-late dynamic userId;
-dynamic selectedMood;
+dynamic userId;
+
+dynamic selectedWriter = -2;
+dynamic selectedMood = '';
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+late List<DiaryModel> filteredDiaries;
 
 class _DiaryFilterState extends State<DiaryFilter> {
-  Map<String, dynamic> selectedWriter = {};
-
   final dict = {
     'ROMANCE': '로맨스',
     'HORROR': '호러',
@@ -55,51 +57,38 @@ class _DiaryFilterState extends State<DiaryFilter> {
   moodSetter(moodname) {
     if (activated[moodname] == true) {
       activated[moodname] = false;
-      selectedMood = null;
+      selectedMood = '';
     } else {
       activated.updateAll((key, value) => false);
       activated[moodname] = true;
-      selectedMood = moodname;
+      selectedMood = dict[moodname]!;
     }
     setState(() {});
-    print(selectedMood);
-    // 이미 2개가 선택되었을 경우 기존에 선택된 것을 해제
-    // if (!activated[content]! && selectedMood.length == 1) {
-    //   activated[selectedMood[0]] = false;
-    //   selectedMood.removeAt(0);
-    // }
-
-    // 나머지 경우 선택 상태를 반전
-    // activated[content] = !activated[content]!;
-    // if (activated[content]!) {
-    //   selectedMood.add(content);
-    // } else {
-    //   selectedMood.remove(content);
-    // }
+    print('나는야 $selectedMood');
   }
 
-  writerSetter(nickname, friendId) {
-    if (selectedWriter.length == 1) {
-      if (selectedWriter.containsKey(nickname)) {
-        selectedWriter.clear();
-      } else {
-        selectedWriter.clear();
-        selectedWriter[nickname] = friendId;
-      }
+  writerSetter(selectedId) {
+    if (selectedWriter == selectedId) {
+      selectedWriter = -2;
     } else {
-      selectedWriter[nickname] = friendId;
+      selectedWriter = selectedId;
     }
     setState(() {});
-    print(selectedWriter);
+
   }
 
   late Future<List<FriendModel>> friends;
+  late List<FriendModel> friendList = [];
 
   void initState() {
     super.initState();
+    selectedWriter = -2;
+    selectedMood='';
     _loadId();
     friends = ApiService().getFriends();
-    print(friends);
+    print('initState : $friends');
+    _loadNickname();
+    print('initState : $friendList');
   }
 
   Future<void> _loadId() async {
@@ -107,6 +96,10 @@ class _DiaryFilterState extends State<DiaryFilter> {
     int? memberId = prefs.getInt('memberId');
     userId = memberId;
     print(userId);
+  }
+
+  Future<void> _loadNickname() async {
+    friendList = await friends;
   }
 
   @override
@@ -144,39 +137,58 @@ class _DiaryFilterState extends State<DiaryFilter> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    if (selectedMood != null)
-                      GradientButton(content: dict[selectedMood]!),
-                    if (selectedWriter.isNotEmpty &&
-                        selectedWriter.keys.first.toString() != '외계인')
+                    if (selectedMood != '')
+                      GradientButton(content:selectedMood),
+                    if (selectedWriter == userId)
                       Row(
                         children: [
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                'https://play-lh.googleusercontent.com/38AGKCqmbjZ9OuWx4YjssAz3Y0DTWbiM5HB0ove1pNBq_o9mtWfGszjZNxZdwt_vgHo=w240-h480-rw'),
-                            radius: 15.0,
+                          SvgPicture.asset(
+                            'assets/svg/atronaut-svgrepo-com.svg',
+                            semanticsLabel: 'user',
+                            width: 50,
+                            height: 50,
                           ),
                           SizedBox(
                             width: 5,
                           ),
                           Text(
-                            selectedWriter.keys.first.toString(),
+                            '나',
                             style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
                         ],
                       ),
-                    if (selectedWriter.isNotEmpty &&
-                        selectedWriter.keys.first.toString() == '외계인')
+                    if (selectedWriter > -1 && selectedWriter != userId)
                       Row(
                         children: [
-                          Container(
-                            child: Lottie.asset('assets/lottie/random.json'),
-                            width: 40,
+                          SvgPicture.asset(
+                            'assets/svg/atronaut-svgrepo-com.svg',
+                            semanticsLabel: 'user',
+                            width: 50,
+                            height: 50,
                           ),
                           SizedBox(
                             width: 5,
                           ),
                           Text(
-                            selectedWriter.keys.first.toString(),
+                            friendList.firstWhere((friend) =>
+                                friend['friendId'] ==
+                                selectedWriter)['nickname'],
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    if (selectedWriter == -1)
+                      Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            child: Lottie.asset('assets/lottie/1-alien.json'),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '외계인',
                             style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
                         ],
@@ -301,18 +313,6 @@ class _DiaryFilterState extends State<DiaryFilter> {
                   ],
                 ),
               ),
-              // Flexible(
-              //     flex: 1,
-              //     child: Row(children: [
-              //       Container(
-              //         child:
-              //             Lottie.asset('assets/lottie/random.json', width: 60),
-              //       ),
-              //       Text(
-              //         '외계인',
-              //         style: TextStyle(color: Colors.white),
-              //       )
-              //     ])),
               Flexible(
                   flex: 1,
                   child: FutureBuilder<List<FriendModel>>(
@@ -331,34 +331,24 @@ class _DiaryFilterState extends State<DiaryFilter> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GestureDetector(
-                        // onTap: () {
-                        //   ApiService.filterDiaries(
-                        //       selectedMood,
-                        //       selectedWriter.isEmpty? null :
-                        //       selectedWriter.values.first);
-                        //   Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //   builder: (context) => DiaryListScreen()));
-                        // },
                         onTap: () async {
+                          if(selectedMood !='') {
+                            selectedMood  = dict.keys.firstWhere((k) => dict[k] == selectedMood);
+                          }
                           List<DiaryModel> filteredDiaries =
                               await ApiService.filterDiaries(
-                            selectedMood,
-                            selectedWriter.isEmpty
-                                ? null
-                                : selectedWriter.values.first,
-                          );
-                          print(filteredDiaries);
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DiaryFilteredScreen(
-                                diaries: filteredDiaries,
+                              selectedMood, selectedWriter);
+                          var currentContext = context;
+                          await Future.delayed(Duration(seconds: 1), () {
+                            Navigator.push(
+                              currentContext,
+                              MaterialPageRoute(
+                                builder: (context) => DiaryFilteredScreen(
+                                  diaries: filteredDiaries,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          });
                         },
                         child: Container(
                             // 필터적용 버튼
@@ -395,39 +385,50 @@ class _DiaryFilterState extends State<DiaryFilter> {
                                     color: Colors.white, fontSize: 15),
                               ),
                             ))),
-                    Container(
-                        // 필터적용 버튼
-                        width: 268,
-                        height: 61,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              const Color(0xff263344),
-                              const Color(0xff1B2532).withOpacity(0.53),
-                              const Color(0xff1C2A3D).withOpacity(0.5),
-                              const Color(0xff1E2E42).withOpacity(0.46),
-                              const Color(0xff364B66).withOpacity(0.33),
-                              const Color(0xff2471D6).withOpacity(0),
-                            ],
-                            stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff000000).withOpacity(0.25),
-                              offset: const Offset(0, 4),
-                              blurRadius: 4,
+                    GestureDetector(
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DiaryListScreen()),
+                        );
+                      },
+                      child: Container(
+                          // 필터적용 버튼
+                          width: 268,
+                          height: 61,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                const Color(0xff263344),
+                                const Color(0xff1B2532).withOpacity(0.53),
+                                const Color(0xff1C2A3D).withOpacity(0.5),
+                                const Color(0xff1E2E42).withOpacity(0.46),
+                                const Color(0xff364B66).withOpacity(0.33),
+                                const Color(0xff2471D6).withOpacity(0),
+                              ],
+                              stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
                             ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '취소',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    const Color(0xff000000).withOpacity(0.25),
+                                offset: const Offset(0, 4),
+                                blurRadius: 4,
+                              ),
+                            ],
                           ),
-                        )),
+                          child: const Center(
+                            child: Text(
+                              '취소',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          )),
+                    ),
                     Image(
                       image: AssetImage('assets/img/small_moon.png'),
                     ),
@@ -448,13 +449,13 @@ Widget buildList(snapshot, setter) {
     children: [
       GestureDetector(
         onTap: () {
-          setter('외계인', -1);
+          setter(-1);
         },
         child: Row(
           children: [
             Container(
-
-              child: Lottie.asset('assets/lottie/1-alien.json',width: 50,height: 50),
+              child: Lottie.asset('assets/lottie/1-alien.json',
+                  width: 50, height: 50),
             ),
             Text(
               '외계인',
@@ -468,16 +469,16 @@ Widget buildList(snapshot, setter) {
       ),
       GestureDetector(
         onTap: () {
-          setter('나', userId);
+          setter(userId);
         },
         child: Row(
           children: [
-          SvgPicture.asset(
-          'assets/svg/atronaut-svgrepo-com.svg',
-          semanticsLabel: 'user',
-          width: 50,
-          height: 50,
-        ),
+            SvgPicture.asset(
+              'assets/svg/atronaut-svgrepo-com.svg',
+              semanticsLabel: 'user',
+              width: 50,
+              height: 50,
+            ),
             SizedBox(width: 5),
             Text(
               '나',
@@ -501,7 +502,7 @@ Widget buildList(snapshot, setter) {
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
               onTap: () {
-                setter(snapshot[index].nickname, snapshot[index].friendId);
+                setter(snapshot[index].friendId);
               },
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -513,7 +514,6 @@ Widget buildList(snapshot, setter) {
                       width: 40,
                       height: 40,
                     ),
-
                     Card(
                       color: Colors.transparent,
                       elevation: 0.0,
