@@ -8,6 +8,7 @@ import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/modify_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/friend_modal.dart';
+import 'package:frontend/widgets/receive_diary_modal.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:math';
 
@@ -35,6 +36,35 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           key: scaffoldKey,
           drawer: AlarmDrawer(),
+          appBar: AppBar(
+            leading: Container(),
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        if (scaffoldKey.currentState != null) {
+                          scaffoldKey.currentState!.openDrawer();
+                        }
+                      },
+                      child: Image(
+                        image: AssetImage(
+                          'assets/img/icon_alarm.png',
+                        ),
+                        width: 45,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
           body: FractionallySizedBox(
               widthFactor: 1.3,
               child: Transform(
@@ -52,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             Image(
                               image:
-                                  AssetImage('assets/gif-file/moon_real.gif'),
+                                  AssetImage('assets/gif-file/moon_brighter_faster.gif'),
                             ),
                             Transform(
                               transform: Matrix4.identity()
@@ -388,6 +418,7 @@ class Notification extends StatelessWidget {
       onTap: () {
         print(alarm.alarmType);
         if (alarm.alarmType == 'REQUEST') {
+          // 수락 모달
           showDialog(
               context: context,
               builder: (context) {
@@ -397,6 +428,44 @@ class Notification extends StatelessWidget {
                 );
               });
         } else if (alarm.alarmType == 'AUTOMATIC') {
+          // 전달받은 일기 상세 페이지로
+          getDiary(alarm.requestId).then((diary) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DiaryDetailCoverScreen(
+                  diaryId: alarm.requestId,
+                  exchangeSituation: 1,
+                  imageUrl: diary.diaryImageUrl[0],
+                ),
+              ),
+            );
+          });
+        } else if (alarm.alarmType == 'FRIEND') {
+          // 수락 모달
+          showDialog(
+              context: context,
+              builder: (context) {
+                return ReceiveDiaryModal(
+                  requestId: alarm.requestId,
+                );
+              });
+        } else if (alarm.alarmType == 'RANDOM') {
+          // 전달받은 일기 상세 페이지로
+          getDiary(alarm.requestId).then((diary) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DiaryDetailCoverScreen(
+                  diaryId: alarm.requestId,
+                  exchangeSituation: 1,
+                  imageUrl: diary.diaryImageUrl[0],
+                ),
+              ),
+            );
+          });
+        } else if (alarm.alarmType == 'MANUAL') {
+          // 전달받은 일기 상세 페이지로
           getDiary(alarm.requestId).then((diary) {
             Navigator.push(
               context,

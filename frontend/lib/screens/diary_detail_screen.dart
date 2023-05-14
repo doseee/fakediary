@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/CardUrlListVerModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
@@ -8,9 +7,6 @@ import 'package:frontend/widgets/compass_divider.dart';
 import 'package:frontend/widgets/dashed_line.dart';
 import 'package:frontend/widgets/diary_detail_card_list.dart';
 import 'package:frontend/widgets/theme.dart';
-import 'package:flutter/foundation.dart';
-
-import '../model/CardModel.dart';
 
 // import '../model/CardUrlListVerModel.dart';
 import '../model/DiaryModel.dart';
@@ -49,6 +45,9 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
   /// SliverAppBar 투명도 변경하는 변수
   late bool _isExpanded = true;
+
+  final default_image_url =
+      'http://fakediary.s3.amazonaws.com/image-20230506-215519.png';
 
   /// 구분선 확장 상태 관리하는 변수
 
@@ -249,7 +248,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
       details, List<String>? subtitles, int index, List<String> diaryImageUrl) {
     return Padding(
       padding: EdgeInsets.only(top: 15, left: 25, right: 25),
-      child: Container(
+      child: SizedBox(
 
           /// 전체 크기
           width: 150,
@@ -276,10 +275,14 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                   height: 200,
                   child: Container(
                     decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage(
+                        image: DecorationImage(
+                            image: NetworkImage(
 
-                            /// diaryImageUrl 리스트에서 S3에 저장된 Url을 가져와 NetworkImage로 띄움
-                            diaryImageUrl[index + 1]), fit: BoxFit.cover)),
+                                /// diaryImageUrl 리스트에서 S3에 저장된 Url을 가져와 NetworkImage로 띄움
+                                diaryImageUrl.length > index + 1
+                                    ? diaryImageUrl[index + 1]
+                                    : default_image_url),
+                            fit: BoxFit.cover)),
                   ),
                 ),
               ),
@@ -369,10 +372,13 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
             /// flexibleSpace 속성을 사용하여 SliverAppBar 위젯의 flexible space에 이미지 배치
             expandedHeight: 200.0,
             flexibleSpace: FlexibleSpaceBar(
-                background: Image(
-              image: NetworkImage(diary.diaryImageUrl[0]),
-              fit: BoxFit.cover,
-            )),
+              background: diary.diaryImageUrl.isNotEmpty
+                  ? Image(
+                      image: NetworkImage(diary.diaryImageUrl[0]),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
           ),
 
           /// 첫번째 슬라이드
@@ -454,7 +460,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                           builder: (context) {
                             return InfoModal(
                                 padding: 20,
-                              color: true,
+                                color: true,
                                 widget: Column(
                                   children: [
                                     Flexible(
@@ -462,7 +468,9 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                                       child: Center(
                                         child: Text(
                                           '일기를 지우시겠습니까?',
-                                          style: TextStyle(fontSize: 16, color: Colors.white60),
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white60),
                                         ),
                                       ),
                                     ),
@@ -472,11 +480,14 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                                         decoration: BtnThemeGradientLine(),
                                         child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.transparent,
+                                                backgroundColor:
+                                                    Colors.transparent,
                                                 shadowColor: Colors.transparent,
                                                 elevation: 0.0,
                                                 shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(30.0),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.0),
                                                 )),
                                             onPressed: () async {
                                               await ApiService.deleteDiary(

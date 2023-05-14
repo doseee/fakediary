@@ -486,9 +486,10 @@ class _CardCreateState extends State<CardCreate> {
                                 _isLoading = false;
                               });
                               Flushbar(
-                                message: '키워드를 한 개 이상 입력해주세요.',
-                                duration: Duration(seconds: 2),
-                              ).show(context);
+                                      message: '키워드를 한 개 이상 입력해주세요.',
+                                      duration: Duration(seconds: 3),
+                                      flushbarPosition: FlushbarPosition.TOP)
+                                  .show(context);
                               // ScaffoldMessenger.of(context).showSnackBar(
                               //   SnackBar(
                               //     content: Center(
@@ -503,9 +504,10 @@ class _CardCreateState extends State<CardCreate> {
                                 _isLoading = false;
                               });
                               Flushbar(
-                                message: '사진을 선택해주세요.',
-                                duration: Duration(seconds: 2),
-                              ).show(context);
+                                      message: '사진을 선택해주세요.',
+                                      duration: Duration(seconds: 3),
+                                      flushbarPosition: FlushbarPosition.TOP)
+                                  .show(context);
                               // ScaffoldMessenger.of(context).showSnackBar(
                               //   SnackBar(
                               //     content: Center(child: Text('사진을 선택해주세요.')),

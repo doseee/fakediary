@@ -77,9 +77,10 @@ class _FriendScreenState extends State<FriendScreen> {
                         MaterialPageRoute(
                             builder: (context) => DiaryListScreen()));
                     Flushbar(
-                      message: "교환 일기 신청을 완료했습니다!",
-                      duration: Duration(seconds: 3),
-                    ).show(context);
+                            message: "교환 일기 신청을 완료했습니다!",
+                            duration: Duration(seconds: 3),
+                            flushbarPosition: FlushbarPosition.TOP)
+                        .show(context);
                     // ScaffoldMessenger.of(context).showSnackBar(
                     //   SnackBar(
                     //     content: Center(child: Text('교환 일기신청을 완료했습니다!')),
