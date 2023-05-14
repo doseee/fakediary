@@ -43,7 +43,7 @@ BoxDecoration BtnThemeGradient(){
         Color(0xff79F1A4),
         Color(0xff0E5CAD),
       ]),
-      borderRadius: BorderRadius.circular(25));
+      borderRadius: BorderRadius.circular(17));
 }
 
 BoxDecoration BtnThemeGradientLine(){
