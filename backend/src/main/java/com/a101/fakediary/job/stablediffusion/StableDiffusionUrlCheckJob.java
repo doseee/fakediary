@@ -1,5 +1,6 @@
 package com.a101.fakediary.job.stablediffusion;
 
+import com.a101.fakediary.mattermost.MatterMostSender;
 import com.a101.fakediary.stablediffusion.api.StableDiffusionApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class StableDiffusionUrlCheckJob implements SchedulingConfigurer  {
     private final StepBuilderFactory stepBuilderFactory;
     private final JobLauncher jobLauncher;
     private final StableDiffusionApi stableDiffusionApi;
+    private final MatterMostSender matterMostSender;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
@@ -64,13 +66,15 @@ public class StableDiffusionUrlCheckJob implements SchedulingConfigurer  {
     private Tasklet tasklet() {
         return (stepContribution, chunkContext) -> {
             try {
-                if(!stableDiffusionApi.isUrlAlive())
-                    throw new Exception("Stable Diffusion URL is dead");
+                if(!stableDiffusionApi.isUrlAlive()) {
+                    log.info("Stable Diffusion is dead!!");
+                    //  Stable Diffusion URL이 만료됐을 경우 메시지 보내기
+                    matterMostSender.sendMessage(new Exception("Stable Diffusion URL이 만료되었습니다!"));
+                }
 
-                log.info("Stablue Diffusion is alive!!");
+                log.info("Stable Diffusion is alive!!");
             } catch(Exception e) {
                 e.printStackTrace();
-                log.info("Stable Diffusion is dead!!");
             }
             return RepeatStatus.FINISHED;
         };
