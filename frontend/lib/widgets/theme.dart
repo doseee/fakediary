@@ -64,7 +64,8 @@ BoxDecoration BtnThemeKakaoGradient(){
           Color(0xffF7E600),
           Color(0xffE6D000),
   ]),
-  borderRadius: BorderRadius.circular(22),);
+  borderRadius: BorderRadius.circular(10),
+  );
 }
 
 BoxDecoration BgThemeIncludeImage(){
