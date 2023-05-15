@@ -514,14 +514,14 @@ public class DiaryService {
         logger.info(formattedTime + " 시간대의 카드 지동생성 로직을 종료합니다.");
     }
 
-    //유저가 보유한 카드중 24시간 이내로 만들어진 카드들 반환 (10개넘을시 랜덤으로 10개고름)
+    //유저가 보유한 카드중 24시간 이내로 만들어진 카드들 반환 (5개넘을시 랜덤으로 5개고름)
     private List<Long> findCardIdsWithin24Hours(Long memberId) {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         LocalDateTime yesterday = now.minusDays(1);
         List<Card> cards = cardRepository.findAllByMember_MemberIdAndCreatedAtBetween(memberId, yesterday, now);
         Collections.shuffle(cards);
         List<Long> cardIds = new ArrayList<>();
-        for (int i = 0; i < Math.min(cards.size(), 10); i++) {
+        for (int i = 0; i < Math.min(cards.size(), 5); i++) {
             cardIds.add(cards.get(i).getCardId());
         }
         cardIds.sort(Comparator.naturalOrder());//오름차순 정렬
