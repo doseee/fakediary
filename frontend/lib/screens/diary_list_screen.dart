@@ -97,7 +97,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
         Flexible(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.only(left: 15, right: 10),
+            padding: const EdgeInsets.only(left: 8, right: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -105,12 +105,12 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 Flexible(
                   flex: 3,
                   child: Padding(
-                    padding: const EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(0.0),
                     child: Text(
                       title,
                       style: TextStyle(
                           color: Colors.white60,
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -121,7 +121,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     padding: const EdgeInsets.all(3.0),
                     child: Text(
                       summary,
-                      style: TextStyle(color: Colors.white60, fontSize: 14),
+                      style: TextStyle(color: Colors.white60, fontSize: 12),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -159,7 +159,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                             shadowColor: Colors.transparent,
                             elevation: 0.0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
+                              borderRadius: BorderRadius.circular(35.0),
                             )),
                         child: SizedBox(
                           width: 250,
