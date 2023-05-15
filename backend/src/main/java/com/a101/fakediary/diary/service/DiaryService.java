@@ -344,6 +344,12 @@ public class DiaryService {
 
         Long diaryId = diaryRepository.save(diary).getDiaryId();
 
+        String alarmTitle = "따끈따끈한 일기의 순간입니다";
+        String alarmBody = "내가 선택한 가짜다이어리가 완성되었어요";
+        alarmService.saveAlarm(new AlarmRequestDto(member.getMemberId(), diary.getDiaryId(), alarmTitle, alarmBody, "MANUAL"));
+        alarmService.sendNotificationByToken(new AlarmResponseDto(member.getMemberId(), alarmTitle, alarmBody));
+
+
         for (String genre : genreList) {
             GenreDto gen = new GenreDto(diary.getDiaryId(), genre);
             genreService.saveGenre(gen); //장르 저장

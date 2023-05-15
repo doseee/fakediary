@@ -9,6 +9,8 @@ import com.a101.fakediary.diary.repository.DiaryRepository;
 import com.a101.fakediary.diary.service.DiaryService;
 import com.a101.fakediary.enums.EExchangeType;
 import com.a101.fakediary.exchangediary.dto.request.ExchangedDiarySaveRequestDto;
+import com.a101.fakediary.exchangediary.dto.response.ExchangedDiaryResponseDto;
+import com.a101.fakediary.exchangediary.entity.ExchangedDiary;
 import com.a101.fakediary.exchangediary.service.ExchangedDiaryService;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -42,8 +45,8 @@ public class RandomExchangePoolService {
     private final ExchangedDiaryService exchangedDiaryService;
     private final AlarmService alarmService;
 
-    private Member globalMember;
-    private Long globalId;
+    private Long memberId;
+    private Long requestId;
 
     @Transactional
     public RandomExchangePoolResponseDto registRandomExchange(RandomExchangePoolRegistDto randomExchangePoolRegistDto) throws Exception {
@@ -70,10 +73,7 @@ public class RandomExchangePoolService {
                 .randomDate(LocalDate.now())
                 .build();
 
-        RandomExchangePool random = randomExchangePoolRepository.save(randomExchangePool);
-        globalMember = owner;
-        globalId = random.getRandomExchangePoolId();
-        sendRandomAlarm();
+        randomExchangePoolRepository.save(randomExchangePool);
 
         return createRandomExchangePoolResponseDto(randomExchangePool);
     }
@@ -113,8 +113,15 @@ public class RandomExchangePoolService {
                 log.info("exchangeDiarySaveRequestDto1 = " + exchangeDiarySaveRequestDto1);
                 log.info("exchangeDiarySaveRequestDto2 = " + exchangeDiarySaveRequestDto1);
 
-                exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto1);
-                exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto2);
+                ExchangedDiaryResponseDto A = exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto1);
+                memberId = A.getReceiverId();
+                requestId = A.getReceiveDiaryId();
+                sendRandomAlarm();
+
+                ExchangedDiaryResponseDto B = exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto2);
+                memberId = B.getReceiverId();
+                requestId = B.getReceiveDiaryId();
+                sendRandomAlarm();
 
                 updateRandomExchangePool(repuDto1);
                 updateRandomExchangePool(repuDto2);
@@ -143,7 +150,10 @@ public class RandomExchangePoolService {
                     .friendExchangeType(EExchangeType.R)
                     .build();
 
-            exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto);
+            ExchangedDiaryResponseDto A = exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto);
+            memberId = A.getReceiverId();
+            requestId = A.getReceiveDiaryId();
+            sendRandomAlarm();
 
             updateRandomExchangePool(repuDto);
         }
@@ -200,10 +210,15 @@ public class RandomExchangePoolService {
     @Async
     @Scheduled(cron = "0 0 9 * * ?")
     public void sendRandomAlarm() {
+        LocalTime currentTime = LocalTime.now();
+        if (!currentTime.equals(LocalTime.of(9, 0))) {
+            return;
+        }
+
         String title = "가짜 별에서 온 편지 도착";
         String body = "외계인은 어떤 일기를 보냈을까요?";
-        alarmService.saveAlarm(new AlarmRequestDto(globalMember.getMemberId(), globalId, title, body, "RANDOM"));
-        alarmService.sendNotificationByToken(new AlarmResponseDto(globalMember.getMemberId(), title, body));
+        alarmService.saveAlarm(new AlarmRequestDto(memberId, requestId, title, body, "RANDOM"));
+        alarmService.sendNotificationByToken(new AlarmResponseDto(memberId, title, body));
     }
 
     private RandomExchangePoolResponseDto createRandomExchangePoolResponseDto(RandomExchangePool randomExchangePool) {
