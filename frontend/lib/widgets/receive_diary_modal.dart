@@ -1,6 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/diary_list_filtered_screen.dart';
+import 'package:frontend/screens/diary_list_screen.dart';
 
 class ReceiveDiaryModal extends StatelessWidget {
   final int requestId;
@@ -84,9 +84,9 @@ class ReceiveDiaryModal extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DiaryFilteredScreen(
-                              diaries: [],
-                              recieverId: requestId,
+                            builder: (context) => DiaryListScreen(
+                              // recieverId: requestId,
+                              requestId: requestId,
                             ),
                           ),
                         );

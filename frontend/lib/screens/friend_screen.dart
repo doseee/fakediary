@@ -423,6 +423,9 @@ class _FriendScreenState extends State<FriendScreen> {
                                         ChangeCheck(friend),
                                       ]),
                                     ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
                                     Container(
                                       height: 0.1,
                                       color: Colors.white,

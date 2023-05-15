@@ -829,6 +829,34 @@ class ApiService {
     return false;
   }
 
+  static Future<bool> DiaryChangeApprove(int diaryId, int requestId) async {
+    print('diaryId: $diaryId');
+    print('requestId: $requestId');
+    final url = Uri.parse('$baseUrl/friendexchange/manage');
+    final manage = {
+      'friendExchangeRequestId': requestId,
+      'receiverDiaryId': diaryId,
+    };
+
+    final response = await http.patch(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(manage),
+    );
+
+    if (response.statusCode == 200) {
+      print('일기 답장 성공');
+      return true;
+    } else {
+      print('일기 답장 실패');
+      print(response.statusCode);
+      print(response.body);
+      return false;
+    }
+  }
+
   static Future<bool> CheckChange() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');

@@ -424,6 +424,25 @@ class _MoodSelectState extends State<MoodSelect> {
                               '일기 생성이 완료되었습니다!',
                               notificationDetails,
                               payload: 'item x');
+                        } else {
+                          const AndroidNotificationDetails
+                              androidNotificationDetails =
+                              AndroidNotificationDetails(
+                                  'your channel id', 'your channel name',
+                                  channelDescription:
+                                      'your channel description',
+                                  importance: Importance.max,
+                                  priority: Priority.high,
+                                  ticker: 'ticker');
+                          const NotificationDetails notificationDetails =
+                              NotificationDetails(
+                                  android: androidNotificationDetails);
+                          await FlutterLocalNotificationsPlugin().show(
+                              0,
+                              '일기 생성 실패',
+                              '서버 문제로 일기 생성에 실패했습니다! 다시 시도해 주세요.',
+                              notificationDetails,
+                              payload: 'item x');
                         }
                       },
                       child: Container(
