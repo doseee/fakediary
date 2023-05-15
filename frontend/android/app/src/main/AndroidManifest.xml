@@ -28,6 +28,12 @@
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- "kakao${YOUR_NATIVE_APP_KEY}://${PRODUCT_NAME}" 형식의 앱 실행 스킴 설정 -->
+                <!-- 카카오톡 공유, 카카오톡 메시지 -->
+<!--                <data android:host="kakaolink"-->
+<!--                    android:scheme="kakao${f0f8afec8b8671e087825009e846a1fa}" />-->
             </intent-filter>
         </activity>
         <activity

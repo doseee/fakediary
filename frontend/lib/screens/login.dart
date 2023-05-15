@@ -2,6 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
+import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -138,12 +139,7 @@ class _LoginState extends State<Login> {
           child: Container(
             width: 250,
             height: 50,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  Color(0xff79F1A4),
-                  Color(0xff0E5CAD),
-                ]),
-                borderRadius: BorderRadius.circular(25)),
+            decoration: BtnThemeGradient(),
             child: Center(
                 child: Text(
               '로그인',

@@ -112,16 +112,41 @@ class _FriendScreenState extends State<FriendScreen> {
             },
             child: Padding(
               padding: const EdgeInsets.all(17.0),
-              child: Text(
-                '일기 교환하러 가기   >',
-                style: TextStyle(
-                    color: Colors.blue[100],
-                    fontWeight: FontWeight.w600,
-                    fontSize: 17),
+              child: Container(
+                width: 268,
+                height: 61,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const Color(0xff263344),
+                      const Color(0xff1B2532).withOpacity(0.53),
+                      const Color(0xff1C2A3D).withOpacity(0.5),
+                      const Color(0xff1E2E42).withOpacity(0.46),
+                      const Color(0xff364B66).withOpacity(0.33),
+                      const Color(0xff2471D6).withOpacity(0),
+                    ],
+                    stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xff000000).withOpacity(0.25),
+                      offset: const Offset(0, 4),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: const Center(
+                  child: Text(
+                    '일기 교환하러 가기',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                  ),
+                ),
               ),
             ),
           ),
-          Container(height: 0.3, color: Colors.white),
         ],
       );
     }
@@ -316,7 +341,6 @@ class _FriendScreenState extends State<FriendScreen> {
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(6.0),
             child: Container(
-              color: Colors.white70,
               height: 0.5,
             ),
           ),

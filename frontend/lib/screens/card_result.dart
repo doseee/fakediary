@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:math' as math;
 
@@ -74,6 +75,53 @@ class _CardResultState extends State<CardResult>
         opacityLevel = 1.0;
       });
     });
+  }
+
+  DefaultTemplate _getTemplate() {
+    String title = widget.card['createdAt'];
+    Uri imageLink = Uri.parse(widget.card['cardImageUrl']);
+    Link link = Link(
+        webUrl: Uri.parse("https://developers.kakao.com"),
+        mobileWebUrl: Uri.parse("https://developers.kakao.com"));
+
+    Content content = Content(title: title, imageUrl: imageLink, link: link);
+
+    FeedTemplate template = FeedTemplate(
+      content: content,
+      buttonTitle: '오늘 기억의 조각 만들기',
+    );
+
+    return template;
+  }
+
+  void shareMyCode() async {
+    try {
+      DefaultTemplate template = _getTemplate();
+      Uri uri = await ShareClient.instance.shareDefault(template: template);
+      await ShareClient.instance.launchKakaoTalk(uri);
+      print('카카오톡 공유 완료');
+    } catch (error) {
+      print('kakao error : ${error.toString()}');
+    }
+  }
+
+  CheckKakao() async {
+    bool isKakaoTalkSharingAvailable =
+    await ShareClient.instance.isKakaoTalkSharingAvailable();
+
+    if (isKakaoTalkSharingAvailable) {
+      shareMyCode();
+    } else {
+      try {
+        DefaultTemplate template = _getTemplate();
+        Uri shareUrl =
+        await WebSharerClient.instance.makeDefaultUrl(template: template);
+        await launchBrowserTab(shareUrl, popupOpen: true);
+        print('NoKakao');
+      } catch (error) {
+        print('kakao no install error : ${error.toString()}');
+      }
+    }
   }
 
   @override
@@ -180,23 +228,42 @@ class _CardResultState extends State<CardResult>
                                 ),
                                 Flexible(
                                   flex: 3,
-                                  child: Center(
-                                      child: TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const CardList(),
-                                          ));
-                                    },
-                                    child: Text(
-                                      '카드 목록 보러가기 →',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w800),
-                                    ),
-                                  )),
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                        flex: 2,
+                                        child: Center(
+                                          child: TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CardList(),
+                                              ));
+                                        },
+                                        child: Text(
+                                          '카드 목록 보러가기 →',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                      )),),
+                                      Flexible(flex: 1, child: Center(
+                                        child: GestureDetector(
+                                          onTap: (){
+                                            CheckKakao();
+                                          },
+                                          child: Text(
+                                            '공유 →',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                        ),
+                                      ),)
+                                    ],
+                                  ),
                                 )
                               ],
                             ),

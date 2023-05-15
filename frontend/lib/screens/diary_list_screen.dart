@@ -6,6 +6,7 @@ import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:lottie/lottie.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/change_button.dart';
@@ -97,7 +98,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
         Flexible(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.only(left: 15, right: 10),
+            padding: const EdgeInsets.only(left: 8, right: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -105,12 +106,12 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 Flexible(
                   flex: 3,
                   child: Padding(
-                    padding: const EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(0.0),
                     child: Text(
                       title,
                       style: TextStyle(
                           color: Colors.white60,
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -121,7 +122,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     padding: const EdgeInsets.all(3.0),
                     child: Text(
                       summary,
-                      style: TextStyle(color: Colors.white60, fontSize: 14),
+                      style: TextStyle(color: Colors.white60, fontSize: 12),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -159,7 +160,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                             shadowColor: Colors.transparent,
                             elevation: 0.0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
+                              borderRadius: BorderRadius.circular(35.0),
                             )),
                         child: SizedBox(
                           width: 250,
@@ -182,11 +183,29 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     ),
                   ),
                 ),
-                ChangeButton(
-                  exchangeSituation: exchangeSituation,
-                  diaryId: diaryId,
-                  requestId: widget.requestId,
-                ),
+                Row(
+                  children: [
+                    ChangeButton(
+                      exchangeSituation: exchangeSituation,
+                      diaryId: diaryId,
+                      requestId: widget.requestId,
+                    ),
+                    SizedBox(
+                      // decoration: BtnThemeGradientLine(),
+                      width: 50,
+                      height: 50,
+                      child: GestureDetector(
+                        onTap: () {
+                          CheckKakao();
+                        },
+                        child: Icon(
+                          Icons.share,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           ),
@@ -412,6 +431,53 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
         ),
       ),
     );
+  }
+
+  DefaultTemplate _getTemplate() {
+    String title = this.title;
+    Uri imageLink = Uri.parse(imageUrl);
+    Link link = Link(
+        webUrl: Uri.parse("https://www.naver.com"),
+        mobileWebUrl: Uri.parse("https://developers.kakao.com"));
+
+    Content content = Content(title: title, imageUrl: imageLink, link: link);
+
+    FeedTemplate template = FeedTemplate(
+      content: content,
+      buttonTitle: '가짜 다이어리 기록하기',
+    );
+
+    return template;
+  }
+
+  void shareMyCode() async {
+    try {
+      DefaultTemplate template = _getTemplate();
+      Uri uri = await ShareClient.instance.shareDefault(template: template);
+      await ShareClient.instance.launchKakaoTalk(uri);
+      print('카카오톡 공유 완료');
+    } catch (error) {
+      print('kakao error : ${error.toString()}');
+    }
+  }
+
+  CheckKakao() async {
+    bool isKakaoTalkSharingAvailable =
+        await ShareClient.instance.isKakaoTalkSharingAvailable();
+
+    if (isKakaoTalkSharingAvailable) {
+      shareMyCode();
+    } else {
+      try {
+        DefaultTemplate template = _getTemplate();
+        Uri shareUrl =
+            await WebSharerClient.instance.makeDefaultUrl(template: template);
+        await launchBrowserTab(shareUrl, popupOpen: true);
+        print('NoKakao');
+      } catch (error) {
+        print('kakao no install error : ${error.toString()}');
+      }
+    }
   }
 
   Widget buildList(snapshot) {
