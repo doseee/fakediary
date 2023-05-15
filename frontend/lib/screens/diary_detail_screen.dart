@@ -42,19 +42,21 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   ///다이어리 모델 중 디테일 리스트
   late Future<List<CardUrlListVerModel>> cards;
 
-  late bool _isTransparent = false;
 
   /// SliverAppBar 투명도 변경하는 변수
+  late bool _isTransparent = false;
+
+  /// 구분선 확장 상태 관리하는 변수
   late bool _isExpanded = true;
 
   final default_image_url =
       'http://fakediary.s3.amazonaws.com/image-20230506-215519.png';
 
-  /// 구분선 확장 상태 관리하는 변수
+  /// 오디오 플레이어
   final player = AudioPlayer();
   bool isPlaying = false;
 
-  /// 오디오 플레이어
+
 
   final List<Color> colors = [
     Colors.red,
@@ -158,7 +160,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
     }
   }
 
-  // 음악 플레이어
+  /// 음악 플레이어
   void playMusic() async {
     await player.setSource(
       AssetSource('wav/test_music.wav'),
@@ -287,7 +289,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 17,
-                      fontFamily: 'Cafe24'),
+                      fontFamily: 'Cafe24',),
                 ),
               ),
 
@@ -332,6 +334,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                         height: 1.5,
                         letterSpacing: 1.1,
                         fontFamily: 'Cafe24'),
+                    textAlign: TextAlign.justify,
                   ),
                 ),
               ),
