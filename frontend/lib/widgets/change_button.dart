@@ -62,7 +62,7 @@ class ChangeButton extends StatelessWidget {
               },
               child: SizedBox(
                 width: 250,
-                height: 50,
+                height: MediaQuery.of(context).size.height/18,
                 child: Center(
                   child: exchangeSituation == 2
                       ? Text(

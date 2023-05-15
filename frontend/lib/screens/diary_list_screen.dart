@@ -6,6 +6,7 @@ import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:lottie/lottie.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/change_button.dart';
@@ -70,6 +71,52 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
       return Center(
         child: Lottie.asset('assets/lottie/book.json'),
       );
+    }
+
+    DefaultTemplate _getTemplate() {
+      String title = this.title;
+      Uri imageLink = Uri.parse(imageUrl);
+      Link link = Link(
+          webUrl: Uri.parse("https://www.naver.com"),
+          mobileWebUrl: Uri.parse("https://developers.kakao.com"));
+
+      Content content = Content(title: title, imageUrl: imageLink, link: link);
+
+      FeedTemplate template = FeedTemplate(
+        content: content,
+        buttonTitle: '가짜 다이어리 기록하기',
+      );
+
+      return template;
+    }
+
+    void shareMyCode() async {
+      try {
+        DefaultTemplate template = _getTemplate();
+        Uri uri = await ShareClient.instance.shareDefault(template: template);
+        await ShareClient.instance.launchKakaoTalk(uri);
+        print('카카오톡 공유 완료');
+      } catch (error) {
+        print('kakao error : ${error.toString()}');
+      }
+    }
+
+    CheckKakao() async {
+      bool isKakaoTalkSharingAvailable =
+      await ShareClient.instance.isKakaoTalkSharingAvailable();
+
+      if (isKakaoTalkSharingAvailable) {
+        shareMyCode();
+      } else {
+        try {
+          DefaultTemplate template = _getTemplate();
+          Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(template: template);
+          await launchBrowserTab(shareUrl, popupOpen: true);
+          print('NoKakao');
+        } catch (error) {
+          print('kakao no install error : ${error.toString()}');
+        }
+      }
     }
 
     return Row(
@@ -182,11 +229,32 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     ),
                   ),
                 ),
-                ChangeButton(
-                  exchangeSituation: exchangeSituation,
-                  diaryId: diaryId,
-                  requestId: widget.requestId,
-                ),
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 4,
+                      child: ChangeButton(
+                        exchangeSituation: exchangeSituation,
+                        diaryId: diaryId,
+                        requestId: widget.requestId,
+                      ),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: GestureDetector(
+                        onTap: CheckKakao,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height/18,
+                          decoration: BtnThemeKakaoGradient(),
+                          child: Center(
+                            child:
+                              Icon(Icons.share, color: Color(0xff3A1D1D)),)
+                              // Text('공유', style: TextStyle(color: Color(0xff3A1D1D)),),
+                          ),
+                        ),
+                      ),
+                  ],
+                )
               ],
             ),
           ),

@@ -61,6 +61,7 @@ dependencies:
   another_flushbar: ^1.12.29
   firebase_crashlytics: ^3.3.0
   audioplayers: ^4.0.1
+  kakao_flutter_sdk_share: ^1.4.2
 
 dev_dependencies:
   flutter_test:

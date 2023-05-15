@@ -43,7 +43,7 @@ BoxDecoration BtnThemeGradient(){
         Color(0xff79F1A4),
         Color(0xff0E5CAD),
       ]),
-      borderRadius: BorderRadius.circular(25));
+      borderRadius: BorderRadius.circular(22));
 }
 
 BoxDecoration BtnThemeGradientLine(){
@@ -56,6 +56,15 @@ BoxDecoration BtnThemeGradientLine(){
         width: 1),
     borderRadius: BorderRadius.circular(22),
   );
+}
+
+BoxDecoration BtnThemeKakaoGradient(){
+  return BoxDecoration(
+        gradient: LinearGradient(colors: [
+          Color(0xffF7E600),
+          Color(0xffE6D000),
+  ]),
+  borderRadius: BorderRadius.circular(22),);
 }
 
 BoxDecoration BgThemeIncludeImage(){
