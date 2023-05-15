@@ -40,10 +40,10 @@ class ChangeButton extends StatelessWidget {
               },
               child: SizedBox(
                 width: 250,
-                height: 50,
+                height: MediaQuery.of(context).size.height/18,
                 child: Center(
                   child: Text(
-                    '교환하기',
+                    '교환',
                     style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ),

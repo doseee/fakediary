@@ -238,14 +238,14 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         onTap: CheckKakao,
                         child: Container(
                           height: MediaQuery.of(context).size.height/18,
-                          decoration: BtnThemeGradientLine(),
+                          decoration: BtnThemeKakaoGradient(),
                           child: Center(
                             child:
-                              Text('공유', style: TextStyle(color: Colors.white),),
+                              Icon(Icons.share, color: Color(0xff3A1D1D)),)
+                              // Text('공유', style: TextStyle(color: Color(0xff3A1D1D)),),
                           ),
                         ),
                       ),
-                    )
                   ],
                 )
               ],
