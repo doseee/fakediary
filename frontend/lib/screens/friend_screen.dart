@@ -187,11 +187,24 @@ class _FriendScreenState extends State<FriendScreen> {
                                       return InfoModal(
                                           padding: 20,
                                           color: true,
-                                          widget: Text(
-                                            '✉ 랜덤 일기는 랜덤 친구와 일기를 교환할 수 있는 기능으로, 하루에 한 번만 보낼 수 있습니다.',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14),
+                                          widget: Column(
+                                            children: [
+                                              Text(
+                                                '✉ 모르는 사람과의 랜덤 일기 교환입니다.',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                '하루에 한 번만 보낼 수 있습니다.',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                            ],
                                           ),
                                           height: 100);
                                     });

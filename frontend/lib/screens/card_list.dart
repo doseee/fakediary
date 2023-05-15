@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/CardModel.dart';
+import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:lottie/lottie.dart';
@@ -57,10 +58,31 @@ class _CardListState extends State<CardList> {
           ),
           actions: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CardCreate()));
+                    },
+                    child: Container(
+                      width: 85,
+                      height: 42,
+                      decoration: BtnThemeGradientLine(),
+                      child: Center(
+                          child: Text(
+                            '카드 만들기',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          )),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -74,9 +96,6 @@ class _CardListState extends State<CardList> {
                       ),
                       width: 45,
                     ),
-                  ),
-                  SizedBox(
-                    width: 15,
                   ),
                 ],
               ),

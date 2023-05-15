@@ -348,9 +348,8 @@ class _MoodSelectState extends State<MoodSelect> {
                           ),
                         );
                         Flushbar(
-
                                 message:
-                                    ' 다이어리 제작은 평균 3분 정도 소요됩니다. \n\n 완성되면 푸시알림을 드릴게요!',
+                                    ' 나만의 가짜 다이어리가 제작에 들어갔습니다 \n\n 평균 3분 후 알람을 보내드릴게요!',
                                 duration: Duration(seconds: 5),
                                 flushbarPosition: FlushbarPosition.TOP)
                             .show(context);
@@ -454,12 +453,12 @@ class _MoodSelectState extends State<MoodSelect> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              const Color(0xff263344),
-                              const Color(0xff1B2532).withOpacity(0.53),
-                              const Color(0xff1C2A3D).withOpacity(0.5),
-                              const Color(0xff1E2E42).withOpacity(0.46),
-                              const Color(0xff364B66).withOpacity(0.33),
-                              const Color(0xff2471D6).withOpacity(0),
+                              const Color(0xff2c526e),
+                              const Color(0xff384f57).withOpacity(0.5),
+                              const Color(0xff5c8375).withOpacity(0.3),
+                              const Color(0xff384f57).withOpacity(0.5),
+                              const Color(0xff364B66).withOpacity(0.5),
+                              const Color(0xff2471D6).withOpacity(0.4),
                             ],
                             stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
                           ),
@@ -474,7 +473,7 @@ class _MoodSelectState extends State<MoodSelect> {
                         child: const Center(
                           child: Text(
                             '나만의 가짜일기 만들기',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ),
                       ),

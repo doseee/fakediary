@@ -9,6 +9,7 @@ import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/screens/diary_list_filtered_screen.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/widgets/info_modal.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -303,6 +304,47 @@ class _DiaryFilterState extends State<DiaryFilter> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    SizedBox(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                              icon: Icon(Icons.info, color: Colors.white60),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return InfoModal(
+                                          padding: 20,
+                                          color: true,
+                                          widget: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '✉ 외계인은 랜덤교환 상대입니다.',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                '모르는 사람과 교환한 일기를 볼 수 있습니다.',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
+                                          height: 100);
+                                    });
+                              }),
+                        ],
+                      ),
+                    ),
                     Expanded(
                       child: Divider(
                         color: Colors.white,
@@ -313,17 +355,18 @@ class _DiaryFilterState extends State<DiaryFilter> {
                 ),
               ),
               Flexible(
-                  flex: 1,
-                  child: FutureBuilder<List<FriendModel>>(
-                      future: friends,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return buildList(snapshot.data, writerSetter);
-                        } else if (snapshot.hasError) {
-                          return Text("${snapshot.error}에러!!");
-                        }
-                        return CircularProgressIndicator();
-                      })),
+                flex: 1,
+                child: FutureBuilder<List<FriendModel>>(
+                    future: friends,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return buildList(snapshot.data, writerSetter);
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}에러!!");
+                      }
+                      return CircularProgressIndicator();
+                    }),
+              ),
               Flexible(
                 flex: 3,
                 child: Column(
@@ -350,41 +393,46 @@ class _DiaryFilterState extends State<DiaryFilter> {
                             );
                           });
                         },
-                        child: Container(
-                            // 필터적용 버튼
-                            width: 268,
-                            height: 61,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  const Color(0xff263344),
-                                  const Color(0xff1B2532).withOpacity(0.53),
-                                  const Color(0xff1C2A3D).withOpacity(0.5),
-                                  const Color(0xff1E2E42).withOpacity(0.46),
-                                  const Color(0xff364B66).withOpacity(0.33),
-                                  const Color(0xff2471D6).withOpacity(0),
-                                ],
-                                stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color:
-                                      const Color(0xff000000).withOpacity(0.25),
-                                  offset: const Offset(0, 4),
-                                  blurRadius: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                // 필터적용 버튼
+                                width: 268,
+                                height: 61,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      const Color(0xff263344),
+                                      const Color(0xff1B2532).withOpacity(0.53),
+                                      const Color(0xff1C2A3D).withOpacity(0.5),
+                                      const Color(0xff1E2E42).withOpacity(0.46),
+                                      const Color(0xff364B66).withOpacity(0.33),
+                                      const Color(0xff2471D6).withOpacity(0),
+                                    ],
+                                    stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xff000000)
+                                          .withOpacity(0.25),
+                                      offset: const Offset(0, 4),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: const Center(
-                              child: Text(
-                                '검색하기',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15),
-                              ),
-                            ))),
+                                child: const Center(
+                                  child: Text(
+                                    '검색하기',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 15),
+                                  ),
+                                )),
+                          ],
+                        )),
                     GestureDetector(
                       onTap: () async {
                         Navigator.push(
