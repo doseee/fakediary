@@ -1,5 +1,6 @@
 package com.a101.fakediary.stablediffusion.api;
 
+import ch.qos.logback.core.net.server.Client;
 import com.a101.fakediary.papago.api.PapagoApi;
 import com.a101.fakediary.stablediffusion.dto.StableDiffusion200ResponseDto;
 import com.a101.fakediary.stablediffusion.dto.StableDiffusion422ResponseDto;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -198,4 +200,13 @@ public class StableDiffusionApi {
         return ImageMap;
     }
 
+    public boolean isUrlAlive() throws Exception {
+        WebClient urlCheckWebClient = WebClient.create(STABLE_DIFFUSION_URL);
+
+        Mono<ClientResponse> responseMono = urlCheckWebClient.head() //  HEAD 요청을 보냄.
+                .exchangeToMono(Mono::just);                         // 응답을 Mono로 변환함.
+
+        ClientResponse response = responseMono.block(); //  응답이 올 때까지 기다린다.
+        return response.statusCode().is2xxSuccessful(); //  응답 상태 코드가 2xx이면 true를 반환합니다.
+    }
 }
