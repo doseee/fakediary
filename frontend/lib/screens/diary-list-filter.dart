@@ -74,7 +74,6 @@ class _DiaryFilterState extends State<DiaryFilter> {
       selectedWriter = selectedId;
     }
     setState(() {});
-
   }
 
   late Future<List<FriendModel>> friends;
@@ -83,7 +82,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
   void initState() {
     super.initState();
     selectedWriter = -2;
-    selectedMood='';
+    selectedMood = '';
     _loadId();
     friends = ApiService().getFriends();
     print('initState : $friends');
@@ -138,7 +137,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     if (selectedMood != '')
-                      GradientButton(content:selectedMood),
+                      GradientButton(content: selectedMood),
                     if (selectedWriter == userId)
                       Row(
                         children: [
@@ -332,12 +331,13 @@ class _DiaryFilterState extends State<DiaryFilter> {
                   children: [
                     GestureDetector(
                         onTap: () async {
-                          if(selectedMood !='') {
-                            selectedMood  = dict.keys.firstWhere((k) => dict[k] == selectedMood);
+                          if (selectedMood != '') {
+                            selectedMood = dict.keys
+                                .firstWhere((k) => dict[k] == selectedMood);
                           }
                           List<DiaryModel> filteredDiaries =
                               await ApiService.filterDiaries(
-                              selectedMood, selectedWriter);
+                                  selectedMood, selectedWriter);
                           var currentContext = context;
                           await Future.delayed(Duration(seconds: 1), () {
                             Navigator.push(
