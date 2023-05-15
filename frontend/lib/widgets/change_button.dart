@@ -26,7 +26,7 @@ class ChangeButton extends StatelessWidget {
         child: Container(
           decoration: BtnThemeGradient(),
           child: Padding(
-            padding: const EdgeInsets.only(right: 25, left: 25),
+            padding: const EdgeInsets.only(right: 15 , left: 15),
             child: GestureDetector(
               onTap: () async {
                 if (exchangeSituation == 1) {
@@ -61,8 +61,8 @@ class ChangeButton extends StatelessWidget {
                 print('답장');
               },
               child: SizedBox(
-                width: 250,
-                height: MediaQuery.of(context).size.height/18,
+                width: 180,
+                height: 50,
                 child: Center(
                   child: exchangeSituation == 2
                       ? Text(
@@ -70,7 +70,7 @@ class ChangeButton extends StatelessWidget {
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         )
                       : Text(
-                          '교환하기',
+                          '교환',
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                 ),
