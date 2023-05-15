@@ -134,7 +134,7 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public DiaryResponseDto detailDiary(Long diaryId) {
-        return changeResponse(diaryRepository.findById(diaryId).get());
+        return changeResponse(diaryRepository.findById(diaryId).orElseThrow());
     }
 
     @Transactional(readOnly = true)

@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:frontend/firebase_options.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/splash.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatelessWidget {
@@ -102,6 +103,9 @@ void main() async {
   final pref = await SharedPreferences.getInstance();
   bool? isLogged = pref.getBool('isLogged');
   isLogged ??= false;
+
+  KakaoSdk.init(nativeAppKey: 'f0f8afec8b8671e087825009e846a1fa');
+
   runApp(MaterialApp(
     theme: ThemeData(fontFamily: 'Nanum_Square_Neo'),
     // home: isLogged ? HomeScreen() : LoginEntrance(),
