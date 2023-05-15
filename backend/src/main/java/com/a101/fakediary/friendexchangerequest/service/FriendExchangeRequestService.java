@@ -61,14 +61,14 @@ public class FriendExchangeRequestService {
         alarm.setStatus(1);
 
         //받은 사람
-        String alarmTitle = friend.getSender().getNickname() + "님과 교환한 일기가 도착했어요";
-        String alarmBody = "둘만의 교환일기를 확인하러 가볼까요?";
+        String alarmTitle = friend.getSender().getNickname() + "님이 교환일기의 답장을 보냈어요";
+        String alarmBody = "친구는 어떤 일기를 보냈을지 궁금해요~";
         alarmService.saveAlarm(new AlarmRequestDto(friend.getReceiver().getMemberId(), friend.getSenderDiary().getDiaryId(), alarmTitle, alarmBody, "RESPONSE"));
         alarmService.sendNotificationByToken(new AlarmResponseDto(friend.getReceiver().getMemberId(), alarmTitle, alarmBody));
 
         //보낸 사람
-        alarmTitle = friend.getReceiver().getNickname() + "님과 교환한 일기가 도착했어요";
-        alarmBody = "둘만의 교환일기를 확인하러 가볼까요?";
+        alarmTitle = friend.getReceiver().getNickname() + "님이 교환일기의 답장을 보냈어요";
+        alarmBody = "친구는 어떤 일기를 보냈을지 궁금해요~";
         alarmService.saveAlarm(new AlarmRequestDto(friend.getSender().getMemberId(), manage.getReceiverDiaryId(), alarmTitle, alarmBody, "RESPONSE"));
         alarmService.sendNotificationByToken(new AlarmResponseDto(friend.getSender().getMemberId(), alarmTitle, alarmBody));
     }
