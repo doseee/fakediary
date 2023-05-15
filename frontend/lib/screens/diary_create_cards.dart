@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
@@ -68,10 +69,31 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
               ),
               actions: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DiaryListScreen()));
+                        },
+                        child: Container(
+                          width: 85,
+                          height: 42,
+                          decoration: BtnThemeGradientLine(),
+                          child: Center(
+                              child: Text(
+                                '일기 리스트',
+                                style: TextStyle(color: Colors.white, fontSize: 14),
+                              )),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -85,9 +107,6 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                           ),
                           width: 45,
                         ),
-                      ),
-                      SizedBox(
-                        width: 15,
                       ),
                     ],
                   ),

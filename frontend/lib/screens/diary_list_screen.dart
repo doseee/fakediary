@@ -261,11 +261,28 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
+                                builder: (context) => DiaryCreateCards()));
+                      },
+                      child: Center(
+                            child: Text(
+                              '일기 쓰기',
+                              style: TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
                                 builder: (context) => DiaryFilter()));
                       },
                       child: Container(
-                        width: 65,
-                        height: 42,
+                        width: 60,
+                        height: 38,
                         decoration: BtnThemeGradientLine(),
                         child: Center(
                             child: Text(
@@ -275,7 +292,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       ),
                     ),
                     SizedBox(
-                      width: 15,
+                      width: 12,
                     ),
                     GestureDetector(
                       onTap: () {
