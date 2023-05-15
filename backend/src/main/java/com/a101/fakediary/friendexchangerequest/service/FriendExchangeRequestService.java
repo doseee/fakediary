@@ -59,6 +59,18 @@ public class FriendExchangeRequestService {
         //동시에 알림 읽음처리
         Alarm alarm = alarmRepository.findFriend(friend.getFriendExchangeRequestId());
         alarm.setStatus(1);
+
+        //받은 사람
+        String alarmTitle = friend.getSender().getNickname() + "님과 교환한 일기가 도착했어요";
+        String alarmBody = "둘만의 교환일기를 확인하러 가볼까요?";
+        alarmService.saveAlarm(new AlarmRequestDto(friend.getReceiver().getMemberId(), friend.getSenderDiary().getDiaryId(), alarmTitle, alarmBody, "RESPONSE"));
+        alarmService.sendNotificationByToken(new AlarmResponseDto(friend.getReceiver().getMemberId(), alarmTitle, alarmBody));
+
+        //보낸 사람
+        alarmTitle = friend.getReceiver().getNickname() + "님과 교환한 일기가 도착했어요";
+        alarmBody = "둘만의 교환일기를 확인하러 가볼까요?";
+        alarmService.saveAlarm(new AlarmRequestDto(friend.getSender().getMemberId(), manage.getReceiverDiaryId(), alarmTitle, alarmBody, "RESPONSE"));
+        alarmService.sendNotificationByToken(new AlarmResponseDto(friend.getSender().getMemberId(), alarmTitle, alarmBody));
     }
 
     private FriendExchangeRequest requestEntity(FriendExchangeRequestDto request) {
