@@ -42,15 +42,36 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   // handle action
 }
 
+sendAlarm(String title, String content) async {
+  const AndroidNotificationDetails androidNotificationDetails =
+      AndroidNotificationDetails('your channel id', 'your channel name',
+          channelDescription: 'your channel description',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker');
+  const NotificationDetails notificationDetails =
+      NotificationDetails(android: androidNotificationDetails);
+  await FlutterLocalNotificationsPlugin()
+      .show(0, title, content, notificationDetails, payload: 'item x');
+}
+
 Future<void> _backgroundMessageHandler(RemoteMessage message) async {
   print('Handling a background message: ${message.messageId}');
   // print('Message data: ${message.data}');
   // print((message.data['FLUTTER_NOTIFICATION_CLICK']));
-  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
-  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
-  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
-  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
-  if (message.data['FLUTTER_NOTIFICATION_CLICK'] == 'friend') {}
+  if (message.data["body"] == 'REQUEST') {
+    sendAlarm('친구 요청이 왔어요!', '친구 요청을 확인해주세요!');
+  }
+  if (message.data["body"] == 'AUTOMATIC') {
+    sendAlarm('자동 일기 생성이 완료되었어요!', '일기장을 확인해주세요!');
+  }
+  if (message.data["body"] == 'FRIEND') {
+    sendAlarm('친구가 일기 교환을 신청했어요!', '교환 여부를 확인해주세요!');
+  }
+  if (message.data["body"] == 'RANDOM') {
+    sendAlarm('랜덤 일기가 도착했어요!', '일기장을 확인해주세요!');
+  }
+  if (message.data["body"] == 'MANUAL') {}
 }
 
 void main() async {
@@ -76,9 +97,25 @@ void main() async {
     print('Got a message whilst in the foreground!');
     print('Message data: ${message.data}');
     print('Message data: ${message.data["body"]}');
-    // print('Message data: ${message.toMap()['body']}');
-    // print('무엇');
-    // print('Message data: ${message.toMap()['title']}');
+    print(message.data["body"]);
+
+    if (message.data["body"] == '친구 맺고 일기를 교환해볼까요?') {
+      print('친구요청');
+      sendAlarm(message.data["title"], message.data["body"]);
+    }
+    if (message.data["body"] == '오늘의 가짜다이어리를 확인해보세요') {
+      print('자동일기');
+      sendAlarm(message.data["title"], message.data["body"]);
+    }
+    if (message.data["body"] == '교환할 일기는 뭐가 좋을까~') {
+      print('교환요청');
+      sendAlarm(message.data["title"], message.data["body"]);
+    }
+    if (message.data["body"] == '외계인은 어떤 일기를 보냈을까요?') {
+      print('랜덤요청');
+      sendAlarm(message.data["title"], message.data["body"]);
+    }
+    if (message.data["body"] == 'MANUAL') {}
 
     if (message.notification != null) {
       print('Message also contained a notification: ${message.notification}');

@@ -197,206 +197,218 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BgThemeIncludeImage(),
-      // BoxDecoration(
-      //   color: Colors.white60,
-      // ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ));
+        return true;
+      },
+      child: Container(
+        decoration: BgThemeIncludeImage(),
+        // BoxDecoration(
+        //   color: Colors.white60,
+        // ),
+        child: Scaffold(
           backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(1.0),
-            child: Container(
-              color: Colors.white70,
-            ),
-          ),
-          title: Row(
-            children: [
-              Text('일기장',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
-              Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
-            ],
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DiaryFilter()));
-                    },
-                    child: Container(
-                      width: 65,
-                      height: 42,
-                      decoration: BtnThemeGradientLine(),
-                      child: Center(
-                          child: Text(
-                        '필터',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      )),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
-                    },
-                    child: Image(
-                      image: AssetImage(
-                        'assets/img/home_icon.png',
-                      ),
-                      width: 45,
-                    ),
-                  ),
-                ],
+          appBar: AppBar(
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(1.0),
+              child: Container(
+                color: Colors.white70,
               ),
-            )
-          ],
-        ),
-        body: Column(
-          children: [
-            Flexible(
-                flex: 3,
-                child: Column(
+            ),
+            title: Row(
+              children: [
+                Text('일기장',
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
+              ],
+            ),
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Flexible(
-                        flex: 6,
-                        child: Center(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(20, 15, 20, 10),
-                              child: DiaryDetail()),
-                        )),
-                    Flexible(
-                      flex: 2,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DiaryFilter()));
+                      },
                       child: Container(
-                        child: Column(
-                          children: [
-                            Flexible(
-                                flex: 1,
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                      flex: 1,
-                                      child: Container(),
-                                    ),
-                                    Flexible(
-                                        flex: 4,
-                                        child: Center(
-                                          child: Text(
-                                            '내가 만든 일기를 확인해보세요',
-                                            style: TextStyle(
-                                                color: Colors.white70,
-                                                fontSize: 14),
-                                          ),
-                                        )),
-                                    Flexible(
-                                        flex: 2,
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                              flex: 1,
-                                              child: Container(),
-                                            ),
-                                            Flexible(
-                                              flex: 11,
-                                              child: Container(
-                                                child: IconButton(
-                                                    icon: Icon(Icons.info,
-                                                        color: Colors.white70),
-                                                    onPressed: () {
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (context) {
-                                                            return InfoModal(
-                                                                padding: 20,
-                                                                color: true,
-                                                                widget: Text(
-                                                                  '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다.',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          14),
-                                                                ),
-                                                                height: 100);
-                                                          });
-                                                    }),
-                                              ),
-                                            ),
-                                            Flexible(
-                                              flex: 1,
-                                              child: Container(),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                )),
-                          ],
+                        width: 65,
+                        height: 42,
+                        decoration: BtnThemeGradientLine(),
+                        child: Center(
+                            child: Text(
+                          '필터',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        )),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()));
+                      },
+                      child: Image(
+                        image: AssetImage(
+                          'assets/img/home_icon.png',
                         ),
+                        width: 45,
                       ),
                     ),
                   ],
-                )),
-            Flexible(
-                flex: 3,
-                child: Container(
-                  // decoration: BgThemeIncludeImage(),
-                  child: FutureBuilder<List<DiaryModel>>(
-                    future: diaries,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        print('data: ${snapshot.data?.length}');
-                        if (snapshot.data?.isEmpty ?? true) {
-                          return Container(
-                              child: Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            DiaryCreateCards()));
-                              },
-                              child: Container(
-                                width: 250,
-                                height: 50,
-                                decoration: BtnThemeGradient(),
+                ),
+              )
+            ],
+          ),
+          body: Column(
+            children: [
+              Flexible(
+                  flex: 3,
+                  child: Column(
+                    children: [
+                      Flexible(
+                          flex: 6,
+                          child: Center(
+                            child: Padding(
+                                padding: EdgeInsets.fromLTRB(20, 15, 20, 10),
+                                child: DiaryDetail()),
+                          )),
+                      Flexible(
+                        flex: 2,
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Flexible(
+                                  flex: 1,
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                        flex: 1,
+                                        child: Container(),
+                                      ),
+                                      Flexible(
+                                          flex: 4,
+                                          child: Center(
+                                            child: Text(
+                                              '내가 만든 일기를 확인해보세요',
+                                              style: TextStyle(
+                                                  color: Colors.white70,
+                                                  fontSize: 14),
+                                            ),
+                                          )),
+                                      Flexible(
+                                          flex: 2,
+                                          child: Row(
+                                            children: [
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(),
+                                              ),
+                                              Flexible(
+                                                flex: 11,
+                                                child: Container(
+                                                  child: IconButton(
+                                                      icon: Icon(Icons.info,
+                                                          color:
+                                                              Colors.white70),
+                                                      onPressed: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return InfoModal(
+                                                                  padding: 20,
+                                                                  color: true,
+                                                                  widget: Text(
+                                                                    '일기를 선택하면 표지, 타이틀, 요약 확인 및 일기 확인 페이지 이동, 교환이 가능합니다.',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            14),
+                                                                  ),
+                                                                  height: 100);
+                                                            });
+                                                      }),
+                                                ),
+                                              ),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Container(),
+                                              )
+                                            ],
+                                          )),
+                                    ],
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+              Flexible(
+                  flex: 3,
+                  child: Container(
+                    // decoration: BgThemeIncludeImage(),
+                    child: FutureBuilder<List<DiaryModel>>(
+                      future: diaries,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          print('data: ${snapshot.data?.length}');
+                          if (snapshot.data?.isEmpty ?? true) {
+                            return Container(
                                 child: Center(
-                                  child: Text(
-                                    '일기 만들러 가기',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DiaryCreateCards()));
+                                },
+                                child: Container(
+                                  width: 250,
+                                  height: 50,
+                                  decoration: BtnThemeGradient(),
+                                  child: Center(
+                                    child: Text(
+                                      '일기 만들러 가기',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ));
+                            ));
+                          }
+                          return buildList(snapshot.data);
+                        } else if (snapshot.hasError) {
+                          return Text("error : ${snapshot.error}");
                         }
-                        return buildList(snapshot.data);
-                      } else if (snapshot.hasError) {
-                        return Text("error : ${snapshot.error}");
-                      }
-                      return CircularProgressIndicator();
-                    },
-                  ),
-                )
-                // child: Container(),
-                )
-          ],
+                        return CircularProgressIndicator();
+                      },
+                    ),
+                  )
+                  // child: Container(),
+                  )
+            ],
+          ),
         ),
       ),
     );
