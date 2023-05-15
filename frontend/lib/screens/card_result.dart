@@ -5,6 +5,8 @@ import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:math' as math;
 
+import 'home_circlemenu.dart';
+
 class CardResult extends StatefulWidget {
   final Map<String, dynamic> card;
 
@@ -20,10 +22,12 @@ Widget _buttonList(BuildContext context) {
     height: 50,
     decoration: BoxDecoration(
         border: GradientBoxBorder(
-            gradient: LinearGradient(colors: [
-              Color(0xff79F1A4),
-              Color(0xff0E5CAD),
-            ]),
+            gradient: LinearGradient(
+              colors: [
+                Color(0xff79F1A4),
+                Color(0xff0E5CAD),
+              ],
+            ),
             width: 2),
         borderRadius: BorderRadius.circular(25)),
     child: ElevatedButton(
@@ -74,125 +78,136 @@ class _CardResultState extends State<CardResult>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        // gradient: LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors: [Color(0xff142e34), Color(0xff4F4662)],
-        //   stops: [0.4, 1.0],
-        // ),
-        image: DecorationImage(
-          image: AssetImage('assets/img/background_pink_darken.png'),
-          fit: BoxFit.cover,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ));
+        return false;
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          // gradient: LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: [Color(0xff142e34), Color(0xff4F4662)],
+          //   stops: [0.4, 1.0],
+          // ),
+          image: DecorationImage(
+            image: AssetImage('assets/img/background_pink_darken.png'),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Padding(
-            padding: EdgeInsets.only(left: 60, right: 60),
-            child: Column(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: Container(),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: Center(
-                    child: Lottie.asset('assets/lottie/105550sparkle.json'),
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Padding(
+              padding: EdgeInsets.only(left: 60, right: 60),
+              child: Column(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Container(),
                   ),
-                ),
-                Flexible(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      Flexible(
-                          flex: 2,
-                          child: Center(
-                            child: Text(
-                              '오늘의 기억 조각 완성 !',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          )),
-                      Flexible(
-                        flex: 1,
-                        child: Text('카드를 터치해보세요',
-                            style: TextStyle(color: Colors.grey,fontSize: 16)),
-                      )
-                    ],
+                  Flexible(
+                    flex: 1,
+                    child: Center(
+                      child: Lottie.asset('assets/lottie/105550sparkle.json'),
+                    ),
                   ),
-                ),
-                Flexible(
-                    flex: 10,
-                    child: GestureDetector(
-                        onTap: () {
-                          _toggleCardExpansion();
-                        },
-                        child: AnimatedOpacity(
-                          opacity: opacityLevel,
-                          duration: Duration(seconds: 3),
-                          child: Center(
-                            child: Transform(
-                              transform:
-                                  Matrix4.rotationY(_animation.value * 3.14),
-                              alignment: Alignment.center,
-                              child: _isFrontVisible
-                                  ? _buildFront()
-                                  : _buildBack(),
-                            ),
-                          ),
-                        ))),
-                Flexible(
-                    flex: 4,
+                  Flexible(
+                    flex: 2,
                     child: Column(
                       children: [
                         Flexible(
-                          flex: 1,
-                          child: Container(),
-                        ),
-                        Flexible(
-                          flex: 4,
-                          child: Column(
-                            children: [
-                              Flexible(
-                                flex: 2,
-                                child: Center(
-                                  child: _buttonList(context),
-                                ),
+                            flex: 2,
+                            child: Center(
+                              child: Text(
+                                '오늘의 기억 조각 완성 !',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w500),
                               ),
-                              Flexible(
-                                flex: 3,
-                                child: Center(
-                                    child: TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const CardList(),
-                                        ));
-                                  },
-                                  child: Text(
-                                    '카드 목록 보러가기 →',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w800),
-                                  ),
-                                )),
-                              )
-                            ],
-                          ),
-                        ),
-                        Flexible(flex: 1, child: Container())
+                            )),
+                        Flexible(
+                          flex: 1,
+                          child: Text('카드를 터치해보세요',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 16)),
+                        )
                       ],
-                    ))
-              ],
-            ),
-          )),
+                    ),
+                  ),
+                  Flexible(
+                      flex: 10,
+                      child: GestureDetector(
+                          onTap: () {
+                            _toggleCardExpansion();
+                          },
+                          child: AnimatedOpacity(
+                            opacity: opacityLevel,
+                            duration: Duration(seconds: 3),
+                            child: Center(
+                              child: Transform(
+                                transform:
+                                    Matrix4.rotationY(_animation.value * 3.14),
+                                alignment: Alignment.center,
+                                child: _isFrontVisible
+                                    ? _buildFront()
+                                    : _buildBack(),
+                              ),
+                            ),
+                          ))),
+                  Flexible(
+                      flex: 4,
+                      child: Column(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Container(),
+                          ),
+                          Flexible(
+                            flex: 4,
+                            child: Column(
+                              children: [
+                                Flexible(
+                                  flex: 2,
+                                  child: Center(
+                                    child: _buttonList(context),
+                                  ),
+                                ),
+                                Flexible(
+                                  flex: 3,
+                                  child: Center(
+                                      child: TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CardList(),
+                                          ));
+                                    },
+                                    child: Text(
+                                      '카드 목록 보러가기 →',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                  )),
+                                )
+                              ],
+                            ),
+                          ),
+                          Flexible(flex: 1, child: Container())
+                        ],
+                      ))
+                ],
+              ),
+            )),
+      ),
     );
   }
 

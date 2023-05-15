@@ -175,7 +175,9 @@ class _RegistScreenState extends State<RegistScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => HomeScreen()));
+                                      builder: (context) => HomeScreen(),
+                                      settings: RouteSettings(name: 'Login'),
+                                    ));
                               }
                               // ScaffoldMessenger.of(context).showSnackBar(
                               //   SnackBar(
