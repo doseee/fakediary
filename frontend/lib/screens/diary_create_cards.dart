@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
@@ -68,10 +69,31 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
               ),
               actions: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DiaryListScreen()));
+                        },
+                        child: Container(
+                          width: 85,
+                          height: 42,
+                          decoration: BtnThemeGradientLine(),
+                          child: Center(
+                              child: Text(
+                                '일기 리스트',
+                                style: TextStyle(color: Colors.white, fontSize: 14),
+                              )),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -85,9 +107,6 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                           ),
                           width: 45,
                         ),
-                      ),
-                      SizedBox(
-                        width: 15,
                       ),
                     ],
                   ),
@@ -214,12 +233,12 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xff263344),
-                const Color(0xff1B2532).withOpacity(0.53),
-                const Color(0xff1C2A3D).withOpacity(0.5),
-                const Color(0xff1E2E42).withOpacity(0.46),
-                const Color(0xff364B66).withOpacity(0.33),
-                const Color(0xff2471D6).withOpacity(0),
+                const Color(0xff2c526e),
+                const Color(0xff384f57).withOpacity(0.5),
+                const Color(0xff5c8375).withOpacity(0.3),
+                const Color(0xff384f57).withOpacity(0.5),
+                const Color(0xff364B66).withOpacity(0.5),
+                const Color(0xff2471D6).withOpacity(0.4),
               ],
               stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
             ),
