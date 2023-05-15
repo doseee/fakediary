@@ -191,16 +191,16 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       requestId: widget.requestId,
                     ),
                     Container(
-                      decoration: BtnThemeKakaoGradient(),
-                      width: 30,
-                      height: 30,
+                      // decoration: BtnThemeGradientLine(),
+                      width: 50,
+                      height: 50,
                       child: GestureDetector(
                         onTap: (){
                           CheckKakao();
                         },
                         child: Icon(
                           Icons.share,
-                          color: Color(0xff3A1D1D),
+                          color: Colors.white,
                         ),
                       ),
                     )

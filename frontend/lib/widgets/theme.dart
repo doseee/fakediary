@@ -60,11 +60,7 @@ BoxDecoration BtnThemeGradientLine(){
 
 BoxDecoration BtnThemeKakaoGradient(){
   return BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Color(0xffF7E600),
-          Color(0xffE6D000),
-  ]),
-  borderRadius: BorderRadius.circular(10),
+  image: DecorationImage(image: AssetImage('assets/img/kakao.png'))
   );
 }
 
