@@ -344,6 +344,12 @@ public class DiaryService {
 
         Long diaryId = diaryRepository.save(diary).getDiaryId();
 
+        String alarmTitle = "따끈따끈한 일기의 순간입니다";
+        String alarmBody = "내가 선택한 가짜다이어리가 완성되었어요";
+        alarmService.saveAlarm(new AlarmRequestDto(member.getMemberId(), diary.getDiaryId(), alarmTitle, alarmBody, "MANUAL"));
+        alarmService.sendNotificationByToken(new AlarmResponseDto(member.getMemberId(), alarmTitle, alarmBody));
+
+
         for (String genre : genreList) {
             GenreDto gen = new GenreDto(diary.getDiaryId(), genre);
             genreService.saveGenre(gen); //장르 저장
@@ -449,7 +455,7 @@ public class DiaryService {
 
     @Async
     //유저가 정해둔 시간에 맞춰 일기 자동생성하기
-    @Scheduled(cron = "0 0/30 * * * ?", zone = "Asia/Seoul") // 현재 30분 기준으로 생성중
+    @Scheduled(cron = "0 0/1 * * * ?", zone = "Asia/Seoul") // 현재 30분 기준으로 생성중 잠시 1분으로 사용. 테스트끝나고 30분으로변경해야함
     @Transactional(propagation = Propagation.NOT_SUPPORTED)//트랜잭셔널 해제해서 유저별로 바로바로 일기생성되도록함
     public void createAutoDiary() throws Exception {
         LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));

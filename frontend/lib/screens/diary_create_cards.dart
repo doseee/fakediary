@@ -391,7 +391,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
-                            fontSize: 11)),
+                            fontSize: 10)),
                   ),
                 ],
               ),
