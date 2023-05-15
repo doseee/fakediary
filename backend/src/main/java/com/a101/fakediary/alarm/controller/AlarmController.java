@@ -37,4 +37,17 @@ public class AlarmController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @ApiOperation(value = "알림 읽기")
+    @GetMapping("read/{alarmId}")
+    public ResponseEntity<?> readAlarm(@PathVariable Long alarmId) {
+        try {
+            alarmService.readAlarm(alarmId);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
