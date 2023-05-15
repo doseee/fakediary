@@ -77,9 +77,10 @@ class _FriendScreenState extends State<FriendScreen> {
                         MaterialPageRoute(
                             builder: (context) => DiaryListScreen()));
                     Flushbar(
-                      message: "교환 일기 신청을 완료했습니다!",
-                      duration: Duration(seconds: 3),
-                    ).show(context);
+                            message: "교환 일기 신청을 완료했습니다!",
+                            duration: Duration(seconds: 3),
+                            flushbarPosition: FlushbarPosition.TOP)
+                        .show(context);
                     // ScaffoldMessenger.of(context).showSnackBar(
                     //   SnackBar(
                     //     content: Center(child: Text('교환 일기신청을 완료했습니다!')),
@@ -309,7 +310,7 @@ class _FriendScreenState extends State<FriendScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
+          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           bottom: PreferredSize(
@@ -319,10 +320,16 @@ class _FriendScreenState extends State<FriendScreen> {
               height: 0.5,
             ),
           ),
-          title: Text('친구 목록'),
+          title: Row(
+            children: [
+              Text('친구 목록',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+              Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
+            ],
+          ),
           actions: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

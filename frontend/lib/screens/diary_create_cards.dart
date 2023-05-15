@@ -3,6 +3,7 @@ import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
 import 'package:frontend/screens/mood_select.dart';
+import 'package:lottie/lottie.dart';
 
 import '../widgets/theme.dart';
 import 'card_create.dart';
@@ -28,25 +29,6 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
     if (widget.cardIdFromList != null) {
       getCardFromList();
     }
-    // for (int i=0 ; i<cards.length ; i++) {
-    //   if(cards[i] == widget.cardIdFromList) {
-    //
-    //   }
-    // }
-    // int index = cards.(widget.cardIdFromList);
-
-    // ApiService().getCardList().then((card) {
-    //   setState(() {
-    //     _card = card;
-    //     // 선택한 카드의 인덱스를 찾습니다.
-    //     int index =
-    //         _card.indexWhere((card) => card.cardId == widget.cardIdFromList);
-    //     print(index);
-    //     setState(() {
-    //       selectedCards.add(cards[index]);
-    //     });
-    //   });
-    // });
   }
 
   getCardFromList() async {
@@ -61,54 +43,61 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
   @override
   Widget build(BuildContext context) {
     return (Container(
-        decoration: BgThemeGradient(),
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage('assets/img/background_1_darken.png'))),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
+              toolbarHeight: MediaQuery.of(context).size.height * 0.1,
               backgroundColor: Colors.transparent,
-              elevation: 0,
-              toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
+              elevation: 0.0,
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(6.0),
+                child: Container(
+                  color: Colors.white70,
+                ),
+              ),
+              title: Row(
+                children: [
+                  Text('일기 쓰기' , style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
+                  Lottie.asset('assets/lottie/menu_grinstar.json',
+                      width: 30),
+                ],
+              ),
               actions: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'CARDS  ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()));
+                        },
+                        child: Image(
+                          image: AssetImage(
+                            'assets/img/home_icon.png',
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeScreen()));
-                            },
-                            child: Image(
-                              image: AssetImage(
-                                'assets/img/home_icon.png',
-                              ),
-                              width: 45,
-                            ),
-                          ),
-                        ],
+                          width: 45,
+                        ),
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        width: 15,
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),
             body: Center(
                 child: Column(children: [
               Flexible(
-                flex: 2,
+                flex: 3,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SizedBox(
@@ -132,7 +121,6 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 15),
                           Text(
                             '이야기로 만들 기억의 조각을 선택하세요.',
                             style: TextStyle(fontSize: 15, color: Colors.white),
@@ -145,25 +133,29 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                 ),
               ),
               Flexible(
-                  flex: 4,
+                  flex: 7,
                   child: FutureBuilder<List<CardModel>>(
                       future: cards,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          if(snapshot.data?.length == 0) {
+                          if (snapshot.data == null || snapshot.data!.isEmpty) {
                             return GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => CardCreate())
-                                );
+                                    MaterialPageRoute(
+                                        builder: (context) => CardCreate()));
                               },
                               child: Container(
                                 width: 250,
                                 height: 50,
                                 decoration: BtnThemeGradient(),
                                 child: Center(
-                                  child: Text('카드 만들러 가기', style: TextStyle(color: Colors.white, fontSize: 16),),
+                                  child: Text(
+                                    '카드 만들러 가기',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
                                 ),
                               ),
                             );
@@ -171,11 +163,19 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
 
                           return Column(
                             children: [
-                              Flexible(flex: 3, child: buildList(snapshot.data),),
-                              Flexible(flex: 1, child: ButtonCheck(),)
+                              Flexible(
+                                flex: 3,
+                                child: buildList(snapshot.data),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: ButtonCheck(),
+                              )
                             ],
                           );
-
                         } else if (snapshot.hasError) {
                           return Text("${snapshot.error}에러!!");
                         }
@@ -184,10 +184,13 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
             ])))));
   }
 
-  Widget ButtonCheck(){
-    if(selectedCards.isEmpty){
+  Widget ButtonCheck() {
+    if (selectedCards.isEmpty) {
       return Center(
-        child: Text('카드를 하나 이상 선택해주세요', style: TextStyle(color: Colors.white60),),
+        child: Text(
+          '카드를 하나 이상 선택해주세요',
+          style: TextStyle(color: Colors.white60),
+        ),
       );
     }
 
@@ -198,12 +201,11 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  MoodSelect(selectedCards: selectedCards)),
+              builder: (context) => MoodSelect(selectedCards: selectedCards)),
         );
       },
       child: Container(
-        // NEXT 버튼
+          // NEXT 버튼
           width: 268,
           height: 61,
           decoration: BoxDecoration(
@@ -231,33 +233,38 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
           ),
           child: const Center(
             child: Text(
-              'NEXT',
+              '카드 선택 완료',
               style: TextStyle(color: Colors.white, fontSize: 15),
             ),
           )),
     );
   }
 
-
   String titleCheck(snapshot, index) {
-    // print('=== $index');
+    String title;
+
     if (snapshot[index].keywords.length != 0) {
-      // print('$index ?');
-      return snapshot[index].keywords[0];
+      title = snapshot[index].keywords[0];
     } else if (snapshot[index].baseName != '') {
-      // print('$index ??');
-      return snapshot[index].baseName;
+      title = snapshot[index].baseName;
     } else {
       print('sn: ${snapshot[index].basePlace}');
-      return snapshot[index].basePlace;
+      title = snapshot[index].basePlace;
     }
+
+    // 문자열이 10자 이상일 경우 잘라내고, "..."를 추가
+    if (title.length > 10) {
+      title = "${title.substring(0, 10)}...";
+    }
+
+    return title;
   }
 
   Widget buildList(snapshot) {
     return GridView.count(
       crossAxisCount: 3,
       // 가로 방향으로 3개의 카드씩 표시
-      childAspectRatio: 0.7,
+      childAspectRatio: 0.66,
       // 카드의 가로 세로 비율 설정
       mainAxisSpacing: 10.0,
       // 카드들의 세로 간격 설정
@@ -308,22 +315,23 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    width: 60,
-                    height: 100,
+                    width: 80,
+                    height: 120,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(color: Colors.white60, width: 4),
+                        borderRadius: BorderRadius.all(Radius.circular(13)),
+                        border: Border.all(color: Colors.white, width: 2),
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(snapshot[index].cardImageUrl))),
+                            image: NetworkImage(
+                                snapshot[index].cardImageUrl))),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                     child: Text(titleCheck(snapshot, index),
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
-                            fontSize: 12)),
+                            fontSize: 11)),
                   ),
                 ],
               ),
@@ -366,23 +374,24 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    width: 60,
+                    width: 70,
                     height: 100,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(color: Colors.white60, width: 4),
+                        borderRadius: BorderRadius.all(Radius.circular(13)),
+                        border: Border.all(color: Colors.white, width: 2),
                         image: DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(
                                 selectedCards[index].cardImageUrl))),
                   ),
+                  SizedBox(height: 8),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                     child: Text(titleCheck(selectedCards, index),
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
-                            fontSize: 12)),
+                            fontSize: 11)),
                   ),
                 ],
               ),

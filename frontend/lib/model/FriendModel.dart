@@ -4,6 +4,7 @@ class FriendModel {
     required this.friendId,
     required this.nickname,
   });
+
   late final int memberId;
   late final int friendId;
   late final String nickname;
@@ -20,5 +21,18 @@ class FriendModel {
     _data['friendId'] = friendId;
     _data['nickname'] = nickname;
     return _data;
+  }
+
+  dynamic operator [](String key) {
+    switch (key) {
+      case 'memberId':
+        return memberId;
+      case 'friendId':
+        return friendId;
+      case 'nickname':
+        return nickname;
+      default:
+        throw ArgumentError('Invalid key: $key');
+    }
   }
 }

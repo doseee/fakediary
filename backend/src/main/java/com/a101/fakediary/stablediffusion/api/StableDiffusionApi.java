@@ -22,6 +22,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 @Component
@@ -67,6 +69,7 @@ public class StableDiffusionApi {
     }
 
     public Map<String, Object> getStableDiffusionUrlsAndPrompt(String title, List<String> subtitles) throws Exception {
+        Instant start = Instant.now();
         Map<String, Object> StableDiffusionMap = new HashMap<>();
         //중요한것은 prompt, steps, sampler_index
         StableDiffusionMap.put("prompt", "");
@@ -115,10 +118,10 @@ public class StableDiffusionApi {
         //subtitles 파싱해서 리스트로 들고있기
         //리스트에 제목, subtitle을 순서대로 영어로 넣는다. 각각 썸네일, 삽화들 만들용도
         List<String> diaryImagePrompt = new ArrayList<>();
-        diaryImagePrompt.add(papagoApi.translate(title));
+        diaryImagePrompt.add(papagoApi.translateKorToEng(title));
 
         for (String subtitle : subtitles)
-            diaryImagePrompt.add(papagoApi.translate(subtitle));
+            diaryImagePrompt.add(papagoApi.translateKorToEng(subtitle));
 
         List<String> dtoImageUrl = new ArrayList<>();   // 다이어리 이미지 url들 저장할것
         // Title, subtitle들 번역해서 프롬프트로 넣고 stablediffusion 이미지 생성
@@ -188,6 +191,9 @@ public class StableDiffusionApi {
         Map<String, Object> ImageMap = new HashMap<>();
         ImageMap.put("stableDiffusionUrl", dtoImageUrl);
         ImageMap.put("diaryImagePrompt", diaryImagePrompt);
+
+        Instant end = Instant.now();
+        log.info("삽화 생성하는데 소요된 시간 : " + Duration.between(start, end).toMillis() + " ms");
 
         return ImageMap;
     }

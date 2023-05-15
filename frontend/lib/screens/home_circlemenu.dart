@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
+import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/modify_screen.dart';
+import 'package:frontend/services/api_service.dart';
+import 'package:frontend/widgets/friend_modal.dart';
+import 'package:frontend/widgets/receive_diary_modal.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:math';
 
 import 'package:vector_math/vector_math_64.dart' as vector64;
+
+import '../model/AlarmModel.dart';
+import '../model/DiaryModel.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -28,46 +35,35 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
           backgroundColor: Colors.transparent,
           key: scaffoldKey,
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                SizedBox(
-                  height: 100,
-                  child: DrawerHeader(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Colors.grey,
-                          width: 1,
+          drawer: AlarmDrawer(),
+          appBar: AppBar(
+            leading: Container(),
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        if (scaffoldKey.currentState != null) {
+                          scaffoldKey.currentState!.openDrawer();
+                        }
+                      },
+                      child: Image(
+                        image: AssetImage(
+                          'assets/img/icon_alarm.png',
                         ),
+                        width: 45,
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '알림',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Icon(Icons.close)
-                        ],
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
-                Notification(),
-                Notification(),
-                Notification(),
-              ],
-            ),
+              )
+            ],
           ),
           body: FractionallySizedBox(
               widthFactor: 1.3,
@@ -86,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             Image(
                               image:
-                                  AssetImage('assets/gif-file/moon_real.gif'),
+                                  AssetImage('assets/gif-file/moon_brighter_faster.gif'),
                             ),
                             Transform(
                               transform: Matrix4.identity()
@@ -289,7 +285,7 @@ class HomeScreen extends StatelessWidget {
 // class MenuBtn extends StatelessWidget {
 //
 // final int radians;
-// final String name;
+// final String name;0
 // final Widget screen;
 //
 // const MoodSelectButton({
@@ -305,32 +301,206 @@ class HomeScreen extends StatelessWidget {
 // }
 }
 
-class Notification extends StatelessWidget {
-  const Notification({
+
+class AlarmDrawer extends StatefulWidget {
+  const AlarmDrawer({
     super.key,
-    required this.title,
   });
-  final String title;
+
+  @override
+  State<AlarmDrawer> createState() => _AlarmDrawerState();
+}
+
+class _AlarmDrawerState extends State<AlarmDrawer> {
+  List<AlarmModel> alarmList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getAlarmList();
+
+  }
+
+  getAlarmList() async {
+    alarmList = await ApiService.getAllAlarm();
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 15),
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          SizedBox(
+            height: 100,
+            child: DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey,
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '알림',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Icon(Icons.close)
+                  ],
+                ),
+              ),
             ),
-            Icon(Icons.chevron_right)
-          ],
+          ),
+          // FutureBuilder(
+          //   future: alarmList,
+          //   builder: (context, snapshot) {
+          //     return Container(
+
+          //     );
+          //   },
+          // ),
+          if (alarmList.isNotEmpty)
+            for (AlarmModel alarm in alarmList)
+              Notification(alarm: alarm, getAlarmList: getAlarmList)
+          else
+            Container(
+              height: 60,
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.grey)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '알림이 없습니다.',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class Notification extends StatelessWidget {
+  const Notification({
+    super.key,
+    required this.alarm,
+    required this.getAlarmList,
+  });
+  final AlarmModel alarm;
+  final Function getAlarmList;
+
+  getDiary(requestId) async {
+    final DiaryModel diary = await ApiService.getDiaryDetail(requestId);
+    return diary;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        print(alarm.alarmType);
+        if (alarm.alarmType == 'REQUEST') {
+          // 수락 모달
+          showDialog(
+              context: context,
+              builder: (context) {
+                return FriendModal(
+                  friendRequestId: alarm.requestId,
+                  getAlarmList: getAlarmList,
+                );
+              });
+        } else if (alarm.alarmType == 'AUTOMATIC') {
+          // 전달받은 일기 상세 페이지로
+          getDiary(alarm.requestId).then((diary) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DiaryDetailCoverScreen(
+                  diaryId: alarm.requestId,
+                  exchangeSituation: 1,
+                  imageUrl: diary.diaryImageUrl[0],
+                ),
+              ),
+            );
+          });
+        } else if (alarm.alarmType == 'FRIEND') {
+          // 수락 모달
+          showDialog(
+              context: context,
+              builder: (context) {
+                return ReceiveDiaryModal(
+                  requestId: alarm.requestId,
+                );
+              });
+        } else if (alarm.alarmType == 'RANDOM') {
+          // 전달받은 일기 상세 페이지로
+          getDiary(alarm.requestId).then((diary) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DiaryDetailCoverScreen(
+                  diaryId: alarm.requestId,
+                  exchangeSituation: 1,
+                  imageUrl: diary.diaryImageUrl[0],
+                ),
+              ),
+            );
+          });
+        } else if (alarm.alarmType == 'MANUAL') {
+          // 전달받은 일기 상세 페이지로
+          getDiary(alarm.requestId).then((diary) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DiaryDetailCoverScreen(
+                  diaryId: alarm.requestId,
+                  exchangeSituation: 1,
+                  imageUrl: diary.diaryImageUrl[0],
+                ),
+              ),
+            );
+          });
+        }
+      },
+      child: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                alarm.title,
+                style: TextStyle(fontSize: 15),
+              ),
+              Icon(Icons.chevron_right)
+            ],
+          ),
         ),
       ),
     );

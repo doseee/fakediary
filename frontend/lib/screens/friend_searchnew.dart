@@ -69,16 +69,16 @@ class _SearchScreenState extends State<SearchScreen> {
         onTap: () async {
           bool isSended = await ApiService.AddFriend(senderID);
           isSended
-              ? ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Center(child: Text('친구요청 완료!')),
-                  ),
-                )
-              : ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Center(child: Text('이미 친구 요청 했짜나 ㅠ')),
-                  ),
-                );
+              ? Flushbar(
+                      message: '친구요청 완료!',
+                      duration: Duration(seconds: 3),
+                      flushbarPosition: FlushbarPosition.TOP)
+                  .show(context)
+              : Flushbar(
+                      message: '이미 친구 요청 했짜나 ㅠ',
+                      duration: Duration(seconds: 3),
+                      flushbarPosition: FlushbarPosition.TOP)
+                  .show(context);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -117,14 +117,27 @@ class _SearchScreenState extends State<SearchScreen> {
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
             backgroundColor: Colors.transparent,
-            title: Text('친구 검색'),
+            elevation: 0.0,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(6.0),
+              child: Container(
+                color: Colors.white70,
+              ),
+            ),
+            title: Row(
+              children: [
+                Text('친구 찾기' , style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
+                Lottie.asset('assets/lottie/menu_grinstar.json',
+                    width: 30),
+              ],
+            ),
           ),
           body: SingleChildScrollView(
               child: Column(
             children: [
               SizedBox(height: 20),
-
               Container(
                 padding: EdgeInsets.all(8.0),
                 child: TextField(
@@ -172,7 +185,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 child: Expanded(
                   child: _isLoading
-                      ? Center(child: CircularProgressIndicator())
+                      ? Center(
+                          child: CircularProgressIndicator())
                       : _searchResults.isNotEmpty
                           ? ListView.builder(
                               itemCount: _searchResults.length,
