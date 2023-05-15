@@ -4,8 +4,10 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
+import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/card_loading.dart';
 import 'package:frontend/screens/card_result.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -172,6 +174,51 @@ class _CardCreateState extends State<CardCreate> {
                           width: 30),
                     ],
                   ),
+                  actions: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CardList()));
+                            },
+                            child: Container(
+                              width: 85,
+                              height: 42,
+                              decoration: BtnThemeGradientLine(),
+                              child: Center(
+                                  child: Text(
+                                    '카드 리스트',
+                                    style: TextStyle(color: Colors.white, fontSize: 14),
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()));
+                            },
+                            child: Image(
+                              image: AssetImage(
+                                'assets/img/home_icon.png',
+                              ),
+                              width: 45,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
                 backgroundColor: Colors.transparent,
                 body: Padding(
