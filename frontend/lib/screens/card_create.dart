@@ -284,7 +284,16 @@ class _CardCreateState extends State<CardCreate> {
                           child: Container(
                             width: 100,
                             height: 336,
-                            decoration: BtnThemeGradientLine(),
+                            decoration: BoxDecoration(
+                              color: Colors.white10,
+                              border: GradientBoxBorder(
+                                  gradient: LinearGradient(colors: [
+                                    Color(0xff79F1A4),
+                                    Color(0xff0E5CAD),
+                                  ]),
+                                  width: 1),
+                              borderRadius: BorderRadius.circular(22),
+                            ),
                             child: GestureDetector(
                               onTap: () async {
                                 setState(() {
@@ -365,9 +374,8 @@ class _CardCreateState extends State<CardCreate> {
                                         color: Colors.white,
                                       )),
                                       focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.white,
-                                      )),
+                                        borderSide: BorderSide(color: Colors.greenAccent),
+                                      ),
                                       hintText: '주인공을 입력하세요.',
                                       hintStyle: TextStyle(
                                         color: Colors.grey,
@@ -411,9 +419,8 @@ class _CardCreateState extends State<CardCreate> {
                                         color: Colors.white,
                                       )),
                                       focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.white,
-                                      )),
+                                        borderSide: BorderSide(color: Colors.greenAccent),
+                                      ),
                                       hintText: '장소를 입력하세요.',
                                       hintStyle: TextStyle(
                                         color: Colors.grey,
@@ -633,8 +640,8 @@ class _CardCreateState extends State<CardCreate> {
                                     Color(0xff1B2532).withOpacity(0.538),
                                     Color(0xff1C2A3D).withOpacity(0.502),
                                     Color(0xff1E2E42).withOpacity(0.46),
-                                    Color(0xff364B66).withOpacity(0.33),
-                                    Color(0xff2471D6).withOpacity(0),
+                                    const Color(0xff384f57).withOpacity(0.5),
+                                    const Color(0xff5c8375).withOpacity(0.3),
                                   ],
                                 ),
                                 boxShadow: [
@@ -658,6 +665,9 @@ class _CardCreateState extends State<CardCreate> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 30,
+                        )
                       ],
                     ),
                   ),
@@ -734,9 +744,8 @@ class InputKeyword extends StatelessWidget {
                   color: Colors.white,
                 )),
                 focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                  color: Colors.white,
-                )),
+                  borderSide: BorderSide(color: Colors.greenAccent),
+                ),
                 hintText: '키워드를 입력하세요.',
                 hintStyle: TextStyle(
                   color: Colors.grey,

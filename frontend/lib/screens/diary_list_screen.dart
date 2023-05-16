@@ -79,26 +79,24 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
             flex: 1,
             child: Padding(
                 padding: EdgeInsets.only(left: 10, right: 5),
-                child: Container(
-                  width: 110,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage('assets/img/book_cover.png')),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 48, 0, 0),
-                    child: Image(
-                      fit: BoxFit.contain,
-                      image: NetworkImage(imageUrl),
+                child:Stack(
+                  children: [
+                    Image.asset('assets/img/diary_paper4.png',width: 150,height: 150), // 첫 번째 이미지
+                    Positioned(
+                      top: 37, // 두 번째 이미지의 위치 설정
+                      left: 27,
+                      child:  Image(
+                        height: 97,
+                        width: 97,
+                        image: NetworkImage(imageUrl),
+                      ), // 두 번째 이미지
                     ),
-                  ),
-                ))),
+                  ],
+                ) )),
         Flexible(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8, right: 0),
+            padding: const EdgeInsets.only(left: 5, right: 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -527,22 +525,19 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     elevation: 0.0,
                     child: Column(
                       children: <Widget>[
-                        Container(
-                          width: 110,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/img/book_cover.png')),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 48, 0, 0),
-                            child: Image(
-                              fit: BoxFit.contain,
-                              image: NetworkImage(
-                                  snapshot[index].diaryImageUrl[0]),
+                        Stack(
+                          children: [
+                            Image.asset('assets/img/diary_paper4.png',width: 150,height: 150), // 첫 번째 이미지
+                            Positioned(
+                              top: 35, // 두 번째 이미지의 위치 설정
+                              left: 27,
+                              child:  Image(
+                                height: 101,
+                                width: 101,
+                                image: NetworkImage(snapshot[index].diaryImageUrl[0]),
+                              ), // 두 번째 이미지
                             ),
-                          ),
+                          ],
                         ),
                         Padding(
                           padding: EdgeInsets.all(10),

@@ -1,24 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/diary-list-filter.dart';
-import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
-import 'package:frontend/screens/friend_screen.dart';
+import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:frontend/widgets/info_modal.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:lottie/lottie.dart';
 import '../model/DiaryModel.dart';
 import '../widgets/change_button.dart';
-import '../widgets/appbar.dart';
 
 class DiaryFilteredScreen extends StatefulWidget {
   final List<DiaryModel> diaries; // diaries 변수 추가
   final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
+  final int? requestId; //답장 상황에서는 requestId가 존재한다고 가정
 
-  const DiaryFilteredScreen({Key? key, required this.diaries, this.recieverId})
+
+  const DiaryFilteredScreen({Key? key, this.requestId, required this.diaries, this.recieverId})
       : super(key: key);
 
   @override
@@ -75,28 +74,26 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
           flex: 1,
           child: Padding(
             padding: EdgeInsets.only(left: 10, right: 5),
-            child: Container(
-              width: 110,
-              height: 200,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/img/book_cover.png')),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(5, 48, 0, 0),
-                child: Image(
-                  fit: BoxFit.contain,
-                  image: NetworkImage(imageUrl),
+            child: Stack(
+              children: [
+                Image.asset('assets/img/diary_paper4.png',width: 150,height: 150), // 첫 번째 이미지
+                Positioned(
+                  top: 37, // 두 번째 이미지의 위치 설정
+                  left: 27,
+                  child:  Image(
+                    height: 97,
+                    width: 97,
+                    image: NetworkImage(imageUrl),
+                  ), // 두 번째 이미지
                 ),
-              ),
-            ),
+              ],
+            )
           ),
         ),
         Flexible(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.only(left: 15, right: 10),
+            padding: const EdgeInsets.only(left: 5, right: 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -104,12 +101,12 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                 Flexible(
                   flex: 3,
                   child: Padding(
-                    padding: const EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(0.0),
                     child: Text(
                       title,
                       style: TextStyle(
                           color: Colors.white60,
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -117,10 +114,10 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                 Flexible(
                   flex: 3,
                   child: Padding(
-                    padding: const EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(0.0),
                     child: Text(
                       summary,
-                      style: TextStyle(color: Colors.white60, fontSize: 14),
+                      style: TextStyle(color: Colors.white60, fontSize: 12),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -134,7 +131,7 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                 // ),),
                 // SizedBox(height: 10,),
                 Flexible(
-                  flex: 3,
+                  flex: 4,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -153,20 +150,20 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                               ));
                         },
                         style: ElevatedButton.styleFrom(
-                            maximumSize: Size(250, 50),
+                            maximumSize: Size(250, 40),
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
                             elevation: 0.0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
+                              borderRadius: BorderRadius.circular(35.0),
                             )),
                         child: SizedBox(
                           width: 250,
-                          height: 50,
+                          height: 40,
                           child: Center(
                             child: SizedBox(
                               width: 250,
-                              height: 50,
+                              height: 40,
                               child: Center(
                                 child: Text(
                                   '상세보기',
@@ -181,10 +178,29 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                     ),
                   ),
                 ),
-                ChangeButton(
-                  exchangeSituation: exchangeSituation,
-                  diaryId: diaryId,
-                ),
+                Row(
+                  children: [
+                    ChangeButton(
+                      exchangeSituation: exchangeSituation,
+                      diaryId: diaryId,
+                      requestId: widget.requestId,
+                    ),
+                    SizedBox(
+                      // decoration: BtnThemeGradientLine(),
+                      width: 50,
+                      height: 50,
+                      child: GestureDetector(
+                        onTap: () {
+                          CheckKakao();
+                        },
+                        child: Icon(
+                          Icons.share,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           ),
@@ -400,6 +416,53 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
     );
   }
 
+  DefaultTemplate _getTemplate() {
+    String title = this.title;
+    Uri imageLink = Uri.parse(imageUrl);
+    Link link = Link(
+        webUrl: Uri.parse("https://www.naver.com"),
+        mobileWebUrl: Uri.parse("https://developers.kakao.com"));
+
+    Content content = Content(title: title, imageUrl: imageLink, link: link);
+
+    FeedTemplate template = FeedTemplate(
+      content: content,
+      buttonTitle: '가짜 다이어리 기록하기',
+    );
+
+    return template;
+  }
+
+  void shareMyCode() async {
+    try {
+      DefaultTemplate template = _getTemplate();
+      Uri uri = await ShareClient.instance.shareDefault(template: template);
+      await ShareClient.instance.launchKakaoTalk(uri);
+      print('카카오톡 공유 완료');
+    } catch (error) {
+      print('kakao error : ${error.toString()}');
+    }
+  }
+
+  CheckKakao() async {
+    bool isKakaoTalkSharingAvailable =
+    await ShareClient.instance.isKakaoTalkSharingAvailable();
+
+    if (isKakaoTalkSharingAvailable) {
+      shareMyCode();
+    } else {
+      try {
+        DefaultTemplate template = _getTemplate();
+        Uri shareUrl =
+        await WebSharerClient.instance.makeDefaultUrl(template: template);
+        await launchBrowserTab(shareUrl, popupOpen: true);
+        print('NoKakao');
+      } catch (error) {
+        print('kakao no install error : ${error.toString()}');
+      }
+    }
+  }
+
   Widget buildList(snapshot) {
     print('imgUrl: ${snapshot[0].diaryImageUrl[0]}');
     return GridView.count(
@@ -426,22 +489,19 @@ class _DiaryListScreenState extends State<DiaryFilteredScreen> {
                     elevation: 0.0,
                     child: Column(
                       children: <Widget>[
-                        Container(
-                          width: 110,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/img/book_cover.png')),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 48, 0, 0),
-                            child: Image(
-                              fit: BoxFit.contain,
-                              image: NetworkImage(
-                                  snapshot[index].diaryImageUrl[0]),
+                        Stack(
+                          children: [
+                            Image.asset('assets/img/diary_paper4.png',width: 150,height: 150), // 첫 번째 이미지
+                            Positioned(
+                              top: 35, // 두 번째 이미지의 위치 설정
+                              left: 27,
+                              child:  Image(
+                                height: 101,
+                                width: 101,
+                                image: NetworkImage(snapshot[index].diaryImageUrl[0]),
+                              ), // 두 번째 이미지
                             ),
-                          ),
+                          ],
                         ),
                         Padding(
                           padding: EdgeInsets.all(10),

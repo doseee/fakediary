@@ -132,7 +132,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(width: 0.3, color: Colors.white),
+                      top: BorderSide(width: 0.3, color: Colors.greenAccent),
                     ),
                   ),
                   child: Scaffold(
@@ -143,7 +143,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                         children: [
                           Text(
                             '이야기로 만들 기억의 조각을 선택하세요.',
-                            style: TextStyle(fontSize: 15, color: Colors.white),
+                            style: TextStyle(fontSize: 15, color: Colors.white70),
                           ),
                           SizedBox(height: 10),
                         ],
