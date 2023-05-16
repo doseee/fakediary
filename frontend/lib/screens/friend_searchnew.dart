@@ -142,7 +142,6 @@ class _SearchScreenState extends State<SearchScreen> {
             body: SingleChildScrollView(
                 child: Column(
               children: [
-                SizedBox(height: 20),
                 Container(
                   padding: EdgeInsets.all(8.0),
                   child: TextField(
@@ -153,18 +152,19 @@ class _SearchScreenState extends State<SearchScreen> {
                     decoration: InputDecoration(
                       hintText: '닉네임을 검색하세요',
                       hintStyle: TextStyle(
-                        color: Colors.blue[100],
+                        color: Colors.white54,
                       ),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30)),borderSide: BorderSide(color: Colors.white,)),
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.circular(50),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.teal),
+                        borderSide: BorderSide(color: Colors.white54),
                         borderRadius: BorderRadius.circular(50),
                       ),
                       errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(color: Colors.white54),
                         borderRadius: BorderRadius.circular(50),
                       ),
                       suffixIcon: IconButton(

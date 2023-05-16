@@ -188,12 +188,12 @@ class _CardCreateState extends State<CardCreate> {
                                       builder: (context) => CardList()));
                             },
                             child: Container(
-                              width: 85,
-                              height: 42,
+                              width: 55,
+                              height: 35,
                               decoration: BtnThemeGradientLine(),
                               child: Center(
                                   child: Text(
-                                    '카드 리스트',
+                                    '내 카드',
                                     style: TextStyle(color: Colors.white, fontSize: 14),
                                   )),
                             ),

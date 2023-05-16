@@ -81,12 +81,12 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                                   builder: (context) => DiaryListScreen()));
                         },
                         child: Container(
-                          width: 85,
-                          height: 42,
+                          width: 55,
+                          height: 35,
                           decoration: BtnThemeGradientLine(),
                           child: Center(
                               child: Text(
-                                '일기 리스트',
+                                '일기장',
                                 style: TextStyle(color: Colors.white, fontSize: 14),
                               )),
                         ),
@@ -310,13 +310,13 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                   selectedCards.remove(delCard);
                 }
                 if (!isExist) {
-                  if (selectedCards.length < 10) {
+                  if (selectedCards.length < 5) {
                     selectedCards.insert(
                         0, snapshot[index]); // append selected card to the list
                   } else {
                     // display a warning message
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('카드는 10장까지만 선택할 수 있습니다.'),
+                      content: Text('카드는 5장까지만 선택할 수 있습니다.'),
                     ));
                   }
                 }

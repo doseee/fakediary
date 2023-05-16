@@ -70,13 +70,13 @@ class _CardListState extends State<CardList> {
                               builder: (context) => CardCreate()));
                     },
                     child: Container(
-                      width: 85,
-                      height: 42,
+                      width: 40,
+                      height: 40,
                       decoration: BtnThemeGradientLine(),
                       child: Center(
                           child: Text(
-                            '카드 만들기',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
+                            '+',
+                            style: TextStyle(color: Colors.white, fontSize: 22),
                           )),
                     ),
                   ),

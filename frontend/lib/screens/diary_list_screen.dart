@@ -252,7 +252,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
             ),
             actions: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
+                padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -263,15 +263,19 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                             MaterialPageRoute(
                                 builder: (context) => DiaryCreateCards()));
                       },
-                      child: Center(
+                      child: Container(
+                        width: 35,
+                        height: 35,
+                        decoration: BtnThemeGradientLine(),
+                        child: Center(
                             child: Text(
-                              '일기 쓰기',
-                              style: TextStyle(color: Colors.white, fontSize: 14),
-                            ),
+                              '+',
+                              style: TextStyle(color: Colors.white, fontSize: 22),
+                            )),
                       ),
                     ),
                     SizedBox(
-                      width: 12,
+                      width: 7,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -281,8 +285,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                 builder: (context) => DiaryFilter()));
                       },
                       child: Container(
-                        width: 60,
-                        height: 38,
+                        width: 55,
+                        height: 35,
                         decoration: BtnThemeGradientLine(),
                         child: Center(
                             child: Text(
@@ -292,7 +296,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       ),
                     ),
                     SizedBox(
-                      width: 12,
+                      width: 7,
                     ),
                     GestureDetector(
                       onTap: () {

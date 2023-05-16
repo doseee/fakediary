@@ -974,9 +974,9 @@ class ApiService {
     // 다이어리 필터 api
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
-    if (genre == '') {
-      genre = null;
-    }
+    // if (genre == '') {
+    //   genre = null;
+    // }
     final diaryFilterRequestDto = {
       "genre": genre,
       "id": writer,
