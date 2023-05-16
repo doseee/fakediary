@@ -23,7 +23,7 @@ public class SoundDrawCrawler {
         this.SOUND_DRAW_URL = SOUND_DRAW_URL;
     }
     public String getMusicUrl(List<String> genreList, Long diaryPk) {
-        StringBuilder command = new StringBuilder("python3 " + CRAWLER + " \"" + SOUND_DRAW_URL + "?length=60&tempo=normal,high,low&mood=");
+        StringBuilder command = new StringBuilder("/usr/bin/python3 " + CRAWLER + " \"" + SOUND_DRAW_URL + "?length=60&tempo=normal,high,low&mood=");
         String musicFileName = diaryPk + "_" + UUID.randomUUID().toString();
         for (String genre : genreList) {
             command.append(SoundDrawMap.getMood(genre));
