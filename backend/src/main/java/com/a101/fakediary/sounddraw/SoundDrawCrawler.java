@@ -62,6 +62,16 @@ public class SoundDrawCrawler {
             while ((line = bufferedReader.readLine()) != null) {
                 log.info("line = " + line);
             }
+        } catch(Exception e) {
+            InputStream inputStream = process.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            e.printStackTrace();
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                log.info("error-line = " + line);
+            }
         }
 
         int exitCode = process.waitFor();
