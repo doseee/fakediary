@@ -55,6 +55,8 @@ public class SoundDrawCrawler {
         for(int i =  1; i < command.length; i++)
             commandLine.addArgument(command[i]);
 
+        log.info("commandLine = " + commandLine);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(outputStream);
         DefaultExecutor executor = new DefaultExecutor();
