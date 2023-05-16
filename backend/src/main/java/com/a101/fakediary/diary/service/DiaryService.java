@@ -11,7 +11,6 @@ import com.a101.fakediary.carddiarymapping.service.CardDiaryMappingService;
 import com.a101.fakediary.chatgptdiary.api.ChatGptApi;
 import com.a101.fakediary.chatgptdiary.dto.message.Message;
 import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
-import com.a101.fakediary.chatgptdiary.dto.result.TitleSubtitlesResultDto;
 import com.a101.fakediary.chatgptdiary.prompt.ChatGptPrompts;
 import com.a101.fakediary.diary.dto.DiaryItemsDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
@@ -29,6 +28,7 @@ import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.a101.fakediary.randomexchangepool.repository.RandomExchangePoolRepository;
+import com.a101.fakediary.sounddraw.SoundDrawCrawler;
 import com.a101.fakediary.stablediffusion.api.StableDiffusionApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -59,12 +58,12 @@ public class DiaryService {
     private final CardRepository cardRepository;
     private final DiaryImageService diaryImageService;
     private final DiaryQueryRepository diaryQueryRepository;
-    //    private final PapagoTranslator papagoTranslator;
     private final ChatGptApi chatGptApi;
     private final StableDiffusionApi stableDiffusionApi;
     private final FriendExchangeRequestRepository friendExchangeRequestRepository;
     private final RandomExchangePoolRepository randomExchangePoolRepository;
     private final AlarmService alarmService;
+    private final SoundDrawCrawler soundDrawCrawler;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     private final static String DELIMITER = "@";
@@ -364,6 +363,14 @@ public class DiaryService {
         List<String> diaryImagePrompt = (List<String>) stableDiffusionMap.get("diaryImagePrompt");
         logger.info("diaryImagePrompt = " + diaryImagePrompt);
         diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
+
+        try {
+            String musicUrl = soundDrawCrawler.getMusicUrl(genreList, diaryId);
+            logger.info("musicUrl = " + musicUrl);
+            diary.setMusicUrl(musicUrl);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
 
         DiaryResponseDto returnDto = new DiaryResponseDto(diary);
         List<String> genres = genreService.searchGenre(diary.getDiaryId());
