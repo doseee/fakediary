@@ -1133,4 +1133,16 @@ class ApiService {
       throw Exception('친구 요청 승인에 실패했습니다');
     }
   }
+
+  static Future<bool> readAlarm(int alarmId) async {
+    final url = Uri.parse('$baseUrl/alarm/read/$alarmId');
+    final response = await http.get(url);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return false;
+    }
+  }
 }
