@@ -53,23 +53,25 @@ public class SoundRawCrawler {
 
     public static void execPython(String[] command) throws Exception {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
-        Process process = processBuilder.start();
+        Process process = null;
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        String line = null;
 
         // Python 코드의 출력 확인
-        try (InputStream inputStream = process.getInputStream();
-             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-            String line;
+        try {
+            process = processBuilder.start();
+
+            inputStream = process.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream);
+            bufferedReader = new BufferedReader(inputStreamReader);
+
             while ((line = bufferedReader.readLine()) != null) {
                 log.info("line = " + line);
             }
         } catch(Exception e) {
-            InputStream inputStream = process.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             e.printStackTrace();
-
-            String line;
             while ((line = bufferedReader.readLine()) != null) {
                 log.info("error-line = " + line);
             }
@@ -79,6 +81,35 @@ public class SoundRawCrawler {
 //        System.out.println("exitCode: " + exitCode);
         log.info("exitCode = " + exitCode);
     }
+
+//    public static void execPython(String[] command) throws Exception {
+//        ProcessBuilder processBuilder = new ProcessBuilder(command);
+//        Process process = processBuilder.start();
+//
+//        // Python 코드의 출력 확인
+//        try (InputStream inputStream = process.getInputStream();
+//             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+//             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+//            String line;
+//            while ((line = bufferedReader.readLine()) != null) {
+//                log.info("line = " + line);
+//            }
+//        } catch(Exception e) {
+//            InputStream inputStream = process.getInputStream();
+//            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+//            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//            e.printStackTrace();
+//
+//            String line;
+//            while ((line = bufferedReader.readLine()) != null) {
+//                log.info("error-line = " + line);
+//            }
+//        }
+//
+//        int exitCode = process.waitFor();
+////        System.out.println("exitCode: " + exitCode);
+//        log.info("exitCode = " + exitCode);
+//    }
 
 
 //    public static void execPython(String[] command) throws Exception {
