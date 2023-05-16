@@ -38,6 +38,7 @@ public class SoundDrawCrawler {
         try {
             log.info("1!!!!!!!!!!!!");
             Process process = Runtime.getRuntime().exec(command.toString());
+            String pythonLog = readProcessOutput(process.getInputStream());
             log.info("2!!!!!!!!!!!!");
             int exitCode = process.waitFor();
             log.info("3!!!!!!!!!!!!");
@@ -47,9 +48,11 @@ public class SoundDrawCrawler {
                 String result = readProcessOutput(process.getInputStream());
 
                 log.info("result = " + result);
+                log.info("pythonLog-success = " + pythonLog);
                 return result;
             } else {
                 log.info("exitCode = " + exitCode);
+                log.info("pythonLog-fail = " + pythonLog);
                 log.info("Failed to execute the Python script.");
             }
         } catch(Exception e) {
