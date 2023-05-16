@@ -975,13 +975,14 @@ class ApiService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
     if (genre == '') {
-      genre = null;
+      genre = ' ';
     }
     final diaryFilterRequestDto = {
       "genre": genre,
       "id": writer,
       "memberId": memberId
     };
+    print(diaryFilterRequestDto);
     final response = await http.post(Uri.parse('$baseUrl/diary/filter'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',

@@ -355,11 +355,11 @@ class _AlarmDrawerState extends State<AlarmDrawer> {
             height: 100,
             child: DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Color(0xffABC2DC).withOpacity(0.2),
                 border: Border(
                   bottom: BorderSide(
                     color: Colors.grey,
-                    width: 1,
+                    width: 0.1,
                   ),
                 ),
               ),
@@ -369,18 +369,23 @@ class _AlarmDrawerState extends State<AlarmDrawer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      '알림',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          '알림',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Lottie.asset('assets/lottie/alarm_moon.json'),
+                      ],
                     ),
                     GestureDetector(
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Icon(Icons.close))
+                        child: Icon(Icons.close,color: Colors.white,)),
                   ],
                 ),
               ),
@@ -401,7 +406,8 @@ class _AlarmDrawerState extends State<AlarmDrawer> {
             Container(
               height: 60,
               decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey)),
+                color: Color(0xffABC2DC).withOpacity(0.2),
+                border: Border(bottom: BorderSide(color:Colors.greenAccent)),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -429,6 +435,7 @@ class Notification extends StatelessWidget {
     required this.alarm,
     required this.getAlarmList,
   });
+
   final AlarmModel alarm;
   final Function getAlarmList;
 
@@ -532,7 +539,9 @@ class Notification extends StatelessWidget {
       child: Container(
         height: 60,
         decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey)),
+          color: Colors.white10,
+          border:
+              Border(bottom: BorderSide(color: Colors.black12, width: 0.2)),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -547,7 +556,7 @@ class Notification extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Icon(Icons.chevron_right)
+              Icon(Icons.chevron_right,color: Colors.black12,)
             ],
           ),
         ),

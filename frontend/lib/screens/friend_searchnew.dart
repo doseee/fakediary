@@ -37,7 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<SearchFriendModel> _searchResults = [];
   bool _isLoading = false;
-
+  final FocusNode _searchFocusNode = FocusNode();
   @override
   void dispose() {
     _searchController.dispose();
@@ -106,11 +106,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Container(
+    return Container(
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/img/background_pink_darken.png'),
@@ -127,7 +123,7 @@ class _SearchScreenState extends State<SearchScreen> {
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(6.0),
                 child: Container(
-                  color: Colors.white70,
+                  height: 0.5,
                 ),
               ),
               title: Row(
@@ -139,60 +135,78 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
-            body: SingleChildScrollView(
-                child: Column(
-              children: [
-                SizedBox(height: 20),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextField(
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: '닉네임을 검색하세요',
-                      hintStyle: TextStyle(
-                        color: Colors.blue[100],
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.search, color: Colors.white),
-                        onPressed: () {
-                          _onSearch(_searchController.text);
-                        },
+            body: Container(
+              child: Column(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Lottie.asset('assets/lottie/friend_space.json',
+                        width: 100),
+                  ),
+                  SizedBox(height: 20),
+                  Flexible(
+                    flex: 2,
+                    child: Container(
+                      margin: EdgeInsets.all(15.0),
+                      padding: EdgeInsets.all(8.0),
+                      child: TextField(
+                        focusNode: _searchFocusNode,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: '닉네임을 검색하세요',
+                          hintStyle: TextStyle(
+                            color: Colors.white54,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 0.5,
+                              )),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.greenAccent, width: 0.5),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.redAccent),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.search, color: Colors.white),
+                            onPressed: () {
+
+                              _onSearch(_searchController.text);
+                                _searchFocusNode.unfocus(); // Dismiss the keyboard
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 30),
-                Container(
-                  width: 330,
-                  height: 400,
-                  padding: EdgeInsets.all(25.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 0.2,
-                    ),
-                  ),
-                  child: Expanded(
-                    child: _isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : _searchResults.isNotEmpty
-                            ? ListView.builder(
+                  SizedBox(height: 30),
+                  Flexible(
+                    flex: 4,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 25),
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white10,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 0.5,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Flexible(
+                              flex: 4,
+                              child: ListView.builder(
                                 itemCount: _searchResults.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   SearchFriendModel friend =
@@ -235,22 +249,17 @@ class _SearchScreenState extends State<SearchScreen> {
                                     ],
                                   ));
                                 },
-                              )
-                            : Center(
-                                child: Text(
-                                '해당 친구는 존재하지 않아요!',
-                                style: TextStyle(
-                                  color: Colors.blue[100],
-                                ),
                               )),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                Center(
-                  child: Lottie.asset('assets/lottie/stars.json', height: 120),
-                ),
-              ],
-            ))),
-      ),
-    );
+                  Center(
+                    child:
+                        Lottie.asset('assets/lottie/stars.json', height: 120),
+                  ),
+                ],
+              ),
+            )));
   }
 }

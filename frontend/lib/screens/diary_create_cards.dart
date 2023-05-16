@@ -82,18 +82,18 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                                   builder: (context) => DiaryListScreen()));
                         },
                         child: Container(
-                          width: 85,
+                          width: 55,
                           height: 35,
                           decoration: BtnThemeGradientLine(),
                           child: Center(
                               child: Text(
-                            '일기 리스트',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          )),
+                                '일기장',
+                                style: TextStyle(color: Colors.white, fontSize: 14),
+                              )),
                         ),
                       ),
                       SizedBox(
-                        width: 5,
+                        width: 15,
                       ),
                       GestureDetector(
                         onTap: () {
@@ -132,7 +132,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(width: 0.3, color: Colors.white),
+                      top: BorderSide(width: 0.3, color: Colors.greenAccent),
                     ),
                   ),
                   child: Scaffold(
@@ -143,7 +143,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                         children: [
                           Text(
                             '이야기로 만들 기억의 조각을 선택하세요.',
-                            style: TextStyle(fontSize: 15, color: Colors.white),
+                            style: TextStyle(fontSize: 15, color: Colors.white70),
                           ),
                           SizedBox(height: 10),
                         ],
@@ -311,13 +311,13 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                   selectedCards.remove(delCard);
                 }
                 if (!isExist) {
-                  if (selectedCards.length < 10) {
+                  if (selectedCards.length < 5) {
                     selectedCards.insert(
                         0, snapshot[index]); // append selected card to the list
                   } else {
                     // display a warning message
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('카드는 10장까지만 선택할 수 있습니다.'),
+                      content: Text('카드는 5장까지만 선택할 수 있습니다.'),
                     ));
                   }
                 }

@@ -135,14 +135,11 @@ class _ModifyScreenState extends State<ModifyScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      SizedBox(
-                        height: 10,
-                      ),
                       SvgPicture.asset(
                         'assets/svg/atronaut-svgrepo-com.svg',
                         semanticsLabel: 'user',
-                        width: 70,
-                        height: 70,
+                        width: 60,
+                        height: 60,
                       ),
                       SizedBox(
                         height: 10,
@@ -171,9 +168,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                               color: Colors.white,
                             )),
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                              color: Colors.white,
-                            )),
+                              borderSide: BorderSide(color: Colors.greenAccent),
+                            ),
                             hintText: '닉네임을 입력하세요.',
                             hintStyle: TextStyle(
                               color: Colors.blue,
@@ -197,7 +193,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: 80,
+                            width: 100,
+                            height: 100,
                             child: CupertinoPicker(
                               scrollController: hourController,
                               itemExtent: 32.0,
@@ -225,7 +222,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                             ),
                           ),
                           SizedBox(
-                            width: 80,
+                            width: 100,
+                            height: 100,
                             child: CupertinoPicker(
                               scrollController: minuteController,
                               backgroundColor: Colors.transparent,
@@ -306,10 +304,9 @@ class _ModifyScreenState extends State<ModifyScreen> {
                                 borderSide: BorderSide(
                               color: Colors.white,
                             )),
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                              color: Colors.white,
-                            )),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.greenAccent),
+                          ),
                             hintText: '기본 주인공 이름을 입력하세요.',
                             hintStyle: TextStyle(
                               color: Colors.grey,
