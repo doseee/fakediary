@@ -1,6 +1,6 @@
-package com.a101.fakediary.sounddraw.controller;
+package com.a101.fakediary.soundraw.controller;
 
-import com.a101.fakediary.sounddraw.SoundDrawCrawler;
+import com.a101.fakediary.soundraw.SoundRawCrawler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,14 +15,14 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/sound-draw")
-public class SoundDrawTestController {
-    private final SoundDrawCrawler soundDrawCrawler;
+@RequestMapping("/sound-raw")
+public class SoundRawTestController {
+    private final SoundRawCrawler soundRawCrawler;
 
     @PostMapping
     public ResponseEntity<?> downloadMusic(@RequestBody List<String> genreList) {
         try {
-            String musicUrl = soundDrawCrawler.getMusicUrl(genreList, 123124L);
+            String musicUrl = soundRawCrawler.getMusicUrl(genreList, 123124L);
             return new ResponseEntity<>(musicUrl, HttpStatus.OK);
         } catch(Exception e) {
             e.printStackTrace();

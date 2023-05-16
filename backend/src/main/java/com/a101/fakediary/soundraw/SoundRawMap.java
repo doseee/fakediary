@@ -1,9 +1,9 @@
-package com.a101.fakediary.sounddraw;
+package com.a101.fakediary.soundraw;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SoundDrawMap {
+public class SoundRawMap {
     private final static Map<String, String> moodMap;
 
     static {
