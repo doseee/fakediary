@@ -29,7 +29,7 @@ public class DiaryQueryRepository {
     public List<Diary> searchDiaryByFilter(DiaryFilterDto filter) { //선택한 memberId, 요청한 memberId, 장르
         if (filter.getId() != filter.getMemberId()) { //교환 일기 조회할 때
             BooleanBuilder g = new BooleanBuilder();
-            if (filter.getGenre() != null)
+            if (!filter.getGenre().equals(" "))
                 g.and(eqGenre(filter.getGenre())).and(eqGenreId());
 
             BooleanBuilder i = new BooleanBuilder();
@@ -40,7 +40,7 @@ public class DiaryQueryRepository {
             else //특정 유저와 교환한 일기
                 i.and(eqSenderId(filter.getId())).and(eqFriend().and(eqSendDiary()).and(eqReceiveId(filter.getMemberId())));
 
-            if (filter.getGenre() == null) { //장르가 선택 안되었을 때
+            if (filter.getGenre().equals(" ")) { //장르가 선택 안되었을 때
                 return queryFactory
                         .select(diary).distinct()
                         .from(exchangedDiary, diary) //조인 3번 하는거 막음
@@ -103,7 +103,7 @@ public class DiaryQueryRepository {
     }
 
     private BooleanExpression eqGenre(String mood) { //g.genre =:genre
-        if (mood == null)
+        if (mood.equals(" "))
             return null;
         return genre.id.genre.eq(mood);
     }
