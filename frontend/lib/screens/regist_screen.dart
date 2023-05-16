@@ -78,8 +78,16 @@ class _RegistScreenState extends State<RegistScreen> {
                               color: Colors.grey,
                             )),
                         validator: (String? value) {
+                          // Email 형식 유효성 검사를 위한 정규식
+                          String pattern =
+                              r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                          RegExp regExp = RegExp(pattern);
+
                           if (value == null || value.isEmpty) {
                             return '이메일이 공백입니다';
+                          } else if (!regExp.hasMatch(value)) {
+                            // 정규식에 맞지 않을 경우
+                            return '유효한 이메일을 입력해주세요';
                           }
                           return null;
                         },
@@ -137,8 +145,15 @@ class _RegistScreenState extends State<RegistScreen> {
                               color: Colors.grey,
                             )),
                         validator: (String? value) {
+                          // 특수문자를 포함하지 않는 정규식
+                          String pattern = r'^[\w-]+$';
+                          RegExp regExp = RegExp(pattern);
+
                           if (value == null || value.isEmpty) {
                             return '닉네임이 공백입니다.';
+                          } else if (!regExp.hasMatch(value)) {
+                            // 정규식에 맞지 않을 경우
+                            return '닉네임에 특수문자를 사용할 수 없습니다.';
                           }
                           return null;
                         },

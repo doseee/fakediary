@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/card_loading.dart';
@@ -169,14 +168,16 @@ class _CardCreateState extends State<CardCreate> {
                   ),
                   title: Row(
                     children: [
-                      Text('카드 만들기', style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
+                      Text('카드 만들기',
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w700)),
                       Lottie.asset('assets/lottie/menu_grinstar.json',
                           width: 30),
                     ],
                   ),
                   actions: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      padding: EdgeInsets.symmetric(horizontal: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -188,18 +189,19 @@ class _CardCreateState extends State<CardCreate> {
                                       builder: (context) => CardList()));
                             },
                             child: Container(
-                              width: 85,
-                              height: 42,
+                              width: 55,
+                              height: 35,
                               decoration: BtnThemeGradientLine(),
                               child: Center(
                                   child: Text(
-                                    '카드 리스트',
-                                    style: TextStyle(color: Colors.white, fontSize: 14),
-                                  )),
+                                '목록',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14),
+                              )),
                             ),
                           ),
                           SizedBox(
-                            width: 15,
+                            width: 5,
                           ),
                           GestureDetector(
                             onTap: () {
@@ -230,7 +232,6 @@ class _CardCreateState extends State<CardCreate> {
                     key: _formKey,
                     child: ListView(
                       children: [
-
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -317,8 +318,10 @@ class _CardCreateState extends State<CardCreate> {
                                 }
                               },
                               child: imageLoading
-                                  ? Lottie.asset('assets/lottie/loading_image.json',
-                                      height: 70, width: 70)
+                                  ? Lottie.asset(
+                                      'assets/lottie/loading_image.json',
+                                      height: 70,
+                                      width: 70)
                                   : ClipRRect(
                                       borderRadius: BorderRadius.circular(22),
                                       child: Image(
