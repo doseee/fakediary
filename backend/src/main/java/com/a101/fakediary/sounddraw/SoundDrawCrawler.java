@@ -14,26 +14,29 @@ import java.util.UUID;
 @Component
 @Slf4j
 public class SoundDrawCrawler {
+    private final String PYTHON;
     private final String CRAWLER;
     private final String SOUND_DRAW_URL;
 
-    public SoundDrawCrawler(@Value("${fake-diary.sound-draw.crawler}")String CRAWLER,
-                            @Value("${fake-diary.sound-draw.base-url}")String SOUND_DRAW_URL) {
+    public SoundDrawCrawler(@Value("${fake-diary.sound-raw.python}")String PYTHON,
+                            @Value("${fake-diary.sound-raw.crawler}")String CRAWLER,
+                            @Value("${fake-diary.sound-raw.base-url}")String SOUND_DRAW_URL) {
+        this.PYTHON = PYTHON;
         this.CRAWLER = CRAWLER;
         this.SOUND_DRAW_URL = SOUND_DRAW_URL;
     }
 
     public String getMusicUrl(List<String> genreList, Long diaryPk) {
         log.info("Python call");
-        StringBuilder[] commandBuilder = new StringBuilder[2];
-        commandBuilder[0] = new StringBuilder("/usr/bin/python3");
+        StringBuilder[] commandBuilder = new StringBuilder[4];
+        commandBuilder[0] = new StringBuilder(PYTHON);
         commandBuilder[1] = new StringBuilder(CRAWLER);
-//        commandBuilder[2] = new StringBuilder("\"").append(SOUND_DRAW_URL).append("?length=60&tempo=normal,high,low&mood=");
-//        for(String genre : genreList)
-//            commandBuilder[2].append(genre).append(",");
-//        commandBuilder[2].delete(commandBuilder[2].length() - 1, commandBuilder[2].length()); //  마지막 , 제거
-//        commandBuilder[2].append("\"");
-//        commandBuilder[3] = new StringBuilder("\"").append(String.valueOf(diaryPk)).append("_").append(UUID.randomUUID().toString()).append("\"");
+        commandBuilder[2] = new StringBuilder("\"").append(SOUND_DRAW_URL).append("?length=60&tempo=normal,high,low&mood=");
+        for(String genre : genreList)
+            commandBuilder[2].append(genre).append(",");
+        commandBuilder[2].delete(commandBuilder[2].length() - 1, commandBuilder[2].length()); //  마지막 , 제거
+        commandBuilder[2].append("\"");
+        commandBuilder[3] = new StringBuilder("\"").append(String.valueOf(diaryPk)).append("_").append(UUID.randomUUID().toString()).append("\"");
 
         String[] command = new String[commandBuilder.length];
         for(int i = 0; i < command.length; i++) {
