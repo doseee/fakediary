@@ -28,7 +28,7 @@ import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.a101.fakediary.randomexchangepool.repository.RandomExchangePoolRepository;
-import com.a101.fakediary.sounddraw.SoundDrawCrawler;
+import com.a101.fakediary.soundraw.SoundRawCrawler;
 import com.a101.fakediary.stablediffusion.api.StableDiffusionApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +63,7 @@ public class DiaryService {
     private final FriendExchangeRequestRepository friendExchangeRequestRepository;
     private final RandomExchangePoolRepository randomExchangePoolRepository;
     private final AlarmService alarmService;
-    private final SoundDrawCrawler soundDrawCrawler;
+    private final SoundRawCrawler soundRawCrawler;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     private final static String DELIMITER = "@";
@@ -359,7 +359,7 @@ public class DiaryService {
         diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
 
         try {
-            String musicUrl = soundDrawCrawler.getMusicUrl(genreList, diaryId);
+            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
             logger.info("musicUrl = " + musicUrl);
             diary.setMusicUrl(musicUrl);
         } catch(Exception e) {
