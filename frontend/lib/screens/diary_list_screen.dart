@@ -53,11 +53,11 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   }
 
   onSelect(
-      int diaryId,
-      String title,
-      String summary,
-      String imageUrl,
-      ) {
+    int diaryId,
+    String title,
+    String summary,
+    String imageUrl,
+  ) {
     setState(() {
       this.diaryId = diaryId;
       this.title = title;
@@ -119,7 +119,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 Flexible(
                   flex: 3,
                   child: Padding(
-                    padding: const EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(0.0),
                     child: Text(
                       summary,
                       style: TextStyle(color: Colors.white60, fontSize: 12),
@@ -136,7 +136,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 // ),),
                 // SizedBox(height: 10,),
                 Flexible(
-                  flex: 3,
+                  flex: 4,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -155,7 +155,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                               ));
                         },
                         style: ElevatedButton.styleFrom(
-                            maximumSize: Size(250, 50),
+                            maximumSize: Size(250, 40),
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
                             elevation: 0.0,
@@ -164,11 +164,11 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                             )),
                         child: SizedBox(
                           width: 250,
-                          height: 50,
+                          height: 40,
                           child: Center(
                             child: SizedBox(
                               width: 250,
-                              height: 50,
+                              height: 40,
                               child: Center(
                                 child: Text(
                                   '상세보기',
@@ -190,12 +190,12 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       diaryId: diaryId,
                       requestId: widget.requestId,
                     ),
-                    Container(
+                    SizedBox(
                       // decoration: BtnThemeGradientLine(),
                       width: 50,
                       height: 50,
                       child: GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           CheckKakao();
                         },
                         child: Icon(
@@ -246,7 +246,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
               children: [
                 Text('일기장',
                     style:
-                    TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
                 Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
               ],
             ),
@@ -275,7 +275,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       ),
                     ),
                     SizedBox(
-                      width: 7,
+                      width: 5,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -290,13 +290,13 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         decoration: BtnThemeGradientLine(),
                         child: Center(
                             child: Text(
-                              '필터',
-                              style: TextStyle(color: Colors.white, fontSize: 14),
-                            )),
+                          '필터',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        )),
                       ),
                     ),
                     SizedBox(
-                      width: 7,
+                      width: 5,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -367,7 +367,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                                   child: IconButton(
                                                       icon: Icon(Icons.info,
                                                           color:
-                                                          Colors.white70),
+                                                              Colors.white70),
                                                       onPressed: () {
                                                         showDialog(
                                                             context: context,
@@ -381,7 +381,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                                                                         color: Colors
                                                                             .white,
                                                                         fontSize:
-                                                                        14),
+                                                                            14),
                                                                   ),
                                                                   height: 100);
                                                             });
@@ -414,28 +414,28 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                           if (snapshot.data?.isEmpty ?? true) {
                             return Container(
                                 child: Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DiaryCreateCards()));
-                                    },
-                                    child: Container(
-                                      width: 250,
-                                      height: 50,
-                                      decoration: BtnThemeGradient(),
-                                      child: Center(
-                                        child: Text(
-                                          '일기 만들러 가기',
-                                          style: TextStyle(
-                                              color: Colors.white, fontSize: 16),
-                                        ),
-                                      ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DiaryCreateCards()));
+                                },
+                                child: Container(
+                                  width: 250,
+                                  height: 50,
+                                  decoration: BtnThemeGradient(),
+                                  child: Center(
+                                    child: Text(
+                                      '일기 만들러 가기',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
                                     ),
                                   ),
-                                ));
+                                ),
+                              ),
+                            ));
                           }
                           return buildList(snapshot.data);
                         } else if (snapshot.hasError) {
@@ -445,8 +445,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       },
                     ),
                   )
-                // child: Container(),
-              )
+                  // child: Container(),
+                  )
             ],
           ),
         ),
@@ -484,7 +484,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
 
   CheckKakao() async {
     bool isKakaoTalkSharingAvailable =
-    await ShareClient.instance.isKakaoTalkSharingAvailable();
+        await ShareClient.instance.isKakaoTalkSharingAvailable();
 
     if (isKakaoTalkSharingAvailable) {
       shareMyCode();
@@ -492,7 +492,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
       try {
         DefaultTemplate template = _getTemplate();
         Uri shareUrl =
-        await WebSharerClient.instance.makeDefaultUrl(template: template);
+            await WebSharerClient.instance.makeDefaultUrl(template: template);
         await launchBrowserTab(shareUrl, popupOpen: true);
         print('NoKakao');
       } catch (error) {
@@ -549,7 +549,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                           child: Text(
                             snapshot[index].title.length > 17
                                 ? (snapshot[index].title.substring(0, 17) +
-                                '...')
+                                    '...')
                                 : snapshot[index].title,
                             style: TextStyle(
                                 color: Colors.white60,

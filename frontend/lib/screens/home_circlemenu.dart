@@ -436,7 +436,7 @@ class Notification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         print(alarm.alarmType);
         if (alarm.alarmType == 'REQUEST') {
           // 수락 모달

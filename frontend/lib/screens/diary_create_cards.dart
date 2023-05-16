@@ -62,14 +62,15 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
               ),
               title: Row(
                 children: [
-                  Text('일기 쓰기' , style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
-                  Lottie.asset('assets/lottie/menu_grinstar.json',
-                      width: 30),
+                  Text('일기 쓰기',
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                  Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
                 ],
               ),
               actions: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -341,8 +342,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                         border: Border.all(color: Colors.white, width: 2),
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(
-                                snapshot[index].cardImageUrl))),
+                            image: NetworkImage(snapshot[index].cardImageUrl))),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),

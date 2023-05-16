@@ -29,6 +29,7 @@ public class DiaryResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean isDeleted;
+    private String musicUrl;
 
     public DiaryResponseDto(Diary entity) {
         int i = 0;
@@ -87,5 +88,6 @@ public class DiaryResponseDto {
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
         this.isDeleted = entity.isDeleted();
+        this.musicUrl = entity.getMusicUrl();
     }
 }

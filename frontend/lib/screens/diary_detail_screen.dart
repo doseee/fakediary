@@ -42,7 +42,6 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   ///다이어리 모델 중 디테일 리스트
   late Future<List<CardUrlListVerModel>> cards;
 
-
   /// SliverAppBar 투명도 변경하는 변수
   late bool _isTransparent = false;
 
@@ -55,8 +54,6 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   /// 오디오 플레이어
   final player = AudioPlayer();
   bool isPlaying = false;
-
-
 
   final List<Color> colors = [
     Colors.red,
@@ -93,6 +90,13 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
     /// 일기를 받아오는 API 호출
     cards = ApiService.getCardsbyDiaryId(widget.diaryId);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    player.dispose();
+    super.dispose();
   }
 
   /// scroll 상태에 따라 slide 변경하는 함수
@@ -286,10 +290,11 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                 child: Text(
                   subtitles![index],
                   style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 17,
-                      fontFamily: 'Cafe24',),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17,
+                    fontFamily: 'Cafe24',
+                  ),
                 ),
               ),
 
