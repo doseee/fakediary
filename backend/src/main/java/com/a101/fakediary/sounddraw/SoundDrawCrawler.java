@@ -49,6 +49,7 @@ public class SoundDrawCrawler {
                 log.info("result = " + result);
                 return result;
             } else {
+                log.info("exitCode = " + exitCode);
                 log.info("Failed to execute the Python script.");
             }
         } catch(Exception e) {
