@@ -45,6 +45,7 @@ public class DiaryQueryRepository {
                         .select(diary).distinct()
                         .from(exchangedDiary, diary) //조인 3번 하는거 막음
                         .where(i, eqDelete())
+                        .orderBy(diary.diaryId.desc())
                         .fetch();
             }
             else {
@@ -52,6 +53,7 @@ public class DiaryQueryRepository {
                         .select(diary).distinct()
                         .from(exchangedDiary, diary, genre)
                         .where(g, i, eqDelete())
+                        .orderBy(diary.diaryId.desc())
                         .fetch();
             }
         }
@@ -60,6 +62,7 @@ public class DiaryQueryRepository {
                     .select(diary).distinct()
                     .from(diary, genre)
                     .where(eqMyMemberId(filter.getMemberId()), eqGenreId(), eqGenre(filter.getGenre()), eqDelete())
+                    .orderBy(diary.diaryId.desc())
                     .fetch();
         }
     }
