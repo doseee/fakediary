@@ -94,7 +94,6 @@ dependencies {
 
 	//	Python 코드 실행 위해 추가
 	implementation 'org.apache.commons:commons-exec:1.3'
-
 }
 
 tasks.named('test') {
