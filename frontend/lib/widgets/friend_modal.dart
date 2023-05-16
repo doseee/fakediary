@@ -4,6 +4,7 @@ import 'package:frontend/services/api_service.dart';
 
 class FriendModal extends StatelessWidget {
   final int friendRequestId;
+  final int alarmId;
   final Function getAlarmList;
   // final double? height;
   // final double padding;
@@ -13,6 +14,7 @@ class FriendModal extends StatelessWidget {
   const FriendModal({
     Key? key,
     required this.friendRequestId,
+    required this.alarmId,
     required this.getAlarmList,
     // required this.widget,
     // this.height,
@@ -94,6 +96,7 @@ class FriendModal extends StatelessWidget {
                                   flushbarPosition: FlushbarPosition.TOP)
                               .show(context);
                           getAlarmList();
+                          await ApiService.readAlarm(alarmId);
                         }
                       },
                       child: Container(

@@ -9,12 +9,14 @@ class ChangeButton extends StatelessWidget {
   final int exchangeSituation; //1이면 내가 교환 보내는 상황 2면 답장하는 상황
   final int diaryId;
   final int? requestId;
+  final int? alarmId;
 
   const ChangeButton({
     Key? key,
     required this.exchangeSituation,
     required this.diaryId,
     this.requestId,
+    this.alarmId,
   }) : super(key: key);
 
   @override
@@ -55,6 +57,7 @@ class ChangeButton extends StatelessWidget {
                             duration: Duration(seconds: 3),
                             flushbarPosition: FlushbarPosition.TOP)
                         .show(context);
+                    ApiService.readAlarm(alarmId!);
                   }
                 }
                 //todo; 답장으로 교환일기 보내는 상황

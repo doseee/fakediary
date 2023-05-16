@@ -14,11 +14,13 @@ import '../widgets/change_button.dart';
 class DiaryListScreen extends StatefulWidget {
   // final int? recieverId; //답장 상황에서는 recieverId가 존재한다고 가정
   final int? requestId; //답장 상황에서는 requestId가 존재한다고 가정
+  final int? alarmId;
 
   const DiaryListScreen({
     Key? key,
     // this.recieverId,
     this.requestId,
+    this.alarmId,
   }) : super(key: key);
 
   @override
@@ -187,6 +189,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       exchangeSituation: exchangeSituation,
                       diaryId: diaryId,
                       requestId: widget.requestId,
+                      alarmId: widget.alarmId,
                     ),
                     SizedBox(
                       // decoration: BtnThemeGradientLine(),

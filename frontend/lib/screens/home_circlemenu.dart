@@ -456,6 +456,7 @@ class Notification extends StatelessWidget {
               builder: (context) {
                 return FriendModal(
                   friendRequestId: alarm.requestId,
+                  alarmId: alarm.alarmId,
                   getAlarmList: getAlarmList,
                 );
               });
@@ -482,6 +483,7 @@ class Notification extends StatelessWidget {
               builder: (context) {
                 return ReceiveDiaryModal(
                   requestId: alarm.requestId,
+                  alarmId: alarm.alarmId,
                 );
               });
         } else if (alarm.alarmType == 'RANDOM') {
