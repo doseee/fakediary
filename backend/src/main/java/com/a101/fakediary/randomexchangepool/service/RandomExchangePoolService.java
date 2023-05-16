@@ -45,9 +45,6 @@ public class RandomExchangePoolService {
     private final ExchangedDiaryService exchangedDiaryService;
     private final AlarmService alarmService;
 
-    private Long memberId;
-    private Long requestId;
-
     @Transactional
     public RandomExchangePoolResponseDto registRandomExchange(RandomExchangePoolRegistDto randomExchangePoolRegistDto) throws Exception {
         Long diaryId = randomExchangePoolRegistDto.getDiaryId();
@@ -113,15 +110,14 @@ public class RandomExchangePoolService {
                 log.info("exchangeDiarySaveRequestDto1 = " + exchangeDiarySaveRequestDto1);
                 log.info("exchangeDiarySaveRequestDto2 = " + exchangeDiarySaveRequestDto1);
 
+                String title = "가짜 별에서 온 편지 도착";
+                String body = "외계인은 어떤 일기를 보냈을까요?";
+
                 ExchangedDiaryResponseDto A = exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto1);
-                memberId = A.getReceiverId();
-                requestId = A.getReceiveDiaryId();
-                sendRandomAlarm();
+                alarmService.saveAlarm(new AlarmRequestDto(A.getReceiverId(), A.getReceiveDiaryId(), title, body, "RANDOM"));
 
                 ExchangedDiaryResponseDto B = exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto2);
-                memberId = B.getReceiverId();
-                requestId = B.getReceiveDiaryId();
-                sendRandomAlarm();
+                alarmService.saveAlarm(new AlarmRequestDto(A.getReceiverId(), A.getReceiveDiaryId(), title, body, "RANDOM"));
 
                 updateRandomExchangePool(repuDto1);
                 updateRandomExchangePool(repuDto2);
@@ -150,10 +146,11 @@ public class RandomExchangePoolService {
                     .friendExchangeType(EExchangeType.R)
                     .build();
 
+            String title = "가짜 별에서 온 편지 도착";
+            String body = "외계인은 어떤 일기를 보냈을까요?";
+
             ExchangedDiaryResponseDto A = exchangedDiaryService.saveExchangeDiary(exchangeDiarySaveRequestDto);
-            memberId = A.getReceiverId();
-            requestId = A.getReceiveDiaryId();
-            sendRandomAlarm();
+            alarmService.saveAlarm(new AlarmRequestDto(A.getReceiverId(), A.getReceiveDiaryId(), title, body, "RANDOM"));
 
             updateRandomExchangePool(repuDto);
         }
@@ -205,20 +202,6 @@ public class RandomExchangePoolService {
         randomExchangePool.setExchangedOwner(exchangedOwner);
 
         return createRandomExchangePoolResponseDto(randomExchangePool);
-    }
-
-    @Async
-    @Scheduled(cron = "0 0 9 * * ?")
-    public void sendRandomAlarm() {
-        LocalTime currentTime = LocalTime.now();
-        if (!currentTime.equals(LocalTime.of(9, 0))) {
-            return;
-        }
-
-        String title = "가짜 별에서 온 편지 도착";
-        String body = "외계인은 어떤 일기를 보냈을까요?";
-        alarmService.saveAlarm(new AlarmRequestDto(memberId, requestId, title, body, "RANDOM"));
-        alarmService.sendNotificationByToken(new AlarmResponseDto(memberId, title, body));
     }
 
     private RandomExchangePoolResponseDto createRandomExchangePoolResponseDto(RandomExchangePool randomExchangePool) {

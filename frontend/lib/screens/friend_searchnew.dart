@@ -142,8 +142,10 @@ class _SearchScreenState extends State<SearchScreen> {
             body: SingleChildScrollView(
                 child: Column(
               children: [
+                Lottie.asset('assets/lottie/friend_space.json', width: 100),
                 SizedBox(height: 20),
                 Container(
+                  margin: EdgeInsets.all(15.0),
                   padding: EdgeInsets.all(8.0),
                   child: TextField(
                     style: TextStyle(
@@ -153,18 +155,21 @@ class _SearchScreenState extends State<SearchScreen> {
                     decoration: InputDecoration(
                       hintText: '닉네임을 검색하세요',
                       hintStyle: TextStyle(
-                        color: Colors.blue[100],
+                        color: Colors.white54,
                       ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 0.5,
+                          )),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.teal),
+                        borderSide:
+                            BorderSide(color: Colors.greenAccent, width: 0.5),
                         borderRadius: BorderRadius.circular(50),
                       ),
                       errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(color: Colors.redAccent),
                         borderRadius: BorderRadius.circular(50),
                       ),
                       suffixIcon: IconButton(
@@ -178,19 +183,22 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 SizedBox(height: 30),
                 Container(
-                  width: 330,
-                  height: 400,
-                  padding: EdgeInsets.all(25.0),
+                  margin: EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.white54,
+                    borderRadius: BorderRadius.circular(15),
                     border: Border.all(
                       color: Colors.white,
-                      width: 0.2,
+                      width: 0.5,
                     ),
                   ),
                   child: Expanded(
                     child: _isLoading
-                        ? Center(child: CircularProgressIndicator())
+                        ? Center(
+                            child: Lottie.asset(
+                                'assets/lottie/loading_image_circle.json',
+                                width: 30))
                         : _searchResults.isNotEmpty
                             ? ListView.builder(
                                 itemCount: _searchResults.length,
@@ -240,7 +248,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: Text(
                                 '해당 친구는 존재하지 않아요!',
                                 style: TextStyle(
-                                  color: Colors.blue[100],
+                                  color: Colors.white54,
+                                  fontSize: 15
                                 ),
                               )),
                   ),

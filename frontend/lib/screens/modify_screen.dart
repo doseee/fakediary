@@ -131,14 +131,13 @@ class _ModifyScreenState extends State<ModifyScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 60),
               child: SingleChildScrollView(
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height - 80,
+                  height: MediaQuery.of(context).size.height - 95,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       SizedBox(
-                        height: 30,
-                      )
-                      ,
+                        height: 10,
+                      ),
                       SvgPicture.asset(
                         'assets/svg/atronaut-svgrepo-com.svg',
                         semanticsLabel: 'user',
@@ -146,9 +145,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         height: 70,
                       ),
                       SizedBox(
-                        height: 30,
-                      )
-                      ,
+                        height: 10,
+                      ),
                       Row(
                         children: [
                           Text(
@@ -380,8 +378,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         angle: 90 * 3.1415926535 / 180,
                         child: Lottie.asset(
                           'assets/lottie/star-twinkle.json',
-                          height: 120,
-                          width: 120,
+                          height: 90,
+                          width: 90,
                         ),
                       ),
                     ],

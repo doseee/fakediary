@@ -105,6 +105,7 @@ class _FriendScreenState extends State<FriendScreen> {
     } else {
       return Column(
         children: [
+          Lottie.asset('assets/lottie/friend_space.json', width: 100),
           GestureDetector(
             onTap: () {
               Navigator.push(context,
@@ -113,20 +114,20 @@ class _FriendScreenState extends State<FriendScreen> {
             child: Padding(
               padding: const EdgeInsets.all(17.0),
               child: Container(
-                width: 268,
-                height: 61,
+                width: 200,
+                height: 40,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      const Color(0xff263344),
-                      const Color(0xff1B2532).withOpacity(0.53),
-                      const Color(0xff1C2A3D).withOpacity(0.5),
-                      const Color(0xff1E2E42).withOpacity(0.46),
-                      const Color(0xff364B66).withOpacity(0.33),
-                      const Color(0xff2471D6).withOpacity(0),
+                      const Color(0xff2c3944),
+                      const Color(0xff1d252d).withOpacity(0.4),
+                      const Color(0xff212e40).withOpacity(0.3),
+                      const Color(0xff1d252d).withOpacity(0.5),
+                      const Color(0xff35423e).withOpacity(0.5),
+                      const Color(0xff444856).withOpacity(0.4),
                     ],
                     stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
                   ),
@@ -187,11 +188,24 @@ class _FriendScreenState extends State<FriendScreen> {
                                       return InfoModal(
                                           padding: 20,
                                           color: true,
-                                          widget: Text(
-                                            '✉ 랜덤 일기는 랜덤 친구와 일기를 교환할 수 있는 기능으로, 하루에 한 번만 보낼 수 있습니다.',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14),
+                                          widget: Column(
+                                            children: [
+                                              Text(
+                                                '✉ 모르는 사람과의 랜덤 일기 교환입니다.',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                '하루에 한 번만 보낼 수 있습니다.',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                            ],
                                           ),
                                           height: 100);
                                     });
@@ -362,11 +376,11 @@ class _FriendScreenState extends State<FriendScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
+                              builder: (context) => SearchScreen()));
                     },
                     child: Image(
                       image: AssetImage(
-                        'assets/img/home_icon.png',
+                        'assets/img/friend_icon.png',
                       ),
                       width: 45,
                     ),
@@ -379,15 +393,15 @@ class _FriendScreenState extends State<FriendScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SearchScreen()));
+                              builder: (context) => HomeScreen()));
                     },
                     child: Image(
                       image: AssetImage(
-                        'assets/img/friend_icon.png',
+                        'assets/img/home_icon.png',
                       ),
                       width: 45,
                     ),
-                  )
+                  ),
                 ],
               ),
             )
@@ -469,7 +483,10 @@ class _FriendScreenState extends State<FriendScreen> {
                         ),
                       );
                     }),
-              ))
+              )),
+              Center(
+                child: Lottie.asset('assets/lottie/stars.json', height: 120),
+              ),
             ],
           ),
         ),

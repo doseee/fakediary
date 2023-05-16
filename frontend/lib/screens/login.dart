@@ -20,6 +20,13 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
+
   Widget _userIdWidget() {
     return TextFormField(
       controller: _emailController,
@@ -92,6 +99,7 @@ class _LoginState extends State<Login> {
               pref.setBool('isFirstLaunch', false);
             }
             if (result) {
+              FocusScope.of(context).unfocus();
               if (isFirstLaunch) {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => TutorialScreen()));

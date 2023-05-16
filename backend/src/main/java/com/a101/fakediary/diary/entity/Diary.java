@@ -53,6 +53,9 @@ public class Diary extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String detail;
 
+    @Column
+    private String musicUrl;
+
     @Column(nullable = false, length = 1000)
     private String summary;
 

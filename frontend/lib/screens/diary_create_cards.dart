@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/model/CardModel.dart';
@@ -61,17 +62,39 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
               ),
               title: Row(
                 children: [
-                  Text('일기 쓰기' , style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
-                  Lottie.asset('assets/lottie/menu_grinstar.json',
-                      width: 30),
+                  Text('일기 쓰기',
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                  Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
                 ],
               ),
               actions: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DiaryListScreen()));
+                        },
+                        child: Container(
+                          width: 55,
+                          height: 35,
+                          decoration: BtnThemeGradientLine(),
+                          child: Center(
+                              child: Text(
+                                '일기장',
+                                style: TextStyle(color: Colors.white, fontSize: 14),
+                              )),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -85,9 +108,6 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                           ),
                           width: 45,
                         ),
-                      ),
-                      SizedBox(
-                        width: 15,
                       ),
                     ],
                   ),
@@ -214,12 +234,12 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xff263344),
-                const Color(0xff1B2532).withOpacity(0.53),
-                const Color(0xff1C2A3D).withOpacity(0.5),
-                const Color(0xff1E2E42).withOpacity(0.46),
-                const Color(0xff364B66).withOpacity(0.33),
-                const Color(0xff2471D6).withOpacity(0),
+                const Color(0xff2c526e),
+                const Color(0xff384f57).withOpacity(0.5),
+                const Color(0xff5c8375).withOpacity(0.3),
+                const Color(0xff384f57).withOpacity(0.5),
+                const Color(0xff364B66).withOpacity(0.5),
+                const Color(0xff2471D6).withOpacity(0.4),
               ],
               stops: const [0, 0.25, 0.4, 0.5, 0.75, 1.0],
             ),
@@ -291,13 +311,13 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                   selectedCards.remove(delCard);
                 }
                 if (!isExist) {
-                  if (selectedCards.length < 10) {
+                  if (selectedCards.length < 5) {
                     selectedCards.insert(
                         0, snapshot[index]); // append selected card to the list
                   } else {
                     // display a warning message
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('카드는 10장까지만 선택할 수 있습니다.'),
+                      content: Text('카드는 5장까지만 선택할 수 있습니다.'),
                     ));
                   }
                 }
@@ -322,8 +342,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                         border: Border.all(color: Colors.white, width: 2),
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(
-                                snapshot[index].cardImageUrl))),
+                            image: NetworkImage(snapshot[index].cardImageUrl))),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),

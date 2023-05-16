@@ -1,5 +1,8 @@
 package com.a101.fakediary.diary.controller;
 
+import com.a101.fakediary.alarm.dto.AlarmRequestDto;
+import com.a101.fakediary.alarm.dto.AlarmResponseDto;
+import com.a101.fakediary.alarm.service.AlarmService;
 import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
@@ -23,18 +26,7 @@ import java.util.Map;
 @Slf4j
 public class DiaryController {
     private final DiaryService diaryService;
-
-//    @ApiOperation(value = "일기 등록", notes = "keyword, places, characters, diaryImageUrl \"\"으로 넣어주시면 됩니다. subtitles는 소제목1@소제목2@소제목3 이런식으로 넣어주면 됩니다, title은 띄어쓰기 포함 10글자 이하여야만합니다.")
-//    @PostMapping
-//    public ResponseEntity<?> saveDiary(@RequestBody DiaryRequestDto dto) {
-//        try {
-//            DiaryResponseDto diaryResponseDto = diaryService.createDiary(dto);
-//            return ResponseEntity.ok().body(diaryResponseDto);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
+    private final AlarmService alarmService;
 
     @PostMapping("/create")
     public ResponseEntity<?> saveDiaryWithDiaryInformation(@RequestBody DiaryInformation information) {
@@ -52,9 +44,11 @@ public class DiaryController {
             log.info("cardIdList = " + cardIdList);
             log.info("genreList = " + genreList);
 
-//            DiaryResultDto diaryResultDto = diaryService.getResultDto(cardIdList);
-
             DiaryResponseDto diaryResponseDto = diaryService.createDiary(memberId, cardIdList, genreList);
+            String alarmTitle = "따끈따끈한 일기의 순간입니다";
+            String alarmBody = "내가 선택한 가짜다이어리가 완성되었어요";
+            alarmService.saveAlarm(new AlarmRequestDto(diaryResponseDto.getMemberId(), diaryResponseDto.getDiaryId(), alarmTitle, alarmBody, "MANUAL"));
+            alarmService.sendNotificationByToken(new AlarmResponseDto(diaryResponseDto.getMemberId(), alarmTitle, alarmBody));
 
             return new ResponseEntity<>(diaryResponseDto, HttpStatus.OK);
         } catch(Exception e) {

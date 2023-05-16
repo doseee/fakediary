@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/camera_ex.dart';
+import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/card_loading.dart';
 import 'package:frontend/screens/card_result.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -167,11 +168,59 @@ class _CardCreateState extends State<CardCreate> {
                   ),
                   title: Row(
                     children: [
-                      Text('카드 만들기', style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
+                      Text('카드 만들기',
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w700)),
                       Lottie.asset('assets/lottie/menu_grinstar.json',
                           width: 30),
                     ],
                   ),
+                  actions: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CardList()));
+                            },
+                            child: Container(
+                              width: 55,
+                              height: 35,
+                              decoration: BtnThemeGradientLine(),
+                              child: Center(
+                                  child: Text(
+                                '내 카드',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14),
+                              )),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()));
+                            },
+                            child: Image(
+                              image: AssetImage(
+                                'assets/img/home_icon.png',
+                              ),
+                              width: 45,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
                 backgroundColor: Colors.transparent,
                 body: Padding(
@@ -345,7 +394,7 @@ class _CardCreateState extends State<CardCreate> {
                           height: 10,
                         ),
                         locationLoading
-                            ? CircularProgressIndicator()
+                            ? Lottie.asset('assets/lottie/loading_image_circle.json',height: 100,width: 100)
                             : Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 55),

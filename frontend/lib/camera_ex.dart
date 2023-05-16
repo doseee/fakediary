@@ -27,14 +27,14 @@ class _CameraExampleState extends State<CameraExample> {
         aspectRatio: CropAspectRatio(ratioX: 1580, ratioY: 2800),
         uiSettings: [
           AndroidUiSettings(
-            toolbarTitle: 'Crop Image',
-            toolbarColor: Colors.deepPurple,
-            toolbarWidgetColor: Colors.white,
+            toolbarTitle: '카드 자르기',
+            toolbarColor: Color(0xff1C2A3D),
+            toolbarWidgetColor: Color(0xffb4c0d0),
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: true,
           ),
           IOSUiSettings(
-            title: 'Crop Image',
+            title: '카드 자르기',
           ),
         ],
       );
@@ -61,7 +61,7 @@ class _CameraExampleState extends State<CameraExample> {
         height: MediaQuery.of(context).size.width,
         child: Center(
             child: _image == null
-                ? Text('No image selected.')
+                ? Text('카드로 만들 사진을 업로드하세요!')
                 : Image.file(File(_image!.path))));
   }
 

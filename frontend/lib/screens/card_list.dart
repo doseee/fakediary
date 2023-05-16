@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:frontend/model/CardModel.dart';
+import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:lottie/lottie.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/card_modal.dart';
 import '../widgets/theme.dart';
-import '../widgets/appbar.dart';
 
 class CardList extends StatefulWidget {
   const CardList({Key? key}) : super(key: key);
@@ -50,17 +50,38 @@ class _CardListState extends State<CardList> {
           ),
           title: Row(
             children: [
-              Text('내 카드' , style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700)),
-              Lottie.asset('assets/lottie/menu_grinstar.json',
-                  width: 30),
+              Text('내 카드',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+              Lottie.asset('assets/lottie/menu_grinstar.json', width: 30),
             ],
           ),
           actions: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CardCreate()));
+                    },
+                    child: Container(
+                      width: 35,
+                      height: 35,
+                      decoration: BtnThemeGradientLine(),
+                      child: Center(
+                          child: Text(
+                            '+',
+                            style: TextStyle(color: Colors.white, fontSize: 22),
+                          )),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 7,
+                  ),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -75,9 +96,6 @@ class _CardListState extends State<CardList> {
                       width: 45,
                     ),
                   ),
-                  SizedBox(
-                    width: 15,
-                  ),
                 ],
               ),
             )
@@ -87,7 +105,7 @@ class _CardListState extends State<CardList> {
           child: Column(
             children: [
               Flexible(
-                flex: 4,
+                flex: 5,
                 child: Scaffold(
                     backgroundColor: Colors.transparent,
                     body: Center(
@@ -107,8 +125,8 @@ class _CardListState extends State<CardList> {
                                   fontSize: 15,
                                   color: Colors.white)),
                           Text('카드를 누르면 해당 카드의 상세 정보를 확인할 수 있습니다',
-                              style:
-                                  TextStyle(fontSize: 11, color: Colors.white54)),
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.white54)),
                           // SizedBox(
                           //   height: 10,
                           // ),

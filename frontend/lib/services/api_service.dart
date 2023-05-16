@@ -975,13 +975,14 @@ class ApiService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? memberId = prefs.getInt('memberId');
     if (genre == '') {
-      genre = null;
+      genre = ' ';
     }
     final diaryFilterRequestDto = {
       "genre": genre,
       "id": writer,
       "memberId": memberId
     };
+    print(diaryFilterRequestDto);
     final response = await http.post(Uri.parse('$baseUrl/diary/filter'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -1131,6 +1132,18 @@ class ApiService {
       return senderId;
     } else {
       throw Exception('친구 요청 승인에 실패했습니다');
+    }
+  }
+
+  static Future<bool> readAlarm(int alarmId) async {
+    final url = Uri.parse('$baseUrl/alarm/read/$alarmId');
+    final response = await http.get(url);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      return false;
     }
   }
 }
