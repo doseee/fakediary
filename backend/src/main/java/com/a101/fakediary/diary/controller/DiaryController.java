@@ -1,5 +1,8 @@
 package com.a101.fakediary.diary.controller;
 
+import com.a101.fakediary.alarm.dto.AlarmRequestDto;
+import com.a101.fakediary.alarm.dto.AlarmResponseDto;
+import com.a101.fakediary.alarm.service.AlarmService;
 import com.a101.fakediary.chatgptdiary.dto.result.DiaryResultDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
@@ -23,6 +26,7 @@ import java.util.Map;
 @Slf4j
 public class DiaryController {
     private final DiaryService diaryService;
+    private final AlarmService alarmService;
 
     @PostMapping("/create")
     public ResponseEntity<?> saveDiaryWithDiaryInformation(@RequestBody DiaryInformation information) {
@@ -41,6 +45,10 @@ public class DiaryController {
             log.info("genreList = " + genreList);
 
             DiaryResponseDto diaryResponseDto = diaryService.createDiary(memberId, cardIdList, genreList);
+            String alarmTitle = "따끈따끈한 일기의 순간입니다";
+            String alarmBody = "내가 선택한 가짜다이어리가 완성되었어요";
+            alarmService.saveAlarm(new AlarmRequestDto(diaryResponseDto.getMemberId(), diaryResponseDto.getDiaryId(), alarmTitle, alarmBody, "MANUAL"));
+            alarmService.sendNotificationByToken(new AlarmResponseDto(diaryResponseDto.getMemberId(), alarmTitle, alarmBody));
 
             return new ResponseEntity<>(diaryResponseDto, HttpStatus.OK);
         } catch(Exception e) {
