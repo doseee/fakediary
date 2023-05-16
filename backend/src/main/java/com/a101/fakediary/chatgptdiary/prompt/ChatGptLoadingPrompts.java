@@ -42,7 +42,7 @@ public class ChatGptLoadingPrompts {
 
         genresMap.put("COMFORTING", 6);
 //        USER_PROMPTS[6] = "Tell me a comforting story in a short sentence.";
-        USER_PROMPTS[6] = "Genre is comforing.";
+        USER_PROMPTS[6] = "Genre is comforting.";
 
         genresMap.put("HAPPY", 7);
 //        USER_PROMPTS[7] = "Tell me a happy story in a short sentence.";
