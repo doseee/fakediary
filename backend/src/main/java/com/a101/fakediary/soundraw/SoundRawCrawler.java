@@ -28,7 +28,7 @@ public class SoundRawCrawler {
 //        StringBuilder[] commandBuilder = new StringBuilder[4];
         StringBuilder[] commandBuilder = new StringBuilder[2];
         commandBuilder[0] = new StringBuilder(PYTHON);
-        commandBuilder[1] = new StringBuilder(CRAWLER);
+        commandBuilder[1] = new StringBuilder("\"" + CRAWLER + "\"");
 //        commandBuilder[2] = new StringBuilder("\"").append(SOUND_RAW_URL).append("?length=60&tempo=normal,high,low&mood=");
 //        for(String genre : genreList)
 //            commandBuilder[2].append(SoundRawMap.getMood(genre)).append(",");
