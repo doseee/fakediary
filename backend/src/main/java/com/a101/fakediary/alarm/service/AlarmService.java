@@ -15,6 +15,8 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -63,6 +65,14 @@ public class AlarmService {
         alarm.setStatus(1);
     }
 
+    @Async
+    @Scheduled(cron = "0 0 9 * * ?", zone = "Asia/Seoul")
+    public void sendRandomAlarm() {
+        List<Alarm> list = alarmRepository.randomAlarm();
+        for (Alarm alarm : list) {
+            sendNotificationByToken(new AlarmResponseDto(alarm.getMemberId().getMemberId(), alarm.getTitle(), alarm.getBody()));
+        }
+    }
 
     public String sendNotificationByToken(AlarmResponseDto alarm) {
         Member member = memberRepository.findByMemberId(alarm.getMemberId());

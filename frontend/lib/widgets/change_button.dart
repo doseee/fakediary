@@ -26,7 +26,7 @@ class ChangeButton extends StatelessWidget {
         child: Container(
           decoration: BtnThemeGradient(),
           child: Padding(
-            padding: const EdgeInsets.only(right: 15 , left: 15),
+            padding: const EdgeInsets.only(right: 15, left: 15),
             child: GestureDetector(
               onTap: () async {
                 if (exchangeSituation == 1) {
@@ -62,7 +62,7 @@ class ChangeButton extends StatelessWidget {
               },
               child: SizedBox(
                 width: 180,
-                height: 50,
+                height: 40,
                 child: Center(
                   child: exchangeSituation == 2
                       ? Text(
