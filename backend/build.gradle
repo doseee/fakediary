@@ -88,6 +88,10 @@ dependencies {
 	implementation 'com.google.firebase:firebase-admin:9.1.1'
 	implementation 'com.google.firebase:firebase-core:20.0.0'
 	implementation 'com.google.firebase:firebase-messaging:23.0.0'
+
+	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.9.1'
+
 }
 
 tasks.named('test') {
