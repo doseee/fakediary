@@ -538,9 +538,12 @@ class Notification extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                alarm.title,
-                style: TextStyle(fontSize: 15),
+              Expanded(
+                child: Text(
+                  alarm.title,
+                  style: TextStyle(fontSize: 15),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               Icon(Icons.chevron_right)
             ],
