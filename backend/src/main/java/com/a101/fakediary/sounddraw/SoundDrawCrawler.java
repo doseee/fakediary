@@ -33,7 +33,7 @@ public class SoundDrawCrawler {
             commandBuilder[2].append(genre).append(",");
         commandBuilder[2].delete(commandBuilder[2].length() - 1, commandBuilder[2].length()); //  마지막 , 제거
         commandBuilder[2].append("\"");
-        commandBuilder[3] = new StringBuilder(String.valueOf(diaryPk)).append("_").append(UUID.randomUUID().toString());
+        commandBuilder[3] = new StringBuilder("\"").append(String.valueOf(diaryPk)).append("_").append(UUID.randomUUID().toString()).append("\"");
 
         String[] command = new String[4];
         for(int i = 0; i < command.length; i++) {
@@ -55,7 +55,7 @@ public class SoundDrawCrawler {
         for(int i =  1; i < command.length; i++)
             commandLine.addArgument(command[i]);
 
-        log.info("commandLine = " + commandLine);
+        log.info("commandLine = " + commandLine.toString());
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(outputStream);
