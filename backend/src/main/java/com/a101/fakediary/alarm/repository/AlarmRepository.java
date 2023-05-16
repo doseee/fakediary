@@ -24,4 +24,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
             "where a.status = 0 and a.member_id =:memberId and a.created_at between DATE_SUB(NOW(), INTERVAL 10 DAY) AND NOW() " +
             "order by created_at desc", nativeQuery = true)
     List<Alarm> listAlarm(@Param("memberId") Long memberId);
+
+    @Query("select a from Alarm a where DATE(a.createdAt) = CURRENT_DATE and a.alarmType = 'RANDOM'")
+    List<Alarm> randomAlarm();
 }
