@@ -99,6 +99,7 @@ class _LoginState extends State<Login> {
               pref.setBool('isFirstLaunch', false);
             }
             if (result) {
+              FocusScope.of(context).unfocus();
               if (isFirstLaunch) {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => TutorialScreen()));

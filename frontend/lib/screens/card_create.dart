@@ -194,7 +194,7 @@ class _CardCreateState extends State<CardCreate> {
                               decoration: BtnThemeGradientLine(),
                               child: Center(
                                   child: Text(
-                                '목록',
+                                '내 카드',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 14),
                               )),
@@ -394,7 +394,7 @@ class _CardCreateState extends State<CardCreate> {
                           height: 10,
                         ),
                         locationLoading
-                            ? CircularProgressIndicator()
+                            ? Lottie.asset('assets/lottie/loading_image_circle.json',height: 100,width: 100)
                             : Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 55),

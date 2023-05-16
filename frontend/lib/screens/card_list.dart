@@ -69,18 +69,18 @@ class _CardListState extends State<CardList> {
                               builder: (context) => CardCreate()));
                     },
                     child: Container(
-                      width: 85,
+                      width: 35,
                       height: 35,
                       decoration: BtnThemeGradientLine(),
                       child: Center(
                           child: Text(
-                        '카드 만들기',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      )),
+                            '+',
+                            style: TextStyle(color: Colors.white, fontSize: 22),
+                          )),
                     ),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: 7,
                   ),
                   GestureDetector(
                     onTap: () {
