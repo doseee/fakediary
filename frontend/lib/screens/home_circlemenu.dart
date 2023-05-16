@@ -376,7 +376,11 @@ class _AlarmDrawerState extends State<AlarmDrawer> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Icon(Icons.close)
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.close))
                   ],
                 ),
               ),
@@ -462,6 +466,8 @@ class Notification extends StatelessWidget {
               ),
             );
           });
+          final result = await ApiService.readAlarm(alarm.alarmId);
+          print('result: $result');
         } else if (alarm.alarmType == 'FRIEND') {
           // 수락 모달
           showDialog(
@@ -485,6 +491,8 @@ class Notification extends StatelessWidget {
               ),
             );
           });
+          final result = await ApiService.readAlarm(alarm.alarmId);
+          print('result: $result');
         } else if (alarm.alarmType == 'MANUAL') {
           // 전달받은 일기 상세 페이지로
           getDiary(alarm.requestId).then((diary) {
@@ -499,6 +507,24 @@ class Notification extends StatelessWidget {
               ),
             );
           });
+          final result = await ApiService.readAlarm(alarm.alarmId);
+          print('result: $result');
+        } else if (alarm.alarmType == 'RESPONSE') {
+          // 전달받은 일기 상세 페이지로
+          getDiary(alarm.requestId).then((diary) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DiaryDetailCoverScreen(
+                  diaryId: alarm.requestId,
+                  exchangeSituation: 1,
+                  imageUrl: diary.diaryImageUrl[0],
+                ),
+              ),
+            );
+          });
+          final result = await ApiService.readAlarm(alarm.alarmId);
+          print('result: $result');
         }
       },
       child: Container(
