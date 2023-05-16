@@ -4,6 +4,7 @@ import 'package:frontend/screens/diary_list_screen.dart';
 
 class ReceiveDiaryModal extends StatelessWidget {
   final int requestId;
+  final int alarmId;
   // final double? height;
   // final double padding;
   // final Widget widget;
@@ -12,6 +13,7 @@ class ReceiveDiaryModal extends StatelessWidget {
   const ReceiveDiaryModal({
     Key? key,
     required this.requestId,
+    required this.alarmId,
     // required this.widget,
     // this.height,
     // required this.color,
@@ -87,6 +89,7 @@ class ReceiveDiaryModal extends StatelessWidget {
                             builder: (context) => DiaryListScreen(
                               // recieverId: requestId,
                               requestId: requestId,
+                              alarmId: alarmId,
                             ),
                           ),
                         );
