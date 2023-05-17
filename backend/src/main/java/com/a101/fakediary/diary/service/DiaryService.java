@@ -466,6 +466,8 @@ public class DiaryService {
 
         String serverPort = serverService.findServerPort();
         String myPort = environment.getProperty("local.server.port");
+        logger.info("현재 포트 번호 : " + myPort);
+        logger.info("감지한 현재 서버 포트 번호 : " + serverPort);
 
         LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
