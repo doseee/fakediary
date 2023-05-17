@@ -1,11 +1,6 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend/model/SearchFriendModel.dart';
-import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
-import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
 
@@ -60,7 +55,7 @@ class _SendLoadingState extends State<SendLoading> {
               children: [
                 SizedBox(height: 150),
                 Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Column(
                     children: [
                       Text('소중한 추억의 조각, 우리의 교환일기',
