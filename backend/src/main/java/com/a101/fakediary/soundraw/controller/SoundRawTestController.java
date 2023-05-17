@@ -22,7 +22,9 @@ public class SoundRawTestController {
     @PostMapping
     public ResponseEntity<?> downloadMusic(@RequestBody List<String> genreList) {
         try {
-            String musicUrl = soundRawCrawler.getMusicUrl(genreList, 123124L);
+//            String musicUrl = soundRawCrawler.getMusicUrl(genreList, 123124L);
+            String musicUrl = "music url";
+            soundRawCrawler.getMusicUrl(genreList);
             return new ResponseEntity<>(musicUrl, HttpStatus.OK);
         } catch(Exception e) {
             e.printStackTrace();

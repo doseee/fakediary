@@ -5,7 +5,12 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,95 +20,120 @@ import java.util.UUID;
 @Component
 @Slf4j
 public class SoundRawCrawler {
-    private final String PYTHON;
-    private final String CRAWLER;
     private final String SOUND_RAW_URL;
+    private final WebClient webClient;
 
-    public SoundRawCrawler(@Value("${fake-diary.sound-raw.python}")String PYTHON,
-                           @Value("${fake-diary.sound-raw.crawler}")String CRAWLER,
-                           @Value("${fake-diary.sound-raw.base-url}")String SOUND_RAW_URL) {
-        this.PYTHON = PYTHON;
-        this.CRAWLER = CRAWLER;
+    public SoundRawCrawler(@Value("${fake-diary.sound-raw.base-url}")String SOUND_RAW_URL,
+                           @Value("${fake-diary.sound-raw.fast-api-url}")String FAST_API_URL) {
         this.SOUND_RAW_URL = SOUND_RAW_URL;
+        this.webClient = WebClient.builder().baseUrl(FAST_API_URL).build();
     }
 
-    public String getMusicUrl(List<String> genreList, Long diaryPk) {
+    public void getMusicUrl(List<String> genreList) {
         String ret = null;
+        StringBuilder requestBodySb = new StringBuilder(SOUND_RAW_URL)
+                .append("?length=60&tempo=normal,high,low&mood=");
 
-        log.info("Python call");
-        StringBuilder[] commandBuilder = new StringBuilder[4];
-//        StringBuilder[] commandBuilder = new StringBuilder[2];
-        commandBuilder[0] = new StringBuilder(PYTHON);
-        commandBuilder[1] = new StringBuilder(CRAWLER);
-        commandBuilder[2] = new StringBuilder("\"").append(SOUND_RAW_URL).append("?length=60&tempo=normal,high,low&mood=");
         for(String genre : genreList)
-            commandBuilder[2].append(SoundRawMap.getMood(genre)).append(",");
-        commandBuilder[2].delete(commandBuilder[2].length() - 1, commandBuilder[2].length()); //  마지막 , 제거
-        commandBuilder[2].append("\"");
-        commandBuilder[3] = new StringBuilder("\"").append(String.valueOf(diaryPk)).append("_").append(UUID.randomUUID().toString()).append("\"");
+            requestBodySb.append(SoundRawMap.getMood(genre)).append(",");
+        requestBodySb.delete(requestBodySb.length() - 1, requestBodySb.length());   //  마지막 , 제거
 
-        String[] command = new String[commandBuilder.length];
-        for(int i = 0; i < command.length; i++) {
-            command[i] = commandBuilder[i].toString();
-            log.info("command[" + i + "] = " + command[i]);
-        }
+        Mono<String> response = webClient.method(HttpMethod.POST)
+                .uri("/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(requestBodySb.toString()))
+                .retrieve()
+                .bodyToMono(String.class);
 
-        try {
-           ret = execPython(command);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        return ret;
+        response.subscribe(
+                result -> {
+                    log.info("Response : " + result);
+                },
+                error -> {
+                    log.info("Request failed : " + error.getMessage());
+                }
+        );
     }
 
-    public static String execPython(String[] command) throws Exception {
-        List<String> outputs = new ArrayList<>();
 
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-        Process process = null;
-        InputStream inputStream = null;
-        InputStreamReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
-        String line = null;
 
-        // Python 코드의 출력 확인
-        try {
-            process = processBuilder.start();
-            log.info("process = " + process);
-
-            inputStream = process.getInputStream();
-            inputStreamReader = new InputStreamReader(inputStream);
-            bufferedReader = new BufferedReader(inputStreamReader);
-
-            log.info("@@1!!!!!!!!!");
-            while ((line = bufferedReader.readLine()) != null) {
-                log.info("line = " + line);
-                outputs.add(line);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-            log.info("@@2!!!!!!!!!");
-            while ((line = bufferedReader.readLine()) != null) {
-                log.info("error-line = " + line);
-            }
-        }
-
-        log.info("@@3!!!!!!!!!");
-        while ((line = bufferedReader.readLine()) != null) {
-            log.info("error-line = " + line);
-        }
-
-        log.info("process = " + process);
-        int exitCode = process.waitFor();
-//        System.out.println("exitCode: " + exitCode);
-        log.info("exitCode = " + exitCode);
-        log.info("process = " + process);
-
-        if(exitCode == 0)
-            return outputs.get(outputs.size() - 1);
-        return null;
-    }
+//    public String getMusicUrl(List<String> genreList, Long diaryPk) {
+//        String ret = null;
+//
+//        log.info("Python call");
+//        StringBuilder[] commandBuilder = new StringBuilder[4];
+////        StringBuilder[] commandBuilder = new StringBuilder[2];
+//        commandBuilder[0] = new StringBuilder(PYTHON);
+//        commandBuilder[1] = new StringBuilder(CRAWLER);
+//        commandBuilder[2] = new StringBuilder("\"").append(SOUND_RAW_URL).append("?length=60&tempo=normal,high,low&mood=");
+//        for(String genre : genreList)
+//            commandBuilder[2].append(SoundRawMap.getMood(genre)).append(",");
+//        commandBuilder[2].delete(commandBuilder[2].length() - 1, commandBuilder[2].length()); //  마지막 , 제거
+//        commandBuilder[2].append("\"");
+//        commandBuilder[3] = new StringBuilder("\"").append(String.valueOf(diaryPk)).append("_").append(UUID.randomUUID().toString()).append("\"");
+//
+//        String[] command = new String[commandBuilder.length];
+//        for(int i = 0; i < command.length; i++) {
+//            command[i] = commandBuilder[i].toString();
+//            log.info("command[" + i + "] = " + command[i]);
+//        }
+//
+//        try {
+//           ret = execPython(command);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return ret;
+//    }
+//
+//    public static String execPython(String[] command) throws Exception {
+//        List<String> outputs = new ArrayList<>();
+//
+//        ProcessBuilder processBuilder = new ProcessBuilder(command);
+//        Process process = null;
+//        InputStream inputStream = null;
+//        InputStreamReader inputStreamReader = null;
+//        BufferedReader bufferedReader = null;
+//        String line = null;
+//
+//        // Python 코드의 출력 확인
+//        try {
+//            process = processBuilder.start();
+//            log.info("process = " + process);
+//
+//            inputStream = process.getInputStream();
+//            inputStreamReader = new InputStreamReader(inputStream);
+//            bufferedReader = new BufferedReader(inputStreamReader);
+//
+//            log.info("@@1!!!!!!!!!");
+//            while ((line = bufferedReader.readLine()) != null) {
+//                log.info("line = " + line);
+//                outputs.add(line);
+//            }
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            log.info("@@2!!!!!!!!!");
+//            while ((line = bufferedReader.readLine()) != null) {
+//                log.info("error-line = " + line);
+//            }
+//        }
+//
+//        log.info("@@3!!!!!!!!!");
+//        while ((line = bufferedReader.readLine()) != null) {
+//            log.info("error-line = " + line);
+//        }
+//
+//        log.info("process = " + process);
+//        int exitCode = process.waitFor();
+////        System.out.println("exitCode: " + exitCode);
+//        log.info("exitCode = " + exitCode);
+//        log.info("process = " + process);
+//
+//        if(exitCode == 0)
+//            return outputs.get(outputs.size() - 1);
+//        return null;
+//    }
 
 //    public static String execPython(String[] command) throws Exception {
 //        CommandLine commandLine = CommandLine.parse(command[0]);
