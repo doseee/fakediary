@@ -59,9 +59,6 @@ public class Diary extends BaseEntity {
     @Column(nullable = false, length = 1000)
     private String summary;
 
-    @Column(name = "diary_music_url")
-    private String diaryMusicUrl;
-
     @Column(nullable = false)
     @ColumnDefault("false")
     private boolean isExchanged;
