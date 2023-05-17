@@ -47,7 +47,9 @@ class _LoginState extends State<Login> {
       ),
       validator: (String? value) {
         if (value!.isEmpty) {
-          return '이메일이 공백입니다';
+          return '이메일을 입력하세요';
+        } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$').hasMatch(value)) {
+          return '유효한 이메일 주소를 입력하세요';
         }
         return null;
       },
