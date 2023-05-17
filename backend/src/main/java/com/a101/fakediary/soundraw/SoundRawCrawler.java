@@ -88,7 +88,8 @@ public class SoundRawCrawler {
         int exitCode = process.waitFor();
 //        System.out.println("exitCode: " + exitCode);
         log.info("exitCode = " + exitCode);
-
+        log.info("process = " + process);
+        
         if(exitCode == 0)
             return outputs.get(outputs.size() - 1);
         return null;
