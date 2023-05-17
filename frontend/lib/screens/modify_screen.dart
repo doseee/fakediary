@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -160,6 +161,9 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         style: TextStyle(
                           color: Colors.white,
                         ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>;]')),
+                        ],
                         maxLength: 10,
                         decoration: const InputDecoration(
                             counterStyle: TextStyle(color: Colors.white),
@@ -297,6 +301,9 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         style: TextStyle(
                           color: Colors.blue[100],
                         ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
+                        ],
                         maxLength: 10,
                         decoration: const InputDecoration(
                             counterStyle: TextStyle(color: Colors.white),
