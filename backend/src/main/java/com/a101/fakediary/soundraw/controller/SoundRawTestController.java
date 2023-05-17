@@ -1,6 +1,7 @@
 package com.a101.fakediary.soundraw.controller;
 
 import com.a101.fakediary.soundraw.SoundRawCrawler;
+import com.a101.fakediary.soundraw.dto.SoundRawRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,10 @@ public class SoundRawTestController {
     private final SoundRawCrawler soundRawCrawler;
 
     @PostMapping
-    public ResponseEntity<?> downloadMusic(@RequestBody List<String> genreList) {
+    public ResponseEntity<?> downloadMusic(@RequestBody SoundRawRequestDto request) {
         try {
 //            String musicUrl = soundRawCrawler.getMusicUrl(genreList, 123124L);
-            String musicUrl = "music url";
-            soundRawCrawler.getMusicUrl(genreList);
+            String musicUrl = soundRawCrawler.getMusicUrl(request.getGenreList(), request.getDiaryPk());
             return new ResponseEntity<>(musicUrl, HttpStatus.OK);
         } catch(Exception e) {
             e.printStackTrace();
