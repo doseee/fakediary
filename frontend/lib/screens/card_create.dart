@@ -313,12 +313,15 @@ class _CardCreateState extends State<CardCreate> {
                                     keyword1 =
                                         captions.isNotEmpty ? captions[0] : "";
                                     keyword1Modified = !captions.isNotEmpty;
+                                    keyword1Selected = captions.isNotEmpty;
                                     keyword2 =
                                         captions.length > 1 ? captions[1] : "";
                                     keyword2Modified = !(captions.length > 1);
+                                    keyword2Selected = captions.length > 1;
                                     keyword3 =
                                         captions.length > 2 ? captions[2] : "";
                                     keyword3Modified = !(captions.length > 2);
+                                    keyword3Selected = captions.length > 2;
                                     imageLoading = false;
                                   });
                                 } else {
@@ -371,7 +374,8 @@ class _CardCreateState extends State<CardCreate> {
                                     fontSize: 15,
                                   ),
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
+                                    FilteringTextInputFormatter.deny(
+                                        RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
                                   ],
                                   decoration: const InputDecoration(
                                       enabledBorder: UnderlineInputBorder(
@@ -423,7 +427,8 @@ class _CardCreateState extends State<CardCreate> {
                                     fontSize: 15,
                                   ),
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
+                                    FilteringTextInputFormatter.deny(
+                                        RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
                                   ],
                                   decoration: const InputDecoration(
                                       enabledBorder: UnderlineInputBorder(
@@ -454,7 +459,7 @@ class _CardCreateState extends State<CardCreate> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '추가설정',
+                                '키워드',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 17,
@@ -705,79 +710,96 @@ class InputKeyword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        GestureDetector(
-          onTap: () {
-            converter();
-          },
-          child: Container(
-            width: 25,
-            height: 25,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: GradientBoxBorder(
-                  gradient: LinearGradient(stops: [
-                0,
-                1.0
-              ], colors: [
-                Color(0xff65D5A6),
-                Color(0xff1E72AC),
-              ])),
-              gradient: isSelected
-                  ? LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0, 1.0],
-                      colors: [
-                        Color(0xff65D5A6),
-                        Color(0xff1E72AC),
-                      ],
-                    )
-                  : null,
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 8,
-        ),
-        SizedBox(
-          width: 160,
-          child: TextFormField(
-            maxLength: 10,
-            controller: keywordController,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
-            ],
-            decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                  color: Colors.white,
-                )),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.greenAccent),
+    return SizedBox(
+      height: 70,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 13,
+              ),
+              GestureDetector(
+                onTap: () {
+                  converter();
+                },
+                child: Container(
+                  width: 25,
+                  height: 25,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: GradientBoxBorder(
+                        gradient: LinearGradient(stops: [
+                      0,
+                      1.0
+                    ], colors: [
+                      Color(0xff65D5A6),
+                      Color(0xff1E72AC),
+                    ])),
+                    gradient: isSelected
+                        ? LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: [0, 1.0],
+                            colors: [
+                              Color(0xff65D5A6),
+                              Color(0xff1E72AC),
+                            ],
+                          )
+                        : null,
+                  ),
                 ),
-                hintText: '키워드를 입력하세요.',
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                )),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return '공백을 채워주세요.';
-              }
-              return null;
-            },
+              ),
+            ],
           ),
-        ),
-        SizedBox(
-          width: 77,
-        )
-      ],
+          SizedBox(
+            width: 8,
+          ),
+          SizedBox(
+            width: 160,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextFormField(
+                  maxLength: 10,
+                  controller: keywordController,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(
+                        RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
+                  ],
+                  decoration: const InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.white,
+                      )),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.greenAccent),
+                      ),
+                      hintText: '키워드를 입력하세요.',
+                      hintStyle: TextStyle(
+                        color: Colors.grey,
+                      )),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return '공백을 채워주세요.';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 77,
+          )
+        ],
+      ),
     );
   }
 }
