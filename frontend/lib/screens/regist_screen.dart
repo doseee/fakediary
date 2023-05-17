@@ -146,7 +146,7 @@ class _RegistScreenState extends State<RegistScreen> {
                             )),
                         validator: (String? value) {
                           // 특수문자를 포함하지 않는 정규식
-                          String pattern = r'^[\w-]+$';
+                          String pattern = r'@#%*(){}&^[\w-]+$?!_=|\/,.';
                           RegExp regExp = RegExp(pattern);
 
                           if (value == null || value.isEmpty) {
