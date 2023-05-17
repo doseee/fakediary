@@ -2,7 +2,6 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
@@ -136,10 +135,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Lottie.asset(
-                          'assets/lottie/friend_planet.json',
-                          width: 100,
-                          height: 100),
+                      Lottie.asset('assets/lottie/friend_planet.json',
+                          width: 100, height: 100),
                       SizedBox(
                         height: 10,
                       ),
@@ -160,7 +157,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           color: Colors.white,
                         ),
                         inputFormatters: [
-                          FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>;]')),
+                          FilteringTextInputFormatter.deny(
+                              RegExp(r'[!@#$%^&*(),.?":{}|<>;]')),
                         ],
                         maxLength: 10,
                         decoration: const InputDecoration(
@@ -300,7 +298,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           color: Colors.blue[100],
                         ),
                         inputFormatters: [
-                          FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
+                          FilteringTextInputFormatter.deny(
+                              RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
                         ],
                         maxLength: 10,
                         decoration: const InputDecoration(
@@ -309,9 +308,9 @@ class _ModifyScreenState extends State<ModifyScreen> {
                                 borderSide: BorderSide(
                               color: Colors.white,
                             )),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.greenAccent),
-                          ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.greenAccent),
+                            ),
                             hintText: '기본 주인공 이름을 입력하세요.',
                             hintStyle: TextStyle(
                               color: Colors.grey,
@@ -380,8 +379,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         angle: 90 * 3.1415926535 / 180,
                         child: Lottie.asset(
                           'assets/lottie/star-twinkle.json',
-                          height: 90,
-                          width: 90,
+                          height: 88,
+                          width: 88,
                         ),
                       ),
                     ],
