@@ -15,7 +15,7 @@ COPY ${PYTHON_HELLO_FILE} hello.py
 COPY ${PYTHON_CRAWLER_FILE} crawler.py
 
 # Python Dependencies Installation
-RUN apt-get update && apt-get install -y python3-pip
+RUN apt-get update && apt-get install -y python3-pip && apt-get install -y libconf-2-4
 COPY ${REQUIREMENTS_FILE} requirements.txt
 RUN pip3 install -r requirements.txt
 
