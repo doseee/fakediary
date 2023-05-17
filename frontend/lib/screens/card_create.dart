@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frontend/camera_ex.dart';
 import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/card_loading.dart';
@@ -368,6 +369,9 @@ class _CardCreateState extends State<CardCreate> {
                                     color: Colors.white,
                                     fontSize: 15,
                                   ),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
+                                  ],
                                   decoration: const InputDecoration(
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -413,6 +417,9 @@ class _CardCreateState extends State<CardCreate> {
                                     color: Colors.white,
                                     fontSize: 15,
                                   ),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
+                                  ],
                                   decoration: const InputDecoration(
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -738,6 +745,9 @@ class InputKeyword extends StatelessWidget {
               color: Colors.white,
               fontSize: 15,
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.deny(RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
+            ],
             decoration: const InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
