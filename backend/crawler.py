@@ -20,9 +20,12 @@ chrome_options = Options()
 
 print("cralwer.py debugging log 3")
 
+# Define your two directories
+download_directory = 'tmp'
+
 # Set the download directory (replace '/path/to/download/directory' with your directory)
 chrome_options.add_experimental_option('prefs',  {
-    "download.default_directory": 'C:\\Users\\SSAFY\\Desktop\\proj\\macro',
+    "download.default_directory": 'tmp',
     "download.prompt_for_download": False,
     "download.directory_upgrade": True,
     "plugins.always_open_pdf_externally": True
@@ -108,10 +111,6 @@ print("cralwer.py debugging log 17")
 time.sleep(60)
 
 print("cralwer.py debugging log 18")
-
-# Define your two directories
-download_directory = 'C:\\Users\\SSAFY\\Desktop\\proj\\macro\\tmp'
-destination_directory = 'C:\\Users\\SSAFY\\Desktop\\proj\\macro\\musics'
 
 print("cralwer.py debugging log 19")
 
