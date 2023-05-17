@@ -233,7 +233,6 @@ class _CardCreateState extends State<CardCreate> {
                     key: _formKey,
                     child: ListView(
                       children: [
-
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -329,8 +328,10 @@ class _CardCreateState extends State<CardCreate> {
                                 }
                               },
                               child: imageLoading
-                                  ? Lottie.asset('assets/lottie/loading_image.json',
-                                      height: 70, width: 70)
+                                  ? Lottie.asset(
+                                      'assets/lottie/loading_image.json',
+                                      height: 70,
+                                      width: 70)
                                   : ClipRRect(
                                       borderRadius: BorderRadius.circular(22),
                                       child: Image(
@@ -378,7 +379,8 @@ class _CardCreateState extends State<CardCreate> {
                                         color: Colors.white,
                                       )),
                                       focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.greenAccent),
+                                        borderSide: BorderSide(
+                                            color: Colors.greenAccent),
                                       ),
                                       hintText: '주인공을 입력하세요.',
                                       hintStyle: TextStyle(
@@ -406,7 +408,10 @@ class _CardCreateState extends State<CardCreate> {
                           height: 10,
                         ),
                         locationLoading
-                            ? Lottie.asset('assets/lottie/loading_image_circle.json',height: 100,width: 100)
+                            ? Lottie.asset(
+                                'assets/lottie/loading_image_circle.json',
+                                height: 100,
+                                width: 100)
                             : Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 55),
@@ -426,7 +431,8 @@ class _CardCreateState extends State<CardCreate> {
                                         color: Colors.white,
                                       )),
                                       focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.greenAccent),
+                                        borderSide: BorderSide(
+                                            color: Colors.greenAccent),
                                       ),
                                       hintText: '장소를 입력하세요.',
                                       hintStyle: TextStyle(
