@@ -20,30 +20,35 @@ import java.util.UUID;
 @Component
 @Slf4j
 public class SoundRawCrawler {
+    private final String S3_URL;
     private final String SOUND_RAW_URL;
     private final WebClient webClient;
 
-    public SoundRawCrawler(@Value("${fake-diary.sound-raw.base-url}")String SOUND_RAW_URL,
+    public SoundRawCrawler(@Value("${cloud.aws.s3.url}")String S3_URL,
+                           @Value("${fake-diary.sound-raw.base-url}")String SOUND_RAW_URL,
                            @Value("${fake-diary.sound-raw.fast-api-url}")String FAST_API_URL) {
+        this.S3_URL = S3_URL;
         this.SOUND_RAW_URL = SOUND_RAW_URL;
         this.webClient = WebClient.builder().baseUrl(FAST_API_URL).build();
     }
 
-    public void getMusicUrl(List<String> genreList) {
-        String ret = null;
-        StringBuilder requestBodySb = new StringBuilder(SOUND_RAW_URL)
+    public String getMusicUrl(List<String> genreList, Long diaryPk) {
+        String musicFileName = diaryPk + "_" + UUID.randomUUID().toString();
+        StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
                 .append("?length=60&tempo=normal,high,low&mood=");
 
         for(String genre : genreList)
-            requestBodySb.append(SoundRawMap.getMood(genre)).append(",");
-        requestBodySb.delete(requestBodySb.length() - 1, requestBodySb.length());   //  마지막 , 제거
+            urlQuerySb.append(SoundRawMap.getMood(genre)).append(",");
+        urlQuerySb.delete(urlQuerySb.length() - 1, urlQuerySb.length());   //  마지막 , 제거
 
         Mono<String> response = webClient.method(HttpMethod.POST)
-                .uri("/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(requestBodySb.toString()))
-                .retrieve()
-                .bodyToMono(String.class);
+                .uri(uriBuilder -> uriBuilder
+                        .path("/create-and-upload/")
+                        .queryParam("url", urlQuerySb.toString())
+                        .queryParam("filename", musicFileName)
+                        .build())
+                        .retrieve()
+                        .bodyToMono(String.class);
 
         response.subscribe(
                 result -> {
@@ -53,6 +58,8 @@ public class SoundRawCrawler {
                     log.info("Request failed : " + error.getMessage());
                 }
         );
+
+        return (this.S3_URL + musicFileName + ".wav");
     }
 
 
