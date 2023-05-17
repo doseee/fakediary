@@ -25,7 +25,7 @@ download_directory = 'tmp_downloads'
 
 # Set the download directory (replace '/path/to/download/directory' with your directory)
 chrome_options.add_experimental_option('prefs',  {
-    "download.default_directory": 'tmp',
+    "download.default_directory": download_directory,
     "download.prompt_for_download": False,
     "download.directory_upgrade": True,
     "plugins.always_open_pdf_externally": True
