@@ -100,18 +100,18 @@ class CardModal extends StatelessWidget {
     } else {
       String keywords = card.keywords.join(', ');
       return Flexible(
-          flex: 1,
+          flex: 3,
           child: Center(
               child: Column(
             children: [
               Flexible(
-                  flex: 1,
+                  flex: 3,
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
                         decoration: BtnThemeGradientLine(),
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
+                          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                           child: Text(
                             '키워드',
                             style: TextStyle(color: Colors.white ,fontSize: 13,fontWeight: FontWeight.w700),
@@ -119,7 +119,7 @@ class CardModal extends StatelessWidget {
                         )),
                   )),
               Flexible(
-                  flex: 1,
+                  flex: 3,
                   child: Align(
                     alignment: Alignment.topLeft,
                     child:
