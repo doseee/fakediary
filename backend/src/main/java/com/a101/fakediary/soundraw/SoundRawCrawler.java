@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +25,8 @@ public class SoundRawCrawler {
     }
 
     public String getMusicUrl(List<String> genreList, Long diaryPk) {
+        String ret = null;
+
         log.info("Python call");
 //        StringBuilder[] commandBuilder = new StringBuilder[4];
         StringBuilder[] commandBuilder = new StringBuilder[2];
@@ -43,15 +46,17 @@ public class SoundRawCrawler {
         }
 
         try {
-            execPython(command);
+           ret = execPython(command);
         } catch(Exception e) {
             e.printStackTrace();
         }
 
-        return null;
+        return ret;
     }
 
-    public static void execPython(String[] command) throws Exception {
+    public static String execPython(String[] command) throws Exception {
+        List<String> outputs = new ArrayList<>();
+
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         Process process = null;
         InputStream inputStream = null;
@@ -62,6 +67,7 @@ public class SoundRawCrawler {
         // Python 코드의 출력 확인
         try {
             process = processBuilder.start();
+            log.info("process = " + process);
 
             inputStream = process.getInputStream();
             inputStreamReader = new InputStreamReader(inputStream);
@@ -69,6 +75,7 @@ public class SoundRawCrawler {
 
             while ((line = bufferedReader.readLine()) != null) {
                 log.info("line = " + line);
+                outputs.add(line);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -77,10 +84,49 @@ public class SoundRawCrawler {
             }
         }
 
+        log.info("process = " + process);
         int exitCode = process.waitFor();
 //        System.out.println("exitCode: " + exitCode);
         log.info("exitCode = " + exitCode);
+
+        if(exitCode == 0)
+            return outputs.get(outputs.size() - 1);
+        return null;
     }
+
+
+//    public static void execPython(String[] command) throws Exception {
+//        ProcessBuilder processBuilder = new ProcessBuilder(command);
+//        Process process = null;
+//        InputStream inputStream = null;
+//        InputStreamReader inputStreamReader = null;
+//        BufferedReader bufferedReader = null;
+//        String line = null;
+//
+//        // Python 코드의 출력 확인
+//        try {
+//            process = processBuilder.start();
+//            log.info("process = " + process);
+//
+//            inputStream = process.getInputStream();
+//            inputStreamReader = new InputStreamReader(inputStream);
+//            bufferedReader = new BufferedReader(inputStreamReader);
+//
+//            while ((line = bufferedReader.readLine()) != null) {
+//                log.info("line = " + line);
+//            }
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            while ((line = bufferedReader.readLine()) != null) {
+//                log.info("error-line = " + line);
+//            }
+//        }
+//
+//        log.info("process = " + process);
+//        int exitCode = process.waitFor();
+////        System.out.println("exitCode: " + exitCode);
+//        log.info("exitCode = " + exitCode);
+//    }
 
 //    public static void execPython(String[] command) throws Exception {
 //        ProcessBuilder processBuilder = new ProcessBuilder(command);
