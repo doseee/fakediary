@@ -76,15 +76,22 @@ public class SoundRawCrawler {
             inputStreamReader = new InputStreamReader(inputStream);
             bufferedReader = new BufferedReader(inputStreamReader);
 
+            log.info("@@1!!!!!!!!!");
             while ((line = bufferedReader.readLine()) != null) {
                 log.info("line = " + line);
                 outputs.add(line);
             }
         } catch(Exception e) {
             e.printStackTrace();
+            log.info("@@2!!!!!!!!!");
             while ((line = bufferedReader.readLine()) != null) {
                 log.info("error-line = " + line);
             }
+        }
+
+        log.info("@@3!!!!!!!!!");
+        while ((line = bufferedReader.readLine()) != null) {
+            log.info("error-line = " + line);
         }
 
         log.info("process = " + process);
