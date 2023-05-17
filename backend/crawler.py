@@ -7,6 +7,7 @@ import time
 import os
 import shutil
 import sys
+import boto3
 
 # Setup webdriver
 s=Service(ChromeDriverManager().install())

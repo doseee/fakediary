@@ -363,13 +363,13 @@ public class DiaryService {
         logger.info("diaryImagePrompt = " + diaryImagePrompt);
         diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
 
-        try {
-            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
-            logger.info("musicUrl = " + musicUrl);
-            diary.setMusicUrl(musicUrl);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
+//            logger.info("musicUrl = " + musicUrl);
+//            diary.setMusicUrl(musicUrl);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         DiaryResponseDto returnDto = new DiaryResponseDto(diary);
         List<String> genres = genreService.searchGenre(diary.getDiaryId());
