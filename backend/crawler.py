@@ -21,7 +21,7 @@ chrome_options = Options()
 print("cralwer.py debugging log 3")
 
 # Define your two directories
-download_directory = 'tmp'
+download_directory = 'tmp_downloads'
 
 # Set the download directory (replace '/path/to/download/directory' with your directory)
 chrome_options.add_experimental_option('prefs',  {
