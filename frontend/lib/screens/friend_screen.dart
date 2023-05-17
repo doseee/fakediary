@@ -1,14 +1,13 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
+import 'package:frontend/screens/diary_loading.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/friend_searchnew.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-
 import 'home_circlemenu.dart';
 
 class FriendScreen extends StatefulWidget {
@@ -376,7 +375,7 @@ class _FriendScreenState extends State<FriendScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SearchScreen()));
+                              builder: (context) => DiaryLoading()));
                     },
                     child: Image(
                       image: AssetImage(
@@ -434,12 +433,10 @@ class _FriendScreenState extends State<FriendScreen> {
                                 child: Column(
                                   children: [
                                     ListTile(
-                                      leading: SvgPicture.asset(
-                                        'assets/svg/atronaut-svgrepo-com.svg',
-                                        semanticsLabel: 'user',
-                                        width: 50,
-                                        height: 50,
-                                      ),
+                                      leading: Lottie.asset(
+                                          'assets/lottie/friend_planet.json',
+                                          width: 40,
+                                          height: 40),
                                       title: Row(children: [
                                         Flexible(
                                             flex: 3,

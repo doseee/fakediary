@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:frontend/screens/diary_loading.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:lottie/lottie.dart';
 
@@ -344,7 +345,7 @@ class _MoodSelectState extends State<MoodSelect> {
                         // print(prp);
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
+                            builder: (context) => DiaryLoading(),
                           ),
                         );
                         Flushbar(
