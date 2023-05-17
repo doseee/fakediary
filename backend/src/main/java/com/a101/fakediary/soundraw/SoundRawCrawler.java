@@ -31,16 +31,16 @@ public class SoundRawCrawler {
         String ret = null;
 
         log.info("Python call");
-//        StringBuilder[] commandBuilder = new StringBuilder[4];
-        StringBuilder[] commandBuilder = new StringBuilder[2];
+        StringBuilder[] commandBuilder = new StringBuilder[4];
+//        StringBuilder[] commandBuilder = new StringBuilder[2];
         commandBuilder[0] = new StringBuilder(PYTHON);
         commandBuilder[1] = new StringBuilder(CRAWLER);
-//        commandBuilder[2] = new StringBuilder("\"").append(SOUND_RAW_URL).append("?length=60&tempo=normal,high,low&mood=");
-//        for(String genre : genreList)
-//            commandBuilder[2].append(SoundRawMap.getMood(genre)).append(",");
-//        commandBuilder[2].delete(commandBuilder[2].length() - 1, commandBuilder[2].length()); //  마지막 , 제거
-//        commandBuilder[2].append("\"");
-//        commandBuilder[3] = new StringBuilder("\"").append(String.valueOf(diaryPk)).append("_").append(UUID.randomUUID().toString()).append("\"");
+        commandBuilder[2] = new StringBuilder("\"").append(SOUND_RAW_URL).append("?length=60&tempo=normal,high,low&mood=");
+        for(String genre : genreList)
+            commandBuilder[2].append(SoundRawMap.getMood(genre)).append(",");
+        commandBuilder[2].delete(commandBuilder[2].length() - 1, commandBuilder[2].length()); //  마지막 , 제거
+        commandBuilder[2].append("\"");
+        commandBuilder[3] = new StringBuilder("\"").append(String.valueOf(diaryPk)).append("_").append(UUID.randomUUID().toString()).append("\"");
 
         String[] command = new String[commandBuilder.length];
         for(int i = 0; i < command.length; i++) {
