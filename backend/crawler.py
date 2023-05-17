@@ -12,7 +12,7 @@ import boto3
 print("cralwer.py debugging log 1")
 
 # Setup webdriver
-s=Service(ChromeDriverManager().install())
+s=Service(ChromeDriverManager().install(), chrome_type='chromium')
 
 print("cralwer.py debugging log 2")
 
