@@ -1,5 +1,7 @@
 ## 📔 가짜 다이어리 Lieary : 평범한 일상을 더욱 특별하게, 나만의 우주🪐를 작성하는 오늘
 
+[App Download Link](https://play.google.com/store/apps/details?id=com.a1012.frontend&hl=en-KR)
+![다운로드 화면]()
 
 ### 🎦 소개 영상 
 
@@ -125,6 +127,11 @@
 
 ### ✅ 프로젝트 결과물
 ---
+#### ✔ PlayStore 배포
+[Download Link](https://play.google.com/store/apps/details?id=com.a1012.frontend&hl=en-KR)
+![배포화면](readme_img/playstore.png)
+
+
 
 ### ✅ 역할분담
 
