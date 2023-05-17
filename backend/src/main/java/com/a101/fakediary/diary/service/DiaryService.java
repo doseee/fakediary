@@ -28,6 +28,7 @@ import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.a101.fakediary.randomexchangepool.repository.RandomExchangePoolRepository;
+import com.a101.fakediary.server.service.ServerService;
 import com.a101.fakediary.soundraw.SoundRawCrawler;
 import com.a101.fakediary.stablediffusion.api.StableDiffusionApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -64,6 +66,8 @@ public class DiaryService {
     private final RandomExchangePoolRepository randomExchangePoolRepository;
     private final AlarmService alarmService;
     private final SoundRawCrawler soundRawCrawler;
+    private final ServerService serverService;
+    private final Environment environment;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     private final static String DELIMITER = "@";
@@ -362,7 +366,7 @@ public class DiaryService {
             String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
             logger.info("musicUrl = " + musicUrl);
             diary.setMusicUrl(musicUrl);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -459,25 +463,39 @@ public class DiaryService {
     @Scheduled(cron = "0 0/1 * * * ?", zone = "Asia/Seoul") // 현재 30분 기준으로 생성중 잠시 1분으로 사용. 테스트끝나고 30분으로변경해야함
     @Transactional(propagation = Propagation.NOT_SUPPORTED)//트랜잭셔널 해제해서 유저별로 바로바로 일기생성되도록함
     public void createAutoDiary() throws Exception {
+
+        String serverPort = serverService.findServerPort();
+        String myPort = environment.getProperty("local.server.port");
+
         LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedTime = now.format(formatter);
         logger.info("일기자동생성 시간이 되어 자동생성로직을 시작합니다. 현재 시간은 " + formattedTime + " 입니다.");
 
+        if (myPort.equals("8080")) {
+            //로컬에서 실험용이면 수행
+        } else if (!myPort.equals(serverPort)) {
+            logger.info("자동생성을 실행할 port가 아닙니다.");
+            logger.info(formattedTime + " 시간대의 카드 지동생성 로직을 종료합니다.");
+            return;
+        }
         // member autodiary시간이 auto_diary_time과 일치하는 멤버들 조회
         List<Member> members = memberRepository.findByAutoDiaryTimeHourAndMinute(now.getHour(), now.getMinute());
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (int i = 0; i < members.size(); i++) {
-            sb.append(members.get(i).getMemberId());
-            if (i < members.size() - 1) {
-                sb.append(",");
+        if (members.isEmpty()) {
+            logger.info(formattedTime + " 시간에 생성할 일기는 없습니다.");
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            for (int i = 0; i < members.size(); i++) {
+                sb.append(members.get(i).getMemberId());
+                if (i < members.size() - 1) {
+                    sb.append(",");
+                }
             }
+            sb.append("]");
+            // memberId 문자열을 로거로 출력
+            logger.info(formattedTime + "시간에 일기를 자동생성할 memberId리스트입니다. " + sb.toString());
         }
-        sb.append("]");
-        // memberId 문자열을 로거로 출력
-        logger.info(formattedTime + "시간에 일기를 자동생성할 memberId리스트입니다. " + sb.toString());
 
         for (Member member : members) {
             // auto_diary_time과 일치하는지 확인
