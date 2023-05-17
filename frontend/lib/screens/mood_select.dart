@@ -350,7 +350,7 @@ class _MoodSelectState extends State<MoodSelect> {
                         );
                         Flushbar(
                                 message:
-                                    ' 나만의 가짜 다이어리가 제작에 들어갔습니다 \n\n 평균 3분 후 알람을 보내드릴게요!',
+                                    ' 제작이 완료되면 푸시알림으로 알려드릴게요!',
                                 duration: Duration(seconds: 5),
                                 flushbarPosition: FlushbarPosition.TOP)
                             .show(context);

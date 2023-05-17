@@ -25,19 +25,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Search DiaryLoading',
-      home: DiaryLoading(),
+      home: SendLoading(),
     );
   }
 }
 
-class DiaryLoading extends StatefulWidget {
-  const DiaryLoading({super.key});
+class SendLoading extends StatefulWidget {
+  const SendLoading({super.key});
 
   @override
-  _DiaryLoadingState createState() => _DiaryLoadingState();
+  _SendLoadingState createState() => _SendLoadingState();
 }
 
-class _DiaryLoadingState extends State<DiaryLoading> {
+class _SendLoadingState extends State<SendLoading> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,13 +63,13 @@ class _DiaryLoadingState extends State<DiaryLoading> {
                   flex: 1,
                   child: Column(
                     children: [
-                      Text('나만의 가짜 일기가 제작에 들어갔습니다',
+                      Text('소중한 추억의 조각, 우리의 교환일기',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 21,
                               fontWeight: FontWeight.w600)),
                       SizedBox(height: 7),
-                      Text('약 3~4분의 시간이 소요됩니다',
+                      Text('나의 일기가 친구의 행성으로 출발했어요',
                           style:
                               TextStyle(color: Colors.white70, fontSize: 15)),
                     ],
@@ -77,24 +77,25 @@ class _DiaryLoadingState extends State<DiaryLoading> {
                 ),
                 SizedBox(height: 30),
                 Flexible(
-                    flex: 4,
+                    flex: 6,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Flexible(
                           flex: 1,
                           child: Lottie.asset('assets/lottie/star-twinkle.json',
-                              height: 150),
+                              height: 100),
                         ),
                         Flexible(
-                          flex: 2,
-                          child: Lottie.asset('assets/lottie/diary_write.json',
+                          flex: 3,
+                          child: Lottie.asset(
+                              'assets/lottie/friend_planet.json',
                               height: 300),
                         ),
                         Flexible(
                           flex: 1,
                           child: Lottie.asset('assets/lottie/star-twinkle.json',
-                              height: 150),
+                              height: 100),
                         )
                       ],
                     )),
@@ -103,15 +104,15 @@ class _DiaryLoadingState extends State<DiaryLoading> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Lottie.asset('assets/lottie/alarm_moon.json',
-                          width: 40, height: 40),
-                      Text('한땀한땀 정성스럽게 쓰는중',
+                      Lottie.asset('assets/lottie/exchange_small.json',
+                          width: 70, height: 70),
+                      Text('안전하게 날아가는중',
                           style: TextStyle(
                               fontSize: 18,
                               color: Colors.blueGrey,
                               fontWeight: FontWeight.w700)),
-                      Lottie.asset('assets/lottie/alarm_moon.json',
-                          width: 40, height: 40)
+                      Lottie.asset('assets/lottie/exchange_small.json',
+                          width: 70, height: 70)
                     ],
                   ),
                 ),
@@ -154,7 +155,7 @@ class _DiaryLoadingState extends State<DiaryLoading> {
                                 ),
                               ],
                             )),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                         Container(
                             width: 250,
                             height: 50,
@@ -189,41 +190,6 @@ class _DiaryLoadingState extends State<DiaryLoading> {
                                 ),
                               ],
                             )),
-                        SizedBox(height: 10),
-                        Container(
-                            width: 250,
-                            height: 50,
-                            decoration: BtnThemeGradientLine(),
-                            child: Column(
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const DiaryCreateCards(),
-                                            ));
-                                      },
-                                      child: Center(
-                                        child: Container(
-                                          width: 250,
-                                          height: 50,
-                                          decoration: BtnThemeGradientLine(),
-                                          child: Center(
-                                              child: Text(
-                                            '가짜일기 또 만들기',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14),
-                                          )),
-                                        ),
-                                      )),
-                                ),
-                              ],
-                            ))
                       ],
                     )),
               ],

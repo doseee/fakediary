@@ -1,9 +1,12 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
+import 'package:frontend/model/SearchFriendModel.dart';
 import 'package:frontend/screens/diary_loading.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
+import 'package:frontend/screens/send_loading.dart';
 import 'package:frontend/screens/friend_searchnew.dart';
+import 'package:frontend/screens/send_random_loading.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -71,10 +74,17 @@ class _FriendScreenState extends State<FriendScreen> {
 
                   if (!mounted) return;
                   if (result) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DiaryListScreen()));
+                    if (recieverId == -1) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SendRandomLoading()));
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SendLoading()));
+                    }
                     Flushbar(
                             message: "교환 일기 신청을 완료했습니다!",
                             duration: Duration(seconds: 3),
@@ -90,7 +100,7 @@ class _FriendScreenState extends State<FriendScreen> {
                   }
                 },
                 child: Center(
-                  child: Text('신청'),
+                  child: Text('신청',style: TextStyle(fontSize: 17,color: Colors.greenAccent),),
                 )),
           ),
         )
@@ -164,12 +174,14 @@ class _FriendScreenState extends State<FriendScreen> {
                   flex: 4,
                   child: Row(
                     children: [
+                      SizedBox(width: 5),
                       Flexible(
-                          flex: 2,
+                          flex: 3,
                           child: Lottie.asset('assets/lottie/1-alien.json',
-                              width: 100, height: 100)),
+                              width: 50, height: 50)),
+                      SizedBox(width: 5),
                       Flexible(
-                        flex: 5,
+                        flex: 4,
                         child: Text(
                           '  외계인',
                           style: TextStyle(fontSize: 17, color: Colors.white70),
@@ -190,13 +202,13 @@ class _FriendScreenState extends State<FriendScreen> {
                                           widget: Column(
                                             children: [
                                               Text(
-                                                '✉ 모르는 사람과의 랜덤 일기 교환입니다.',
+                                                '✉    모르는 사람과의 랜덤 일기 교환입니다.',
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 14),
                                               ),
                                               SizedBox(
-                                                height: 5,
+                                                height: 20,
                                               ),
                                               Text(
                                                 '하루에 한 번만 보낼 수 있습니다.',
@@ -206,7 +218,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                               ),
                                             ],
                                           ),
-                                          height: 100);
+                                          height: 100,);
                                     });
                               }),
                         ),
@@ -217,12 +229,15 @@ class _FriendScreenState extends State<FriendScreen> {
                 flex: 2,
                 child: Container(),
               ),
+              SizedBox(
+                width: 25,
+              ),
               Flexible(
-                flex: 3,
+                flex: 4,
                 child: Center(
                   child: Container(
-                    width: 250,
-                    height: 50,
+                    width: 88,
+                    height: 38,
                     decoration: BtnThemeGradient(),
                     child: ElevatedButton(
                         onPressed: () async {
@@ -294,8 +309,8 @@ class _FriendScreenState extends State<FriendScreen> {
       return Flexible(
           flex: 2,
           child: Container(
-            width: 250,
-            height: 50,
+            width: 90,
+            height: 40,
             decoration: BtnThemeGradientLine(),
             child: ElevatedButton(
                 onPressed: () async {
@@ -375,7 +390,7 @@ class _FriendScreenState extends State<FriendScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DiaryLoading()));
+                              builder: (context) => SearchScreen()));
                     },
                     child: Image(
                       image: AssetImage(
