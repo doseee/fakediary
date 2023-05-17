@@ -21,13 +21,16 @@ import java.util.UUID;
 @Slf4j
 public class SoundRawCrawler {
     private final String S3_URL;
+    private final int PORT;
     private final String SOUND_RAW_URL;
     private final WebClient webClient;
 
     public SoundRawCrawler(@Value("${cloud.aws.s3.url}")String S3_URL,
+                           @Value("${fake-diary.sound-raw.port}")int PORT,
                            @Value("${fake-diary.sound-raw.base-url}")String SOUND_RAW_URL,
                            @Value("${fake-diary.sound-raw.fast-api-url}")String FAST_API_URL) {
         this.S3_URL = S3_URL;
+        this.PORT = PORT;
         this.SOUND_RAW_URL = SOUND_RAW_URL;
         this.webClient = WebClient.builder().baseUrl(FAST_API_URL).build();
 
@@ -47,6 +50,7 @@ public class SoundRawCrawler {
 
         Mono<String> response = webClient.method(HttpMethod.POST)
                 .uri(uriBuilder -> uriBuilder
+                        .port(this.PORT)
                         .path("/create-and-upload")
                         .queryParam("url", urlQuerySb.toString())
                         .queryParam("filename", musicFileName)
