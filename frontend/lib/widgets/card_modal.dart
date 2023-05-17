@@ -17,14 +17,14 @@ class CardModal extends StatelessWidget {
 
   Widget Character() {
     if (card.baseName == '') {
-      return  Flexible(
+      return Flexible(
           flex: 1,
           child: Center(
             child: Row(
               children: [
                 Text(
                   '주인공 : ',
-                  style: TextStyle(color: Colors.white,fontSize: 13),
+                  style: TextStyle(color: Colors.white, fontSize: 13),
                 ),
                 Text('선택 안함', style: TextStyle(color: Colors.white54)),
               ],
@@ -38,7 +38,10 @@ class CardModal extends StatelessWidget {
               children: [
                 Text(
                   '주인공 : ',
-                  style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700),
                 ),
                 Text(card.baseName, style: TextStyle(color: Colors.white)),
               ],
@@ -58,14 +61,13 @@ class CardModal extends StatelessWidget {
           children: [
             Text(
               '장소 :',
-              style: TextStyle(color: Colors.white,fontSize: 13),
+              style: TextStyle(color: Colors.white, fontSize: 13),
             ),
             SizedBox(
               height: 5,
             ),
             Expanded(
-              child:
-              Text('선택 안함', style: TextStyle(color: Colors.white54)),
+              child: Text('선택 안함', style: TextStyle(color: Colors.white54)),
             )
           ],
         ),
@@ -80,14 +82,17 @@ class CardModal extends StatelessWidget {
             children: [
               Text(
                 '장소 :',
-                style: TextStyle(color: Colors.white,fontSize: 13,fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700),
               ),
               SizedBox(
                 height: 5,
               ),
               Expanded(
-                child:
-                    Text(card.basePlace, style: TextStyle(color: Colors.white,fontSize: 13)),
+                child: Text(card.basePlace,
+                    style: TextStyle(color: Colors.white, fontSize: 13)),
               )
             ],
           ));
@@ -114,7 +119,10 @@ class CardModal extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                           child: Text(
                             '키워드',
-                            style: TextStyle(color: Colors.white ,fontSize: 13,fontWeight: FontWeight.w700),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700),
                           ),
                         )),
                   )),
@@ -148,12 +156,11 @@ class CardModal extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(25, 10, 25, 20),
               child: Column(
                 children: [
-
                   Flexible(
                     flex: 1,
                     child: Text(
                       '기억의 조각이 완성된 날',
-                      style: TextStyle(color: Colors.white,fontSize: 13),
+                      style: TextStyle(color: Colors.white, fontSize: 13),
                     ),
                   ),
                   SizedBox(
@@ -163,11 +170,12 @@ class CardModal extends StatelessWidget {
                     flex: 1,
                     child: Text(
                       card.createdAt.split('T')[0],
-                      style: TextStyle(color: Colors.white,fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ),
                   SizedBox(height: 10),
-                  Text('카드를 터치해서 크게보세요' ,style:TextStyle(fontSize: 11,color: Colors.white54) ),
+                  Text('카드를 터치해서 크게보세요',
+                      style: TextStyle(fontSize: 11, color: Colors.white54)),
                   Flexible(
                     flex: 10,
                     child: Center(
@@ -204,19 +212,20 @@ class CardModal extends StatelessWidget {
                                       });
                                 },
                                 child: Container(
-                                  width: MediaQuery.of(context).size.width / 3.5,
-                                  height:
-                                      (MediaQuery.of(context).size.width / 3.0) *
-                                          1.35,
+                                  width:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                  height: (MediaQuery.of(context).size.width /
+                                          3.0) *
+                                      1.35,
                                   decoration: BoxDecoration(
                                     borderRadius:
-                                  BorderRadius.all(Radius.circular(13)),
+                                        BorderRadius.all(Radius.circular(13)),
                                     border: Border.all(
                                         color: Colors.white, width: 2),
                                     image: DecorationImage(
                                       fit: BoxFit.fill,
-                                        image: NetworkImage(card.cardImageUrl),
-                                        ),
+                                      image: NetworkImage(card.cardImageUrl),
+                                    ),
                                   ),
                                 ),
                               )),
@@ -229,7 +238,7 @@ class CardModal extends StatelessWidget {
                                 width: 300,
                                 height: 240,
                                 child: Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 20, 0, 30),
+                                    padding: EdgeInsets.fromLTRB(10, 5, 0, 7),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -255,12 +264,14 @@ class CardModal extends StatelessWidget {
                               GestureDetector(
                                 onTap: () async {
                                   var file = card.cardImageUrl;
-                                  final result = await GallerySaver.saveImage(file);
+                                  final result =
+                                      await GallerySaver.saveImage(file);
                                   if (result != null) {
                                     Flushbar(
                                             message: "사진 저장 성공!",
                                             duration: Duration(seconds: 3),
-                                            flushbarPosition: FlushbarPosition.TOP)
+                                            flushbarPosition:
+                                                FlushbarPosition.TOP)
                                         .show(context);
                                     // ScaffoldMessenger.of(context).showSnackBar(
                                     //   SnackBar(
@@ -271,7 +282,8 @@ class CardModal extends StatelessWidget {
                                     Flushbar(
                                             message: "권한을 허용해주세요.",
                                             duration: Duration(seconds: 3),
-                                            flushbarPosition: FlushbarPosition.TOP)
+                                            flushbarPosition:
+                                                FlushbarPosition.TOP)
                                         .show(context);
                                     // ScaffoldMessenger.of(context).showSnackBar(
                                     //   SnackBar(
@@ -299,8 +311,7 @@ class CardModal extends StatelessWidget {
                               ),
                               SizedBox(
                                 width: 20,
-                              )
-                              ,
+                              ),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -322,15 +333,14 @@ class CardModal extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(25)),
                                   child: Center(
                                       child: Text(
-                                        '일기생성',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
-                                      )),
+                                    '일기생성',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  )),
                                 ),
                               ),
                             ],
                           ),
-
                         ],
                       ),
                     ),
