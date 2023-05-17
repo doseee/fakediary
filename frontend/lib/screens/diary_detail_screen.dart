@@ -550,6 +550,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           DiaryListScreen()));
+                                              player.dispose();
                                             },
                                             child: Center(
                                               child: Text('삭제'),
