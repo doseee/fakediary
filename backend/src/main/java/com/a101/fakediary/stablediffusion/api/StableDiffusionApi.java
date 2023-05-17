@@ -165,7 +165,7 @@ public class StableDiffusionApi {
                     if (4 == retryCount) {
                         throw new Exception("Stable Diffusion 이미지 생성을 5회 시도하였으나 502 SERVICE_UNAVAILABLE 에러가 났습니다.");
                     } else {
-                        logger.info("Stable Diffusion 이미지 생성중 502 SERVICE_UNAVAILABLE가 " + (retryCount + 1) + "회 발생하였습니다.");
+                        logger.warn("Stable Diffusion 이미지 생성중 502 SERVICE_UNAVAILABLE가 " + (retryCount + 1) + "회 발생하였습니다.");
                         retryCount++;
                         continue;
                     }

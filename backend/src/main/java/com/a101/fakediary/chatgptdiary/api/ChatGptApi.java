@@ -10,6 +10,7 @@ import com.a101.fakediary.chatgptdiary.config.ChatGptApiConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
@@ -30,13 +31,13 @@ public class ChatGptApi {
     private final Integer N;
     private final Double TEMPERATURE;
 
-    public ChatGptApi(@Value("${fake-diary.chat-gpt.model3-5}")String MODEL_3_5,
-                      @Value("${fake-diary.chat-gpt.model4-0}")String MODEL_4_0,
-                      @Value("${fake-diary.chat-gpt.base-url}")String API_URL,
-                      @Value("${fake-diary.chat-gpt.max-tokens3-5}")Integer MAX_TOKENS_3_5,
-                      @Value("${fake-diary.chat-gpt.max-tokens4-0}")Integer MAX_TOKENS_4_0,
-                      @Value("${fake-diary.chat-gpt.n}")Integer N,
-                      @Value("${fake-diary.chat-gpt.temperature}")Double TEMPERATURE) {
+    public ChatGptApi(@Value("${fake-diary.chat-gpt.model3-5}") String MODEL_3_5,
+                      @Value("${fake-diary.chat-gpt.model4-0}") String MODEL_4_0,
+                      @Value("${fake-diary.chat-gpt.base-url}") String API_URL,
+                      @Value("${fake-diary.chat-gpt.max-tokens3-5}") Integer MAX_TOKENS_3_5,
+                      @Value("${fake-diary.chat-gpt.max-tokens4-0}") Integer MAX_TOKENS_4_0,
+                      @Value("${fake-diary.chat-gpt.n}") Integer N,
+                      @Value("${fake-diary.chat-gpt.temperature}") Double TEMPERATURE) {
         this.restTemplate35 = ChatGptApiConfig.chatGpt35RestTemplate();
         this.restTemplate40 = ChatGptApiConfig.chatGpt40RestTemplate();
         this.MODEL_3_5 = MODEL_3_5;
@@ -49,7 +50,6 @@ public class ChatGptApi {
     }
 
     /**
-     * 
      * @param messages : 전체 프롬프트 Message
      * @param prompt   : 이번 질의에서 추가될 프롬프트 문자열
      * @return : gpt4가 만들어준 대답 프롬프트
@@ -57,7 +57,7 @@ public class ChatGptApi {
     public List<Message> askGpt41(List<Message> messages, String prompt) throws Exception {
         Instant start = Instant.now();
 
-        if(messages.isEmpty()) {
+        if (messages.isEmpty()) {
             messages.add(new Message("system", ChatGptPrompts.generateSystemPrompt()));
         }
 
@@ -71,17 +71,41 @@ public class ChatGptApi {
                 .messages(messages)
                 .build();
 
-        ChatGptDiaryResponseDto responseDto = restTemplate40.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
+        ChatGptDiaryResponseDto responseDto = null;
+        int retryCount = 1;
+        final int RETRY_MAX_COUNT = 5;
+        boolean retry = true;
+        while (retry) {
+            try {
+                responseDto = restTemplate40.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
+                retry = false; // Too many Request에러가 발생하지않고 응답 받으면 반복 중지
+                if (1 < retryCount)
+                    log.warn("GPT에 " + retryCount + "회 재시도하여 Too many Request를 해결하고 응답을 받았습니다.");
+            } catch (HttpClientErrorException.TooManyRequests e) {
+                log.warn("GPT Too Many Requests. 에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT+ "회까지 재시도하겠습니다. 현재 시도횟수 : " + retryCount);
+                if (RETRY_MAX_COUNT < retryCount) {
+                    log.error("GPT Too Many Request 에러로 "+RETRY_MAX_COUNT+"회연속 실패하였습니다.");
+                    throw new Exception(RETRY_MAX_COUNT+"회연속 GPT 요청을 보냈으나 TooManyRequests에러가 발생하였습니다.");
+                }
+                // 3초 대기후 재시도
+                Thread.sleep(5000);
+                retry = true;
+            } finally {
+                retryCount++;
+            }
+        }
+//        ChatGptDiaryResponseDto responseDto = restTemplate40.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
 
-        if(responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
+
+        if (responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
             log.info("no response!!!");
             throw new Exception("GPT4가 응답이 없음");
         }
-        
+
         String answer = responseDto.getChoices().get(0).getMessage().getContent().trim();
         messages.add(new Message("assistant", answer));
-        
-        if(!answer.endsWith("}")) {
+
+        if (!answer.endsWith("}")) {
             messages = askGpt41(messages, ChatGptPrompts.generateUserContinuePrompt());
         }
 
@@ -108,7 +132,7 @@ public class ChatGptApi {
 
         ChatGptDiaryResponseDto responseDto = restTemplate35.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
 
-        if(responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
+        if (responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
             log.info("no response!!!");
             throw new Exception("GPT4가 응답이 없음");
         }
