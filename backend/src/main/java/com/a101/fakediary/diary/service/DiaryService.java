@@ -42,6 +42,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -464,18 +465,23 @@ public class DiaryService {
     @Transactional(propagation = Propagation.NOT_SUPPORTED)//트랜잭셔널 해제해서 유저별로 바로바로 일기생성되도록함
     public void createAutoDiary() throws Exception {
 
-        String serverPort = serverService.findServerPort();
-        String myPort = environment.getProperty("local.server.port");
-        logger.info("현재 포트 번호 : " + myPort);
-        logger.info("감지한 현재 서버 포트 번호 : " + serverPort);
-
         LocalTime now = LocalTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedTime = now.format(formatter);
         logger.info("일기자동생성 시간이 되어 자동생성로직을 시작합니다. 현재 시간은 " + formattedTime + " 입니다.");
 
+        WebClient client = WebClient.create();
+        String serverPort = client.get()
+                .uri("https://k8a101.p.ssafy.io/server")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        String myPort = serverService.findServerPort();
+//        logger.info("현재 포트 번호 : " + myPort + " EC2 서버 포트 번호 : " + serverPort);
+
         if (myPort.equals("8080")) {
-            //로컬에서 실험용이면 수행
+            //로컬에서 8080포트로 실험용이면 자동생성 실행하기
         } else if (!myPort.equals(serverPort)) {
             logger.info("자동생성을 실행할 port가 아닙니다.");
             logger.info(formattedTime + " 시간대의 카드 지동생성 로직을 종료합니다.");
