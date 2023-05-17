@@ -77,10 +77,9 @@ public class AlarmService {
     public String sendNotificationByToken(AlarmResponseDto alarm) {
         Member member = memberRepository.findByMemberId(alarm.getMemberId());
         Map<String, String> data = new HashMap<>();
-        data.put("FLUTTER_NOTIFICATION_CLICK", "ALARM");
+        data.put("FLUTTER_NOTIFICATION_CLICK", alarm.getMemberId().toString());
         data.put("title", alarm.getTitle());
         data.put("body", alarm.getBody());
-        data.put("memberId", alarm.getMemberId().toString());
         alarm.setData(data);
 
         if (member != null) {
