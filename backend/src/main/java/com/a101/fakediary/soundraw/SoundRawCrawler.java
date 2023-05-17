@@ -43,7 +43,7 @@ public class SoundRawCrawler {
 
         Mono<String> response = webClient.method(HttpMethod.POST)
                 .uri(uriBuilder -> uriBuilder
-                        .path("/create-and-upload/")
+                        .path("/create-and-upload")
                         .queryParam("url", urlQuerySb.toString())
                         .queryParam("filename", musicFileName)
                         .build())
