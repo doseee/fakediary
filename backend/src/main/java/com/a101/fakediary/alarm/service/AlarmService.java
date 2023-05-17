@@ -80,6 +80,7 @@ public class AlarmService {
         data.put("FLUTTER_NOTIFICATION_CLICK", "ALARM");
         data.put("title", alarm.getTitle());
         data.put("body", alarm.getBody());
+        data.put("memberId", alarm.getMemberId().toString());
         alarm.setData(data);
 
         if (member != null) {
