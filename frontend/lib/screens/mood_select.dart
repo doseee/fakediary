@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:frontend/screens/diary_loading.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:lottie/lottie.dart';
 
@@ -344,12 +345,12 @@ class _MoodSelectState extends State<MoodSelect> {
                         // print(prp);
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
+                            builder: (context) => DiaryLoading(),
                           ),
                         );
                         Flushbar(
                                 message:
-                                    ' 나만의 가짜 다이어리가 제작에 들어갔습니다 \n\n 평균 3분 후 알람을 보내드릴게요!',
+                                    ' 제작이 완료되면 푸시알림으로 알려드릴게요!',
                                 duration: Duration(seconds: 5),
                                 flushbarPosition: FlushbarPosition.TOP)
                             .show(context);

@@ -977,7 +977,7 @@ class CheckRow extends StatelessWidget {
                   Color(0xff1B2532).withOpacity(0.538),
                   Color(0xff1C2A3D).withOpacity(0.502),
                   Color(0xff1E2E42).withOpacity(0.46),
-                  Color(0xff364B66).withOpacity(0.33),
+                  Color(0xff222c31).withOpacity(0.33),
                   Color(0xff2471D6).withOpacity(0),
                 ],
               ),

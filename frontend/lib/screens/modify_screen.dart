@@ -136,12 +136,10 @@ class _ModifyScreenState extends State<ModifyScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      SvgPicture.asset(
-                        'assets/svg/atronaut-svgrepo-com.svg',
-                        semanticsLabel: 'user',
-                        width: 60,
-                        height: 60,
-                      ),
+                      Lottie.asset(
+                          'assets/lottie/friend_planet.json',
+                          width: 100,
+                          height: 100),
                       SizedBox(
                         height: 10,
                       ),

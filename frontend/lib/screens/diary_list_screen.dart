@@ -83,13 +83,13 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 padding: EdgeInsets.only(left: 10, right: 5),
                 child:Stack(
                   children: [
-                    Image.asset('assets/img/diary_paper4.png',width: 150,height: 150), // 첫 번째 이미지
+                    Image.asset('assets/img/diary_cover.png',width: 130,height: 130), // 첫 번째 이미지
                     Positioned(
-                      top: 37, // 두 번째 이미지의 위치 설정
+                      top: 11, // 두 번째 이미지의 위치 설정
                       left: 27,
                       child:  Image(
-                        height: 97,
-                        width: 97,
+                        height: 90,
+                        width: 90,
                         image: NetworkImage(imageUrl),
                       ), // 두 번째 이미지
                     ),
@@ -530,13 +530,13 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       children: <Widget>[
                         Stack(
                           children: [
-                            Image.asset('assets/img/diary_paper4.png',width: 150,height: 150), // 첫 번째 이미지
+                            Image.asset('assets/img/diary_cover.png',width: 130,height: 130), // 첫 번째 이미지
                             Positioned(
-                              top: 35, // 두 번째 이미지의 위치 설정
+                              top: 11, // 두 번째 이미지의 위치 설정
                               left: 27,
                               child:  Image(
-                                height: 101,
-                                width: 101,
+                                height: 90,
+                                width: 90,
                                 image: NetworkImage(snapshot[index].diaryImageUrl[0]),
                               ), // 두 번째 이미지
                             ),
