@@ -1,8 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
-import 'package:frontend/model/SearchFriendModel.dart';
-import 'package:frontend/screens/diary_loading.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/send_loading.dart';
 import 'package:frontend/screens/friend_searchnew.dart';
@@ -100,7 +98,10 @@ class _FriendScreenState extends State<FriendScreen> {
                   }
                 },
                 child: Center(
-                  child: Text('신청',style: TextStyle(fontSize: 17,color: Colors.greenAccent),),
+                  child: Text(
+                    '신청',
+                    style: TextStyle(fontSize: 17, color: Colors.greenAccent),
+                  ),
                 )),
           ),
         )
@@ -181,7 +182,7 @@ class _FriendScreenState extends State<FriendScreen> {
                               width: 50, height: 50)),
                       SizedBox(width: 5),
                       Flexible(
-                        flex: 4,
+                        flex: 5,
                         child: Text(
                           '  외계인',
                           style: TextStyle(fontSize: 17, color: Colors.white70),
@@ -197,28 +198,31 @@ class _FriendScreenState extends State<FriendScreen> {
                                     context: context,
                                     builder: (context) {
                                       return InfoModal(
-                                          padding: 20,
-                                          color: true,
-                                          widget: Column(
-                                            children: [
-                                              Text(
-                                                '✉    모르는 사람과의 랜덤 일기 교환입니다.',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14),
-                                              ),
-                                              SizedBox(
-                                                height: 20,
-                                              ),
-                                              Text(
-                                                '하루에 한 번만 보낼 수 있습니다.',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
-                                          height: 100,);
+                                        padding: 5,
+                                        color: true,
+                                        widget: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '✉    모르는 사람과의 랜덤 일기 교환입니다.',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14),
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Text(
+                                              '하루에 한 번만 보낼 수 있습니다.',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14),
+                                            ),
+                                          ],
+                                        ),
+                                        height: 80,
+                                      );
                                     });
                               }),
                         ),
