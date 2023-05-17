@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:frontend/firebase_options.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/splash.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
@@ -154,8 +155,8 @@ void main() async {
 
   runApp(MaterialApp(
     theme: ThemeData(fontFamily: 'Nanum_Square_Neo'),
-    // home: isLogged ? HomeScreen() : LoginEntrance(),
-    home: LoginEntrance(),
+    home: isLogged ? HomeScreen() : LoginEntrance(),
+    // home: LoginEntrance(),
   ));
 }
 
