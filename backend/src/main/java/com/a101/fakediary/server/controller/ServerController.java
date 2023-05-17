@@ -1,5 +1,6 @@
 package com.a101.fakediary.server.controller;
 
+import com.a101.fakediary.server.service.ServerService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ServerController {
 
     private final Environment environment;
+    private final ServerService serverService;
 
     @GetMapping
     public ResponseEntity<?> getServerPort() {
-        String port = environment.getProperty("local.server.port");
+
+        String port = serverService.findServerPort();
         if (port != null) {
             log.info("현재 사용중인 포트는 " + port + "번 입니다.");
             return ResponseEntity.ok(port);
