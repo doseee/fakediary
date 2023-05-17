@@ -26,7 +26,6 @@ public class ServerController {
 
         String port = serverService.findServerPort();
         if (port != null) {
-            log.info("현재 사용중인 포트는 " + port + "번 입니다.");
             return ResponseEntity.ok(port);
         } else
             return ResponseEntity.badRequest().body("getServerPort Failed");
