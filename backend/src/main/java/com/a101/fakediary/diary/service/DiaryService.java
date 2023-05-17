@@ -483,7 +483,7 @@ public class DiaryService {
         if (myPort.equals("8080")) {
             //로컬에서 8080포트로 실험용이면 자동생성 실행하기
         } else if (!myPort.equals(serverPort)) {
-            logger.info("자동생성을 실행할 port가 아닙니다.");
+            logger.info("ec2 서버포트 : " + serverPort + " 지금 서버 포트 : " + myPort + " 자동생성 실행항 포트가 아닙니다.");
             logger.info(formattedTime + " 시간대의 카드 지동생성 로직을 종료합니다.");
             return;
         }
