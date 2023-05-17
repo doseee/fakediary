@@ -57,65 +57,65 @@ public class SoundRawCrawler {
         return ret;
     }
 
-//    public static String execPython(String[] command) throws Exception {
-//        List<String> outputs = new ArrayList<>();
-//
-//        ProcessBuilder processBuilder = new ProcessBuilder(command);
-//        Process process = null;
-//        InputStream inputStream = null;
-//        InputStreamReader inputStreamReader = null;
-//        BufferedReader bufferedReader = null;
-//        String line = null;
-//
-//        // Python 코드의 출력 확인
-//        try {
-//            process = processBuilder.start();
-//            log.info("process = " + process);
-//
-//            inputStream = process.getInputStream();
-//            inputStreamReader = new InputStreamReader(inputStream);
-//            bufferedReader = new BufferedReader(inputStreamReader);
-//
-//            while ((line = bufferedReader.readLine()) != null) {
-//                log.info("line = " + line);
-//                outputs.add(line);
-//            }
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//            while ((line = bufferedReader.readLine()) != null) {
-//                log.info("error-line = " + line);
-//            }
-//        }
-//
-//        log.info("process = " + process);
-//        int exitCode = process.waitFor();
-////        System.out.println("exitCode: " + exitCode);
-//        log.info("exitCode = " + exitCode);
-//        log.info("process = " + process);
-//
-//        if(exitCode == 0)
-//            return outputs.get(outputs.size() - 1);
-//        return null;
-//    }
-
     public static String execPython(String[] command) throws Exception {
-        CommandLine commandLine = CommandLine.parse(command[0]);
-        for(int i =  1; i < command.length; i++)
-            commandLine.addArgument(command[i]);
+        List<String> outputs = new ArrayList<>();
 
-        log.info("commandLine = " + commandLine.toString());
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        Process process = null;
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        String line = null;
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(outputStream);
-        DefaultExecutor executor = new DefaultExecutor();
-        executor.setStreamHandler(pumpStreamHandler);
-        int exitCode = executor.execute(commandLine);
+        // Python 코드의 출력 확인
+        try {
+            process = processBuilder.start();
+            log.info("process = " + process);
 
+            inputStream = process.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream);
+            bufferedReader = new BufferedReader(inputStreamReader);
+
+            while ((line = bufferedReader.readLine()) != null) {
+                log.info("line = " + line);
+                outputs.add(line);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            while ((line = bufferedReader.readLine()) != null) {
+                log.info("error-line = " + line);
+            }
+        }
+
+        log.info("process = " + process);
+        int exitCode = process.waitFor();
+//        System.out.println("exitCode: " + exitCode);
         log.info("exitCode = " + exitCode);
-        log.info("output = " + outputStream.toString());
+        log.info("process = " + process);
 
-        return outputStream.toString();
+        if(exitCode == 0)
+            return outputs.get(outputs.size() - 1);
+        return null;
     }
+
+//    public static String execPython(String[] command) throws Exception {
+//        CommandLine commandLine = CommandLine.parse(command[0]);
+//        for(int i =  1; i < command.length; i++)
+//            commandLine.addArgument(command[i]);
+//
+//        log.info("commandLine = " + commandLine.toString());
+//
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(outputStream);
+//        DefaultExecutor executor = new DefaultExecutor();
+//        executor.setStreamHandler(pumpStreamHandler);
+//        int exitCode = executor.execute(commandLine);
+//
+//        log.info("exitCode = " + exitCode);
+//        log.info("output = " + outputStream.toString());
+//
+//        return outputStream.toString();
+//    }
 
 
 //    public String getMusicUrl(List<String> genreList, Long diaryPk) {
