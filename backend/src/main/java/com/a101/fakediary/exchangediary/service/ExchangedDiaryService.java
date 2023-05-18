@@ -64,7 +64,7 @@ public class ExchangedDiaryService {
     @Transactional
     public void saveExchangeDiary(ExchangedRequestDiaryDto request) throws Exception {
         exchangedDiaryRepository.save(requestEntity(request)); //A -> B
-        ExchangedRequestDiaryDto tmp = new ExchangedRequestDiaryDto(request.getReceiveOwnerId(), request.getSendDiaryId(), request.getReceiveDiaryId(), request.getSendDiaryId(), request.getExchangeType());
+        ExchangedRequestDiaryDto tmp = new ExchangedRequestDiaryDto(request.getReceiveOwnerId(), request.getReceiveDiaryId(), request.getSenderId(), request.getSendDiaryId(), request.getExchangeType());
         exchangedDiaryRepository.save(requestEntity(tmp)); // B -> A
     }
 
