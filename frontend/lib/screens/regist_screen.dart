@@ -18,6 +18,8 @@ class _RegistScreenState extends State<RegistScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
 
   @override
@@ -118,6 +120,40 @@ class _RegistScreenState extends State<RegistScreen> {
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
                             return '비밀번호가 공백입니다.';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      // New confirm password TextFormField
+                      TextFormField(
+                        controller: _confirmPasswordController,
+                        obscureText: true,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        decoration: const InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                              color: Colors.white,
+                            )),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.greenAccent),
+                            ),
+                            labelText: 'Confirm Password',
+                            labelStyle: TextStyle(color: Colors.grey),
+                            hintText: '비밀번호를 다시 입력하세요.',
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                            )),
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return '비밀번호 확인란이 공백입니다.';
+                          } else if (_passwordController.text !=
+                              _confirmPasswordController.text) {
+                            return '비밀번호가 일치하지 않습니다.';
                           }
                           return null;
                         },
