@@ -461,7 +461,7 @@ public class DiaryService {
 
     @Async
     //유저가 정해둔 시간에 맞춰 일기 자동생성하기
-    @Scheduled(cron = "0 0/1 * * * ?", zone = "Asia/Seoul") // 현재 30분 기준으로 생성중 잠시 1분으로 사용. 테스트끝나고 30분으로변경해야함
+    @Scheduled(cron = "0 0/30 * * * ?", zone = "Asia/Seoul") //  30분마다 다이어리 자동 생성로직 실행
     @Transactional(propagation = Propagation.NOT_SUPPORTED)//트랜잭셔널 해제해서 유저별로 바로바로 일기생성되도록함
     public void createAutoDiary() throws Exception {
 
