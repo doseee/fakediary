@@ -257,14 +257,19 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
               /// 중간 간격
               height: 30,
             ),
-            ChangeButton(
-              /// 교환 버튼
-              exchangeSituation: widget.exchangeSituation,
+            GestureDetector(
+              onTap: () {
+                player.dispose();
+              },
+              child: ChangeButton(
+                /// 교환 버튼
+                exchangeSituation: widget.exchangeSituation,
 
-              ///현재 교환 상태가 어떠한지 parameter로 넘김
-              diaryId: widget.diaryId,
+                ///현재 교환 상태가 어떠한지 parameter로 넘김
+                diaryId: widget.diaryId,
 
-              /// 지금 상세페이지로 조회하고 있는 다이어리 아이디 parameter로 넘김
+                /// 지금 상세페이지로 조회하고 있는 다이어리 아이디 parameter로 넘김
+              ),
             )
           ],
         ),

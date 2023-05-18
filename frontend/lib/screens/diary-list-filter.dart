@@ -1,7 +1,6 @@
 // import 'dart:js';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/model/DiaryModel.dart';
 
 // import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -80,6 +79,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
   late Future<List<FriendModel>> friends;
   late List<FriendModel> friendList = [];
 
+  @override
   void initState() {
     super.initState();
     selectedWriter = -2;
@@ -142,10 +142,8 @@ class _DiaryFilterState extends State<DiaryFilter> {
                     if (selectedWriter == userId)
                       Row(
                         children: [
-                          Lottie.asset(
-                              'assets/lottie/friend_planet.json',
-                              width: 40,
-                              height: 40),
+                          Lottie.asset('assets/lottie/friend_planet.json',
+                              width: 40, height: 40),
                           SizedBox(
                             width: 5,
                           ),
@@ -158,10 +156,8 @@ class _DiaryFilterState extends State<DiaryFilter> {
                     if (selectedWriter > -1 && selectedWriter != userId)
                       Row(
                         children: [
-                          Lottie.asset(
-                              'assets/lottie/friend_planet.json',
-                              width: 40,
-                              height: 40),
+                          Lottie.asset('assets/lottie/friend_planet.json',
+                              width: 40, height: 40),
                           SizedBox(
                             width: 5,
                           ),
@@ -176,7 +172,7 @@ class _DiaryFilterState extends State<DiaryFilter> {
                     if (selectedWriter == -1)
                       Row(
                         children: [
-                          Container(
+                          SizedBox(
                             width: 40,
                             child: Lottie.asset('assets/lottie/1-alien.json'),
                           ),
@@ -517,10 +513,8 @@ Widget buildList(snapshot, setter) {
         },
         child: Row(
           children: [
-            Lottie.asset(
-                'assets/lottie/friend_planet.json',
-                width: 40,
-                height: 40),
+            Lottie.asset('assets/lottie/friend_planet.json',
+                width: 40, height: 40),
             SizedBox(width: 5),
             Text(
               '나',
@@ -550,10 +544,8 @@ Widget buildList(snapshot, setter) {
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
                   children: [
-                    Lottie.asset(
-                        'assets/lottie/friend_planet.json',
-                        width: 40,
-                        height: 40),
+                    Lottie.asset('assets/lottie/friend_planet.json',
+                        width: 40, height: 40),
                     Card(
                       color: Colors.transparent,
                       elevation: 0.0,
