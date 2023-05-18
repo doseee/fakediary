@@ -13,7 +13,7 @@
 ## 🎦 소개 영상
 
 가짜 다이어리 Lieary 프로젝트
-[![Video Label]()]()
+[![Video Label](https://youtu.be/l9ifuKukqcA)](readme_img/video.png)
 
 <br>
 
@@ -117,13 +117,13 @@
 
 <img src="readme_img/change.gif" width="200" height="400"/>
 
-<br><br>
+<br>
 ✔ 각자의 일기를 교환해서 볼 수 있는 기능
 
-<br><br>
+<br>
 ✔ 교환할 대상을 선택하고 신청을 누르면 교환이 진행
 
-<br><br>
+<br>
 ✔ 수신자가 교환 수락 후 답장할 일기 선택하면 교환 과정 완료 되어 교환된 일기 확인할 수 있음
 
 <br><br>
@@ -133,10 +133,10 @@
 
 <img src="readme_img/share.gif" width="200" height="400"/>
 
-<br><br>
+<br>
 ✔ 카드, 일기 정보(이미지, 타이틀 등) 카카오톡 공유 기능
 
-<br><br>
+<br>
 ✔ 카카오톡 공유 기능을 통해서 잠재적 유저 확보 기대
 
 <br>
