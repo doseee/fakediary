@@ -332,6 +332,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                             if (result == true) {
                               Flushbar(
                                 message: '수정 성공!',
+                                flushbarPosition: FlushbarPosition.TOP,
                                 duration: Duration(seconds: 2),
                               ).show(context);
                             }
