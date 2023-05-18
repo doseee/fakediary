@@ -28,7 +28,7 @@ public class MatterMostSender {
         request.put("username", "허재성");
 
         StringBuilder text = new StringBuilder("In ").append(LOCATION).append("\n")
-                .append("```")
+                .append("```\n")
                 .append(ExceptionUtils.getStackTrace(e)).append("\n")
                 .append("```\n")
                 .append(e.getMessage());
