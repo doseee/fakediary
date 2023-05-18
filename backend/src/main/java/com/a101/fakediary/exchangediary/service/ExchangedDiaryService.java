@@ -63,7 +63,13 @@ public class ExchangedDiaryService {
 
     @Transactional
     public void saveExchangeDiary(ExchangedRequestDiaryDto request) throws Exception {
-        exchangedDiaryRepository.save(requestEntity(request));
+        exchangedDiaryRepository.save(requestEntity(request)); //A -> B
+        ExchangedRequestDiaryDto tmp = request;
+        tmp.setSenderId(request.getReceiveOwnerId());
+        tmp.setReceiveOwnerId(request.getSenderId());
+        tmp.setSendDiaryId(request.getReceiveDiaryId());
+        tmp.setReceiveDiaryId(request.getSendDiaryId());
+        exchangedDiaryRepository.save(requestEntity(tmp)); // B -> A
     }
 
     private ExchangedDiary requestEntity(ExchangedRequestDiaryDto request) throws Exception {
