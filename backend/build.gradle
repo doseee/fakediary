@@ -94,6 +94,9 @@ dependencies {
 
 	//	Python 코드 실행 위해 추가
 	implementation 'org.apache.commons:commons-exec:1.3'
+
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 }
 
 tasks.named('test') {
