@@ -257,7 +257,7 @@ class _FriendScreenState extends State<FriendScreen> {
                           if (!mounted) return;
 
                           print(result);
-                          if (result) {
+                          if (!result) {
                             showDialog(
                                 context: context,
                                 builder: (context) {

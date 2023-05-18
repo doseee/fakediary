@@ -27,11 +27,11 @@ public class DiaryQueryRepository {
     }
 
     public List<Diary> searchDiaryByFilter(DiaryFilterDto filter) { //선택한 memberId, 요청한 memberId, 장르
-        if (filter.getId() != filter.getMemberId()) { //교환 일기 조회할 때
-            BooleanBuilder g = new BooleanBuilder();
-            if (!filter.getGenre().equals(" "))
-                g.and(eqGenre(filter.getGenre())).and(eqGenreId());
+        BooleanBuilder g = new BooleanBuilder();
+        if (!filter.getGenre().equals(" "))
+            g.and(eqGenre(filter.getGenre())).and(eqGenreId());
 
+        if (!filter.getId().equals(filter.getMemberId())) { //교환 일기 조회할 때
             BooleanBuilder i = new BooleanBuilder();
             if (filter.getId() == -1) //랜덤 교환한 유저의 일기
                 i.and(eqExchange().and(eqSendDiary()).and(eqReceiveId(filter.getMemberId())));
@@ -61,7 +61,7 @@ public class DiaryQueryRepository {
             return queryFactory
                     .select(diary).distinct()
                     .from(diary, genre)
-                    .where(eqMyMemberId(filter.getMemberId()), eqGenreId(), eqGenre(filter.getGenre()), eqDelete())
+                    .where(eqMyMemberId(filter.getMemberId()), g, eqDelete())
                     .orderBy(diary.diaryId.desc())
                     .fetch();
         }
