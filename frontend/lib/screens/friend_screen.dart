@@ -5,6 +5,7 @@ import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/send_loading.dart';
 import 'package:frontend/screens/friend_searchnew.dart';
 import 'package:frontend/screens/send_random_loading.dart';
+import 'package:frontend/screens/tutorial_one.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';

@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
+import 'package:frontend/screens/tutorial_one.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
@@ -102,7 +103,7 @@ class _LoginState extends State<Login> {
               FocusScope.of(context).unfocus();
               if (isFirstLaunch) {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TutorialScreen()));
+                    MaterialPageRoute(builder: (context) => TutorialOne()));
               } else {
                 Navigator.push(
                     context,

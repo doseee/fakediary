@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
+import 'package:frontend/screens/tutorial_one.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -221,12 +222,12 @@ class _RegistScreenState extends State<RegistScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            TutorialScreen()));
+                                            TutorialOne()));
                               } else {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HomeScreen(),
+                                      builder: (context) => TutorialOne(),
                                       settings: RouteSettings(name: 'Login'),
                                     ));
                               }

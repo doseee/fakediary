@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/screens/login_entrance.dart';
+import 'package:frontend/screens/tutorial_one.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -371,6 +372,27 @@ class _ModifyScreenState extends State<ModifyScreen> {
                                 '저장하기',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 17),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TutorialOne()));
+                          },
+                          child: Container(
+                            width: 170,
+                            height: 50,
+                            child: const Center(
+                              child: Text(
+                                '튜토리얼 다시보기',
+                                style: TextStyle(
+                                    color: Colors.white54, fontSize: 14),
                               ),
                             ),
                           ),
