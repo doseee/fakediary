@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
+import 'package:frontend/screens/tutorial_one.dart';
+import 'package:frontend/screens/tutorial_screen.dart';
+import 'package:frontend/screens/tutorial_three.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
 
@@ -20,19 +23,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Search DiaryLoading',
-      home: SendLoading(),
+      home: TutorialTwo(),
     );
   }
 }
 
-class SendLoading extends StatefulWidget {
-  const SendLoading({super.key});
+class TutorialTwo extends StatefulWidget {
+  const TutorialTwo({super.key});
 
   @override
-  _SendLoadingState createState() => _SendLoadingState();
+  _TutorialTwoState createState() => _TutorialTwoState();
 }
 
-class _SendLoadingState extends State<SendLoading> {
+class _TutorialTwoState extends State<TutorialTwo> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,24 +56,28 @@ class _SendLoadingState extends State<SendLoading> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(height: 150),
+                SizedBox(height: 40),
                 Flexible(
                   flex: 2,
                   child: Column(
                     children: [
-                      Text('소중한 추억의 조각, 우리의 교환일기',
+                      Lottie.asset('assets/lottie/menu_grinstar.json',
+                          height: 80),
+                      Text('카드를 모아 가짜 일기를 만들어보세요',
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 21,
+                              fontSize: 22,
                               fontWeight: FontWeight.w600)),
                       SizedBox(height: 7),
-                      Text('나의 일기가 친구의 행성으로 출발했어요',
+                      Text('카드에 담긴 키워드와 장르를 기반으로',
                           style:
-                          TextStyle(color: Colors.white70, fontSize: 15)),
+                              TextStyle(color: Colors.white70, fontSize: 17)),
+                      Text('삽화와 이야기가 생성돼요',
+                          style:
+                              TextStyle(color: Colors.white70, fontSize: 17)),
                     ],
                   ),
                 ),
-                SizedBox(height: 30),
                 Flexible(
                     flex: 6,
                     child: Row(
@@ -78,46 +85,26 @@ class _SendLoadingState extends State<SendLoading> {
                       children: [
                         Flexible(
                           flex: 1,
-                          child: Lottie.asset('assets/lottie/star-twinkle.json',
-                              height: 100),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Lottie.asset(
-                              'assets/lottie/friend_planet.json',
-                              height: 300),
+                          child: Image.asset('assets/img/tutorial_card_3.png',
+                              height: 350, width: 350),
                         ),
                         Flexible(
                           flex: 1,
-                          child: Lottie.asset('assets/lottie/star-twinkle.json',
-                              height: 100),
-                        )
+                          child: Image.asset(
+                            'assets/img/tutorial_card_4.png',
+                            height: 350,
+                            width: 3520,
+                          ),
+                        ),
                       ],
                     )),
                 Flexible(
-                  flex: 2,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset('assets/lottie/exchange_small.json',
-                          width: 70, height: 70),
-                      Text('안전하게 날아가는중',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.blueGrey,
-                              fontWeight: FontWeight.w700)),
-                      Lottie.asset('assets/lottie/exchange_small.json',
-                          width: 70, height: 70)
-                    ],
-                  ),
-                ),
-                SizedBox(height: 5),
-                Flexible(
-                    flex: 5,
-                    child: Column(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            width: 250,
+                            width: 130,
                             height: 50,
                             decoration: BtnThemeGradientLine(),
                             child: Column(
@@ -130,7 +117,7 @@ class _SendLoadingState extends State<SendLoading> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                              const HomeScreen(),
+                                              const TutorialOne(),
                                             ));
                                       },
                                       child: Center(
@@ -140,19 +127,19 @@ class _SendLoadingState extends State<SendLoading> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                                '메인화면으로 가기',
+                                                '이전으로',
                                                 style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 14),
+                                                    fontSize: 15),
                                               )),
                                         ),
                                       )),
                                 ),
                               ],
                             )),
-                        SizedBox(height: 20),
+                        SizedBox(width: 30),
                         Container(
-                            width: 250,
+                            width: 130,
                             height: 50,
                             decoration: BtnThemeGradientLine(),
                             child: Column(
@@ -165,7 +152,7 @@ class _SendLoadingState extends State<SendLoading> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                              const DiaryListScreen(),
+                                              const TutorialThree(),
                                             ));
                                       },
                                       child: Center(
@@ -175,18 +162,20 @@ class _SendLoadingState extends State<SendLoading> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                                '내 일기장 보러가기',
+                                                '다음으로',
                                                 style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 14),
+                                                    fontSize: 15),
                                               )),
                                         ),
                                       )),
                                 ),
                               ],
                             )),
+
                       ],
                     )),
+                SizedBox(height: 40)
               ],
             ),
           )),

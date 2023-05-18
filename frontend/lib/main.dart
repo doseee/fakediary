@@ -9,6 +9,7 @@ import 'package:frontend/firebase_options.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/splash.dart';
+import 'package:frontend/screens/tutorial_one.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
