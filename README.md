@@ -119,10 +119,10 @@
 
 <br>
 ✔ 각자의 일기를 교환해서 볼 수 있는 기능
-
+<br>
 <br>
 ✔ 교환할 대상을 선택하고 신청을 누르면 교환이 진행
-
+<br>
 <br>
 ✔ 수신자가 교환 수락 후 답장할 일기 선택하면 교환 과정 완료 되어 교환된 일기 확인할 수 있음
 
@@ -135,7 +135,7 @@
 
 <br>
 ✔ 카드, 일기 정보(이미지, 타이틀 등) 카카오톡 공유 기능
-
+<br>
 <br>
 ✔ 카카오톡 공유 기능을 통해서 잠재적 유저 확보 기대
 
@@ -148,14 +148,14 @@
 
 ## ✅ 사용 기술
 <br>
- <img src="https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=OpenJDK&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Dart-0175C2?style=flat-square&logo=OpenJDK&logoColor=white"/>
+ <img src="https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=Flutter&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Dart-0175C2?style=flat-square&logo=Dart&logoColor=white"/>
  <img src="https://img.shields.io/badge/Java-f19800?style=flat-square&logo=OpenJDK&logoColor=white"/>
  <img src="https://img.shields.io/badge/Springboot-75b336?style=flat-square&logo=Springboot&logoColor=white"/>
  <img src="https://img.shields.io/badge/MySQL-20688f?style=flat-square&logo=Mysql&logoColor=white"/>
   <img src="https://img.shields.io/badge/Jenkins-D24939?style=flat-square&logo=Jirasoftware&logoColor=white"/>
-   <img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=Jirasoftware&logoColor=white"/>
- <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Jirasoftware&logoColor=white"/>
+   <img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=Nginx&logoColor=white"/>
+ <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white"/>
 
  
 
@@ -5019,6 +5019,7 @@
 ## ✅ 협업툴
 
 <img src="https://img.shields.io/badge/GitLab-d23f1f?style=flat-square&logo=Gitlab&logoColor=white"/> <br>
+<img src="https://img.shields.io/badge/Figma-f24e1e?style=flat-square&logo=Figma&logoColor=white"/> <br>
 <img src="https://img.shields.io/badge/Jira Software-0052CC?style=flat-square&logo=Jira Software&logoColor=white"/> <br>
 <img src="https://img.shields.io/badge/Mattermost-0058CC?style=flat-square&logo=Mattermost&logoColor=white"/> <br>
 <img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white"/> <br>
@@ -5033,8 +5034,39 @@
 ## ✅ 협업 환경
 
 ### GitLab
-- 프로젝트 시작 전 커밋 컨벤션을 정한 후 협업 
+- 프로젝트 시작 전 커밋 컨벤션을 정한 후 협업
+
+    <details>
+        <summary> 커밋컨벤션 </summary>
+
+        💙메세지
+            - ⭐ FEAT : #이슈번호 새로운 기능에 대한 커밋
+            - 🛠 FIX : #이슈번호 버그 수정에 대한 커밋
+            - 📝 UPDATE : #이슈번호 파일 내용 수정에 대한 커밋
+            - 🧱 BUILD : #이슈번호 빌드 관련 파일 수정에 대한 커밋 
+            - ⚒ REFACT : #이슈번호 코드 리팩토링에 대한 커밋
+            - 🎨 DESIGN: #이슈번호 CSS 등 사용자 UI 디자인 변경
+            - ✏ DOCS : #이슈번호 문서 수정에 대한 커밋
+            - 💬 COMMENT : #이슈번호 필요한 주석 추가 및 변경
+            - 🔙 RENAME : #이슈번호 파일 혹은 폴더명을 수정하거나 옮기는 작업만인 경우
+            - ✂ REMOVE : #이슈번호 파일을 삭제하는 작업만 수행한 경우
+            - 👏 CHORE : #이슈번호 그 외 기타 수정에 대한 커밋
+        
+
+        💚merge 컨벤션
+            # Feature Request
+                - Part
+                - [ ] FE
+                - [ ] BE
+                - 기능 상세 설명
+                - 기능에서 어떤 부분이 구현되어야 하는 지 설명해주세요
+    </details>
+
+<br>
+
 - 프론트엔드, 백엔드로 나누어 진행
+
+<br>
 
 ### Jira
 - Story Point를 세분화하여 작업을 효율적으로 진행하기 위해 노력
@@ -5042,6 +5074,8 @@
 - Epic : 대분류 구분
 - Story : 구현 기능 구분
 - Task : 담당 일과 구분
+
+<br>
 
 ### Mattermost, KakaoTalk
 - 팀단톡방을 만들어 자료 공유 및 현황 공유 
@@ -5052,12 +5086,16 @@
         - A101_log : 서버 상태 확인
     - 100MB 이상의 자료 공유 : KakaoTalk
 
+<br>
+
 ### Notion
 - 문서화가 필요한 자료 기록
 - 간트차트 작성
 - 회의록 작성
 - 참고자료 업로드
 - 기능구현 현황 파악
+
+<br>
 
 ### WebEx
 - 공가 등의 이슈가 있을 경우 화상채팅으로 회의, 개발 진행
