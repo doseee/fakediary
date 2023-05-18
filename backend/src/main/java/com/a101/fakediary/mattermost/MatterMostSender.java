@@ -26,7 +26,15 @@ public class MatterMostSender {
     public void sendMessage(Exception e) {
         Map<String, Object> request = new HashMap<>();
         request.put("username", "허재성");
-        request.put("text", "In " + LOCATION + "\n" + ExceptionUtils.getStackTrace(e) + "\n" + e.getMessage());
+
+        StringBuilder text = new StringBuilder("In ").append(LOCATION).append("\n")
+                .append("```")
+                .append(ExceptionUtils.getStackTrace(e)).append("\n")
+                .append("```\n")
+                .append(e.getMessage());
+
+
+        request.put("text", text);
 
         HttpEntity<Map<String, Object>> entity =  new HttpEntity<>(request);
 
