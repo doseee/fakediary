@@ -1,10 +1,12 @@
 package com.a101.fakediary.soundraw;
 
+import com.a101.fakediary.soundraw.dto.FastApiRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -40,7 +42,8 @@ public class SoundRawCrawler {
     }
 
     public String getMusicUrl(List<String> genreList, Long diaryPk) {
-        StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload?url=");
+        WebClient webClient = WebClient.create();
+        StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload");
         String musicFileName = diaryPk + "_" + UUID.randomUUID().toString();
         StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
                 .append("?length=60&tempo=normal,high,low&mood=");
@@ -49,19 +52,23 @@ public class SoundRawCrawler {
             urlQuerySb.append(SoundRawMap.getMood(genre)).append(",");
         urlQuerySb.delete(urlQuerySb.length() - 1, urlQuerySb.length());   //  마지막 , 제거
 
-        requestUrl = requestUrl.append(urlQuerySb).append("&filename=").append(musicFileName);
-
         log.info("requestUrl = " + requestUrl);
+        log.info("musicFileName = " + musicFileName);
+        log.info("urlQuerySb = " + urlQuerySb);
 
-        WebClient webClient = WebClient.create();
-        String response = webClient.post()
+        FastApiRequestDto requestDto = FastApiRequestDto.builder()
+                .url(urlQuerySb.toString())
+                .filename(musicFileName)
+                .build();
+
+        Mono<String> response = webClient.post()
                 .uri(requestUrl.toString())
-                .body(BodyInserters.empty())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(BodyInserters.fromValue(requestDto))
                 .retrieve()
-                .bodyToMono(String.class)
-                .block();
+                .bodyToMono(String.class);
 
-        log.info("response = " + response);
+        String responseBody = response.block();
 
         return (this.S3_URL + musicFileName + ".wav");
     }
