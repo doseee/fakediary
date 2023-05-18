@@ -151,7 +151,8 @@ void main() async {
   bool? isLogged = pref.getBool('isLogged');
   isLogged ??= false;
 
-  KakaoSdk.init(nativeAppKey: 'f0f8afec8b8671e087825009e846a1fa');
+  String nativeAppKey = dotenv.get('kakaoNativeApiKey');
+  KakaoSdk.init(nativeAppKey: nativeAppKey);
 
   runApp(MaterialApp(
     theme: ThemeData(fontFamily: 'Nanum_Square_Neo'),
