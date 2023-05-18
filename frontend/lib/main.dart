@@ -13,7 +13,7 @@ import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+  MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class MainScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const MainScreen(),
+                builder: (context) => MainScreen(),
               ),
             );
           },
@@ -72,6 +72,7 @@ Future<void> _backgroundMessageHandler(RemoteMessage message) async {
 }
 
 void main() async {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -141,9 +142,11 @@ void main() async {
   );
   await FlutterLocalNotificationsPlugin().initialize(
     initializationSettings,
-    onDidReceiveNotificationResponse:
-        (NotificationResponse notificationResponse) async {
-      // ...
+    onDidReceiveNotificationResponse: (NotificationResponse details) async {
+      print('onDidReceiveNotificationResponse - payload: ${details.payload}');
+      final payload = details.payload ?? '';
+      print(payload);
+      // final parsedJson = jsonDecode(payload);
     },
     onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
   );
@@ -155,6 +158,7 @@ void main() async {
   KakaoSdk.init(nativeAppKey: nativeAppKey);
 
   runApp(MaterialApp(
+    navigatorKey: navigatorKey,
     theme: ThemeData(fontFamily: 'Nanum_Square_Neo'),
     home: isLogged ? HomeScreen() : LoginEntrance(),
     // home: LoginEntrance(),

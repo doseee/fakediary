@@ -168,7 +168,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   /// 음악 플레이어
   void playMusic() async {
     await player.setSource(
-      AssetSource('wav/test_music.wav'),
+      AssetSource('wav/test_music2.wav'),
     );
     // await player.setReleaseMode(ReleaseMode.loop);
     await player.resume();
