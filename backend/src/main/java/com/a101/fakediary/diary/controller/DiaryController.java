@@ -9,6 +9,7 @@ import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
 import com.a101.fakediary.diary.dto.request.DiaryInformation;
 import com.a101.fakediary.diary.service.DiaryService;
+import com.a101.fakediary.mattermost.MatterMostSender;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class DiaryController {
     private final DiaryService diaryService;
     private final AlarmService alarmService;
+    private final MatterMostSender matterMostSender;
 
     @PostMapping("/create")
     public ResponseEntity<?> saveDiaryWithDiaryInformation(@RequestBody DiaryInformation information) {
@@ -53,6 +55,7 @@ public class DiaryController {
             return new ResponseEntity<>(diaryResponseDto, HttpStatus.OK);
         } catch(Exception e) {
             e.printStackTrace();
+            matterMostSender.sendMessage(e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

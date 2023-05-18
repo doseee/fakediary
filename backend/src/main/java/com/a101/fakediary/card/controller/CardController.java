@@ -5,6 +5,7 @@ import com.a101.fakediary.card.dto.response.CardSaveResponseDto;
 import com.a101.fakediary.card.repository.CardRepository;
 import com.a101.fakediary.card.service.CardService;
 import com.a101.fakediary.diary.service.DiaryService;
+import com.a101.fakediary.mattermost.MatterMostSender;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class CardController {
     private final CardService cardService;
     private final DiaryService diaryService;
     private final CardRepository cardRepository;
+    private final MatterMostSender matterMostSender;
 
     /**
      *
@@ -55,8 +57,10 @@ public class CardController {
             ret = new ResponseEntity<>(cardSaveResponseDto, HttpStatus.OK);
         } catch(ParseException e) {
             e.printStackTrace();
+            matterMostSender.sendMessage(e);
         } catch(Exception e) {
             e.printStackTrace();
+            matterMostSender.sendMessage(e);
         }
         return ret;
     }
