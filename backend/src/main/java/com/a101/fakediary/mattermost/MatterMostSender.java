@@ -1,5 +1,6 @@
 package com.a101.fakediary.mattermost;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -25,7 +26,15 @@ public class MatterMostSender {
     public void sendMessage(Exception e) {
         Map<String, Object> request = new HashMap<>();
         request.put("username", "허재성");
-        request.put("text", "In " + LOCATION + ", " + e.getMessage());
+
+        StringBuilder text = new StringBuilder("In ").append(LOCATION).append("\n")
+                .append("```\n")
+                .append(ExceptionUtils.getStackTrace(e)).append("\n")
+                .append("```\n")
+                .append(e.getMessage());
+
+
+        request.put("text", text);
 
         HttpEntity<Map<String, Object>> entity =  new HttpEntity<>(request);
 

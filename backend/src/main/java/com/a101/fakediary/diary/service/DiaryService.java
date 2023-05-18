@@ -297,6 +297,7 @@ public class DiaryService {
         logger.info(memberId + "번 MemberId의 일기 생성을 시작하겠습니다.");
         // 메소드 시작시간
         long startTime = System.nanoTime();
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
 
         DiaryResultDto diaryResultDto = getResultDto(cardIdList, genreList);
 
@@ -305,7 +306,6 @@ public class DiaryService {
         List<String> subtitleList = diaryResultDto.getSubtitles();
         List<String> contents = diaryResultDto.getContents();
         String prompt = diaryResultDto.getPrompt();
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
 
         logger.info("subtitleList = " + subtitleList);
 
@@ -363,13 +363,14 @@ public class DiaryService {
         logger.info("diaryImagePrompt = " + diaryImagePrompt);
         diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
 
-//        try {
-//            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
-//            logger.info("musicUrl = " + musicUrl);
-//            diary.setMusicUrl(musicUrl);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
+            logger.info("musicUrl = " + musicUrl);
+            diary.setMusicUrl(musicUrl);
+        } catch(Exception e) {
+            e.printStackTrace();
+            logger.info("음악 다운로드 실패");
+        }
 
         DiaryResponseDto returnDto = new DiaryResponseDto(diary);
         List<String> genres = genreService.searchGenre(diary.getDiaryId());

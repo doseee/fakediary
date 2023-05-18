@@ -1,11 +1,7 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend/model/SearchFriendModel.dart';
 import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
-import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
 
@@ -58,9 +54,9 @@ class _DiaryLoadingState extends State<DiaryLoading> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(height: 150),
+                SizedBox(height: 90),
                 Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Column(
                     children: [
                       Text('나만의 가짜 일기가 제작에 들어갔습니다',
@@ -75,7 +71,7 @@ class _DiaryLoadingState extends State<DiaryLoading> {
                     ],
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 10),
                 Flexible(
                     flex: 4,
                     child: Row(

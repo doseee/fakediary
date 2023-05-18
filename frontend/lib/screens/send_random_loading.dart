@@ -1,11 +1,6 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend/model/SearchFriendModel.dart';
-import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
-import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
 
@@ -60,7 +55,7 @@ class _SendRandomLoadingState extends State<SendRandomLoading> {
               children: [
                 SizedBox(height: 150),
                 Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Column(
                     children: [
                       Text('신비한 우주의 조각, 외계인과의 랜덤 교환일기',
@@ -71,7 +66,7 @@ class _SendRandomLoadingState extends State<SendRandomLoading> {
                       SizedBox(height: 7),
                       Text('나의 일기가 모르는 친구의 행성으로 출발했어요',
                           style:
-                          TextStyle(color: Colors.white70, fontSize: 14)),
+                              TextStyle(color: Colors.white70, fontSize: 14)),
                     ],
                   ),
                 ),
@@ -88,8 +83,7 @@ class _SendRandomLoadingState extends State<SendRandomLoading> {
                         ),
                         Flexible(
                           flex: 3,
-                          child: Lottie.asset(
-                              'assets/lottie/1-alien.json',
+                          child: Lottie.asset('assets/lottie/1-alien.json',
                               height: 180),
                         ),
                         Flexible(
@@ -135,7 +129,7 @@ class _SendRandomLoadingState extends State<SendRandomLoading> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                              const HomeScreen(),
+                                                  const HomeScreen(),
                                             ));
                                       },
                                       child: Center(
@@ -145,11 +139,11 @@ class _SendRandomLoadingState extends State<SendRandomLoading> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                                '메인화면으로 가기',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14),
-                                              )),
+                                            '메인화면으로 가기',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          )),
                                         ),
                                       )),
                                 ),
@@ -170,7 +164,7 @@ class _SendRandomLoadingState extends State<SendRandomLoading> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                              const DiaryListScreen(),
+                                                  const DiaryListScreen(),
                                             ));
                                       },
                                       child: Center(
@@ -180,11 +174,11 @@ class _SendRandomLoadingState extends State<SendRandomLoading> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                                '내 일기장 보러가기',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14),
-                                              )),
+                                            '내 일기장 보러가기',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          )),
                                         ),
                                       )),
                                 ),
