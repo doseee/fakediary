@@ -142,12 +142,10 @@ class _DiaryFilterState extends State<DiaryFilter> {
                     if (selectedWriter == userId)
                       Row(
                         children: [
-                          SvgPicture.asset(
-                            'assets/svg/atronaut-svgrepo-com.svg',
-                            semanticsLabel: 'user',
-                            width: 50,
-                            height: 50,
-                          ),
+                          Lottie.asset(
+                              'assets/lottie/friend_planet.json',
+                              width: 40,
+                              height: 40),
                           SizedBox(
                             width: 5,
                           ),
@@ -160,12 +158,10 @@ class _DiaryFilterState extends State<DiaryFilter> {
                     if (selectedWriter > -1 && selectedWriter != userId)
                       Row(
                         children: [
-                          SvgPicture.asset(
-                            'assets/svg/atronaut-svgrepo-com.svg',
-                            semanticsLabel: 'user',
-                            width: 50,
-                            height: 50,
-                          ),
+                          Lottie.asset(
+                              'assets/lottie/friend_planet.json',
+                              width: 40,
+                              height: 40),
                           SizedBox(
                             width: 5,
                           ),
@@ -521,12 +517,10 @@ Widget buildList(snapshot, setter) {
         },
         child: Row(
           children: [
-            SvgPicture.asset(
-              'assets/svg/atronaut-svgrepo-com.svg',
-              semanticsLabel: 'user',
-              width: 50,
-              height: 50,
-            ),
+            Lottie.asset(
+                'assets/lottie/friend_planet.json',
+                width: 40,
+                height: 40),
             SizedBox(width: 5),
             Text(
               '나',
@@ -556,12 +550,10 @@ Widget buildList(snapshot, setter) {
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
                   children: [
-                    SvgPicture.asset(
-                      'assets/svg/atronaut-svgrepo-com.svg',
-                      semanticsLabel: 'user',
-                      width: 40,
-                      height: 40,
-                    ),
+                    Lottie.asset(
+                        'assets/lottie/friend_planet.json',
+                        width: 40,
+                        height: 40),
                     Card(
                       color: Colors.transparent,
                       elevation: 0.0,

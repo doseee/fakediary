@@ -219,12 +219,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          SvgPicture.asset(
-                                            'assets/svg/atronaut-svgrepo-com.svg',
-                                            semanticsLabel: 'user',
-                                            width: 40,
-                                            height: 40,
-                                          ),
+                                          Lottie.asset('assets/lottie/friend_planet.json',width:40,height:40),
 
                                           Text(
                                             friend.nickname.toString(),

@@ -95,6 +95,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    player.stop();
     player.dispose();
     super.dispose();
   }
@@ -167,9 +168,9 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   /// 음악 플레이어
   void playMusic() async {
     await player.setSource(
-      AssetSource('wav/test_music.wav'),
+      AssetSource('wav/test_music2.wav'),
     );
-    await player.setReleaseMode(ReleaseMode.loop);
+    // await player.setReleaseMode(ReleaseMode.loop);
     await player.resume();
     isPlaying = true;
     print('played');
@@ -192,6 +193,9 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
           /// 뒤로 가기 실행 시 일기 리스트로 이동하도록 조절
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => DiaryListScreen()));
+
+          /// 음악 종료
+          player.dispose();
           return false;
         },
         child: Scaffold(
@@ -546,6 +550,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           DiaryListScreen()));
+                                              player.dispose();
                                             },
                                             child: Center(
                                               child: Text('삭제'),

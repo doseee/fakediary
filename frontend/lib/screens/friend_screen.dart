@@ -2,13 +2,13 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
+import 'package:frontend/screens/send_loading.dart';
 import 'package:frontend/screens/friend_searchnew.dart';
+import 'package:frontend/screens/send_random_loading.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-
 import 'home_circlemenu.dart';
 
 class FriendScreen extends StatefulWidget {
@@ -72,10 +72,17 @@ class _FriendScreenState extends State<FriendScreen> {
 
                   if (!mounted) return;
                   if (result) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DiaryListScreen()));
+                    if (recieverId == -1) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SendRandomLoading()));
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SendLoading()));
+                    }
                     Flushbar(
                             message: "교환 일기 신청을 완료했습니다!",
                             duration: Duration(seconds: 3),
@@ -91,7 +98,10 @@ class _FriendScreenState extends State<FriendScreen> {
                   }
                 },
                 child: Center(
-                  child: Text('신청'),
+                  child: Text(
+                    '신청',
+                    style: TextStyle(fontSize: 17, color: Colors.greenAccent),
+                  ),
                 )),
           ),
         )
@@ -165,10 +175,12 @@ class _FriendScreenState extends State<FriendScreen> {
                   flex: 4,
                   child: Row(
                     children: [
+                      SizedBox(width: 5),
                       Flexible(
-                          flex: 2,
+                          flex: 3,
                           child: Lottie.asset('assets/lottie/1-alien.json',
-                              width: 100, height: 100)),
+                              width: 50, height: 50)),
+                      SizedBox(width: 5),
                       Flexible(
                         flex: 5,
                         child: Text(
@@ -186,28 +198,31 @@ class _FriendScreenState extends State<FriendScreen> {
                                     context: context,
                                     builder: (context) {
                                       return InfoModal(
-                                          padding: 20,
-                                          color: true,
-                                          widget: Column(
-                                            children: [
-                                              Text(
-                                                '✉ 모르는 사람과의 랜덤 일기 교환입니다.',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(
-                                                '하루에 한 번만 보낼 수 있습니다.',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
-                                          height: 100);
+                                        padding: 5,
+                                        color: true,
+                                        widget: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '✉    모르는 사람과의 랜덤 일기 교환입니다.',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14),
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Text(
+                                              '하루에 한 번만 보낼 수 있습니다.',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14),
+                                            ),
+                                          ],
+                                        ),
+                                        height: 80,
+                                      );
                                     });
                               }),
                         ),
@@ -218,12 +233,15 @@ class _FriendScreenState extends State<FriendScreen> {
                 flex: 2,
                 child: Container(),
               ),
+              SizedBox(
+                width: 25,
+              ),
               Flexible(
-                flex: 3,
+                flex: 4,
                 child: Center(
                   child: Container(
-                    width: 250,
-                    height: 50,
+                    width: 88,
+                    height: 38,
                     decoration: BtnThemeGradient(),
                     child: ElevatedButton(
                         onPressed: () async {
@@ -239,7 +257,7 @@ class _FriendScreenState extends State<FriendScreen> {
                           if (!mounted) return;
 
                           print(result);
-                          if (result) {
+                          if (!result) {
                             showDialog(
                                 context: context,
                                 builder: (context) {
@@ -295,8 +313,8 @@ class _FriendScreenState extends State<FriendScreen> {
       return Flexible(
           flex: 2,
           child: Container(
-            width: 250,
-            height: 50,
+            width: 90,
+            height: 40,
             decoration: BtnThemeGradientLine(),
             child: ElevatedButton(
                 onPressed: () async {
@@ -434,12 +452,10 @@ class _FriendScreenState extends State<FriendScreen> {
                                 child: Column(
                                   children: [
                                     ListTile(
-                                      leading: SvgPicture.asset(
-                                        'assets/svg/atronaut-svgrepo-com.svg',
-                                        semanticsLabel: 'user',
-                                        width: 50,
-                                        height: 50,
-                                      ),
+                                      leading: Lottie.asset(
+                                          'assets/lottie/friend_planet.json',
+                                          width: 40,
+                                          height: 40),
                                       title: Row(children: [
                                         Flexible(
                                             flex: 3,
