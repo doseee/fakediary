@@ -297,6 +297,7 @@ public class DiaryService {
         logger.info(memberId + "번 MemberId의 일기 생성을 시작하겠습니다.");
         // 메소드 시작시간
         long startTime = System.nanoTime();
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
 
         DiaryResultDto diaryResultDto = getResultDto(cardIdList, genreList);
 
@@ -305,7 +306,6 @@ public class DiaryService {
         List<String> subtitleList = diaryResultDto.getSubtitles();
         List<String> contents = diaryResultDto.getContents();
         String prompt = diaryResultDto.getPrompt();
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
 
         logger.info("subtitleList = " + subtitleList);
 
