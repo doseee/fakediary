@@ -13,7 +13,7 @@
 ## 🎦 소개 영상
 
 가짜 다이어리 Lieary 프로젝트
-[![Video Label](https://youtu.be/l9ifuKukqcA)](readme_img/video.png)
+[![Video Label](readme_img/video.png)](https://youtu.be/l9ifuKukqcA)
 
 <br>
 
