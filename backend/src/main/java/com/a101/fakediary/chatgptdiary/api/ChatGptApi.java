@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
@@ -84,8 +85,30 @@ public class ChatGptApi {
                 retry = false; // 에러가 발생하지않고 응답 받으면 반복 중지
                 if (1 < gptErrorCount)
                     log.warn("GPT에 " + gptErrorCount + "회 재시도하여 Too many Request를 해결하고 응답을 받았습니다.");
+            } catch (HttpStatusCodeException e) {
+                int statusCode = e.getStatusCode().value();
+                if (RETRY_MAX_COUNT < gptErrorCount) {
+                    log.error((RETRY_MAX_COUNT + "회연속 GPT 재시도 요청을 보냈으나 " + statusCode + " 에러가 발생하였습니다. 생성을 종료합니다."));
+                    throw e;
+                }
+                log.warn("GPT 요청과정에서 " + statusCode + "에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT + "회까지 재시도하겠습니다. 현재 시도횟수 : " + gptErrorCount);
+                Thread.sleep(SLEEP_MS);
+                retry = true;
+                gptErrorCount++;
+            } catch (RestClientResponseException e) { // 위으 catch문으로는 524감지가 안되고있어서 추가
+                int statusCode = e.getRawStatusCode();
+                if (RETRY_MAX_COUNT < gptErrorCount) {
+                    log.error(RETRY_MAX_COUNT + "회 연속 GPT 재시도 요청을 보냈으나 " + statusCode + " 에러가 발생하였습니다. 생성을 종료합니다.");
+                    throw e;
+                } else {
+                    log.warn("GPT 요청 과정에서 " + statusCode + " 에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT + "회까지 재시도하겠습니다. 현재 시도 횟수: " + gptErrorCount);
+                    Thread.sleep(SLEEP_MS);
+                    retry = true;
+                    gptErrorCount++;
+                }
             }
-            //429외에도 다양한 에러감지후 재시도하기
+        } //while(retry) end
+        //429외에도 다양한 에러감지후 재시도하기
 //            catch (HttpClientErrorException.TooManyRequests e) { // 429 Too Many Request Catch
 //                log.warn("GPT Too Many Requests. 에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT + "회까지 재시도하겠습니다. 현재 시도횟수 : " + gptErrorCount);
 //                if (RETRY_MAX_COUNT < gptErrorCount) {
@@ -97,18 +120,6 @@ public class ChatGptApi {
 //                retry = true;
 //                gptErrorCount++;
 //            }
-            catch (HttpStatusCodeException e) {
-                int statusCode = e.getStatusCode().value();
-                if (RETRY_MAX_COUNT < gptErrorCount) {
-                    log.error((RETRY_MAX_COUNT + "회연속 GPT 재시도 요청을 보냈으나 " + statusCode + " 에러가 발생하였습니다. 생성을 종료합니다."));
-                    throw e;
-                }
-                log.warn("GPT 요청과정에서 " + statusCode + "에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT + "회까지 재시도하겠습니다. 현재 시도횟수 : " + gptErrorCount);
-                Thread.sleep(SLEEP_MS);
-                retry = true;
-                gptErrorCount++;
-            }
-        } //while(retry) end
 
 //        ChatGptDiaryResponseDto responseDto = restTemplate40.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
 
