@@ -292,6 +292,14 @@ public class DiaryService {
         return diaryResultDto;
     }
 
+    /**
+     * 성능 개선을 위해 해야 할 노력들
+     * @param memberId
+     * @param cardIdList
+     * @param genreList
+     * @return
+     * @throws Exception
+     */
     @Transactional
     public DiaryResponseDto createDiary(Long memberId, List<Long> cardIdList, List<String> genreList) throws Exception {
         logger.info(memberId + "번 MemberId의 일기 생성을 시작하겠습니다.");
