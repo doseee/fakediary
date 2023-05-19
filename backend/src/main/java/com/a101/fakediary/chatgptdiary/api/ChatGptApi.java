@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
@@ -72,28 +73,43 @@ public class ChatGptApi {
                 .build();
 
         ChatGptDiaryResponseDto responseDto = null;
-        int retryCount = 1;
-        final int RETRY_MAX_COUNT = 5;
+        int gptErrorCount = 1; //429 Too Many Request, 524 Gateway Timeout 자주 발생
+        final int RETRY_MAX_COUNT = 5; //최대 재시도 횟수
+        final int SLEEP_MS = 7000; //재시도 간격
         boolean retry = true;
+
         while (retry) {
             try {
                 responseDto = restTemplate40.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
-                retry = false; // Too many Request에러가 발생하지않고 응답 받으면 반복 중지
-                if (1 < retryCount)
-                    log.warn("GPT에 " + retryCount + "회 재시도하여 Too many Request를 해결하고 응답을 받았습니다.");
-            } catch (HttpClientErrorException.TooManyRequests e) {
-                log.warn("GPT Too Many Requests. 에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT+ "회까지 재시도하겠습니다. 현재 시도횟수 : " + retryCount);
-                if (RETRY_MAX_COUNT < retryCount) {
-                    log.error("GPT Too Many Request 에러로 "+RETRY_MAX_COUNT+"회연속 실패하였습니다.");
-                    throw new Exception(RETRY_MAX_COUNT+"회연속 GPT 요청을 보냈으나 TooManyRequests에러가 발생하였습니다.");
-                }
-                // 3초 대기후 재시도
-                Thread.sleep(5000);
-                retry = true;
-            } finally {
-                retryCount++;
+                retry = false; // 에러가 발생하지않고 응답 받으면 반복 중지
+                if (1 < gptErrorCount)
+                    log.warn("GPT에 " + gptErrorCount + "회 재시도하여 Too many Request를 해결하고 응답을 받았습니다.");
             }
-        }
+            //429외에도 다양한 에러감지후 재시도하기
+//            catch (HttpClientErrorException.TooManyRequests e) { // 429 Too Many Request Catch
+//                log.warn("GPT Too Many Requests. 에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT + "회까지 재시도하겠습니다. 현재 시도횟수 : " + gptErrorCount);
+//                if (RETRY_MAX_COUNT < gptErrorCount) {
+//                    log.error("GPT Too Many Request 에러로 " + RETRY_MAX_COUNT + "회연속 실패하였습니다.");
+//                    throw new Exception(RETRY_MAX_COUNT + "회연속 GPT 요청을 보냈으나 TooManyRequests에러가 발생하였습니다.");
+//                }
+//                // 5초 대기후 재시도
+//                Thread.sleep(SLEEP_MS);
+//                retry = true;
+//                gptErrorCount++;
+//            }
+            catch (HttpStatusCodeException e) {
+                int statusCode = e.getStatusCode().value();
+                if (RETRY_MAX_COUNT < gptErrorCount) {
+                    log.error((RETRY_MAX_COUNT + "회연속 GPT 재시도 요청을 보냈으나 " + statusCode + " 에러가 발생하였습니다. 생성을 종료합니다."));
+                    throw e;
+                }
+                log.warn("GPT 요청과정에서 " + statusCode + "에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT + "회까지 재시도하겠습니다. 현재 시도횟수 : " + gptErrorCount);
+                Thread.sleep(SLEEP_MS);
+                retry = true;
+                gptErrorCount++;
+            }
+        } //while(retry) end
+
 //        ChatGptDiaryResponseDto responseDto = restTemplate40.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
 
 
