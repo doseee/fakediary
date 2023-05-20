@@ -1,8 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_one.dart';
-import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
@@ -82,9 +80,8 @@ class _RegistScreenState extends State<RegistScreen> {
                             )),
                         validator: (String? value) {
                           // Email 형식 유효성 검사를 위한 정규식
-                          String pattern =
-                              r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
-                          RegExp regExp = RegExp(pattern);
+                          RegExp regExp = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
                           if (value == null || value.isEmpty) {
                             return '이메일이 공백입니다';
@@ -221,8 +218,7 @@ class _RegistScreenState extends State<RegistScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            TutorialOne()));
+                                        builder: (context) => TutorialOne()));
                               } else {
                                 Navigator.push(
                                     context,

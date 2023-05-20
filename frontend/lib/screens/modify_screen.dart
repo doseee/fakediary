@@ -385,7 +385,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                                 MaterialPageRoute(
                                     builder: (context) => TutorialOne()));
                           },
-                          child: Container(
+                          child: SizedBox(
                             width: 170,
                             height: 50,
                             child: const Center(
@@ -402,8 +402,8 @@ class _ModifyScreenState extends State<ModifyScreen> {
                         angle: 90 * 3.1415926535 / 180,
                         child: Lottie.asset(
                           'assets/lottie/star-twinkle.json',
-                          height: 88,
-                          width: 88,
+                          height: 30,
+                          width: 30,
                         ),
                       ),
                     ],
