@@ -61,6 +61,8 @@ public class SoundRawCrawler {
                 .filename(musicFileName)
                 .build();
 
+        log.info("requestDto = " + requestDto);
+
         Mono<String> response = webClient.post()
                 .uri(requestUrl.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)

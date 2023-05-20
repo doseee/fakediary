@@ -24,6 +24,9 @@ public class MatterMostSender {
     }
 
     public void sendMessage(Exception e) {
+        if(this.LOCATION.equals("Springboot-Backend-local"))
+            return;
+
         Map<String, Object> request = new HashMap<>();
         request.put("username", "허재성");
 
