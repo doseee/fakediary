@@ -76,9 +76,7 @@ class HomeScreen extends StatelessWidget {
                           width: 45,
                         ),
                       ),
-                      SizedBox(
-                        width:10
-                      ),
+                      SizedBox(width: 10),
                       GestureDetector(
                         onTap: () {
                           if (scaffoldKey.currentState != null) {
@@ -405,7 +403,10 @@ class _AlarmDrawerState extends State<AlarmDrawer> {
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Icon(Icons.close,color: Colors.white,)),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        )),
                   ],
                 ),
               ),
@@ -427,7 +428,7 @@ class _AlarmDrawerState extends State<AlarmDrawer> {
               height: 60,
               decoration: BoxDecoration(
                 color: Color(0xffABC2DC).withOpacity(0.2),
-                border: Border(bottom: BorderSide(color:Colors.greenAccent)),
+                border: Border(bottom: BorderSide(color: Colors.greenAccent)),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -560,8 +561,7 @@ class Notification extends StatelessWidget {
         height: 60,
         decoration: BoxDecoration(
           color: Colors.white10,
-          border:
-              Border(bottom: BorderSide(color: Colors.black12, width: 0.2)),
+          border: Border(bottom: BorderSide(color: Colors.black12, width: 0.2)),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -570,13 +570,27 @@ class Notification extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Text(
-                  alarm.title,
-                  style: TextStyle(fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      alarm.title,
+                      style: TextStyle(fontSize: 15),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      alarm.createdAt.replaceFirst('T', ' '),
+                      style: TextStyle(fontSize: 10),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
               ),
-              Icon(Icons.chevron_right,color: Colors.black12,)
+              Icon(
+                Icons.chevron_right,
+                color: Colors.black12,
+              )
             ],
           ),
         ),

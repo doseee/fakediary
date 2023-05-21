@@ -7,6 +7,7 @@ class AlarmModel {
     required this.status,
     required this.title,
     required this.memberId,
+    required this.createdAt,
   });
   late final int alarmId;
   late final int requestId;
@@ -15,6 +16,7 @@ class AlarmModel {
   late final int status;
   late final String title;
   late final int memberId;
+  late final String createdAt;
 
   AlarmModel.fromJson(Map<String, dynamic> json) {
     alarmId = json['alarmId'];
@@ -24,6 +26,7 @@ class AlarmModel {
     status = json['status'];
     title = json['title'];
     memberId = json['memberId'];
+    createdAt = json['createdAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class AlarmModel {
     data['status'] = status;
     data['title'] = title;
     data['memberId'] = memberId;
+    data['createdAt'] = createdAt;
     return data;
   }
 }
