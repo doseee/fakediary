@@ -44,9 +44,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -307,6 +305,10 @@ public class DiaryService {
         long startTime = System.nanoTime();
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
 
+        //  TASK1.
+        //  ChatGPT4로부터 키워드들을 통해 일기 제목, 부제, 내용 얻어오는 과정
+        Instant start = Instant.now();
+        logger.info("TASK1 start at ", LocalDateTime.now());
         DiaryResultDto diaryResultDto = getResultDto(cardIdList, genreList);
 
         String title = diaryResultDto.getTitle();
@@ -370,6 +372,16 @@ public class DiaryService {
         List<String> diaryImagePrompt = (List<String>) stableDiffusionMap.get("diaryImagePrompt");
         logger.info("diaryImagePrompt = " + diaryImagePrompt);
         diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
+        //  TASK1 end
+
+        Instant end = Instant.now();
+        logger.info("TASK1 end at ", LocalDateTime.now());
+        logger.info("Elapsed time: " + Duration.between(start, end).toMillis() + " ms");
+
+        //  TASK2.
+        //  SoundRaw로부터 음악 크롤링해서 가져오기
+        start = Instant.now();
+        logger.info("TASK2 start at ", LocalDateTime.now());
 
         try {
             String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
@@ -379,6 +391,10 @@ public class DiaryService {
             e.printStackTrace();
             logger.info("음악 다운로드 실패");
         }
+        //  TASK2 end
+        end = Instant.now();
+        logger.info("TASK2 end at ", LocalDateTime.now());
+        logger.info("Elapsed time: " + Duration.between(start, end).toMillis() + " ms");
 
         DiaryResponseDto returnDto = new DiaryResponseDto(diary);
         List<String> genres = genreService.searchGenre(diary.getDiaryId());
