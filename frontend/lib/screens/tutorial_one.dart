@@ -61,6 +61,10 @@ class _TutorialOneState extends State<TutorialOne> {
                   child: Column(
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',height: 60),
+                      Text('(1/4)',
+                          style:
+                          TextStyle(color: Colors.white70, fontSize: 12)),
+                      SizedBox(height: 10),
                       Text('일기에 쓰일 카드를 만들어주세요',
                           style: TextStyle(
                               color: Colors.white,
