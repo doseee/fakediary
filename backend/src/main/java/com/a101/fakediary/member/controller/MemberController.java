@@ -58,6 +58,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "유저 카카오 로그인")
+    @PostMapping("/login/kakao")
     public ResponseEntity<?> loginKakao(@RequestBody MemberKakaoLoginRequestDto memberKakaoLoginRequestDto) {
         try {
             MemberLoginResponseDto memberLoginResponseDto = memberService.signInKakaoMember(memberKakaoLoginRequestDto);
