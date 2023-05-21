@@ -180,12 +180,11 @@ class _RegistScreenState extends State<RegistScreen> {
                             )),
                         validator: (String? value) {
                           // 특수문자를 포함하지 않는 정규식
-                          String pattern = r'^[a-zA-Z0-9_\uAC00-\uD7A3-]+$';
-                          RegExp regExp = RegExp(pattern);
+                          RegExp regExp = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
 
                           if (value == null || value.isEmpty) {
                             return '닉네임이 공백입니다.';
-                          } else if (!regExp.hasMatch(value)) {
+                          } else if (regExp.hasMatch(value)) {
                             // 정규식에 맞지 않을 경우
                             return '닉네임에 특수문자를 사용할 수 없습니다.';
                           }

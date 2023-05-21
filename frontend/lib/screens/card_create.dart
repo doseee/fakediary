@@ -581,6 +581,18 @@ class _CardCreateState extends State<CardCreate> {
 
                             String combinedString = nonEmptyStrings.join('@');
 
+                            if (_image == null) {
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              Flushbar(
+                                      message: '사진을 선택해주세요.',
+                                      duration: Duration(seconds: 3),
+                                      flushbarPosition: FlushbarPosition.TOP)
+                                  .show(context);
+                              return;
+                            }
+
                             if ((!personSelected ||
                                     _personController.text == '') &&
                                 (!locationSelected ||
@@ -594,29 +606,6 @@ class _CardCreateState extends State<CardCreate> {
                                       duration: Duration(seconds: 3),
                                       flushbarPosition: FlushbarPosition.TOP)
                                   .show(context);
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   SnackBar(
-                              //     content: Center(
-                              //         child: Text('키워드를 한 개 이상 입력해주세요.')),
-                              //   ),
-                              // );
-                              return;
-                            }
-
-                            if (_image == null) {
-                              setState(() {
-                                _isLoading = false;
-                              });
-                              Flushbar(
-                                      message: '사진을 선택해주세요.',
-                                      duration: Duration(seconds: 3),
-                                      flushbarPosition: FlushbarPosition.TOP)
-                                  .show(context);
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   SnackBar(
-                              //     content: Center(child: Text('사진을 선택해주세요.')),
-                              //   ),
-                              // );
                               return;
                             }
 
