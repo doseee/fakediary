@@ -37,7 +37,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
   /// 3은 친구 일기 보기 && 카드, 교환버튼 표시 안됨
   int exchangeSituation = 1;
   int diaryId = -1;
-  String title = '', summary = '', imageUrl = '';
+  String title = '', summary = '', imageUrl = '', createdAt = '';
 
   @override
   void initState() {
@@ -59,12 +59,14 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
     String title,
     String summary,
     String imageUrl,
+    String createdAt,
   ) {
     setState(() {
       this.diaryId = diaryId;
       this.title = title;
       this.summary = summary;
       this.imageUrl = imageUrl;
+      this.createdAt = createdAt;
     });
   }
 
@@ -81,20 +83,21 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
             flex: 1,
             child: Padding(
                 padding: EdgeInsets.only(left: 10, right: 5),
-                child:Stack(
+                child: Stack(
                   children: [
-                    Image.asset('assets/img/diary_cover.png',width: 130,height: 130), // 첫 번째 이미지
+                    Image.asset('assets/img/diary_cover.png',
+                        width: 130, height: 130), // 첫 번째 이미지
                     Positioned(
                       top: 11, // 두 번째 이미지의 위치 설정
                       left: 27,
-                      child:  Image(
+                      child: Image(
                         height: 90,
                         width: 90,
                         image: NetworkImage(imageUrl),
                       ), // 두 번째 이미지
                     ),
                   ],
-                ) )),
+                ))),
         Flexible(
           flex: 1,
           child: Padding(
@@ -128,6 +131,12 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     ),
                   ),
                 ),
+                Flexible(
+                    flex: 1,
+                    child: Text(
+                      createdAt.replaceFirst('T', ' '),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    )),
                 // Flexible(flex: 2, child: Row(
                 //   children: [
                 //     Flexible(flex: 1, child: Container(decoration: BoxDecoration(color: Colors.yellow)),),
@@ -183,30 +192,33 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    ChangeButton(
-                      exchangeSituation: exchangeSituation,
-                      diaryId: diaryId,
-                      requestId: widget.requestId,
-                      alarmId: widget.alarmId,
-                    ),
-                    SizedBox(
-                      // decoration: BtnThemeGradientLine(),
-                      width: 50,
-                      height: 50,
-                      child: GestureDetector(
-                        onTap: () {
-                          CheckKakao();
-                        },
-                        child: Icon(
-                          Icons.share,
-                          color: Colors.white,
-                        ),
+                Flexible(
+                  flex: 4,
+                  child: Row(
+                    children: [
+                      ChangeButton(
+                        exchangeSituation: exchangeSituation,
+                        diaryId: diaryId,
+                        requestId: widget.requestId,
+                        alarmId: widget.alarmId,
                       ),
-                    )
-                  ],
-                )
+                      SizedBox(
+                        // decoration: BtnThemeGradientLine(),
+                        width: 50,
+                        height: 50,
+                        child: GestureDetector(
+                          onTap: () {
+                            CheckKakao();
+                          },
+                          child: Icon(
+                            Icons.share,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -270,9 +282,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         decoration: BtnThemeGradientLine(),
                         child: Center(
                             child: Text(
-                              '+',
-                              style: TextStyle(color: Colors.white, fontSize: 22),
-                            )),
+                          '+',
+                          style: TextStyle(color: Colors.white, fontSize: 22),
+                        )),
                       ),
                     ),
                     SizedBox(
@@ -515,8 +527,12 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
           onTap: () {
             print(
                 '${snapshot[index].diaryId}, ${snapshot[index].title}, ${snapshot[index].summary}');
-            onSelect(snapshot[index].diaryId, snapshot[index].title,
-                snapshot[index].summary, snapshot[index].diaryImageUrl[0]);
+            onSelect(
+                snapshot[index].diaryId,
+                snapshot[index].title,
+                snapshot[index].summary,
+                snapshot[index].diaryImageUrl[0],
+                snapshot[index].createdAt);
           },
           child: Card(
               color: Colors.transparent,
@@ -530,14 +546,16 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       children: <Widget>[
                         Stack(
                           children: [
-                            Image.asset('assets/img/diary_cover.png',width: 130,height: 130), // 첫 번째 이미지
+                            Image.asset('assets/img/diary_cover.png',
+                                width: 130, height: 130), // 첫 번째 이미지
                             Positioned(
                               top: 11, // 두 번째 이미지의 위치 설정
                               left: 27,
-                              child:  Image(
+                              child: Image(
                                 height: 90,
                                 width: 90,
-                                image: NetworkImage(snapshot[index].diaryImageUrl[0]),
+                                image: NetworkImage(
+                                    snapshot[index].diaryImageUrl[0]),
                               ), // 두 번째 이미지
                             ),
                           ],

@@ -581,7 +581,7 @@ class Notification extends StatelessWidget {
                     ),
                     Text(
                       alarm.createdAt.replaceFirst('T', ' '),
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10, color: Colors.blueGrey),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
