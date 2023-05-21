@@ -6,8 +6,6 @@ import com.a101.fakediary.alarm.dto.AlarmResponseDto;
 import com.a101.fakediary.alarm.entity.Alarm;
 import com.a101.fakediary.alarm.repository.AlarmRepository;
 import com.a101.fakediary.enums.EAlarm;
-import com.a101.fakediary.friendrequest.entity.FriendRequest;
-import com.a101.fakediary.friendrequest.repository.FriendRequestRepository;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -30,7 +28,6 @@ import java.util.Map;
 public class AlarmService {
 
     private final FirebaseMessaging firebaseMessaging;
-    private final FriendRequestRepository friendRequestRepository;
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
 
@@ -53,7 +50,7 @@ public class AlarmService {
         List<AlarmListDto> list = new ArrayList<>();
 
         for (Alarm alarm : alarms)
-            list.add(new AlarmListDto(alarm.getAlarmId(), alarm.getRequestId(), alarm.getMemberId().getMemberId(), alarm.getTitle(), alarm.getBody(), alarm.getAlarmType().toString(), alarm.getStatus()));
+            list.add(new AlarmListDto(alarm.getAlarmId(), alarm.getRequestId(), alarm.getMemberId().getMemberId(), alarm.getTitle(), alarm.getBody(), alarm.getAlarmType().toString(), alarm.getStatus(), alarm.getCreatedAt()));
 
         return list;
     }
