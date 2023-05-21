@@ -308,7 +308,7 @@ public class DiaryService {
         //  TASK1.
         //  ChatGPT4로부터 키워드들을 통해 일기 제목, 부제, 내용 얻어오는 과정
         Instant start = Instant.now();
-        logger.info("TASK1 start at ", LocalDateTime.now());
+        logger.info("TASK1 start at " + LocalDateTime.now());
         DiaryResultDto diaryResultDto = getResultDto(cardIdList, genreList);
 
         String title = diaryResultDto.getTitle();
@@ -375,13 +375,13 @@ public class DiaryService {
         //  TASK1 end
 
         Instant end = Instant.now();
-        logger.info("TASK1 end at ", LocalDateTime.now());
+        logger.info("TASK1 end at " + LocalDateTime.now());
         logger.info("Elapsed time: " + Duration.between(start, end).toMillis() + " ms");
 
         //  TASK2.
         //  SoundRaw로부터 음악 크롤링해서 가져오기
         start = Instant.now();
-        logger.info("TASK2 start at ", LocalDateTime.now());
+        logger.info("TASK2 start at " + LocalDateTime.now());
 
         try {
             String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
@@ -393,7 +393,7 @@ public class DiaryService {
         }
         //  TASK2 end
         end = Instant.now();
-        logger.info("TASK2 end at ", LocalDateTime.now());
+        logger.info("TASK2 end at " + LocalDateTime.now());
         logger.info("Elapsed time: " + Duration.between(start, end).toMillis() + " ms");
 
         DiaryResponseDto returnDto = new DiaryResponseDto(diary);
