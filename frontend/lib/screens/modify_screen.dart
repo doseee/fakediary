@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/screens/login_entrance.dart';
 import 'package:frontend/screens/tutorial_one.dart';
+import 'package:frontend/widgets/bottom_nav_bar.dart';
+import 'package:frontend/widgets/my_appbar.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -412,6 +414,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
               ),
             ),
           ),
+          bottomNavigationBar: BottomNavBar(),
         ),
       ),
     );
