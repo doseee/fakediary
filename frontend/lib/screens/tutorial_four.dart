@@ -63,17 +63,13 @@ class _TutorialFourState extends State<TutorialFour> {
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',
                           height: 60),
-                      Text('마이페이지에 가보세요!',
+                      Text('마이페이지에 가보세요',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
                       Text('기본 주인공과 일기 자동 생성 시간을 정할 수 있어요',
-                          style:
-                          TextStyle(color: Colors.white70, fontSize: 15)),
-                      SizedBox(height: 5),
-                      Text('튜토리얼도 다시 볼 수 있어요',
                           style:
                           TextStyle(color: Colors.white70, fontSize: 15)),
                     ],
@@ -86,13 +82,13 @@ class _TutorialFourState extends State<TutorialFour> {
                       children: [
                         Flexible(
                           flex: 1,
-                          child: Image.asset('assets/img/tutorial_card_7.png',
+                          child: Image.asset('assets/img/tutorial_card_8.png',
                               height: 350, width: 350),
                         ),
                         Flexible(
                           flex: 1,
                           child: Image.asset(
-                            'assets/img/tutorial_card_8.png',
+                            'assets/img/tutorial_card_7.png',
                             height: 350,
                             width: 3520,
                           ),

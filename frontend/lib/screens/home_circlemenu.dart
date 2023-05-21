@@ -6,6 +6,7 @@ import 'package:frontend/screens/diary_detail_cover_screen.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/friend_screen.dart';
 import 'package:frontend/screens/modify_screen.dart';
+import 'package:frontend/screens/tutorial_one.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/friend_modal.dart';
 import 'package:frontend/widgets/receive_diary_modal.dart';
@@ -59,6 +60,25 @@ class HomeScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TutorialOne(),
+                            ),
+                          );
+                        },
+                        child: Image(
+                          image: AssetImage(
+                            'assets/img/icon_q.png',
+                          ),
+                          width: 45,
+                        ),
+                      ),
+                      SizedBox(
+                        width:10
+                      ),
                       GestureDetector(
                         onTap: () {
                           if (scaffoldKey.currentState != null) {
