@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/diary_list_screen.dart';
-import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_one.dart';
-import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/screens/tutorial_three.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
@@ -58,7 +55,7 @@ class _TutorialTwoState extends State<TutorialTwo> {
               children: [
                 SizedBox(height: 40),
                 Flexible(
-                  flex: 2,
+                  flex: 3,
                   child: Column(
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',
@@ -99,7 +96,7 @@ class _TutorialTwoState extends State<TutorialTwo> {
                       ],
                     )),
                 Flexible(
-                    flex: 2,
+                    flex: 1,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -117,7 +114,7 @@ class _TutorialTwoState extends State<TutorialTwo> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                              const TutorialOne(),
+                                                  const TutorialOne(),
                                             ));
                                       },
                                       child: Center(
@@ -127,11 +124,11 @@ class _TutorialTwoState extends State<TutorialTwo> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                                '이전으로',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15),
-                                              )),
+                                            '이전으로',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15),
+                                          )),
                                         ),
                                       )),
                                 ),
@@ -152,7 +149,7 @@ class _TutorialTwoState extends State<TutorialTwo> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                              const TutorialThree(),
+                                                  const TutorialThree(),
                                             ));
                                       },
                                       child: Center(
@@ -162,17 +159,16 @@ class _TutorialTwoState extends State<TutorialTwo> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                                '다음으로',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15),
-                                              )),
+                                            '다음으로',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15),
+                                          )),
                                         ),
                                       )),
                                 ),
                               ],
                             )),
-
                       ],
                     )),
                 SizedBox(height: 40)

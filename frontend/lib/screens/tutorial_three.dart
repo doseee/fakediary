@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
-import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/screens/tutorial_two.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
@@ -57,7 +55,7 @@ class _TutorialThreeState extends State<TutorialThree> {
               children: [
                 SizedBox(height: 40),
                 Flexible(
-                  flex: 3,
+                  flex: 4,
                   child: Column(
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',
@@ -65,7 +63,7 @@ class _TutorialThreeState extends State<TutorialThree> {
                       Text('다른 행성과 친구 맺고 일기를 교환해요',
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 22,
+                              fontSize: 21,
                               fontWeight: FontWeight.w600)),
                       SizedBox(height: 15),
                       Lottie.asset('assets/lottie/1-alien.json', height: 35),
@@ -101,7 +99,7 @@ class _TutorialThreeState extends State<TutorialThree> {
                       ],
                     )),
                 Flexible(
-                    flex: 2,
+                    flex: 1,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -174,7 +172,6 @@ class _TutorialThreeState extends State<TutorialThree> {
                                 ),
                               ],
                             )),
-
                       ],
                     )),
                 SizedBox(height: 40)

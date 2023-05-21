@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/diary_list_screen.dart';
-import 'package:frontend/screens/home_circlemenu.dart';
-import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/screens/tutorial_two.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
@@ -60,7 +57,8 @@ class _TutorialOneState extends State<TutorialOne> {
                   flex: 2,
                   child: Column(
                     children: [
-                      Lottie.asset('assets/lottie/menu_grinstar.json',height: 80),
+                      Lottie.asset('assets/lottie/menu_grinstar.json',
+                          height: 80),
                       Text('오늘 기억의 조각을 만들어보세요',
                           style: TextStyle(
                               color: Colors.white,
@@ -69,7 +67,7 @@ class _TutorialOneState extends State<TutorialOne> {
                       SizedBox(height: 7),
                       Text('사진과 키워드를 입력해 특별한 카드를 만들어요',
                           style:
-                          TextStyle(color: Colors.white70, fontSize: 17)),
+                              TextStyle(color: Colors.white70, fontSize: 17)),
                     ],
                   ),
                 ),
@@ -80,16 +78,21 @@ class _TutorialOneState extends State<TutorialOne> {
                       children: [
                         Flexible(
                           flex: 1,
-                          child: Image.asset('assets/img/toturial_card_1.png',height:350,width: 350),
+                          child: Image.asset('assets/img/toturial_card_1.png',
+                              height: 350, width: 350),
                         ),
                         Flexible(
                           flex: 1,
-                          child: Image.asset('assets/img/toturial_card_2.png',height:350,width: 3520,),
+                          child: Image.asset(
+                            'assets/img/toturial_card_2.png',
+                            height: 350,
+                            width: 3520,
+                          ),
                         ),
                       ],
                     )),
                 Flexible(
-                    flex: 2,
+                    flex: 1,
                     child: Column(
                       children: [
                         Container(
@@ -106,7 +109,7 @@ class _TutorialOneState extends State<TutorialOne> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                              const TutorialTwo(),
+                                                  const TutorialTwo(),
                                             ));
                                       },
                                       child: Center(
@@ -116,11 +119,11 @@ class _TutorialOneState extends State<TutorialOne> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                                '다음',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15),
-                                              )),
+                                            '다음',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15),
+                                          )),
                                         ),
                                       )),
                                 ),
