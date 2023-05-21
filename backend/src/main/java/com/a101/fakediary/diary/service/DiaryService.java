@@ -569,4 +569,135 @@ public class DiaryService {
         cardIds.sort(Comparator.naturalOrder());//오름차순 정렬
         return cardIds;
     }
+
+    @Transactional
+    public DiaryResponseDto createDiaryOld(Long memberId, List<Long> cardIdList, List<String> genreList) throws Exception {
+        logger.info(memberId + "번 MemberId의 일기 생성을 시작하겠습니다.");
+        // 메소드 시작시간
+        long startTime = System.nanoTime();
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("찾으려는 회원이 존재하지 않음."));
+
+        DiaryResultDto diaryResultDto = getResultDtoOld(cardIdList, genreList);
+
+        String title = diaryResultDto.getTitle();
+        String summary = diaryResultDto.getSummary();
+        List<String> subtitleList = diaryResultDto.getSubtitles();
+        List<String> contents = diaryResultDto.getContents();
+        String prompt = diaryResultDto.getPrompt();
+
+        logger.info("subtitleList = " + subtitleList);
+
+        Map<String, String> map = getDiaryItems(cardIdList);
+        String keywords = map.getOrDefault("keywords", "");
+        String characters = map.getOrDefault("characters", "");
+        String places = map.getOrDefault("places", "");
+
+        StringBuilder sb = new StringBuilder();
+
+        for (String content : contents)
+            sb.append(content).append(DELIMITER);
+        if (sb.charAt(sb.length() - 1) == '@')
+            sb.deleteCharAt(sb.lastIndexOf("@"));
+        String detail = sb.toString().trim();
+
+        sb = new StringBuilder();
+
+        for (String subtitle : subtitleList) {
+            sb.append(subtitle).append(DELIMITER);
+        }
+
+        if (0 < sb.length() && sb.toString().endsWith(DELIMITER))
+            sb.setLength(sb.length() - 1);
+
+        String subtitles = sb.toString();
+        logger.info("subtitles = " + subtitles);
+
+        Diary diary = Diary.builder()
+                .member(member)
+                .characters(characters)
+                .places(places)
+                .keyword(keywords)
+                .prompt(prompt)
+                .title(title)
+                .subtitles(subtitles)
+                .detail(detail)
+                .summary(summary)
+                .build();
+
+        Long diaryId = diaryRepository.save(diary).getDiaryId();
+
+        for (String genre : genreList) {
+            GenreDto gen = new GenreDto(diary.getDiaryId(), genre);
+            genreService.saveGenre(gen); //장르 저장
+        }
+
+        // 카드&일기 매핑테이블 생성
+        cardDiaryMappingService.createCardDiaryMappings(diary.getDiaryId(), cardIdList);
+
+        Map<String, Object> stableDiffusionMap = stableDiffusionApi.getStableDiffusionUrlsAndPrompt(title, subtitleList);
+        List<String> stableDiffusionUrls = (List<String>) stableDiffusionMap.get("stableDiffusionUrl");
+        logger.info("stableDiffusionUrls = " + stableDiffusionUrls);
+        List<String> diaryImagePrompt = (List<String>) stableDiffusionMap.get("diaryImagePrompt");
+        logger.info("diaryImagePrompt = " + diaryImagePrompt);
+        diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
+
+        try {
+            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
+            logger.info("musicUrl = " + musicUrl);
+            diary.setMusicUrl(musicUrl);
+        } catch(Exception e) {
+            e.printStackTrace();
+            logger.info("음악 다운로드 실패");
+        }
+
+        DiaryResponseDto returnDto = new DiaryResponseDto(diary);
+        List<String> genres = genreService.searchGenre(diary.getDiaryId());
+        EGenre[] genreArray = genres.stream()
+                .map(EGenre::valueOf)
+                .toArray(EGenre[]::new);
+        returnDto.setGenre(genreArray);
+        returnDto.setDiaryImageUrl(stableDiffusionUrls.toArray(new String[stableDiffusionUrls.size()]));
+
+        // 메소드 종료 시간
+        long endTime = System.nanoTime();
+
+        // 소요된 시간 (초 단위)
+        double elapsedTime = (endTime - startTime) / 1_000_000_000.0;
+
+        // 일기 생성에 소요된 시간을 로그로 출력
+        logger.info(memberId + "(" + member.getNickname() + ")" + "번 memberId의 " + diaryId + "번 diaryId 일기를 만드는데 소요된 시간 : {} 초", elapsedTime);
+        return returnDto;
+    }
+
+    @Transactional(readOnly = true)
+    public DiaryResultDto getResultDtoOld(List<Long> cardList, List<String> genres) throws Exception {
+        DiaryItemsDto diaryItemsDto = getItemInformations(cardList, genres);
+        List<String> characters = diaryItemsDto.getCharacters();
+        List<String> places = diaryItemsDto.getPlaces();
+        List<String> keywords = diaryItemsDto.getKeywords();
+
+        String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords, genres);
+
+//        TitleSubtitlesResultDto titleSubtitlesResultDto = chatGptApi.askGpt4TitleSubtitles(prompt);
+//        logger.info("titleSubtitlesResultDto = " + titleSubtitlesResultDto);
+        List<Message> messageList = chatGptApi.askGpt41(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
+
+        StringBuilder diaryContent = new StringBuilder();
+        for (Message message : messageList) {
+            String role = message.getRole();
+            String content = message.getContent();
+
+            if (role.equals("assistant")) {
+                diaryContent.append(content);
+            }
+        }
+
+        logger.info("diaryContent = " + diaryContent);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        DiaryResultDto diaryResultDto = objectMapper.readValue(diaryContent.toString(), DiaryResultDto.class);
+        diaryResultDto.setPrompt(prompt);
+
+        return diaryResultDto;
+    }
 }
