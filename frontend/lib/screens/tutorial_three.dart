@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/home_circlemenu.dart';
+import 'package:frontend/screens/tutorial_four.dart';
 import 'package:frontend/screens/tutorial_two.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
@@ -59,8 +59,8 @@ class _TutorialThreeState extends State<TutorialThree> {
                   child: Column(
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',
-                          height: 80),
-                      Text('다른 행성과 친구 맺고 일기를 교환해요',
+                          height: 60),
+                      Text('지인과 친구 맺고 일기를 교환해요',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 21,
@@ -68,11 +68,11 @@ class _TutorialThreeState extends State<TutorialThree> {
                       SizedBox(height: 15),
                       Lottie.asset('assets/lottie/1-alien.json', height: 35),
                       SizedBox(height: 7),
-                      Text('  외계인과의 교환으로',
+                      Text('  외계인과의 교환은 덤이에요',
                           style:
                               TextStyle(color: Colors.white70, fontSize: 15)),
                       SizedBox(height: 7),
-                      Text('모르는 친구의 랜덤일기를 볼 수도 있어요',
+                      Text('모르는 친구의 랜덤일기도 볼 수 있어요',
                           style:
                               TextStyle(color: Colors.white70, fontSize: 15)),
                     ],
@@ -152,7 +152,7 @@ class _TutorialThreeState extends State<TutorialThree> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  const HomeScreen(),
+                                                  const TutorialFour(),
                                             ));
                                       },
                                       child: Center(
@@ -162,7 +162,7 @@ class _TutorialThreeState extends State<TutorialThree> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                            '시작하기',
+                                            '다음으로',
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 15),

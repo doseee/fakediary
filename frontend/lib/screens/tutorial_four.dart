@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/diary_list_screen.dart';
+import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_one.dart';
+import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/screens/tutorial_three.dart';
 import 'package:frontend/widgets/theme.dart';
 import 'package:lottie/lottie.dart';
@@ -20,19 +23,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Search DiaryLoading',
-      home: TutorialTwo(),
+      home: TutorialFour(),
     );
   }
 }
 
-class TutorialTwo extends StatefulWidget {
-  const TutorialTwo({super.key});
+class TutorialFour extends StatefulWidget {
+  const TutorialFour({super.key});
 
   @override
-  _TutorialTwoState createState() => _TutorialTwoState();
+  _TutorialFourState createState() => _TutorialFourState();
 }
 
-class _TutorialTwoState extends State<TutorialTwo> {
+class _TutorialFourState extends State<TutorialFour> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,23 +63,19 @@ class _TutorialTwoState extends State<TutorialTwo> {
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',
                           height: 60),
-                      Text('카드로 일기를 만들어보세요',
+                      Text('마이페이지에 가보세요!',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
-                      Text('카드에 담긴 키워드와 장르를 기반으로',
+                      Text('기본 주인공과 일기 자동 생성 시간을 정할 수 있어요',
                           style:
-                              TextStyle(color: Colors.white70, fontSize: 15)),
-                      SizedBox(height: 3),
-                      Text('삽화와 일기가 자동으로 생성돼요',
+                          TextStyle(color: Colors.white70, fontSize: 15)),
+                      SizedBox(height: 5),
+                      Text('튜토리얼도 다시 볼 수 있어요',
                           style:
-                              TextStyle(color: Colors.white70, fontSize: 15)),
-                      SizedBox(height: 10),
-                      Text('* 오늘 만든 카드로 일기가 자동으로 생성되기도 해요',
-                          style:
-                          TextStyle(color: Colors.white70, fontSize: 12)),
+                          TextStyle(color: Colors.white70, fontSize: 15)),
                     ],
                   ),
                 ),
@@ -87,22 +86,21 @@ class _TutorialTwoState extends State<TutorialTwo> {
                       children: [
                         Flexible(
                           flex: 1,
-                          child: Image.asset('assets/img/tutorial_card_3.png',
+                          child: Image.asset('assets/img/tutorial_card_7.png',
                               height: 350, width: 350),
                         ),
                         Flexible(
                           flex: 1,
                           child: Image.asset(
-                            'assets/img/tutorial_card_4.png',
+                            'assets/img/tutorial_card_8.png',
                             height: 350,
                             width: 3520,
                           ),
                         ),
                       ],
                     )),
-
                 Flexible(
-                    flex: 1,
+                    flex: 2,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -120,7 +118,7 @@ class _TutorialTwoState extends State<TutorialTwo> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  const TutorialOne(),
+                                              const TutorialThree(),
                                             ));
                                       },
                                       child: Center(
@@ -130,11 +128,11 @@ class _TutorialTwoState extends State<TutorialTwo> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                            '이전으로',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15),
-                                          )),
+                                                '이전으로',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15),
+                                              )),
                                         ),
                                       )),
                                 ),
@@ -155,7 +153,7 @@ class _TutorialTwoState extends State<TutorialTwo> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  const TutorialThree(),
+                                              const HomeScreen(),
                                             ));
                                       },
                                       child: Center(
@@ -165,16 +163,17 @@ class _TutorialTwoState extends State<TutorialTwo> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                            '다음으로',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15),
-                                          )),
+                                                '시작하기',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15),
+                                              )),
                                         ),
                                       )),
                                 ),
                               ],
                             )),
+
                       ],
                     )),
                 SizedBox(height: 40)

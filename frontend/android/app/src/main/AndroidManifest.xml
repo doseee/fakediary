@@ -1,10 +1,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.a1012.frontend">
+
    <application
         android:label="가짜다이어리"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
+       <!-- 카카오 로그인 커스텀 URL 스킴 설정 -->
+       <activity
+           android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
+           android:exported="true">
+           <intent-filter android:label="flutter_web_auth">
+               <action android:name="android.intent.action.VIEW" />
+               <category android:name="android.intent.category.DEFAULT" />
+               <category android:name="android.intent.category.BROWSABLE" />
+
+               <!-- "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식의 앱 실행 스킴 설정 -->
+<!--               &lt;!&ndash; 카카오 로그인 Redirect URI &ndash;&gt;-->
+<!--               <data android:scheme="kakao${YOUR_NATIVE_APP_KEY}" android:host="oauth"/>-->
+           </intent-filter>
+       </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"

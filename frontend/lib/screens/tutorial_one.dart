@@ -54,20 +54,24 @@ class _TutorialOneState extends State<TutorialOne> {
               children: [
                 SizedBox(height: 40),
                 Flexible(
-                  flex: 2,
+                  flex: 3,
                   child: Column(
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',
-                          height: 80),
-                      Text('오늘 기억의 조각을 만들어보세요',
+                          height: 60),
+                      Text('일기에 쓰일 카드를 만들어주세요',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.w600)),
                       SizedBox(height: 7),
-                      Text('사진과 키워드를 입력해 특별한 카드를 만들어요',
+                      Text('카드는 일기를 만들 때 필요해요!',
                           style:
-                              TextStyle(color: Colors.white70, fontSize: 17)),
+                              TextStyle(color: Colors.white70, fontSize: 15)),
+                      SizedBox(height: 5),
+                      Text('오늘의 사진과 키워드를 입력해주세요',
+                          style:
+                              TextStyle(color: Colors.white70, fontSize: 15)),
                     ],
                   ),
                 ),
