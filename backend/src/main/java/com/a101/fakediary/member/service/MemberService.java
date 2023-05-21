@@ -35,6 +35,22 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional
+    public Member kakaoSignUpMember(MemberKakaoSignUpRequestDto memberKakaoSignUpRequestDto){
+        // 닉네임 중복 체크
+        if (memberRepository.existsByNickname(memberKakaoSignUpRequestDto.getNickname())) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        }
+        if(memberRepository.existsByKakaoUid(memberKakaoSignUpRequestDto.getKakaoUid())){
+            throw new IllegalArgumentException("이미 존재하는 kakao 아이디가 있습니다.");
+        }
+        Member member = memberKakaoSignUpRequestDto.toEntity();
+        member.setProviderId("KAKAO");// 나중에 Enum으로 리팩토링 가능할듯
+
+        return memberRepository.save(member);
+
+    }
+
     //로그인
     @Transactional
     public MemberLoginResponseDto signInMember(MemberLoginRequestDto memberloginRequestDto) {
@@ -61,6 +77,30 @@ public class MemberService {
                 .build();
 
         return memberLoginResponseDto;
+    }
+
+    //카카오 로그인
+    @Transactional
+    public MemberLoginResponseDto signInKakaoMember(MemberKakaoLoginRequestDto memberKakaoLoginRequestDto){
+        Optional<Member> memberOptional = memberRepository.findByKakaoUid(memberKakaoLoginRequestDto.getKakaoUid());
+        if(memberOptional.isEmpty()){
+            throw new IllegalArgumentException("올바르지 않은 kakaoUid입니다");
+        }
+        Member member = memberOptional.get();
+
+        MemberLoginResponseDto memberLoginResponseDto = MemberLoginResponseDto.builder()
+                .memberId(member.getMemberId())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .autoDiaryTime(member.getAutoDiaryTime())
+                .diaryBaseName(member.getDiaryBaseName())
+                .firebaseUid(member.getFirebaseUid())
+                .kakaoUid(member.getKakaoUid())
+                .providerId(member.getProviderId())
+                .build();
+
+        return memberLoginResponseDto;
+
     }
 
     //유저 조회
