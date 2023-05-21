@@ -140,4 +140,34 @@ public class DiaryController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/create/old")
+    public ResponseEntity<?> saveDiaryWithDiaryInformationOld(@RequestBody DiaryInformation information) {
+        log.info("saveDiaryWithDiaryInformation");
+        log.info("memberId = " + information.getMemberId());
+        log.info("cardIdList = " + information.getCardIdList());
+        log.info("genreList = " + information.getGenreList());
+
+        try {
+            Long memberId = information.getMemberId();
+            List<Long> cardIdList = information.getCardIdList();
+            List<String> genreList = information.getGenreList();
+
+            log.info("memberId = " + memberId);
+            log.info("cardIdList = " + cardIdList);
+            log.info("genreList = " + genreList);
+
+            DiaryResponseDto diaryResponseDto = diaryService.createDiaryOld(memberId, cardIdList, genreList);
+            String alarmTitle = "따끈따끈한 일기의 순간입니다";
+            String alarmBody = "내가 선택한 가짜다이어리가 완성되었어요";
+            alarmService.saveAlarm(new AlarmRequestDto(diaryResponseDto.getMemberId(), diaryResponseDto.getDiaryId(), alarmTitle, alarmBody, "MANUAL"));
+            alarmService.sendNotificationByToken(new AlarmResponseDto(diaryResponseDto.getMemberId(), alarmTitle, alarmBody));
+
+            return new ResponseEntity<>(diaryResponseDto, HttpStatus.OK);
+        } catch(Exception e) {
+            e.printStackTrace();
+            matterMostSender.sendMessage(e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
