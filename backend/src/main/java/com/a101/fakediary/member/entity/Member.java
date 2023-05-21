@@ -26,10 +26,10 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = true, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = true)
     private String password;
 
     @Column(name = "nickname", nullable = false, length = 10, unique = true)
@@ -43,6 +43,9 @@ public class Member extends BaseEntity {
 
     @Column(name = "firebase_uid", nullable = true)
     private String firebaseUid;
+
+    @Column(name = "kakao_uid", nullable = true)
+    private String kakaoUid;
 
     @Column(name = "provider_id", nullable = true)
     private String providerId;
