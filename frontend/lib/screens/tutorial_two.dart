@@ -58,11 +58,15 @@ class _TutorialTwoState extends State<TutorialTwo> {
               children: [
                 SizedBox(height: 40),
                 Flexible(
-                  flex: 3,
+                  flex: 4,
                   child: Column(
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',
                           height: 60),
+                      Text('(2/4)',
+                          style:
+                          TextStyle(color: Colors.white70, fontSize: 12)),
+                      SizedBox(height: 10),
                       Text('카드로 일기를 만들어보세요',
                           style: TextStyle(
                               color: Colors.white,
@@ -76,7 +80,7 @@ class _TutorialTwoState extends State<TutorialTwo> {
                       Text('삽화와 일기가 자동으로 생성돼요',
                           style:
                               TextStyle(color: Colors.white70, fontSize: 15)),
-                      SizedBox(height: 10),
+                      SizedBox(height: 13),
                       Text('* 오늘 만든 카드로 일기가 자동으로 생성되기도 해요',
                           style:
                           TextStyle(color: Colors.white70, fontSize: 12)),

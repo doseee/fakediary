@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/card_create.dart';
 import 'package:frontend/screens/card_list.dart';
+import 'package:frontend/screens/diary_create_cards.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:lottie/lottie.dart';
@@ -36,7 +37,7 @@ Widget _buttonList(BuildContext context) {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const CardCreate(),
+                builder: (context) => const DiaryCreateCards(),
               ));
         },
         style: ElevatedButton.styleFrom(
@@ -47,7 +48,7 @@ Widget _buttonList(BuildContext context) {
               borderRadius: BorderRadius.circular(30.0),
             )),
         child: Text(
-          '카드 추가 생성하기',
+          '일기 쓰러 가기',
           style: TextStyle(
               color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
         )),
@@ -239,11 +240,11 @@ class _CardResultState extends State<CardResult>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const CardList(),
+                                                    const CardCreate(),
                                               ));
                                         },
                                         child: Text(
-                                          '카드 목록 보러가기 →',
+                                          '카드 추가 생성하기 →',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w800),

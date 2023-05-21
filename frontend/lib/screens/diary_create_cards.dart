@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/card_list.dart';
 import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/services/api_service.dart';
@@ -79,7 +80,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DiaryListScreen()));
+                                  builder: (context) => CardList()));
                         },
                         child: Container(
                           width: 55,
@@ -87,7 +88,7 @@ class _DiaryCreateState extends State<DiaryCreateCards> {
                           decoration: BtnThemeGradientLine(),
                           child: Center(
                               child: Text(
-                                '일기장',
+                                '내 카드',
                                 style: TextStyle(color: Colors.white, fontSize: 14),
                               )),
                         ),

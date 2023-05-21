@@ -110,7 +110,8 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
                 int subtitleIndex = 0;
 
-                return Padding(
+                return
+                  Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: CustomScrollView(
                     controller: _scrollController,

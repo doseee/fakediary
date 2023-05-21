@@ -63,6 +63,10 @@ class _TutorialThreeState extends State<TutorialThree> {
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',
                           height: 60),
+                      Text('(3/4)',
+                          style:
+                          TextStyle(color: Colors.white70, fontSize: 12)),
+                      SizedBox(height: 10),
                       Text('지인과 친구 맺고 일기를 교환해요',
                           style: TextStyle(
                               color: Colors.white,

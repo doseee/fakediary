@@ -1,10 +1,13 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
+import 'package:frontend/screens/law_form.dart';
+import 'package:frontend/screens/law_info_form.dart';
 import 'package:frontend/screens/tutorial_one.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/theme.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +25,20 @@ class _RegistScreenState extends State<RegistScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
+
+  bool agreeSelected = false;
+  bool infoAgreeSelected = false;
+
+  setAgree() {
+    setState(() {
+      agreeSelected = !agreeSelected;
+    });
+  }
+  setInfoAgree() {
+    setState(() {
+      infoAgreeSelected = !infoAgreeSelected;
+    });
+  }
 
   @override
   void initState() {
@@ -55,12 +72,12 @@ class _RegistScreenState extends State<RegistScreen> {
               child: Form(
                 key: _formKey,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 70, left: 70),
+                  padding: EdgeInsets.only(right: 60, left: 60),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Lottie.asset('assets/lottie/stars.json'),
+                      // Center(child: Lottie.asset('assets/lottie/stars.json',width: 100)),
                       TextFormField(
                         controller: _emailController,
                         style: TextStyle(
@@ -198,64 +215,191 @@ class _RegistScreenState extends State<RegistScreen> {
                       SizedBox(
                         height: 40,
                       ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setAgree();
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 17,
+                                  height: 17,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: GradientBoxBorder(
+                                        gradient: LinearGradient(stops: [
+                                      0,
+                                      1.0
+                                    ], colors: [
+                                      Color(0xff65D5A6),
+                                      Color(0xff1E72AC),
+                                    ])),
+                                    gradient: agreeSelected
+                                        ? LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            stops: [0, 1.0],
+                                            colors: [
+                                              Color(0xff65D5A6),
+                                              Color(0xff1E72AC),
+                                            ],
+                                          )
+                                        : null,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  '이용약관에 동의하기 (필수)',
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.white),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 7,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LawForm()));
+                            },
+                            child: Text(
+                              '보기',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setInfoAgree();
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 17,
+                                  height: 17,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: GradientBoxBorder(
+                                        gradient: LinearGradient(stops: [
+                                      0,
+                                      1.0
+                                    ], colors: [
+                                      Color(0xff65D5A6),
+                                      Color(0xff1E72AC),
+                                    ])),
+                                    gradient: infoAgreeSelected
+                                        ? LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            stops: [0, 1.0],
+                                            colors: [
+                                              Color(0xff65D5A6),
+                                              Color(0xff1E72AC),
+                                            ],
+                                          )
+                                        : null,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  '개인정보 수집 및 이용동의 (필수)',
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.white),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 7,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LawInfoForm()));
+                            },
+                            child: Text(
+                              '보기',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                decoration: TextDecoration.underline
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
                       GestureDetector(
                         onTap: () async {
-                          if (_formKey.currentState!.validate()) {
-                            print(_emailController.text);
-                            print(_nicknameController.text);
-                            print(_passwordController.text);
-                            final bool result = await ApiService.signup(
-                              _emailController.text,
-                              _nicknameController.text,
-                              _passwordController.text,
-                            );
-                            if (!mounted) return;
-                            final pref = await SharedPreferences.getInstance();
-                            final isFirstLaunch =
-                                pref.getBool('isFirstLaunch') ?? true;
-                            if (isFirstLaunch) {
-                              pref.setBool('isFirstLaunch', false);
-                            }
-                            if (result) {
+                          if (agreeSelected && infoAgreeSelected) {
+                            if (_formKey.currentState!.validate()) {
+                              print(_emailController.text);
+                              print(_nicknameController.text);
+                              print(_passwordController.text);
+                              final bool result = await ApiService.signup(
+                                _emailController.text,
+                                _nicknameController.text,
+                                _passwordController.text,
+                              );
+                              if (!mounted) return;
+                              final pref =
+                                  await SharedPreferences.getInstance();
+                              final isFirstLaunch =
+                                  pref.getBool('isFirstLaunch') ?? true;
                               if (isFirstLaunch) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TutorialOne()));
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TutorialOne(),
-                                      settings: RouteSettings(name: 'Login'),
-                                    ));
+                                pref.setBool('isFirstLaunch', false);
                               }
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   SnackBar(
-                              //     content:
-                              //         Center(child: Text('login success!')),
-                              //   ),
-                              // );
-                              Flushbar(
-                                message: "회원가입 성공!",
-                                duration: Duration(seconds: 3),
-                                backgroundColor: Colors.greenAccent,
-                                flushbarPosition: FlushbarPosition.TOP,
-                              ).show(context);
-                            } else {
-                              Flushbar(
-                                message: "회원가입 실패!(이메일 또는 닉네임이 중복되었습니다.)",
-                                duration: Duration(seconds: 3),
-                                backgroundColor: Colors.redAccent,
-                                flushbarPosition: FlushbarPosition.TOP,
-                              ).show(context);
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   const SnackBar(
-                              //     content: Text('duplicate information.'),
-                              //   ),
-                              // );
+                              if (result) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => TutorialOne()));
+                                Flushbar(
+                                  message: "회원가입 성공!",
+                                  duration: Duration(seconds: 3),
+                                  backgroundColor: Colors.greenAccent,
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                ).show(context);
+                              } else {
+                                Flushbar(
+                                  message: "회원가입 실패!(이메일 또는 닉네임이 중복되었습니다.)",
+                                  duration: Duration(seconds: 3),
+                                  backgroundColor: Colors.redAccent,
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                ).show(context);
+                              }
                             }
+                          } else {
+                            Flushbar(
+                              message: "이용약관 및 정보수집에 동의해주세요",
+                              duration: Duration(seconds: 3),
+                              backgroundColor: Colors.redAccent,
+                              flushbarPosition: FlushbarPosition.TOP,
+                            ).show(context);
                           }
                         },
                         child: Container(

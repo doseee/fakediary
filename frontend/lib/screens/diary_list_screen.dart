@@ -413,7 +413,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         if (snapshot.hasData) {
                           print('data: ${snapshot.data?.length}');
                           if (snapshot.data?.isEmpty ?? true) {
-                            return Container(
+                            return
+                              Container(
                                 child: Center(
                               child: GestureDetector(
                                 onTap: () {

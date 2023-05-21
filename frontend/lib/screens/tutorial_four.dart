@@ -63,6 +63,10 @@ class _TutorialFourState extends State<TutorialFour> {
                     children: [
                       Lottie.asset('assets/lottie/menu_grinstar.json',
                           height: 60),
+                      Text('(4/4)',
+                          style:
+                              TextStyle(color: Colors.white70, fontSize: 12)),
+                      SizedBox(height: 10),
                       Text('마이페이지에 가보세요',
                           style: TextStyle(
                               color: Colors.white,
@@ -71,7 +75,7 @@ class _TutorialFourState extends State<TutorialFour> {
                       SizedBox(height: 10),
                       Text('기본 주인공과 일기 자동 생성 시간을 정할 수 있어요',
                           style:
-                          TextStyle(color: Colors.white70, fontSize: 15)),
+                              TextStyle(color: Colors.white70, fontSize: 15)),
                     ],
                   ),
                 ),
@@ -114,7 +118,7 @@ class _TutorialFourState extends State<TutorialFour> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                              const TutorialThree(),
+                                                  const TutorialThree(),
                                             ));
                                       },
                                       child: Center(
@@ -124,11 +128,11 @@ class _TutorialFourState extends State<TutorialFour> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                                '이전으로',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15),
-                                              )),
+                                            '이전으로',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15),
+                                          )),
                                         ),
                                       )),
                                 ),
@@ -149,7 +153,7 @@ class _TutorialFourState extends State<TutorialFour> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                              const HomeScreen(),
+                                                  const HomeScreen(),
                                             ));
                                       },
                                       child: Center(
@@ -159,17 +163,16 @@ class _TutorialFourState extends State<TutorialFour> {
                                           decoration: BtnThemeGradientLine(),
                                           child: Center(
                                               child: Text(
-                                                '시작하기',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15),
-                                              )),
+                                            '시작하기',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15),
+                                          )),
                                         ),
                                       )),
                                 ),
                               ],
                             )),
-
                       ],
                     )),
                 SizedBox(height: 40)

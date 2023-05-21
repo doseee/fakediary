@@ -119,7 +119,7 @@ class _CardListState extends State<CardList> {
                           // SizedBox(
                           //   height: 15,
                           // ),
-                          Text('내가 만든 카드를 확인해보세요',
+                          Text('카드로 일기를 만들어보세요',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 15,
