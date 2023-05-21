@@ -5,7 +5,6 @@ import 'package:frontend/screens/diary_list_screen.dart';
 import 'package:frontend/screens/send_loading.dart';
 import 'package:frontend/screens/friend_searchnew.dart';
 import 'package:frontend/screens/send_random_loading.dart';
-import 'package:frontend/screens/tutorial_one.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/info_modal.dart';
 import 'package:frontend/widgets/theme.dart';
@@ -162,6 +161,144 @@ class _FriendScreenState extends State<FriendScreen> {
         ],
       );
     }
+  }
+
+  Widget RandomDiary2() {
+    if (widget.exchangeSituation == 1) {
+      return Column(
+        children: [
+          SizedBox(
+            height: 90,
+            child: ListTile(
+              leading: Padding(
+                padding: const EdgeInsets.only(top: 13),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: Lottie.asset('assets/lottie/1-alien.json',
+                      width: 35, height: 35),
+                ),
+              ),
+              title: Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Row(
+                  children: [
+                    Transform.translate(
+                      offset: Offset(-5, 0),
+                      child: Text(
+                        '  외계인',
+                        style: TextStyle(fontSize: 17, color: Colors.white70),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 2),
+                      child: IconButton(
+                          icon: Icon(Icons.info, color: Colors.white60),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return InfoModal(
+                                    padding: 5,
+                                    color: true,
+                                    widget: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '✉    모르는 사람과의 랜덤 일기 교환입니다.',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          '하루에 한 번만 보낼 수 있습니다.',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                    height: 80,
+                                  );
+                                });
+                          }),
+                    ),
+                    Expanded(child: Container()),
+                    Container(
+                      width: 88,
+                      height: 38,
+                      decoration: BtnThemeGradient(),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => const Login(),
+                            //     ));
+                            print(widget.diaryId);
+                            //Todo; api 먼저 보내서 오늘 랜덤 일기 교환했는지 여부 확인 후 다른 상태 Modal 띄우기
+                            final bool result = await ApiService.CheckChange();
+
+                            if (!mounted) return;
+
+                            print(result);
+                            if (!result) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return InfoModal(
+                                      padding: 20,
+                                      color: true,
+                                      widget: Text(
+                                        '오늘은 이미 교환일기를 보냈습니다',
+                                        style: TextStyle(color: Colors.white60),
+                                      ),
+                                      height: 140,
+                                    );
+                                  });
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return InfoModal(
+                                      padding: 20,
+                                      color: true,
+                                      widget: ChangeModal(widget.diaryId),
+                                      height: 180,
+                                    );
+                                  });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              elevation: 0.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              )),
+                          child: Text(
+                            'SEND',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Container(
+            height: 0.1,
+            color: Colors.white,
+          ),
+        ],
+      );
+    }
+    return SizedBox(
+      height: 5,
+    );
   }
 
   Widget RandomDiary() {
@@ -431,7 +568,8 @@ class _FriendScreenState extends State<FriendScreen> {
             children: [
               GoSelectDiary(),
               Container(height: 0.3, color: Colors.white),
-              RandomDiary(),
+              // RandomDiary(),
+              RandomDiary2(),
               Expanded(
                   child: Padding(
                 padding: EdgeInsets.only(left: 10, right: 5),

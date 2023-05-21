@@ -23,46 +23,45 @@ class ChangeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       flex: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BtnThemeGradient(),
-          child: Padding(
-            padding: const EdgeInsets.only(right: 15, left: 15),
-            child: GestureDetector(
-              onTap: () async {
-                if (exchangeSituation == 1) {
-                  //내가 먼저 교환 보내는 상황
-                  // 친구 선택
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FriendScreen(
-                            diaryId: diaryId,
-                            exchangeSituation: exchangeSituation),
-                      ));
-                } else if (exchangeSituation == 2) {
-                  final result =
-                      await ApiService.DiaryChangeApprove(diaryId, requestId!);
-                  print('result: $result');
-                  if (result == true) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomeScreen(),
-                      ),
-                    );
-                    Flushbar(
-                            message: '일기 교환이 완료되었습니다!',
-                            duration: Duration(seconds: 3),
-                            flushbarPosition: FlushbarPosition.TOP)
-                        .show(context);
-                    ApiService.readAlarm(alarmId!);
-                  }
-                }
-                //todo; 답장으로 교환일기 보내는 상황
-                print('답장');
-              },
+      child: GestureDetector(
+        onTap: () async {
+          if (exchangeSituation == 1) {
+            //내가 먼저 교환 보내는 상황
+            // 친구 선택
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FriendScreen(
+                      diaryId: diaryId, exchangeSituation: exchangeSituation),
+                ));
+          } else if (exchangeSituation == 2) {
+            final result =
+                await ApiService.DiaryChangeApprove(diaryId, requestId!);
+            print('result: $result');
+            if (result == true) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(),
+                ),
+              );
+              Flushbar(
+                      message: '일기 교환이 완료되었습니다!',
+                      duration: Duration(seconds: 3),
+                      flushbarPosition: FlushbarPosition.TOP)
+                  .show(context);
+              ApiService.readAlarm(alarmId!);
+            }
+          }
+          //todo; 답장으로 교환일기 보내는 상황
+          print('답장');
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BtnThemeGradient(),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 15, left: 15),
               child: SizedBox(
                 width: 180,
                 height: 40,
