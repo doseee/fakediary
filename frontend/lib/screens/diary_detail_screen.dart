@@ -216,7 +216,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                     /// 정보가 없다면 에러 표시
                     return Text("${snapshot.error}에러!!");
                   }
-                  return CircularProgressIndicator();
+                  return Center(child: CircularProgressIndicator());
 
                   /// 통신할 때 렌더링 중이라는 표시
                 })));
