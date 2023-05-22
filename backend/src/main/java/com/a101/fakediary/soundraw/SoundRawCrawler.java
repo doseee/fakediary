@@ -32,6 +32,7 @@ public class SoundRawCrawler {
     private final String[] moodArr = {"Scary", "Suspense", "Sad", "Romantic", "Happy",
             "Busy & Frantic", "Funny & Weird", "Peaceful", "Laid Back", "Hopeful"};
     private final MusicService musicService;
+    private final int MUSIC_CNT = 1;
 
     public SoundRawCrawler(@Value("${cloud.aws.s3.url}")String S3_URL,
                            @Value("${fake-diary.sound-raw.port}")int PORT,
@@ -88,7 +89,7 @@ public class SoundRawCrawler {
             String mood = moodArr[i];
             log.info("다운로드할 음악 mood = " + mood);
 
-            for(int j = 0; j < 5; j++) {
+            for(int j = 0; j < MUSIC_CNT; j++) {
                 WebClient webClient = WebClient.create();
                 StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload");
 
