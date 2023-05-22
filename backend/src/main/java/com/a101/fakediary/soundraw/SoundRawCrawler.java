@@ -1,5 +1,6 @@
 package com.a101.fakediary.soundraw;
 
+import com.a101.fakediary.music.service.MusicService;
 import com.a101.fakediary.soundraw.dto.FastApiRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
@@ -15,6 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,15 +28,20 @@ public class SoundRawCrawler {
     private final String FAST_API_URL;
     private final int PORT;
     private final String SOUND_RAW_URL;
+    private final String[] moodArr = {"Scary", "Suspense", "Sad", "Romantic", "Happy",
+            "Busy & Frantic", "Funny & Weird", "Peaceful", "Laid Back", "Hopeful"};
+    private final MusicService musicService;
 
     public SoundRawCrawler(@Value("${cloud.aws.s3.url}")String S3_URL,
                            @Value("${fake-diary.sound-raw.port}")int PORT,
                            @Value("${fake-diary.sound-raw.base-url}")String SOUND_RAW_URL,
-                           @Value("${fake-diary.sound-raw.fast-api-url}")String FAST_API_URL) {
+                           @Value("${fake-diary.sound-raw.fast-api-url}")String FAST_API_URL,
+                           MusicService musicService) {
         this.S3_URL = S3_URL;
         this.FAST_API_URL = FAST_API_URL;
         this.PORT = PORT;
         this.SOUND_RAW_URL = SOUND_RAW_URL;
+        this.musicService = musicService;
 
         log.info("S3_URL = " + this.S3_URL);
         log.info("SOUND_RAW_URL = " + this.SOUND_RAW_URL);
@@ -73,6 +80,37 @@ public class SoundRawCrawler {
         String responseBody = response.block();
 
         return (this.S3_URL + musicFileName + ".wav");
+    }
+
+    public void downloadMusicsBatch() {
+        for(int i = 0; i < moodArr.length; i++) {
+            String mood = moodArr[i];
+
+            for(int j = 0; j < 5; j++) {
+                WebClient webClient = WebClient.create();
+                StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload");
+
+                //  ex) 2023-05-22_Scary_aesad23423523234253235 이런 식으로 저장
+                String musicFileName = LocalDate.now() + "_" +  mood + "_" + UUID.randomUUID().toString();
+                StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
+                        .append("?length=60&tempo=normal,high,low&mood=")
+                        .append(mood);
+
+                FastApiRequestDto requestDto = FastApiRequestDto.builder()
+                        .url(urlQuerySb.toString())
+                        .filename(musicFileName)
+                        .build();
+
+                Mono<String> response = webClient.post()
+                        .uri(requestUrl.toString())
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .body(BodyInserters.fromValue(requestDto))
+                        .retrieve()
+                        .bodyToMono(String.class);
+
+                musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
+            }
+        }
     }
 
 
