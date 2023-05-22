@@ -43,6 +43,8 @@ public class MusicService {
                 .uploadDate(LocalDate.now())
                 .build();
 
+        musicRepository.save(music);
+
         return new MusicResponseDto(music);
     }
 }
