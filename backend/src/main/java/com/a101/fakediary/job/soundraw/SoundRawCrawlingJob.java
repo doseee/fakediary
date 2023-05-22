@@ -1,5 +1,6 @@
 package com.a101.fakediary.job.soundraw;
 
+import com.a101.fakediary.mattermost.MatterMostSender;
 import com.a101.fakediary.music.service.MusicService;
 import com.a101.fakediary.soundraw.SoundRawCrawler;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class SoundRawCrawlingJob implements SchedulingConfigurer {
         taskRegistrar.setTaskScheduler(taskScheduler);
     }
 
-    @Scheduled(cron = "0 25 16 * * *")
+    @Scheduled(cron = "0 43 16 * * *")
     public void runJob() throws Exception {
 
         Job job = jobBuilderFactory.get("soundraw-crawling-job")
