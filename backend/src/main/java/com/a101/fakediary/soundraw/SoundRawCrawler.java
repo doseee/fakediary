@@ -32,7 +32,7 @@ public class SoundRawCrawler {
     private final String[] moodArr = {"Scary", "Suspense", "Sad", "Romantic", "Happy",
             "Busy & Frantic", "Funny & Weird", "Peaceful", "Laid Back", "Hopeful"};
     private final MusicService musicService;
-    private final int MUSIC_CNT = 1;
+    private final int MUSIC_CNT = 2;
 
     public SoundRawCrawler(@Value("${cloud.aws.s3.url}")String S3_URL,
                            @Value("${fake-diary.sound-raw.port}")int PORT,
