@@ -35,20 +35,18 @@ public class SoundRawCrawler {
             "Busy & Frantic", "Funny & Weird", "Peaceful", "Laid Back", "Hopeful"};
     private final MusicService musicService;
     private final int MUSIC_CNT = 3;
-    private final MatterMostSender matterMostSender;
 
     public SoundRawCrawler(@Value("${cloud.aws.s3.url}") String S3_URL,
                            @Value("${fake-diary.sound-raw.port}") int PORT,
                            @Value("${fake-diary.sound-raw.base-url}") String SOUND_RAW_URL,
                            @Value("${fake-diary.sound-raw.fast-api-url}") String FAST_API_URL,
-                           MusicService musicService,
-                           MatterMostSender matterMostSender) {
+                           MusicService musicService
+                           ) {
         this.S3_URL = S3_URL;
         this.FAST_API_URL = FAST_API_URL;
         this.PORT = PORT;
         this.SOUND_RAW_URL = SOUND_RAW_URL;
         this.musicService = musicService;
-        this.matterMostSender = matterMostSender;
 
         log.info("S3_URL = " + this.S3_URL);
         log.info("SOUND_RAW_URL = " + this.SOUND_RAW_URL);
@@ -90,7 +88,6 @@ public class SoundRawCrawler {
     }
 
     public void downloadMusicsBatch() {
-        matterMostSender.sendMessage(LocalDateTime.now() + "에 음악 일괄 다운로드 시작",  "koreii");
         for (int i = 0; i < moodArr.length; i++) {
             String mood = moodArr[i];
             log.info("다운로드할 음악 mood = " + mood);
@@ -126,8 +123,6 @@ public class SoundRawCrawler {
             MusicResponseDto dto = musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
             log.info("저장된 음악 = " + dto);
         }
-
-        matterMostSender.sendMessage(LocalDateTime.now() + "에 음악 일괄 다운로드 완료",  "koreii");
     }
 
 
