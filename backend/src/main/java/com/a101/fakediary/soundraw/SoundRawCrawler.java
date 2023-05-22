@@ -1,5 +1,6 @@
 package com.a101.fakediary.soundraw;
 
+import com.a101.fakediary.music.dto.MusicResponseDto;
 import com.a101.fakediary.music.service.MusicService;
 import com.a101.fakediary.soundraw.dto.FastApiRequestDto;
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +86,7 @@ public class SoundRawCrawler {
     public void downloadMusicsBatch() {
         for(int i = 0; i < moodArr.length; i++) {
             String mood = moodArr[i];
+            log.info("다운로드할 음악 mood = " + mood);
 
             for(int j = 0; j < 5; j++) {
                 WebClient webClient = WebClient.create();
@@ -95,6 +97,10 @@ public class SoundRawCrawler {
                 StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
                         .append("?length=60&tempo=normal,high,low&mood=")
                         .append(mood);
+
+                log.info("requestUrl = " + requestUrl);
+                log.info("musicFileName = " + musicFileName);
+                log.info("urlQuery = " + urlQuerySb);
 
                 FastApiRequestDto requestDto = FastApiRequestDto.builder()
                         .url(urlQuerySb.toString())
@@ -108,7 +114,8 @@ public class SoundRawCrawler {
                         .retrieve()
                         .bodyToMono(String.class);
 
-                musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
+                MusicResponseDto dto = musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
+                log.info("저장된 음악 = " + dto);
             }
         }
     }
