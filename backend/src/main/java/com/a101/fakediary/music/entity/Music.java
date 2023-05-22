@@ -1,8 +1,10 @@
 package com.a101.fakediary.music.entity;
 
+import com.a101.fakediary.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -10,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Music {
+public class Music extends BaseEntity {
     @SequenceGenerator(
             name = "MEMBER_SEQ_GEN",
             sequenceName = "MEMBER_SEQ",
@@ -22,9 +24,15 @@ public class Music {
     @Column(name = "music_id")
     private Long musicId;
 
-    @Column(name = "file_name", unique = true)
+    @Column(name = "file_name", unique = true, nullable = false)
     private String fileName;
 
-    @Column(name = "music_url", unique = true)
+    @Column(name = "music_url", unique = true, nullable = false)
     private String musicUrl;
+
+    @Column(nullable = false)
+    private String mood;
+
+    @Column(name = "upload_date", nullable = false)
+    private LocalDate uploadDate;
 }

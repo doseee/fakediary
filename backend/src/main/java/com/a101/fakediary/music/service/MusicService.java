@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,14 +19,13 @@ public class MusicService {
     private final MusicRepository musicRepository;
     
     /**
-     * 오늘 크롤링한 음악 중 장르가 mood에 해당하는 음악 5개의 리스트를 가져옴
+     * 어제 또는 오늘 크롤링한 음악 중 장르가 mood에 해당하는 음악의 리스트를 가져옴
      * @param mood
      * @return
      */
     @Transactional(readOnly = true)
-    public List<MusicResponseDto> getMusicsByGenre(String mood) {
-        List<MusicResponseDto> ret = null;
-        return ret;
+    public List<MusicResponseDto> getMusicsByMood(String mood) {
+        return musicRepository.getMusicsByMoodAndUploadDate(mood, LocalDate.now());
     }
 
     /**
@@ -35,18 +35,14 @@ public class MusicService {
      * @return
      */
     @Transactional
-    public MusicResponseDto saveMusic(String fileName, String musicUrl) {
+    public MusicResponseDto saveMusic(String fileName, String musicUrl, String mood) {
         Music music = Music.builder()
                 .fileName(fileName)
                 .musicUrl(musicUrl)
+                .mood(mood)
+                .uploadDate(LocalDate.now())
                 .build();
 
-        Long musicid = musicRepository.save(music).getMusicId();
-
-        return MusicResponseDto.builder()
-                .musicId(musicid)
-                .fileName(fileName)
-                .musicUrl(musicUrl)
-                .build();
+        return new MusicResponseDto(music);
     }
 }

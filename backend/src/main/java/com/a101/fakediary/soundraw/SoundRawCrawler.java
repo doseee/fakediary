@@ -90,7 +90,7 @@ public class SoundRawCrawler {
                 WebClient webClient = WebClient.create();
                 StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload");
 
-                //  ex) 2023-05-22_Scary_aesad23423523234253235 이런 식으로 저장 
+                //  ex) 2023-05-22_Scary_aesad23423523234253235 이런 식으로 저장
                 String musicFileName = LocalDate.now() + "_" +  mood + "_" + UUID.randomUUID().toString();
                 StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
                         .append("?length=60&tempo=normal,high,low&mood=")
@@ -108,7 +108,7 @@ public class SoundRawCrawler {
                         .retrieve()
                         .bodyToMono(String.class);
 
-                musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav");
+                musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
             }
         }
     }

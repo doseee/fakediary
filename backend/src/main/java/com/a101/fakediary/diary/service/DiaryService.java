@@ -27,9 +27,12 @@ import com.a101.fakediary.genre.dto.GenreDto;
 import com.a101.fakediary.genre.service.GenreService;
 import com.a101.fakediary.member.entity.Member;
 import com.a101.fakediary.member.repository.MemberRepository;
+import com.a101.fakediary.music.dto.MusicResponseDto;
+import com.a101.fakediary.music.service.MusicService;
 import com.a101.fakediary.randomexchangepool.repository.RandomExchangePoolRepository;
 import com.a101.fakediary.server.service.ServerService;
 import com.a101.fakediary.soundraw.SoundRawCrawler;
+import com.a101.fakediary.soundraw.SoundRawMap;
 import com.a101.fakediary.stablediffusion.api.StableDiffusionApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -64,9 +67,9 @@ public class DiaryService {
     private final FriendExchangeRequestRepository friendExchangeRequestRepository;
     private final RandomExchangePoolRepository randomExchangePoolRepository;
     private final AlarmService alarmService;
-    private final SoundRawCrawler soundRawCrawler;
     private final ServerService serverService;
     private final Environment environment;
+    private final MusicService musicService;
     private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     private final static String DELIMITER = "@";
@@ -383,14 +386,23 @@ public class DiaryService {
         start = Instant.now();
         logger.info("TASK2 start at " + LocalDateTime.now());
 
-        try {
-            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
-            logger.info("musicUrl = " + musicUrl);
-            diary.setMusicUrl(musicUrl);
-        } catch(Exception e) {
-            e.printStackTrace();
-            logger.info("음악 다운로드 실패");
-        }
+        String mood = SoundRawMap.getMood(genreList.get(0));
+        List<MusicResponseDto> musicResponseDtoList = musicService.getMusicsByMood(mood);
+        int musicCnt = musicResponseDtoList.size();
+        Random ran = new Random();
+        MusicResponseDto musicResponseDto = musicResponseDtoList.get(ran.nextInt(musicCnt));
+
+        diary.setMusicUrl(musicResponseDto.getMusicUrl());
+//        try {
+//            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
+//            logger.info("musicUrl = " + musicUrl);
+//            diary.setMusicUrl(musicUrl);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            logger.info("음악 다운로드 실패");
+//        }
+
+
         //  TASK2 end
         end = Instant.now();
         logger.info("TASK2 end at " + LocalDateTime.now());
@@ -657,14 +669,14 @@ public class DiaryService {
         logger.info("diaryImagePrompt = " + diaryImagePrompt);
         diaryImageService.createDiaryImages(diaryId, stableDiffusionUrls, diaryImagePrompt);
 
-        try {
-            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
-            logger.info("musicUrl = " + musicUrl);
-            diary.setMusicUrl(musicUrl);
-        } catch(Exception e) {
-            e.printStackTrace();
-            logger.info("음악 다운로드 실패");
-        }
+//        try {
+//            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
+//            logger.info("musicUrl = " + musicUrl);
+//            diary.setMusicUrl(musicUrl);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            logger.info("음악 다운로드 실패");
+//        }
 
         DiaryResponseDto returnDto = new DiaryResponseDto(diary);
         List<String> genres = genreService.searchGenre(diary.getDiaryId());
