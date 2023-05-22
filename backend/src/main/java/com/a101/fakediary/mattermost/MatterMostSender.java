@@ -49,4 +49,26 @@ public class MatterMostSender {
         else
             restTemplate.exchange(MM_WEBHOOK_URL, HttpMethod.POST, entity, String.class);
     }
+
+    public void sendMessage(String msg, String target) {
+        if(this.LOCATION.equals("Springboot-Backend-local"))
+            return;
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("username", "허재성");
+
+        StringBuilder text = new StringBuilder("In ").append(LOCATION).append("\n")
+                .append("```\n")
+                .append(msg).append("\n")
+                .append("```\n");
+
+        request.put("text", text);
+
+        HttpEntity<Map<String, Object>> entity =  new HttpEntity<>(request);
+
+        if(target.equals("koreii"))
+            restTemplate.exchange(MM_WEBHOOK_KOREII_URL, HttpMethod.POST, entity, String.class);
+        else
+            restTemplate.exchange(MM_WEBHOOK_URL, HttpMethod.POST, entity, String.class);
+    }
 }
