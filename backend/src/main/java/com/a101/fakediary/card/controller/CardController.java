@@ -57,10 +57,10 @@ public class CardController {
             ret = new ResponseEntity<>(cardSaveResponseDto, HttpStatus.OK);
         } catch(ParseException e) {
             e.printStackTrace();
-            matterMostSender.sendMessage(e);
+            matterMostSender.sendMessage(e, "all");
         } catch(Exception e) {
             e.printStackTrace();
-            matterMostSender.sendMessage(e);
+            matterMostSender.sendMessage(e, "all");
         }
         return ret;
     }

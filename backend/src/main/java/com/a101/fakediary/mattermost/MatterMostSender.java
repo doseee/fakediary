@@ -13,17 +13,20 @@ import java.util.Map;
 @Component
 public class MatterMostSender {
     private final String MM_WEBHOOK_URL;
+    private final String MM_WEBHOOK_KOREII_URL;
     private final String LOCATION;
     private final RestTemplate restTemplate;
 
     public MatterMostSender(@Value("${notification.mattermost.webhook-url}") String MM_WEBHOOK_URL,
+                            @Value("${notification.mattermost.webhook-url-koreii") String MM_WEBHOOK_KOREII_URL,
                             @Value("${notification.mattermost.location}") String LOCATION) {
         this.restTemplate = new RestTemplate();
         this.MM_WEBHOOK_URL = MM_WEBHOOK_URL;
+        this.MM_WEBHOOK_KOREII_URL = MM_WEBHOOK_KOREII_URL;
         this.LOCATION = LOCATION;
     }
 
-    public void sendMessage(Exception e) {
+    public void sendMessage(Exception e, String target) {
         if(this.LOCATION.equals("Springboot-Backend-local"))
             return;
 
@@ -41,6 +44,9 @@ public class MatterMostSender {
 
         HttpEntity<Map<String, Object>> entity =  new HttpEntity<>(request);
 
-        restTemplate.exchange(MM_WEBHOOK_URL, HttpMethod.POST, entity, String.class);
+        if(target.equals("koreii"))
+            restTemplate.exchange(MM_WEBHOOK_KOREII_URL, HttpMethod.POST, entity, String.class);
+        else
+            restTemplate.exchange(MM_WEBHOOK_URL, HttpMethod.POST, entity, String.class);
     }
 }
