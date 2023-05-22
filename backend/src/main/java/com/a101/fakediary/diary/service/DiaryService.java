@@ -393,10 +393,14 @@ public class DiaryService {
         logger.info("musicResponseDtoList = " + musicResponseDtoList);
 
         int musicCnt = musicResponseDtoList.size();
-        Random ran = new Random();
-        MusicResponseDto musicResponseDto = musicResponseDtoList.get(ran.nextInt(musicCnt));
+        if(musicCnt > 0) {
+            Random ran = new Random();
+            MusicResponseDto musicResponseDto = musicResponseDtoList.get(ran.nextInt(musicCnt));
 
-        diary.setMusicUrl(musicResponseDto.getMusicUrl());
+            diary.setMusicUrl(musicResponseDto.getMusicUrl());
+        } else {
+            diary.setMusicUrl(null);
+        }
 //        try {
 //            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
 //            logger.info("musicUrl = " + musicUrl);
