@@ -6,6 +6,7 @@ import com.a101.fakediary.music.repository.MusicRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -34,7 +35,7 @@ public class MusicService {
      * @param musicUrl
      * @return
      */
-    @Transactional
+    @Transactional(propagation = Propagation.NOT_SUPPORTED) //  트랜잭셔널 해제해서 음악별로 바로바로 일기생성되도록함
     public MusicResponseDto saveMusic(String fileName, String musicUrl, String mood) {
         Music music = Music.builder()
                 .fileName(fileName)
@@ -43,9 +44,9 @@ public class MusicService {
                 .uploadDate(LocalDate.now())
                 .build();
 
-        log.info("저장된 음악 = " + music);
-
         musicRepository.save(music);
+
+        log.info("저장된 음악 = " + music);
 
         return new MusicResponseDto(music);
     }
