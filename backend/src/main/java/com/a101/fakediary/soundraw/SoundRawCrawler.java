@@ -113,6 +113,9 @@ public class SoundRawCrawler {
                         .body(BodyInserters.fromValue(requestDto))
                         .retrieve()
                         .bodyToMono(String.class);
+                String responseBody = response.block();
+
+                log.info("responseBody = " + responseBody);
 
                 MusicResponseDto dto = musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
                 log.info("저장된 음악 = " + dto);
