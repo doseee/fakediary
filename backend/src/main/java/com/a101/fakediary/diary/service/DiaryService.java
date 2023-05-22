@@ -387,7 +387,11 @@ public class DiaryService {
         logger.info("TASK2 start at " + LocalDateTime.now());
 
         String mood = SoundRawMap.getMood(genreList.get(0));
+        logger.info("mood = " + mood);
+
         List<MusicResponseDto> musicResponseDtoList = musicService.getMusicsByMood(mood);
+        logger.info("musicResponseDtoList = " + musicResponseDtoList);
+
         int musicCnt = musicResponseDtoList.size();
         Random ran = new Random();
         MusicResponseDto musicResponseDto = musicResponseDtoList.get(ran.nextInt(musicCnt));
