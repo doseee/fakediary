@@ -1,5 +1,6 @@
 package com.a101.fakediary.soundraw;
 
+import com.a101.fakediary.mattermost.MatterMostSender;
 import com.a101.fakediary.music.dto.MusicResponseDto;
 import com.a101.fakediary.music.service.MusicService;
 import com.a101.fakediary.soundraw.dto.FastApiRequestDto;
@@ -18,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,17 +35,20 @@ public class SoundRawCrawler {
             "Busy & Frantic", "Funny & Weird", "Peaceful", "Laid Back", "Hopeful"};
     private final MusicService musicService;
     private final int MUSIC_CNT = 3;
+    private final MatterMostSender matterMostSender;
 
-    public SoundRawCrawler(@Value("${cloud.aws.s3.url}")String S3_URL,
-                           @Value("${fake-diary.sound-raw.port}")int PORT,
-                           @Value("${fake-diary.sound-raw.base-url}")String SOUND_RAW_URL,
-                           @Value("${fake-diary.sound-raw.fast-api-url}")String FAST_API_URL,
-                           MusicService musicService) {
+    public SoundRawCrawler(@Value("${cloud.aws.s3.url}") String S3_URL,
+                           @Value("${fake-diary.sound-raw.port}") int PORT,
+                           @Value("${fake-diary.sound-raw.base-url}") String SOUND_RAW_URL,
+                           @Value("${fake-diary.sound-raw.fast-api-url}") String FAST_API_URL,
+                           MusicService musicService,
+                           MatterMostSender matterMostSender) {
         this.S3_URL = S3_URL;
         this.FAST_API_URL = FAST_API_URL;
         this.PORT = PORT;
         this.SOUND_RAW_URL = SOUND_RAW_URL;
         this.musicService = musicService;
+        this.matterMostSender = matterMostSender;
 
         log.info("S3_URL = " + this.S3_URL);
         log.info("SOUND_RAW_URL = " + this.SOUND_RAW_URL);
@@ -57,7 +62,7 @@ public class SoundRawCrawler {
         StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
                 .append("?length=60&tempo=normal,high,low&mood=");
 
-        for(String genre : genreList)
+        for (String genre : genreList)
             urlQuerySb.append(SoundRawMap.getMood(genre)).append(",");
         urlQuerySb.delete(urlQuerySb.length() - 1, urlQuerySb.length());   //  마지막 , 제거
 
@@ -85,45 +90,45 @@ public class SoundRawCrawler {
     }
 
     public void downloadMusicsBatch() {
-        for(int i = 0; i < MUSIC_CNT; i++) {
-            for(int j = 0; j < moodArr.length; j++) {
-                String mood = moodArr[j];
-                log.info("다운로드할 음악 mood = " + mood);
+        matterMostSender.sendMessage(LocalDateTime.now() + "에 음악 일괄 다운로드 시작",  "koreii");
+        for (int i = 0; i < moodArr.length; i++) {
+            String mood = moodArr[i];
+            log.info("다운로드할 음악 mood = " + mood);
 
-                WebClient webClient = WebClient.create();
-                StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload");
+            WebClient webClient = WebClient.create();
+            StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload");
 
-                //  ex) 2023-05-22_Scary_aesad23423523234253235 이런 식으로 저장
-                String musicFileName = LocalDate.now() + "_" + UUID.randomUUID().toString();
-                StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
-                        .append("?length=60&tempo=normal,high,low&mood=")
-                        .append(mood);
+            //  ex) 2023-05-22_Scary_aesad23423523234253235 이런 식으로 저장
+            String musicFileName = LocalDate.now() + "_" + UUID.randomUUID().toString();
+            StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
+                    .append("?length=60&tempo=normal,high,low&mood=")
+                    .append(mood);
 
-                log.info("requestUrl = " + requestUrl);
-                log.info("musicFileName = " + musicFileName);
-                log.info("urlQuery = " + urlQuerySb);
+            log.info("requestUrl = " + requestUrl);
+            log.info("musicFileName = " + musicFileName);
+            log.info("urlQuery = " + urlQuerySb);
 
-                FastApiRequestDto requestDto = FastApiRequestDto.builder()
-                        .url(urlQuerySb.toString())
-                        .filename(musicFileName)
-                        .build();
+            FastApiRequestDto requestDto = FastApiRequestDto.builder()
+                    .url(urlQuerySb.toString())
+                    .filename(musicFileName)
+                    .build();
 
-                Mono<String> response = webClient.post()
-                        .uri(requestUrl.toString())
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .body(BodyInserters.fromValue(requestDto))
-                        .retrieve()
-                        .bodyToMono(String.class);
-                String responseBody = response.block();
+            Mono<String> response = webClient.post()
+                    .uri(requestUrl.toString())
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .body(BodyInserters.fromValue(requestDto))
+                    .retrieve()
+                    .bodyToMono(String.class);
+            String responseBody = response.block();
 
-                log.info("responseBody = " + responseBody);
+            log.info("responseBody = " + responseBody);
 
-                MusicResponseDto dto = musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
-                log.info("저장된 음악 = " + dto);
-            }
+            MusicResponseDto dto = musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
+            log.info("저장된 음악 = " + dto);
         }
-    }
 
+        matterMostSender.sendMessage(LocalDateTime.now() + "에 음악 일괄 다운로드 완료",  "koreii");
+    }
 
 
 //    public String getMusicUrl(List<String> genreList, Long diaryPk) {
