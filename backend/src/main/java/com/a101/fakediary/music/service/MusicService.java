@@ -43,6 +43,8 @@ public class MusicService {
                 .uploadDate(LocalDate.now())
                 .build();
 
+        log.info("저장된 음악 = " + music);
+
         musicRepository.save(music);
 
         return new MusicResponseDto(music);

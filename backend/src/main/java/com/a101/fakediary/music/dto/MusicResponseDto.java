@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class MusicResponseDto {
     private Long musicId;
