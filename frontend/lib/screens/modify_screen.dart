@@ -414,7 +414,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: BottomNavBar(),
+          // bottomNavigationBar: BottomNavBar(),
         ),
       ),
     );
