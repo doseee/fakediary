@@ -85,11 +85,11 @@ public class SoundRawCrawler {
     }
 
     public void downloadMusicsBatch() {
-        for(int i = 0; i < moodArr.length; i++) {
-            String mood = moodArr[i];
-            log.info("다운로드할 음악 mood = " + mood);
+        for(int i = 0; i < MUSIC_CNT; i++) {
+            for(int j = 0; j < moodArr.length; j++) {
+                String mood = moodArr[j];
+                log.info("다운로드할 음악 mood = " + mood);
 
-            for(int j = 0; j < MUSIC_CNT; j++) {
                 WebClient webClient = WebClient.create();
                 StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload");
 
