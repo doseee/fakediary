@@ -31,8 +31,7 @@ public class SoundRawCrawler {
     private final String FAST_API_URL;
     private final int PORT;
     private final String SOUND_RAW_URL;
-    private final String[] moodArr = {"Scary", "Suspense", "Sad", "Romantic", "Happy",
-            "Busy & Frantic", "Funny & Weird", "Peaceful", "Laid Back", "Hopeful"};
+    private final String[] moodArr = {"Scary", "Suspense", "Sad", "Romantic", "Happy", "Peaceful", "Laid Back", "Hopeful"};
     private final MusicService musicService;
     private final int MUSIC_CNT = 3;
 
