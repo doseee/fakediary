@@ -38,7 +38,6 @@ public class CardService {
     private final CardDiaryMappingRepository cardDiaryMappingRepository;
     private final ImageFileHandler s3ImageFileHandler;
     private final DeepArtEffectsApi deepArtEffectsApi;
-//    private final DiaryService diaryService;
 
     @Transactional
     public CardSaveResponseDto saveCard(MultipartFile origImageFile, String cardImageFileUrl, int styleIndex, String styleId, String saveCardDtoString) throws Exception {
@@ -146,13 +145,6 @@ public class CardService {
     public List<Long> getDiaryIdsByCardId(Long cardId) {
         return cardDiaryMappingRepository.findDiaryIdsByCardId(cardId);
     }
-
-//    //  특정 카드로 만들어진 일기 반환
-//    @Transactional(readOnly = true)
-//    public List<DiaryResponseDto> getDiariesByCardId(Long cardId) throws Exception {
-//        return diaryService.getDiariesByCardId(cardId);
-//    }
-
     private CardSaveRequestDto createCardSaveRequestDto(Map<String, Object> map) {
         Object baseNameObj = map.get("baseName");
         Object basePlaceObj = map.get("basePlace");

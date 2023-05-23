@@ -91,10 +91,10 @@ public class DiaryService {
                 .keyword(dto.getKeyword()) // 받아온 카드리스트기반으로 키워드 추출
                 .characters(dto.getCharacters())
                 .places(dto.getPlaces())
-                .prompt(dto.getPrompt()) //프론트GPT
-                .title(dto.getTitle()) //프론트GPT
-                .detail(dto.getDetail()) //프론트GPT
-                .summary(dto.getSummary()) //프론트GPT
+                .prompt(dto.getPrompt())
+                .title(dto.getTitle())
+                .detail(dto.getDetail())
+                .summary(dto.getSummary())
                 .subtitles(dto.getSubtitles())
                 .build();
     }
@@ -270,8 +270,6 @@ public class DiaryService {
 
         String prompt = ChatGptPrompts.generateUserPrompt(characters, places, keywords, genres);
 
-//        TitleSubtitlesResultDto titleSubtitlesResultDto = chatGptApi.askGpt4TitleSubtitles(prompt);
-//        logger.info("titleSubtitlesResultDto = " + titleSubtitlesResultDto);
         List<Message> messageList = chatGptApi.askGpt41(new ArrayList<Message>(), prompt);  //  GPT4 사용 시 askGpt4로 변경
 
         StringBuilder diaryContent = new StringBuilder();
@@ -574,10 +572,8 @@ public class DiaryService {
                 }
                 List<String> genreList = new ArrayList<>(genreSet);
 
-//                logger.info(member.getMemberId() + "번 MemberId의 일기 자동생성을 시작하겠습니다.");
-
                 DiaryResponseDto diary = createDiary(member.getMemberId(), cardIdList, genreList);
-                //자동생성 알람로직 여기다가 작성예정 by 은녕
+                //자동생성 알람로직 여기타이밍에 작성 -> 은녕
                 String title = "그대만의 하루일기 도착";
                 String body = "오늘의 가짜다이어리를 확인해보세요";
                 alarmService.saveAlarm(new AlarmRequestDto(member.getMemberId(), diary.getDiaryId(), title, body, "AUTOMATIC"));

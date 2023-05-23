@@ -82,7 +82,6 @@ public class RandomExchangePoolService {
     @Transactional
     public void doRandomMatching() throws Exception {
         List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getYesterdayRandomExchangePoolResponseList();
-//        List<RandomExchangePoolResponseDto> randomExchangePoolResponseDtoList = getTodayRandomExchangePoolResponseList();
 
         log.info("randomExchangePoolResponseDtoList = " + randomExchangePoolResponseDtoList);
 
