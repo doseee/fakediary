@@ -31,7 +31,7 @@ public class SoundRawCrawler {
     private final String FAST_API_URL;
     private final int PORT;
     private final String SOUND_RAW_URL;
-    private final String[] moodArr = {"Scary", "Suspense", "Sad", "Romantic", "Happy", "Peaceful", "Laid Back", "Hopeful"};
+    private final String[] moodArr = {"Scary", "Suspense", "Sad", "Romantic", "Happy", "Peaceful", "Laid Back", "Hopeful", "Busy & Frantic", "Funny & Weird"};
     private final MusicService musicService;
     private final int MUSIC_CNT = 2;
 
@@ -90,6 +90,13 @@ public class SoundRawCrawler {
         for(int iter = 0; iter < MUSIC_CNT; iter++) {
             for (int i = 0; i < moodArr.length; i++) {
                 String mood = moodArr[i];
+                String urlMood = mood;
+
+                if(urlMood.equals("Busy & Frantic"))
+                    urlMood = "Busy%20%26%20Frantic";
+                else if(urlMood.equals("Funny & Weird"))
+                    urlMood = "Funny%20%26%20Weird";
+
                 log.info("다운로드할 음악 mood = " + mood);
 
                 WebClient webClient = WebClient.create();
@@ -99,7 +106,7 @@ public class SoundRawCrawler {
                 String musicFileName = LocalDate.now() + "_" + UUID.randomUUID().toString();
                 StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
                         .append("?length=60&tempo=normal,high,low&mood=")
-                        .append(mood);
+                        .append(urlMood);
 
                 log.info("requestUrl = " + requestUrl);
                 log.info("musicFileName = " + musicFileName);
