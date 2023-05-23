@@ -63,7 +63,7 @@ public class MemberController {
         try {
             MemberLoginResponseDto memberLoginResponseDto = memberService.signInKakaoMember(memberKakaoLoginRequestDto);
             return ResponseEntity.ok().body(memberLoginResponseDto);
-        }catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 

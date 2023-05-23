@@ -19,6 +19,13 @@ public class MemberService {
     //회원가입
     @Transactional
     public Member signUpMember(MemberSaveRequestDto memberSaveRequestDto) {
+        if(memberSaveRequestDto.getEmail() == null){
+            throw new IllegalArgumentException("Email를 입력해 주세요.");
+        }
+        if(memberSaveRequestDto.getPassword() == null){
+            throw new IllegalArgumentException("Password를 입력해 주세요.");
+        }
+
         // 닉네임 중복 체크
         if (memberRepository.existsByNickname(memberSaveRequestDto.getNickname())) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
@@ -35,20 +42,18 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    //카카오 소셜 회원가입
     @Transactional
     public Member kakaoSignUpMember(MemberKakaoSignUpRequestDto memberKakaoSignUpRequestDto){
-        // 닉네임 중복 체크
-        if (memberRepository.existsByNickname(memberKakaoSignUpRequestDto.getNickname())) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
-        }
+
         if(memberRepository.existsByKakaoUid(memberKakaoSignUpRequestDto.getKakaoUid())){
             throw new IllegalArgumentException("이미 존재하는 kakao 아이디가 있습니다.");
         }
         Member member = memberKakaoSignUpRequestDto.toEntity();
         member.setProviderId("KAKAO");// 나중에 Enum으로 리팩토링 가능할듯
+        member.setNickname("외계인" + member.getKakaoUid());
 
         return memberRepository.save(member);
-
     }
 
     //로그인

@@ -26,13 +26,13 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "email", nullable = true, unique = true)
+    @Column(name = "email", nullable = true, unique = true)//소셜로그인 추가되면서 기존 email nullable = true 수정
     private String email;
 
-    @Column(name = "password", nullable = true)
+    @Column(name = "password", nullable = true) //소셜로그인 추가되면서 기존 password nullable = true 수정
     private String password;
 
-    @Column(name = "nickname", nullable = false, length = 10, unique = true)
+    @Column(name = "nickname", nullable = false, length = 15, unique = true)
     private String nickname;
 
     @Column(name = "auto_diary_time", nullable = true)
@@ -45,7 +45,7 @@ public class Member extends BaseEntity {
     private String firebaseUid;
 
     @Column(name = "kakao_uid", nullable = true)
-    private String kakaoUid;
+    private Long kakaoUid;
 
     @Column(name = "provider_id", nullable = true)
     private String providerId;

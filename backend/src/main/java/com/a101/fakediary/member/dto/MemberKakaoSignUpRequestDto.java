@@ -11,16 +11,13 @@ import lombok.*;
 @ToString
 public class MemberKakaoSignUpRequestDto {
 
-    private String kakaoUid;
-
-    private String nickname;
+    private Long kakaoUid;
 
     private String firebaseUid;
 
     public Member toEntity() {
         return Member.builder()
                 .kakaoUid(kakaoUid)
-                .nickname(nickname)
                 .firebaseUid(firebaseUid)
                 .build();
     }
