@@ -1,9 +1,11 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frontend/screens/home_circlemenu.dart';
 import 'package:frontend/screens/tutorial_one.dart';
 import 'package:frontend/screens/tutorial_screen.dart';
 import 'package:frontend/widgets/theme.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -117,11 +119,6 @@ class _LoginState extends State<Login> {
                       duration: Duration(seconds: 3),
                       flushbarPosition: FlushbarPosition.TOP)
                   .show(context);
-              // ScaffoldMessenger.of(context).showSnackBar(
-              //   SnackBar(
-              //     content: Center(child: Text('login success!')),
-              //   ),
-              // );
             } else {
               ScaffoldMessenger.of(context).showMaterialBanner(
                 MaterialBanner(
@@ -157,6 +154,8 @@ class _LoginState extends State<Login> {
           ),
         ));
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -200,9 +199,6 @@ class _LoginState extends State<Login> {
                               height: 40,
                             ),
                             _buttonLogin(),
-                            // SizedBox(
-                            //   height: 280,
-                            // ),
                           ],
                         ),
                         Expanded(child: Container()),
@@ -212,7 +208,7 @@ class _LoginState extends State<Login> {
                         ),
                         SizedBox(
                           height: 30,
-                        )
+                        ),
                       ]),
                     )))));
   }
