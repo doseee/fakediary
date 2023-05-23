@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class MemberKakaoLoginRequestDto {
-    private String kakaoUid;
+    private Long kakaoUid;
 }

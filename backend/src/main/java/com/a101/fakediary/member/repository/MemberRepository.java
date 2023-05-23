@@ -12,10 +12,10 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByMemberId(Long memberId);
     Optional<Member> findByEmail(String email);
-    Optional<Member> findByKakaoUid(String kakaoUid);
+    Optional<Member> findByKakaoUid(Long kakaoUid);
     boolean existsByNickname(String nickname);
     boolean existsByEmail(String email);
-    boolean existsByKakaoUid(String kakaoUid);
+    boolean existsByKakaoUid(Long kakaoUid);
     Optional<Member> findByNickname(String nickname);
     @Query("SELECT m FROM Member m WHERE HOUR(m.autoDiaryTime) = ?1 AND MINUTE(m.autoDiaryTime) = ?2")
     List<Member> findByAutoDiaryTimeHourAndMinute(int hour, int minute);

@@ -24,7 +24,7 @@ public class MemberLoginResponseDto {
 
     private String firebaseUid;
 
-    private String kakaoUid;
+    private Long kakaoUid;
 
     private String providerId;
 
