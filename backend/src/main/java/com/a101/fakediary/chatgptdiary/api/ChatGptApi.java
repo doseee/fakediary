@@ -108,21 +108,6 @@ public class ChatGptApi {
                 }
             }
         } //while(retry) end
-        //429외에도 다양한 에러감지후 재시도하기
-//            catch (HttpClientErrorException.TooManyRequests e) { // 429 Too Many Request Catch
-//                log.warn("GPT Too Many Requests. 에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT + "회까지 재시도하겠습니다. 현재 시도횟수 : " + gptErrorCount);
-//                if (RETRY_MAX_COUNT < gptErrorCount) {
-//                    log.error("GPT Too Many Request 에러로 " + RETRY_MAX_COUNT + "회연속 실패하였습니다.");
-//                    throw new Exception(RETRY_MAX_COUNT + "회연속 GPT 요청을 보냈으나 TooManyRequests에러가 발생하였습니다.");
-//                }
-//                // 5초 대기후 재시도
-//                Thread.sleep(SLEEP_MS);
-//                retry = true;
-//                gptErrorCount++;
-//            }
-
-//        ChatGptDiaryResponseDto responseDto = restTemplate40.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
-
 
         if (responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
             log.info("no response!!!");
@@ -230,21 +215,6 @@ public class ChatGptApi {
                 }
             }
         } //while(retry) end
-        //429외에도 다양한 에러감지후 재시도하기
-//            catch (HttpClientErrorException.TooManyRequests e) { // 429 Too Many Request Catch
-//                log.warn("GPT Too Many Requests. 에러가 발생하였습니다. 최대 " + RETRY_MAX_COUNT + "회까지 재시도하겠습니다. 현재 시도횟수 : " + gptErrorCount);
-//                if (RETRY_MAX_COUNT < gptErrorCount) {
-//                    log.error("GPT Too Many Request 에러로 " + RETRY_MAX_COUNT + "회연속 실패하였습니다.");
-//                    throw new Exception(RETRY_MAX_COUNT + "회연속 GPT 요청을 보냈으나 TooManyRequests에러가 발생하였습니다.");
-//                }
-//                // 5초 대기후 재시도
-//                Thread.sleep(SLEEP_MS);
-//                retry = true;
-//                gptErrorCount++;
-//            }
-
-//        ChatGptDiaryResponseDto responseDto = restTemplate40.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
-
 
         if (responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
             log.info("no response!!!");

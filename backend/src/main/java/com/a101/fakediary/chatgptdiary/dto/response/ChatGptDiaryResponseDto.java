@@ -29,7 +29,6 @@ public class ChatGptDiaryResponseDto {
     public static class Choice {
         private int index;
         private Message message;
-//        private Usage usage;
         @JsonProperty("finish_reason")
         private String finishReason;
     }

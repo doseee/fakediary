@@ -1,7 +1,8 @@
 package com.a101.fakediary.deeparteffects.styles;
 
 import java.util.Random;
-public class DeepArtEffectsStyles {
+public class
+DeepArtEffectsStyles {
     private final static String[] styles =
             {"ed777c0d-1b90-11e7-afe2-06d95fe194ed",
                     "c7984d3c-1560-11e7-afe2-06d95fe194ed",
