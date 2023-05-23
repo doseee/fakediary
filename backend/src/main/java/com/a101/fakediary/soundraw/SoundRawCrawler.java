@@ -33,7 +33,7 @@ public class SoundRawCrawler {
     private final String SOUND_RAW_URL;
     private final String[] moodArr = {"Scary", "Suspense", "Sad", "Romantic", "Happy", "Peaceful", "Laid Back", "Hopeful"};
     private final MusicService musicService;
-    private final int MUSIC_CNT = 3;
+    private final int MUSIC_CNT = 2;
 
     public SoundRawCrawler(@Value("${cloud.aws.s3.url}") String S3_URL,
                            @Value("${fake-diary.sound-raw.port}") int PORT,
@@ -87,40 +87,42 @@ public class SoundRawCrawler {
     }
 
     public void downloadMusicsBatch() {
-        for (int i = 0; i < moodArr.length; i++) {
-            String mood = moodArr[i];
-            log.info("다운로드할 음악 mood = " + mood);
+        for(int iter = 0; iter < MUSIC_CNT; iter++) {
+            for (int i = 0; i < moodArr.length; i++) {
+                String mood = moodArr[i];
+                log.info("다운로드할 음악 mood = " + mood);
 
-            WebClient webClient = WebClient.create();
-            StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload");
+                WebClient webClient = WebClient.create();
+                StringBuilder requestUrl = new StringBuilder(this.FAST_API_URL).append("/create-and-upload");
 
-            //  ex) 2023-05-22_Scary_aesad23423523234253235 이런 식으로 저장
-            String musicFileName = LocalDate.now() + "_" + UUID.randomUUID().toString();
-            StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
-                    .append("?length=60&tempo=normal,high,low&mood=")
-                    .append(mood);
+                //  ex) 2023-05-22_Scary_aesad23423523234253235 이런 식으로 저장
+                String musicFileName = LocalDate.now() + "_" + UUID.randomUUID().toString();
+                StringBuilder urlQuerySb = new StringBuilder(SOUND_RAW_URL)
+                        .append("?length=60&tempo=normal,high,low&mood=")
+                        .append(mood);
 
-            log.info("requestUrl = " + requestUrl);
-            log.info("musicFileName = " + musicFileName);
-            log.info("urlQuery = " + urlQuerySb);
+                log.info("requestUrl = " + requestUrl);
+                log.info("musicFileName = " + musicFileName);
+                log.info("urlQuery = " + urlQuerySb);
 
-            FastApiRequestDto requestDto = FastApiRequestDto.builder()
-                    .url(urlQuerySb.toString())
-                    .filename(musicFileName)
-                    .build();
+                FastApiRequestDto requestDto = FastApiRequestDto.builder()
+                        .url(urlQuerySb.toString())
+                        .filename(musicFileName)
+                        .build();
 
-            Mono<String> response = webClient.post()
-                    .uri(requestUrl.toString())
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .body(BodyInserters.fromValue(requestDto))
-                    .retrieve()
-                    .bodyToMono(String.class);
-            String responseBody = response.block();
+                Mono<String> response = webClient.post()
+                        .uri(requestUrl.toString())
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .body(BodyInserters.fromValue(requestDto))
+                        .retrieve()
+                        .bodyToMono(String.class);
+                String responseBody = response.block();
 
-            log.info("responseBody = " + responseBody);
+                log.info("responseBody = " + responseBody);
 
-            MusicResponseDto dto = musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
-            log.info("저장된 음악 = " + dto);
+                MusicResponseDto dto = musicService.saveMusic(musicFileName, this.S3_URL + musicFileName + ".wav", mood);
+                log.info("저장된 음악 = " + dto);
+            }
         }
     }
 
