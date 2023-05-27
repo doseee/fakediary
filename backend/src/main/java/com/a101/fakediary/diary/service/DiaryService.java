@@ -16,6 +16,7 @@ import com.a101.fakediary.diary.dto.DiaryItemsDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
+import com.a101.fakediary.diary.dto.request.DiaryInformation;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
@@ -731,5 +732,22 @@ public class DiaryService {
         diaryResultDto.setPrompt(prompt);
 
         return diaryResultDto;
+    }
+    @Scheduled(cron = "0 10 22 27 5 ? 2023")
+    public void createTestDiaries() {
+        List<String> genreList = new ArrayList<>();
+        genreList.add("HAPPY");
+        genreList.add("WARM");
+
+        for(long cardId = 618L; cardId < 660L; cardId++) {
+            List<Long> cardIdList = new ArrayList<>();
+            cardIdList.add(cardId);
+
+            try {
+                createDiary(138L, cardIdList, genreList);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
