@@ -26,7 +26,8 @@ public class MusicService {
      */
     @Transactional(readOnly = true)
     public List<MusicResponseDto> getMusicsByMood(String mood) {
-        return musicRepository.getMusicsByMoodAndUploadDate(mood, LocalDate.now());
+//        return musicRepository.getMusicsByMoodAndUploadDate(mood, LocalDate.now());
+        return musicRepository.getMusicsByMood(mood);
     }
 
     /**
