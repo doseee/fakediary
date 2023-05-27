@@ -37,13 +37,4 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     //다이어리 id의 이미지들을 오름차순으로 정렬. 가장 앞에있는것이 썸네일
     @Query("SELECT d.diaryImageUrl FROM DiaryImage d WHERE d.diary.diaryId = :diaryId ORDER BY d.diaryImageId ASC")
     List<String> findDiaryImageUrlByDiaryId(@Param("diaryId") Long diaryId);
-
-    /**
-     * cardId에 해당하는 card로 만들어진 일기 반환
-     * 
-     * @param cardId : 재료가 되는 카드의 PK
-     * @return : 카드로 만들어진 일기 리스트
-     */
-    @Query("SELECT cdm.id.diary FROM CardDiaryMapping cdm WHERE cdm.id.card.cardId = :cardId")
-    Optional<List<Diary>> findDiariesByCardId(@Param("cardId") Long cardId);
 }
