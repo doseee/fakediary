@@ -733,8 +733,8 @@ public class DiaryService {
 
         return diaryResultDto;
     }
-    @Scheduled(cron = "0 10 22 27 5 ? 2023")
-    public void createTestDiaries() {
+
+    public void createTestDiaries() throws Exception {
         List<String> genreList = new ArrayList<>();
         genreList.add("HAPPY");
         genreList.add("WARM");
@@ -743,11 +743,7 @@ public class DiaryService {
             List<Long> cardIdList = new ArrayList<>();
             cardIdList.add(cardId);
 
-            try {
-                createDiary(138L, cardIdList, genreList);
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
+            createDiary(138L, cardIdList, genreList);
         }
     }
 }
