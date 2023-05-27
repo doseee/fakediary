@@ -282,8 +282,8 @@ class _CardCreateState extends State<CardCreate> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 75),
                           child: Container(
-                            width: 100,
-                            height: 336,
+                            width: 120,
+                            height: 380,
                             decoration: BoxDecoration(
                               color: Colors.white10,
                               border: GradientBoxBorder(
