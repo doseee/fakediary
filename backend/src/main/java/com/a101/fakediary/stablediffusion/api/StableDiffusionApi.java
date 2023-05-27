@@ -74,6 +74,7 @@ public class StableDiffusionApi {
         Instant start = Instant.now();
         Map<String, Object> StableDiffusionMap = new HashMap<>();
         //중요한것은 prompt, steps, sampler_index
+        //
         StableDiffusionMap.put("prompt", "");
         StableDiffusionMap.put("steps", 20);
         StableDiffusionMap.put("sampler_index", "Euler a");
