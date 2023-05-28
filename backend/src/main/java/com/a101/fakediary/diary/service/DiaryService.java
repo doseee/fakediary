@@ -734,9 +734,10 @@ public class DiaryService {
         return diaryResultDto;
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void createTestDiaries() throws Exception {
         List<String> genreList = new ArrayList<>();
-        genreList.add("HAPPY");
+        genreList.add("TOUCHING");
         genreList.add("WARM");
 
         for(long cardId = 618L; cardId < 660L; cardId++) {
