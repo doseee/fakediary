@@ -13,6 +13,8 @@ class DiaryModel {
     required this.genre,
     required this.diaryImageUrl,
     required this.exchanged,
+    this.musicUrl,
+    required this.createdAt,
   });
   late final int diaryId;
   late final int memberId;
@@ -27,6 +29,8 @@ class DiaryModel {
   late final List<String> genre;
   late final List<String> diaryImageUrl;
   late final bool exchanged;
+  late final String? musicUrl;
+  late final String createdAt;
 
   DiaryModel.fromJson(Map<String, dynamic> json) {
     diaryId = json['diaryId'];
@@ -57,6 +61,8 @@ class DiaryModel {
         : List<String>.from(json['diaryImageUrl']
             .map((dynamic x) => (x as String).replaceFirst('s', '')));
     exchanged = json['exchanged'];
+    musicUrl = json['musicUrl'];
+    createdAt = json['createdAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -74,6 +80,8 @@ class DiaryModel {
     data['genre'] = genre;
     data['diaryImageUrl'] = diaryImageUrl;
     data['exchanged'] = exchanged;
+    data['musicUrl'] = musicUrl;
+    data['createdAt'] = createdAt;
     return data;
   }
 }
