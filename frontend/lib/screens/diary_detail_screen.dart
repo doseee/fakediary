@@ -35,6 +35,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
   ///모바일 화면을 일정한 크기의 slide로 나누었을 때 몇번째 슬라이드인지 인덱스 번호
   late Future<DiaryModel> diary;
+  late DiaryModel diary2;
 
   ///API로 받아온 다이어리 모델
   late List<String> details;
@@ -71,6 +72,10 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   /// 일기를 받아오는 API 호출
   getDiaryModel() {
     diary = ApiService.getDiaryDetail(widget.diaryId);
+  }
+
+  getDiaryModel2() async {
+    diary2 = await ApiService.getDiaryDetail(widget.diaryId);
   }
 
   /// 화면 첫 렌더링 시 수행
@@ -167,9 +172,15 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
   /// 음악 플레이어
   void playMusic() async {
-    await player.setSource(
-      AssetSource('wav/test_music2.wav'),
-    );
+    await getDiaryModel2();
+    if (diary2.musicUrl == null) {
+      await player.setSource(
+        AssetSource('wav/test_music2.wav'),
+      );
+    } else {
+      print(diary2.musicUrl!);
+      await player.setSourceUrl(diary2.musicUrl!);
+    }
     // await player.setReleaseMode(ReleaseMode.loop);
     await player.resume();
     isPlaying = true;
