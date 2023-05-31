@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/model/CardUrlListVerModel.dart';
 import 'package:frontend/model/FriendModel.dart';
 import 'package:frontend/model/SearchFriendModel.dart';
+import 'package:frontend/screens/tutorial_one.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -89,6 +91,80 @@ class ApiService {
       return false;
     }
   }
+
+
+  static Future<bool> kakao_login(int kakaoUid) async {
+    print('kakaologinstart');
+    final url = Uri.parse('$baseUrl/member/login/kakao');
+    final token = FirebaseMessaging.instance.getToken();
+    final memberLoginKakaoRequestDto = {
+      'kakaoUid': kakaoUid,
+      'firebaseUid': await token ?? '',
+    };
+    print(memberLoginKakaoRequestDto);
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(memberLoginKakaoRequestDto),
+    );
+    print('loginmiddle');
+    if (response.statusCode == 200) {
+      print('success');
+      final prefs = await SharedPreferences.getInstance();
+      final respJson = jsonDecode(utf8.decode(response.bodyBytes));
+      print(respJson);
+      final parsedTime =
+          respJson['autoDiaryTime']?.split(':') ?? ["00", "00", "00"];
+      final hour = int.parse(parsedTime[0] ?? '00');
+      final minute = int.parse(parsedTime[1] ?? '00');
+      final second = int.parse(parsedTime[2] ?? '00');
+      await prefs.setInt('hour', hour);
+      await prefs.setInt('minute', minute);
+      await prefs.setInt('second', second);
+      await prefs.setInt('memberId', respJson['memberId']);
+      await prefs.setString('nickname', respJson['nickname']);
+      await prefs.setString('diaryBaseName', respJson['diaryBaseName'] ?? '');
+      await prefs.setBool('isLogged', true);
+      print('end');
+      return true;
+    } else {
+      print('failed');
+      print(response.body);
+      return signup_kakao(kakaoUid);
+    }
+  }
+
+
+  static Future<bool> signup_kakao(
+      int kakaoUid) async {
+    final url = Uri.parse('$baseUrl/member/signup/kakao');
+    final token = await FirebaseMessaging.instance.getToken();
+    final memberSaveRequestDto = {
+      'kakaoUid': kakaoUid,
+      'firebaseUid': token,
+    };
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(memberSaveRequestDto),
+    );
+    if (response.statusCode == 200) {
+      print('success');
+      return kakao_login(kakaoUid);
+    } else {
+      print('failed');
+      print(response.body);
+      return false;
+    }
+  }
+
+
+
+
 
   static Future<String> getTranslation_papago(String content) async {
     String clientId = dotenv.get('papagoClientId');

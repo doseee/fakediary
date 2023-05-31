@@ -16,6 +16,7 @@ import com.a101.fakediary.diary.dto.DiaryItemsDto;
 import com.a101.fakediary.diary.dto.DiaryFilterDto;
 import com.a101.fakediary.diary.dto.DiaryRequestDto;
 import com.a101.fakediary.diary.dto.DiaryResponseDto;
+import com.a101.fakediary.diary.dto.request.DiaryInformation;
 import com.a101.fakediary.diary.entity.Diary;
 import com.a101.fakediary.diary.repository.DiaryQueryRepository;
 import com.a101.fakediary.diary.repository.DiaryRepository;
@@ -399,15 +400,6 @@ public class DiaryService {
         } else {
             diary.setMusicUrl(null);
         }
-//        try {
-//            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
-//            logger.info("musicUrl = " + musicUrl);
-//            diary.setMusicUrl(musicUrl);
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//            logger.info("음악 다운로드 실패");
-//        }
-
 
         //  TASK2 end
         end = Instant.now();

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/screens/regist_screen.dart';
+import 'package:frontend/screens/tutorial_one.dart';
+import 'package:frontend/services/api_service.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:lottie/lottie.dart';
 
@@ -52,6 +55,10 @@ class _LoginEntranceState extends State<LoginEntrance>
           '\n닉네임: ${user.kakaoAccount?.profile?.nickname}'
           // '\n이메일: ${user.kakaoAccount?.email}'
           );
+      await ApiService.kakao_login(user.id);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => TutorialOne()));
     } catch (error) {
       print('사용자 정보 요청 실패 $error');
     }
@@ -88,100 +95,121 @@ class _LoginEntranceState extends State<LoginEntrance>
             toolbarHeight: MediaQuery.of(context).size.height * 0.1183,
           ),
           body: Center(
-              child: Column(
-            children: [
-              Flexible(flex: 1, child: Container()),
-              Flexible(
-                  flex: 5,
-                  child: Container(
-                    child: Lottie.asset('assets/lottie/login_ent.json',
-                        width: 300),
-                  )),
-              Padding(
-                  padding: EdgeInsets.only(left: 50, right: 50),
-                  child: Container(
-                      width: 250,
-                      height: 50,
-                      decoration: BtnThemeGradient(),
-                      child: Column(
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Login(),
-                                      ));
-                                },
-                                child: Center(
-                                  child: Container(
-                                    width: 250,
-                                    height: 50,
-                                    decoration: BtnThemeGradient(),
-                                    child: Center(
-                                        child: Text(
-                                      '로그인',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                      ),
-                                    )),
-                                  ),
-                                )),
-                          ),
-                        ],
-                      ))),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
+              child: Column(children: [
+            Flexible(flex: 1, child: Container()),
+            Flexible(
+                flex: 5,
+                child: Container(
+                  child:
+                      Lottie.asset('assets/lottie/login_ent.json', width: 300),
+                )),
+            Padding(
+                padding: EdgeInsets.only(left: 50, right: 50),
+                child: Container(
+                    width: 250,
+                    height: 50,
+                    decoration: BtnThemeGradient(),
+                    child: Column(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Login(),
+                                    ));
+                              },
+                              child: Center(
+                                child: Container(
+                                  width: 250,
+                                  height: 50,
+                                  decoration: BtnThemeGradient(),
+                                  child: Center(
+                                      child: Text(
+                                    '로그인',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  )),
+                                ),
+                              )),
+                        ),
+                      ],
+                    ))),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+                width: 250,
+                height: 50,
+                decoration: BtnThemeGradientLine(),
+                child: Column(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const RegistScreen(),
+                                ));
+                          },
+                          child: Center(
+                            child: Container(
+                              width: 250,
+                              height: 50,
+                              decoration: BtnThemeGradientLine(),
+                              child: Center(
+                                  child: Text(
+                                '회원이 아니신가요? JOIN',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14),
+                              )),
+                            ),
+                          )),
+                    ),
+                  ],
+                )),
+            SizedBox(
+              height: 20,
+            ),
+            GestureDetector(
+              onTap: () {
+                loginKakao();
+              },
+              child: Center(
+                child: Container(
                   width: 250,
                   height: 50,
-                  decoration: BtnThemeGradientLine(),
-                  child: Column(
+                  decoration: BoxDecoration(
+                    color: Color(0xffF8D706),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Flexible(
-                        flex: 1,
-                        child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const RegistScreen(),
-                                  ));
-                            },
-                            child: Center(
-                              child: Container(
-                                width: 250,
-                                height: 50,
-                                decoration: BtnThemeGradientLine(),
-                                child: Center(
-                                    child: Text(
-                                  '회원이 아니신가요? JOIN',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 14),
-                                )),
-                              ),
-                            )),
-                      ),
+                      Image.asset('assets/img/kakao_logo.png',width: 45,),
+                      Text(
+                        '카카오 로그인',
+                        style: TextStyle(
+                            color: Color(0xFF181600),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800),
+                      ),SizedBox(
+                        width:45
+                      )
                     ],
                   )),
-              SizedBox(
-                height: 20,
+                ),
               ),
-              GestureDetector(
-                onTap: () {
-                  loginKakao();
-                },
-                child: Center(
-                    child: Image.asset(
-                  'assets/img/kakao_login.png',
-                )),
-              )
-            ],
-          ))),
+            )
+          ]))),
     );
   }
 }

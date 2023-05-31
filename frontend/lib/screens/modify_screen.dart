@@ -163,7 +163,7 @@ class _ModifyScreenState extends State<ModifyScreen> {
                           FilteringTextInputFormatter.deny(
                               RegExp(r'[!@#$%^&*(),.?":{}|<>;]')),
                         ],
-                        maxLength: 10,
+                        maxLength: 15,
                         decoration: const InputDecoration(
                             counterStyle: TextStyle(color: Colors.white),
                             enabledBorder: UnderlineInputBorder(
