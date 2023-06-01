@@ -30,6 +30,11 @@ public class DiaryController {
     private final AlarmService alarmService;
     private final MatterMostSender matterMostSender;
 
+    /**
+     * 
+     * @param information : 생성할 일기 정보
+     * @return
+     */
     @PostMapping("/create")
     public ResponseEntity<?> saveDiaryWithDiaryInformation(@RequestBody DiaryInformation information) {
         log.info("saveDiaryWithDiaryInformation");
