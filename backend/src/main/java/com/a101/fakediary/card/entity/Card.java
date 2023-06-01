@@ -1,6 +1,5 @@
 package com.a101.fakediary.card.entity;
 
-//import com.a101.fakediary.common.BaseEntity;
 import com.a101.fakediary.common.BaseEntity;
 import com.a101.fakediary.member.entity.Member;
 import lombok.*;
