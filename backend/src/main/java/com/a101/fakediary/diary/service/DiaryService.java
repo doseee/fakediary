@@ -400,15 +400,6 @@ public class DiaryService {
         } else {
             diary.setMusicUrl(null);
         }
-//        try {
-//            String musicUrl = soundRawCrawler.getMusicUrl(genreList, diaryId);
-//            logger.info("musicUrl = " + musicUrl);
-//            diary.setMusicUrl(musicUrl);
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//            logger.info("음악 다운로드 실패");
-//        }
-
 
         //  TASK2 end
         end = Instant.now();
@@ -732,19 +723,5 @@ public class DiaryService {
         diaryResultDto.setPrompt(prompt);
 
         return diaryResultDto;
-    }
-
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public void createTestDiaries() throws Exception {
-        List<String> genreList = new ArrayList<>();
-        genreList.add("TOUCHING");
-        genreList.add("WARM");
-
-        for(long cardId = 618L; cardId < 660L; cardId++) {
-            List<Long> cardIdList = new ArrayList<>();
-            cardIdList.add(cardId);
-
-            createDiary(138L, cardIdList, genreList);
-        }
     }
 }
