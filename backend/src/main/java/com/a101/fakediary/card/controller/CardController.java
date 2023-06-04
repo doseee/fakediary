@@ -105,7 +105,7 @@ public class CardController {
     /**
      * 카드 스타일 가져오기
      *
-     * @return
+     * @return : DeeArtEffects에서 제공하는 이미지 변환 스타일들을 가져옴
      */
     @GetMapping("/styles")
     public ResponseEntity<?> findCardStyles() {
