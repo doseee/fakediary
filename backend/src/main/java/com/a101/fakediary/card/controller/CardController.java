@@ -30,10 +30,9 @@ public class CardController {
 
     /**
      *
-     *
      * @param origImageFile : FE에서 촬영한 원본 이미지
      * @param cardSaveRequestDtoString : FE에서 전송한 카드에 넣을 정보들
-     * @return
+     * @return : 생성된 카드의 정보
      */
     @ApiOperation(value = "카드 생성 요청", notes = "body를 form-data 형태로 origImageFile과 cardSaveRequestDtoString을 묶어서 함께 전송")
     @PostMapping
@@ -68,8 +67,8 @@ public class CardController {
     /**
      * 사용자가 가지고 있는 모든 카드들을 가져옴
      *
-     * @param memberId
-     * @return
+     * @param memberId : 카드를 조회할 회원의 pk
+     * @return : memberId에 해당하는 회원이 보유한 카드 리스트
      */
     @ApiOperation(value = "카드 조회 요청", notes = "memberId에 해당하는 회원이 보유한 카드 전체 리스트를 반환함")
     @GetMapping("/{memberId}")
@@ -106,7 +105,7 @@ public class CardController {
     /**
      * 카드 스타일 가져오기
      *
-     * @return
+     * @return : DeeArtEffects에서 제공하는 이미지 변환 스타일들을 가져옴
      */
     @GetMapping("/styles")
     public ResponseEntity<?> findCardStyles() {

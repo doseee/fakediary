@@ -16,6 +16,12 @@ public class ChatGptApiConfig {
         ChatGptApiConfig.OPEN_AI_API_KEY_35 = OPEN_AI_API_KEY_35;
         ChatGptApiConfig.OPEN_AI_API_KEY_40 = OPEN_AI_API_KEY_40;
     }
+
+    /**
+     * RestTemplate 대신 WebClient로 변경해보기
+     *
+     * @return
+     */
     public static RestTemplate chatGpt35RestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -28,6 +34,11 @@ public class ChatGptApiConfig {
         return restTemplate;
     }
 
+    /**
+     * RestTemplate 대신 WebClient로 변경해보기
+     *
+     * @return
+     */
     public static RestTemplate chatGpt40RestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
 
