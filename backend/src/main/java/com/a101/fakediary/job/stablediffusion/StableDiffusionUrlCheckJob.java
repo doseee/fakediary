@@ -45,7 +45,7 @@ public class StableDiffusionUrlCheckJob implements SchedulingConfigurer  {
         taskRegistrar.setTaskScheduler(taskScheduler);
     }
 
-    @Scheduled(cron = "0 30 * * * *")
+//    @Scheduled(cron = "0 30 * * * *")
     public void runJob() throws Exception {
 
         Job job = jobBuilderFactory.get("stable-diffusion-url-check-job")
