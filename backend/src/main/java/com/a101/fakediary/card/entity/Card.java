@@ -35,8 +35,11 @@ public class Card extends BaseEntity {
     @Column(length = 20)
     private String basePlace;   //  장소 이름
 
-    @Column(name = "keyword", length = 40)
+    @Column(name = "keyword", length = 40)  //  Card 키워드 현재는 "A@B@C"로 @로 구분하고 있음.
     private String keyword;
+
+    @Transient
+    private String improvedKeyword; //  JSON 형태의 문자열로 받기
 
     @Column(name = "latitude", nullable = true, precision = 20, scale = 10)
     private BigDecimal latitude;

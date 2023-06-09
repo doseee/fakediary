@@ -69,7 +69,7 @@ public class StableDiffusionUrlCheckJob implements SchedulingConfigurer  {
                 if(!stableDiffusionApi.isUrlAlive()) {
                     log.info("Stable Diffusion is dead!!");
                     //  Stable Diffusion URL이 만료됐을 경우 메시지 보내기
-                    matterMostSender.sendMessage(new Exception("Stable Diffusion URL이 만료되었습니다!"), "all");
+//                    matterMostSender.sendMessage(new Exception("Stable Diffusion URL이 만료되었습니다!"), "all");
                 }
 
                 log.info("Stable Diffusion is alive!!");
