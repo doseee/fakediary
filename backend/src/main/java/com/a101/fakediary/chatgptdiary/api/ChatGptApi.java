@@ -157,35 +157,4 @@ public class ChatGptApi {
 
         return messages;
     }
-
-    public List<Message> chatGpt35LoadingMessageOld(String genre) throws Exception {
-        String userPrompt = ChatGptLoadingPrompts.getUserPrompt(genre);
-        List<Message> messages = new ArrayList<>();
-
-        messages.add(new Message("system", ChatGptLoadingPrompts.getSystemPrompt()));
-        messages.add(new Message("user", userPrompt));
-
-        ChatGptDiaryRequestDto requestDto = ChatGptDiaryRequestDto.builder()
-                .model(MODEL_3_5)
-                .n(N)
-                .maxTokens(MAX_TOKENS_3_5)
-                .temperature(TEMPERATURE)
-                .messages(messages)
-                .build();
-
-        ChatGptDiaryResponseDto responseDto = restTemplate35.postForObject(API_URL, requestDto, ChatGptDiaryResponseDto.class);
-
-        if (responseDto == null || responseDto.getChoices() == null || responseDto.getChoices().isEmpty()) {
-            log.info("no response!!!");
-            throw new Exception("GPT4가 응답이 없음");
-        }
-
-        String answer = responseDto.getChoices().get(0).getMessage().getContent().trim();
-        messages.add(new Message("assistant", answer));
-
-        log.info("answer = " + answer);
-        log.info("messages = " + messages);
-
-        return messages;
-    }
 }
