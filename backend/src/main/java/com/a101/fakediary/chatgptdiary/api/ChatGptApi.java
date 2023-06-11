@@ -33,6 +33,16 @@ public class ChatGptApi {
     private final Integer N;
     private final Double TEMPERATURE;
 
+    /**
+     *
+     * @param MODEL_3_5 : GPT 3.5 model
+     * @param MODEL_4_0 : GPT 4 model
+     * @param API_URL : ChatGPT API 호출 URL
+     * @param MAX_TOKENS_3_5 : GPT 3.5 이용 시 최대 토큰 개수
+     * @param MAX_TOKENS_4_0 : GPT 4 이용 시 최대 토큰 개수
+     * @param N : N
+     * @param TEMPERATURE : TEMPERATURE
+     */
     public ChatGptApi(@Value("${fake-diary.chat-gpt.model3-5}") String MODEL_3_5,
                       @Value("${fake-diary.chat-gpt.model4-0}") String MODEL_4_0,
                       @Value("${fake-diary.chat-gpt.base-url}") String API_URL,
